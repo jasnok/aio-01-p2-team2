@@ -64,7 +64,7 @@ Copy-Item legal_mcp\.env.example legal_mcp\.env
 `legal_mcp/.env`에서 지혜 PC의 DB 주소와 필요한 Provider Key를 설정한다.
 
 ```env
-DATABASE_URL=postgresql://사용자:비밀번호@지혜_PC_IP:5432/legal_ai
+DATABASE_URL=postgresql://사용자:비밀번호@지혜_PC_IP:5434/legal_ai
 ```
 
 현재 Mock HTTP 서버 실행:
