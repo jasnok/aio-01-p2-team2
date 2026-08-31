@@ -9,10 +9,10 @@ class Settings(BaseSettings):
     max_tool_calls: int = 3
     llm_provider: str = "mock"
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # 통합 실행용 루트 .env를 먼저 읽고, 서비스 전용 파일이 있으면 덮어씁니다.
+    model_config = SettingsConfigDict(env_file=(".env", "backend/.env"), extra="ignore")
 
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

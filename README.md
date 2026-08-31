@@ -23,6 +23,24 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
+서버를 각 팀원의 PC에서 분리해 실행할 때는 담당 서비스의 예시 파일을 복사합니다.
+
+```powershell
+# 상옥 PC
+Copy-Item frontend/.env.example frontend/.env
+
+# 다혁 PC
+Copy-Item backend/.env.example backend/.env
+
+# 병훈 PC
+Copy-Item legal_mcp/.env.example legal_mcp/.env
+
+# 지혜 PC
+Copy-Item database/.env.example database/.env
+```
+
+각 파일의 `127.0.0.1`은 실제 담당 PC의 내부 IPv4로 변경합니다. `.env` 파일과 API Key는 Git에 올리지 않습니다.
+
 ## 실행
 
 ### 1. MCP Mock Server
@@ -47,11 +65,26 @@ uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 streamlit run frontend/app.py --server.address 0.0.0.0 --server.port 8501
 ```
 
+`.streamlit/config.toml`에 LAN 공개 설정이 포함되어 있으므로 다음 명령만 사용해도 됩니다.
+
+```powershell
+streamlit run frontend/app.py
+```
+
+상옥 PC의 IPv4가 `192.100.200.232`라면 같은 네트워크의 팀원은 `http://192.100.200.232:8501`로 접속합니다. IP는 네트워크 재접속 시 달라질 수 있으므로 실행 전에 `ipconfig`로 다시 확인합니다.
+
 ### 4. PostgreSQL + pgvector
 
 ```powershell
 docker compose up -d postgres
 docker compose ps
+```
+
+지혜 PC에서 `database/.env`를 사용할 때는 다음처럼 실행합니다.
+
+```powershell
+docker compose --env-file database/.env up -d postgres
+docker compose --env-file database/.env ps
 ```
 
 ## 연결 확인
@@ -70,4 +103,3 @@ Frontend에서 카테고리와 질문을 입력하면 Backend가 Mock MCP 결과
 - 실제 MCP 프로토콜과 RAG 구현은 담당 feature 브랜치에서 Mock 계약을 대체합니다.
 
 상세 설계와 역할은 [1차_plan.md](./1차_plan.md)를 참고합니다.
-
