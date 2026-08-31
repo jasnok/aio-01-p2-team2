@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    mcp_server_url: str = "http://127.0.0.1:8001"
+    mcp_server_url: str = "http://192.100.200.72:8011"
     request_timeout_seconds: float = 15
     max_tool_calls: int = 3
     llm_provider: str = "mock"
