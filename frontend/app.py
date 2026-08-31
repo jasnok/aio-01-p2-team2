@@ -3,6 +3,7 @@ import streamlit as st
 from frontend.clients.backend_client import BackendClientError, ask_legal_question
 from frontend.components.answer_view import render_answer
 from frontend.components.connection_status import render_connection_status
+from frontend.components.integration_smoke_test import render_integration_smoke_test
 from frontend.components.question_form import render_question_form
 from frontend.core.session import initialize_session
 
@@ -21,6 +22,7 @@ st.info("이 서비스는 법률 자문이나 판결 예측을 제공하지 않�
 
 with st.sidebar:
     render_connection_status()
+    render_integration_smoke_test()
     st.divider()
     st.subheader("지원 범위")
     st.write("임대차·주거 · 근로·임금 · 중고거래·소비자 분쟁")

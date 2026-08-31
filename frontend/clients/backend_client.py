@@ -60,6 +60,30 @@ def get_backend_health() -> dict:
     return _request("GET", "/health")
 
 
+def get_mcp_integration_status() -> dict:
+    return _request("GET", "/api/integration/mcp")
+
+
+def search_food_mock(
+    region: str = "서울",
+    food_category: str = "한식",
+    max_price: int = 20000,
+    allergy: str = "없음",
+    limit: int = 3,
+) -> dict:
+    return _request(
+        "POST",
+        "/api/integration/mcp/food-search",
+        json={
+            "region": region,
+            "food_category": food_category,
+            "max_price": max_price,
+            "allergy": allergy,
+            "limit": limit,
+        },
+    )
+
+
 def ask_legal_question(category: str, message: str, session_id: str) -> dict:
     payload = _request(
         "POST",

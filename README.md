@@ -105,3 +105,5 @@ Frontend에서 카테고리와 질문을 입력하면 Backend가 Mock MCP 결과
 - 실제 MCP 프로토콜과 RAG 구현은 담당 feature 브랜치에서 Mock 계약을 대체합니다.
 
 상세 설계와 역할은 [1차_plan.md](./1차_plan.md)를 참고합니다.
+
+Frontend → Backend → MCP 연결 확인은 [통합 Smoke Test 가이드](./docs/integration-smoke-test.md)를 참고합니다.
