@@ -1,0 +1,2 @@
+"""Allowlisted Legal MCP tools."""
+

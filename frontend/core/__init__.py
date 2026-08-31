@@ -1,0 +1,2 @@
+"""Frontend configuration and helpers."""
+
