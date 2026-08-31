@@ -23,6 +23,24 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
+서버를 각 팀원의 PC에서 분리해 실행할 때는 담당 서비스의 예시 파일을 복사합니다.
+
+```powershell
+# 상옥 PC
+Copy-Item frontend/.env.example frontend/.env
+
+# 다혁 PC
+Copy-Item backend/.env.example backend/.env
+
+# 병훈 PC
+Copy-Item legal_mcp/.env.example legal_mcp/.env
+
+# 지혜 PC
+Copy-Item database/.env.example database/.env
+```
+
+각 파일의 `127.0.0.1`은 실제 담당 PC의 내부 IPv4로 변경합니다. `.env` 파일과 API Key는 Git에 올리지 않습니다.
+
 ## 실행
 
 ### 1. MCP Mock Server
@@ -60,6 +78,13 @@ streamlit run frontend/app.py
 ```powershell
 docker compose up -d postgres
 docker compose ps
+```
+
+지혜 PC에서 `database/.env`를 사용할 때는 다음처럼 실행합니다.
+
+```powershell
+docker compose --env-file database/.env up -d postgres
+docker compose --env-file database/.env ps
 ```
 
 ## 연결 확인
