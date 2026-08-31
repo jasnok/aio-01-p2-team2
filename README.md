@@ -47,6 +47,14 @@ uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 streamlit run frontend/app.py --server.address 0.0.0.0 --server.port 8501
 ```
 
+`.streamlit/config.toml`에 LAN 공개 설정이 포함되어 있으므로 다음 명령만 사용해도 됩니다.
+
+```powershell
+streamlit run frontend/app.py
+```
+
+상옥 PC의 IPv4가 `192.100.200.232`라면 같은 네트워크의 팀원은 `http://192.100.200.232:8501`로 접속합니다. IP는 네트워크 재접속 시 달라질 수 있으므로 실행 전에 `ipconfig`로 다시 확인합니다.
+
 ### 4. PostgreSQL + pgvector
 
 ```powershell
@@ -70,4 +78,3 @@ Frontend에서 카테고리와 질문을 입력하면 Backend가 Mock MCP 결과
 - 실제 MCP 프로토콜과 RAG 구현은 담당 feature 브랜치에서 Mock 계약을 대체합니다.
 
 상세 설계와 역할은 [1차_plan.md](./1차_plan.md)를 참고합니다.
-
