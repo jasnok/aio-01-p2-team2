@@ -1,4 +1,4 @@
-from schemas.tools import SearchLegalDocumentsInput, ToolResponse
+from legal_mcp.schemas.tools import SearchLegalDocumentsInput, ToolResponse
 
 
 CATEGORY_LABELS = {

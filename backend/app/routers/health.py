@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.mcp_clients.legal_mcp import get_mcp_health
+from backend.app.mcp_clients.legal_mcp import get_mcp_health
 
 
 router = APIRouter(tags=["health"])

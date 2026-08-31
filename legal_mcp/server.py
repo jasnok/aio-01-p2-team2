@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from schemas.tools import SearchLegalDocumentsInput, ToolResponse
-from tools.search import search_legal_documents
+from legal_mcp.schemas.tools import SearchLegalDocumentsInput, ToolResponse
+from legal_mcp.tools.search import search_legal_documents
 
 
 app = FastAPI(title="Legal MCP Mock Server", version="0.1.0")

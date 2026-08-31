@@ -1,7 +1,7 @@
 import uuid
 
-from app.mcp_clients.legal_mcp import search_legal_documents
-from app.schemas.legal import LegalDocument, LegalQuestionRequest, LegalQuestionResponse
+from backend.app.mcp_clients.legal_mcp import search_legal_documents
+from backend.app.schemas.legal import LegalDocument, LegalQuestionRequest, LegalQuestionResponse
 
 
 DISCLAIMER = "이 결과는 서버 연결 확인용 Mock이며 법률 자문이나 실제 법률 정보가 아닙니다."
