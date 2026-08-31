@@ -19,9 +19,11 @@ git clone https://github.com/jasnok/aio-01-p2-team2.git
 cd aio-01-p2-team2
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 Copy-Item .env.example .env
 ```
+
+위 명령은 한 PC에서 전체 테스트를 할 때만 사용합니다. 서버를 각 PC에서 분리할 때는 서비스별 가상환경과 의존성을 사용합니다. 자세한 내용은 [서비스별 실행 가이드](./docs/setup.md)를 참고합니다.
 
 서버를 각 팀원의 PC에서 분리해 실행할 때는 담당 서비스의 예시 파일을 복사합니다.
 
@@ -46,7 +48,7 @@ Copy-Item database/.env.example database/.env
 ### 1. MCP Mock Server
 
 ```powershell
-uvicorn legal_mcp.server:app --host 0.0.0.0 --port 8001
+legal_mcp\.venv\Scripts\python -m uvicorn legal_mcp.server:app --host 0.0.0.0 --port 8001
 ```
 
 ### 2. Backend
@@ -54,7 +56,7 @@ uvicorn legal_mcp.server:app --host 0.0.0.0 --port 8001
 다른 PC의 MCP에 연결한다면 `.env`의 `MCP_SERVER_URL`을 병훈 PC의 내부 IP로 변경합니다.
 
 ```powershell
-uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
+backend\.venv\Scripts\python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 ```
 
 ### 3. Frontend
@@ -62,13 +64,13 @@ uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 다른 PC의 Backend에 연결한다면 `.env`의 `BACKEND_API_URL`을 다혁 PC의 내부 IP로 변경합니다.
 
 ```powershell
-streamlit run frontend/app.py --server.address 0.0.0.0 --server.port 8501
+frontend\.venv\Scripts\python -m streamlit run frontend\app.py --server.address 0.0.0.0 --server.port 8501
 ```
 
 `.streamlit/config.toml`에 LAN 공개 설정이 포함되어 있으므로 다음 명령만 사용해도 됩니다.
 
 ```powershell
-streamlit run frontend/app.py
+frontend\.venv\Scripts\python -m streamlit run frontend\app.py
 ```
 
 상옥 PC의 IPv4가 `192.100.200.232`라면 같은 네트워크의 팀원은 `http://192.100.200.232:8501`로 접속합니다. IP는 네트워크 재접속 시 달라질 수 있으므로 실행 전에 `ipconfig`로 다시 확인합니다.
