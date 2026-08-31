@@ -1,6 +1,6 @@
 import httpx
 
-from app.core.config import get_settings
+from backend.app.core.config import get_settings
 
 
 def get_mcp_health() -> dict:

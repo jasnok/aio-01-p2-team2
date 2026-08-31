@@ -1,0 +1,8 @@
+# Install every service dependency for repository-wide tests and CI.
+-r frontend/requirements.txt
+-r backend/requirements.txt
+-r legal_mcp/requirements.txt
+-r database/requirements.txt
+
+pytest>=8.3,<9.0
+

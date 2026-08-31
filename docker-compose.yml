@@ -3,16 +3,16 @@ services:
     image: pgvector/pgvector:pg16
     container_name: legal-ai-postgres
     environment:
-      POSTGRES_DB: legal_ai
-      POSTGRES_USER: legal_user
-      POSTGRES_PASSWORD: legal_password
+      POSTGRES_DB: ${POSTGRES_DB:-legal_ai}
+      POSTGRES_USER: ${POSTGRES_USER:-legal_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-legal_password}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - legal-postgres-data:/var/lib/postgresql/data
       - ./database/migrations:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U legal_user -d legal_ai"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-legal_user} -d ${POSTGRES_DB:-legal_ai}"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -26,4 +26,3 @@ services:
 
 volumes:
   legal-postgres-data:
-
