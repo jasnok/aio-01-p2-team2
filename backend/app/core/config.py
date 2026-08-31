@@ -5,6 +5,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     mcp_server_url: str = "http://127.0.0.1:8001"
+    food_mcp_url: str = "http://192.100.200.72:8011/mcp"
+    enable_integration_debug: bool = False
+    mcp_request_timeout_seconds: float = 15
     request_timeout_seconds: float = 15
     max_tool_calls: int = 3
     llm_provider: str = "mock"
