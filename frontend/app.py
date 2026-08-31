@@ -1,6 +1,6 @@
 import streamlit as st
 
-from frontend.clients.backend_client import ask_legal_question, get_backend_health
+from clients.backend_client import ask_legal_question, get_backend_health
 
 
 CATEGORIES = {
