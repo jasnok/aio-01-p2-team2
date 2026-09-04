@@ -6,12 +6,22 @@
   --lawpath-radius: 12px;
 }
 
-html, body, [class*="st-"] {
+html, body {
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }
 
+.stApp p, .stApp label, .stApp input, .stApp textarea, .stApp button {
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+}
+
+/* Streamlit 아이콘은 전용 Material Symbols 폰트를 유지해야 글자로 깨지지 않습니다. */
+.material-symbols-rounded,
+.material-symbols-outlined {
+  font-family: "Material Symbols Rounded", "Material Symbols Outlined" !important;
+}
+
 .stApp { background: #ffffff; color: #17233a; }
-header[data-testid="stHeader"] { background: transparent; height: 0; }
+header[data-testid="stHeader"] { display: none !important; }
 section[data-testid="stSidebar"] { width: 270px !important; background: #fbfdff; border-right: 1px solid var(--lawpath-border); }
 section[data-testid="stSidebar"] > div { width: 270px !important; }
 section[data-testid="stSidebar"] .block-container { padding: 1rem .65rem; }
