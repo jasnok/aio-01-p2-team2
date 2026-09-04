@@ -1,0 +1,9 @@
+from typing import Protocol
+
+
+class LegalService(Protocol):
+    def analyze_case(self, category: str, question: str) -> dict: ...
+
+    def search_laws(self, category: str, query: str) -> list[dict]: ...
+
+    def search_cases(self, category: str, query: str) -> list[dict]: ...

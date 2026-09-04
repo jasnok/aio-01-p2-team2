@@ -6,4 +6,60 @@
   --lawpath-radius: 12px;
 }
 
-/* 공통 색상과 간격만 관리합니다. Streamlit 자동 생성 class에는 의존하지 않습니다. */
+html, body, [class*="st-"] {
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+}
+
+.stApp { background: #f8fafc; }
+
+.block-container {
+  max-width: 1480px;
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
+}
+
+.lawpath-brand { color: var(--lawpath-navy); font-size: 2rem; font-weight: 800; line-height: 1; }
+.lawpath-tagline { color: #62718a; font-size: .82rem; margin-top: .35rem; }
+.page-kicker { color: var(--lawpath-blue); font-size: .82rem; font-weight: 700; letter-spacing: .08em; }
+.page-title { color: #173968; font-size: 2rem; font-weight: 800; margin: .25rem 0 .5rem; }
+.page-description { color: #64748b; margin-bottom: 1.6rem; }
+
+.demo-banner {
+  background: #fff8e8;
+  border: 1px solid #f4d58d;
+  border-radius: 10px;
+  color: #795a14;
+  padding: .7rem 1rem;
+  margin: .5rem 0 1rem;
+}
+
+.summary-box {
+  background: linear-gradient(135deg, #f7faff, #eef5ff);
+  border: 1px solid #cdddf5;
+  border-radius: var(--lawpath-radius);
+  padding: 1.25rem;
+  min-height: 190px;
+}
+.summary-box h3 { color: var(--lawpath-navy); margin: 0 0 .75rem; }
+.summary-box p { color: #334155; line-height: 1.7; }
+
+.issue-chip {
+  display: inline-block;
+  background: #eaf2ff;
+  border: 1px solid #d3e1fa;
+  border-radius: 7px;
+  color: #27528e;
+  font-size: .82rem;
+  margin: .2rem .35rem .2rem 0;
+  padding: .35rem .65rem;
+}
+
+.card-label { color: #6b7a90; font-size: .78rem; }
+.card-title { color: var(--lawpath-navy); font-size: 1rem; font-weight: 750; margin: .3rem 0; }
+.score-badge { color: #23885c; background: #e9f8f0; border-radius: 6px; padding: .2rem .45rem; font-size: .75rem; }
+.empty-state { color: #718096; text-align: center; padding: 2.5rem 1rem; }
+.coming-soon { color: #6b7a90; text-align: center; padding: 1.5rem; }
+.footer-note { color: #8190a5; font-size: .78rem; text-align: center; margin-top: 2rem; }
+
+div[data-testid="stButton"] > button { border-radius: 8px; font-weight: 650; }
+div[data-testid="stFormSubmitButton"] > button { border-radius: 8px; font-weight: 700; }

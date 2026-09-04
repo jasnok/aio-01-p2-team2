@@ -123,6 +123,25 @@ Invoke-RestMethod http://127.0.0.1:8000/health
 
 브라우저에서 `http://127.0.0.1:8501`을 엽니다.
 
+### Frontend만 단독으로 확인하기
+
+현재 Frontend MVP는 기본값이 `FRONTEND_DATA_MODE=mock`이므로 Backend, MCP와 DB를 실행하지 않아도 됩니다.
+
+```powershell
+cd C:\dev\aio-01-p2-team2
+.\.venv\Scripts\Activate.ps1
+python -m streamlit run frontend\app.py
+```
+
+홈에서 `임대차·주거`, `근로·임금`, `소비자·중고거래` 중 하나를 선택한 뒤 다음 기능을 확인합니다.
+
+1. `내 사례 분석`에서 대표 질문을 불러오거나 5자 이상 입력합니다.
+2. `법 검색`에서 현재 분야의 키워드를 검색합니다.
+3. `실제 사례`에서 현재 분야의 키워드를 검색합니다.
+4. 나머지 메뉴의 준비 중 화면과 세션 기반 체크리스트·질의 이력을 확인합니다.
+
+모든 결과는 `DEMO MODE`로 표시되는 UI 확인용 예시입니다.
+
 ## 현재 API 계약
 
 질문 Endpoint:

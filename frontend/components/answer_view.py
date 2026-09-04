@@ -1,59 +1,53 @@
-from typing import Any
-
 import streamlit as st
 
+from frontend.components.case_card import render_case_card
+from frontend.components.law_card import render_law_card
+from frontend.components.result_state import render_demo_banner, render_empty
 
-def render_answer(result: dict[str, Any]) -> None:
-    st.divider()
-    if result.get("is_mock"):
-        st.warning("MOCK DATA — 서버 연결 검증용이며 실제 법률 자료가 아닙니다.")
 
-    st.subheader("상황 요약")
-    st.write(result.get("question_summary") or "상황 요약이 제공되지 않았습니다.")
-
-    key_issues = result.get("key_issues") or []
-    if key_issues:
-        st.caption("핵심 쟁점: " + " · ".join(key_issues))
-
-    st.subheader("답변")
-    st.write(result.get("answer") or "답변이 제공되지 않았습니다.")
-
-    laws = result.get("related_laws") or []
-    cases = result.get("similar_cases") or []
-    law_column, case_column = st.columns(2)
+def render_analysis_result(result: dict) -> None:
+    render_demo_banner()
+    st.markdown("### 분석 안내")
+    st.write(result["answer"])
+    law_column, cases_column = st.columns([1, 2.5], gap="large")
     with law_column:
-        _render_documents("관련 법령", laws, "관련 법령을 찾지 못했습니다.")
-    with case_column:
-        _render_documents("유사 사례", cases, "유사 사례를 찾지 못했습니다.")
+        st.markdown("### ▣ 관련 법령")
+        for index, law in enumerate(result.get("related_laws", []), 1):
+            render_law_card(law, index)
+    with cases_column:
+        st.markdown("### ⚖ 유사 판례 TOP 3")
+        case_columns = st.columns(3, gap="small")
+        for index, case in enumerate(result.get("similar_cases", []), 1):
+            with case_columns[index - 1]:
+                render_case_card(case, index)
+    follow_ups = result.get("follow_up_questions", [])
+    if follow_ups:
+        with st.expander("추가로 확인할 내용"):
+            for item in follow_ups:
+                st.markdown(f"- {item}")
+    st.info("\n\n".join(result.get("cautions", [])))
 
-    follow_up_questions = result.get("follow_up_questions") or []
-    if follow_up_questions:
-        st.subheader("추가로 확인할 내용")
-        for question in follow_up_questions:
-            st.markdown(f"- {question}")
 
-    cautions = result.get("cautions") or ["이 답변은 법률 자문이 아닌 정보 제공입니다."]
-    st.info("\n\n".join(cautions))
+def render_law_results(results: list[dict] | None) -> None:
+    if results is None:
+        render_empty("검색어를 입력하면 관련 법령 예시를 표시합니다.")
+    elif not results:
+        render_empty("현재 준비된 예시 법령에서 검색 결과를 찾지 못했습니다.")
+    else:
+        render_demo_banner()
+        for index, law in enumerate(results, 1):
+            render_law_card(law, index)
 
 
-def _render_documents(title: str, documents: list[dict[str, Any]], empty_message: str) -> None:
-    st.subheader(title)
-    if not documents:
-        st.caption(empty_message)
-        return
-
-    for document in documents:
-        with st.container(border=True):
-            st.markdown(f"**{document.get('title', '제목 없음')}**")
-            st.write(document.get("summary") or "요약이 없습니다.")
-            source = document.get("source") or {}
-            source_name = source.get("title") or "출처 미상"
-            source_url = source.get("url")
-            if source_url:
-                st.markdown(f"출처: [{source_name}]({source_url})")
-            else:
-                st.caption(f"출처: {source_name}")
-            if document.get("decided_at"):
-                st.caption(f"선고일: {document['decided_at']}")
-            st.caption(f"문서 ID: {document.get('document_id', '-')}")
+def render_case_results(results: list[dict] | None) -> None:
+    if results is None:
+        render_empty("검색어를 입력하면 유사한 실제 사례 화면 예시를 표시합니다.")
+    elif not results:
+        render_empty("현재 준비된 예시 사례에서 검색 결과를 찾지 못했습니다.")
+    else:
+        render_demo_banner()
+        columns = st.columns(min(3, len(results)), gap="large")
+        for index, case in enumerate(results, 1):
+            with columns[index - 1]:
+                render_case_card(case, index)
 
