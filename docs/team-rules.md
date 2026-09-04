@@ -11,9 +11,8 @@
 
 ## Shared contracts
 
-`backend/app/schemas`, `legal_mcp/schemas`, `docs/api-contract.md`를 변경하기 전에 팀에 공유한다.
+`backend/app/schemas`, `legal_mcp/schemas`, `docs/최종 plan.md`, `docs/AI agent 명세서.md`의 공통 계약을 변경하기 전에 팀에 공유한다.
 
 ## Secrets
 
 `.env`, API Key, DB 비밀번호, 개인정보를 commit하지 않는다.
-

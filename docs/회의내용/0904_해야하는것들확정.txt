@@ -1,0 +1,505 @@
+아래 내용을 세 파일과 함께 팀 채팅에 공유하면 됩니다.
+
+---
+
+팀원분들께 공유드립니다.
+
+09.04 회의 내용과 기존 DB·MCP·Redis·Agent 문서, 현재 구현 상태, Frontend 예시 화면을 종합해서 다음 문서 3개를 작성했습니다.
+
+- `AI agent 명세서.md`
+- `AI agent 테스트 보고서.md`
+- `최종 plan.md`
+
+문서에서 각 항목을 어떻게 결정했는지 쉽게 정리하면 다음과 같습니다.
+
+## 1. DB 자료 구조와 Schema
+
+DB는 다음 세 종류의 데이터를 분리해서 관리하는 방향으로 정했습니다.
+
+```text
+법률 원문
+→ legal_documents
+
+RAG 검색용 Chunk와 Embedding
+→ legal_chunks
+
+수집 작업 기록
+→ ingestion_runs
+```
+
+사용자 저장 기능을 위해 다음 테이블도 포함했습니다.
+
+```text
+users
+saved_conversations
+saved_messages
+saved_message_sources
+```
+
+따라서 총 7개 핵심 테이블을 기준으로 설계했습니다.
+
+ID는 용도가 섞이지 않도록 구분했습니다.
+
+```text
+id
+→ PostgreSQL 내부 PK
+
+external_id
+→ 국가법령정보센터의 원본 문서 ID
+
+document_id
+→ MCP와 Backend에서 사용하는 문서 식별자
+
+session_id
+→ 비로그인 사용자의 임시 세션
+
+request_id/run_id
+→ 질문 한 건의 Agent 실행 ID
+
+agent_id
+→ housing, labor, consumer
+```
+
+Embedding은 MVP 기준으로 다음 값으로 통일했습니다.
+
+```text
+Provider: OpenAI
+Model: text-embedding-3-small
+Dimension: 1536
+```
+
+DB에 문서를 적재할 때와 MCP가 질문을 검색할 때 반드시 같은 모델과 차원을 사용합니다.
+
+DB Schema와 ID 정책은 통합 충돌을 방지하기 위한 추천 확정안입니다. 팀에서 이견이 없다면 이 내용을 Team Contract v1로 사용하면 됩니다.
+
+## 2. Mock 데이터 검색 테스트
+
+현재 저장소의 Mock은 서버 연결을 확인하는 용도이며, 실제 DB/RAG 검색 테스트는 아닙니다.
+
+이번 주에는 공식 출처를 확인한 고정 Seed 데이터를 사용합니다.
+
+```text
+housing: 질문 5개
+labor: 질문 5개
+consumer: 질문 5개
+
+총 15개 평가 질문
+```
+
+통과 기준은 다음과 같습니다.
+
+- 15개 중 최소 12개에서 기대 문서가 Top 3 안에 포함
+- 모든 결과에 공식 출처 URL 포함
+- 다른 카테고리의 문서가 섞이지 않음
+- 같은 문서의 Chunk가 중복 표시되지 않음
+- 결과는 최대 3개
+- score가 높은 순서로 정렬
+- 관련성이 낮으면 빈 결과 반환
+
+여기서 Mock은 허위 법률 내용을 만드는 것이 아니라, 공식 출처를 확인한 소량의 테스트용 데이터를 고정해서 사용하는 의미입니다.
+
+## 3. Open API 데이터 영속 저장
+
+국가법령정보 공동활용 공식 이용안내를 확인했습니다.
+
+공식 안내에서는 제공되는 법령정보가 공공데이터 정책에 따라 개방되고, 영리 목적을 포함해 자유롭게 활용할 수 있다고 설명하고 있습니다.
+
+따라서 다음 방식으로 결정했습니다.
+
+```text
+사용승인을 받은 Open API 데이터
+→ 프로젝트 공통 Schema로 정규화
+→ PostgreSQL에 영속 저장
+```
+
+다만 다음 조건을 지켜야 합니다.
+
+- 공동활용 신청과 승인 후 사용
+- 승인받은 API와 이용 목적 준수
+- 공식 출처와 원문 URL 표시
+- 트래픽 제한 준수
+- 제3자 권리가 포함된 데이터는 별도 조건 확인
+- API Key를 코드, DB, 로그에 저장하거나 공개하지 않음
+- 실제 운영 전 활용사례 등록 등 승인 절차 재확인
+
+DB 저장 가능 여부와 API를 무제한 호출할 수 있는지는 별개입니다. 승인 계정의 실제 호출 제한은 수집 작업 전에 확인해야 합니다.
+
+## 4. Open API 호출 방식
+
+사용자가 질문할 때마다 국가법령정보 Open API를 호출하지 않는 방식으로 정했습니다.
+
+기본 흐름은 다음과 같습니다.
+
+```text
+Open API 목록 조회
+→ external_id 확보
+→ 본문 API 조회
+→ 데이터 정규화
+→ PostgreSQL 저장
+→ Chunking
+→ Embedding
+→ pgvector 저장
+```
+
+사용자 질문이 들어오면 외부 API가 아니라 내부 DB를 검색합니다.
+
+```text
+사용자 질문
+→ Agent
+→ MCP
+→ PostgreSQL + pgvector
+→ 검색 결과
+```
+
+이 방식을 선택한 이유는 다음과 같습니다.
+
+- 외부 API 장애와 지연의 영향을 줄일 수 있음
+- 같은 데이터를 반복 호출하지 않음
+- 같은 문서의 Embedding을 반복 생성하지 않음
+- 검색 결과를 재현하고 테스트하기 쉬움
+- 시연 도중 외부 API 문제로 전체 서비스가 멈추는 것을 방지할 수 있음
+
+## 5. Open API 갱신 방식
+
+데이터 갱신은 `external_id + content_hash` 방식으로 정했습니다.
+
+```text
+external_id가 DB에 없음
+→ 신규 INSERT
+
+external_id가 있고 content_hash가 같음
+→ 변경 없음, SKIP
+
+external_id가 있고 content_hash가 다름
+→ 문서 UPDATE
+→ 기존 Chunk 교체
+→ Embedding 재생성
+```
+
+수집 결과는 `ingestion_runs`에 기록합니다.
+
+```text
+가져온 문서 수
+신규 저장 수
+수정 수
+변경 없음 수
+실패 수
+오류 메시지
+```
+
+MVP에서는 자동 스케줄러를 만들지 않고 다음 시점에 수동으로 실행합니다.
+
+- 개발 데이터 준비 시
+- 통합 테스트 전
+- 최종 시연 전
+
+## 6. 데이터 소스와 범위
+
+데이터 소스는 국가법령정보 공동활용 Open API로 확정했습니다.
+
+MVP에서는 전체 법률 데이터를 수집하지 않고 대표 시연 질문과 관련된 범위부터 사용합니다.
+
+```text
+Housing
+- 주택임대차보호법
+- 민법
+- 임대차보증금
+- 보증금 반환
+- 임대차 종료
+
+Labor
+- 근로기준법
+- 근로자퇴직급여 보장법
+- 퇴직금
+- 임금 체불
+- 부당해고
+
+Consumer
+- 전자상거래법
+- 소비자기본법
+- 민법
+- 중고거래
+- 물품 미배송
+- 환불
+- 매매대금
+```
+
+검색 테스트와 시연에 필요한 범위를 먼저 완성한 뒤 데이터 범위를 확대합니다.
+
+## 7. MCP Tool 기능과 Input/Output
+
+Legal MCP Tool은 다음 3개로 정리했습니다.
+
+```text
+search_laws
+→ 관련 법령 검색
+
+search_cases
+→ 유사 판례 검색
+
+get_law_article
+→ 특정 법령의 특정 조문 조회
+```
+
+공통 검색 입력:
+
+```json
+{
+  "query": "퇴직금을 받지 못했습니다.",
+  "category": "labor",
+  "top_k": 3
+}
+```
+
+정확한 조문 조회 입력:
+
+```json
+{
+  "law_name": "근로기준법",
+  "article_number": "제36조"
+}
+```
+
+모든 Tool은 공통 `ToolResult` 형식을 사용합니다.
+
+```text
+success
+tool
+data
+error_code
+message
+```
+
+검색은 성공했지만 결과가 없으면 오류가 아니라 다음처럼 반환합니다.
+
+```text
+검색 Tool → data=[]
+조문 조회 → data=null
+```
+
+score는 `0.0~1.0` 범위이며 값이 클수록 관련성이 높도록 통일했습니다.
+
+## 8. MCP Server 분리 방식
+
+카테고리별로 MCP Server를 3개 만들지 않고 Legal MCP Server 하나를 사용합니다.
+
+```text
+Legal MCP Server
+├─ Tool
+├─ Service
+├─ Repository
+├─ Embedding Provider
+└─ Database 연결
+```
+
+책임은 다음처럼 구분했습니다.
+
+```text
+Agent
+→ 어떤 Tool을 사용할지 결정
+
+MCP Tool
+→ 요청과 응답 계약 담당
+
+Service
+→ 검색 흐름과 결과 가공
+
+Repository
+→ SQL과 pgvector 검색
+
+PostgreSQL
+→ 법률 데이터 저장
+```
+
+Agent와 Backend는 DB에 직접 접근하지 않습니다.
+
+## 9. AI Agent 구조
+
+세 Agent가 서로 대화하는 Multi-Agent 구조는 사용하지 않습니다.
+
+```text
+사용자 질문
+→ 전문 Agent 하나 선택
+→ 공통 AgentRuntime 실행
+```
+
+Agent는 다음 3개입니다.
+
+```text
+HousingAgent
+LaborAgent
+ConsumerAgent
+```
+
+각 Agent는 실행 코드를 따로 가지지 않고 `AgentProfile`로 역할과 허용 Tool을 정의합니다.
+
+실행은 공통 `AgentRuntime`이 담당합니다.
+
+```text
+LLM이 Tool 선택
+→ Tool 이름과 arguments 검증
+→ MCP 실행
+→ Tool Result를 LLM에 전달
+→ 추가 Tool 또는 최종 답변 결정
+```
+
+먼저 LaborAgent 하나를 Mock Model·Mock Tool과 연결해 전체 Loop를 검증하고, 정상 작동하면 같은 Runtime에 HousingAgent와 ConsumerAgent를 추가하는 방식입니다.
+
+실행 제한은 다음과 같습니다.
+
+```text
+최대 Agent Step: 4
+최대 Tool Call: 3
+MCP Timeout: 10초
+LLM Timeout: 20초
+검색 결과: Top 3
+```
+
+## 10. Agent 안전 정책
+
+Agent는 MCP가 반환한 Evidence만 근거로 사용합니다.
+
+다음 내용은 생성하거나 단정하지 않습니다.
+
+- 검색되지 않은 법령명
+- 검색되지 않은 조문
+- 존재하지 않는 사건번호
+- 존재하지 않는 공식 URL
+- 승소·패소 확률
+- 범죄 성립 여부
+- 보증금이나 임금을 반드시 받을 수 있다는 판단
+
+검색 결과가 없으면 추측하지 않고 `no_evidence`로 처리합니다.
+
+## 11. AI Agent 테스트 보고서
+
+테스트 결과는 다음 상태로 구분했습니다.
+
+```text
+PASS
+FAIL
+NOT RUN
+BLOCKED
+```
+
+현재 실제 결과는 다음과 같습니다.
+
+```text
+기존 Mock/계약 테스트 6개: PASS
+
+AgentProfile/Registry: NOT RUN
+LLM Tool 선택: NOT RUN
+실제 Legal MCP: NOT RUN
+PostgreSQL/pgvector 검색: NOT RUN
+Agent 안전성: NOT RUN
+대표 질문 E2E: NOT RUN
+```
+
+테스트 계획을 만들었다는 이유로 실제 테스트에 성공한 것처럼 표시하지 않았습니다.
+
+향후 테스트에는 다음이 포함됩니다.
+
+- Agent 3개 선택
+- Tool 선택과 재판단
+- 허용되지 않은 Tool 차단
+- MCP 및 LLM 오류
+- 검색 결과 없음
+- 최대 호출 제한
+- 존재하지 않는 조문
+- 허위 판례·URL 생성 방지
+- 승소 확률과 범죄 성립 단정 방지
+
+## 12. Frontend Flow와 디자인
+
+Frontend는 `0903_프론트엔드예시화면.png`를 기준으로 정리했습니다.
+
+구조는 다음 두 방식을 결합합니다.
+
+```text
+메인
+→ 사례 분석 중심의 통합 결과 화면
+
+사이드바
+→ 기능별 메뉴 이동
+```
+
+메인 화면 순서:
+
+```text
+사례 입력
+→ AI 상황 요약
+→ 핵심 쟁점
+→ 관련 법령
+→ 유사 판례 Top 3
+→ 판결 결과·선고일·유사한 점
+→ 쉬운 법률 용어
+→ 필요 서류
+→ 다음 행동
+→ FAQ
+```
+
+핵심 MVP는 다음 세 가지입니다.
+
+```text
+사례 분석
+관련 법령
+유사 판례 Top 3
+```
+
+쉬운 법률 용어, 필요 서류, 다음 행동, FAQ와 질의 이력은 같은 화면 구조를 유지하되 시간이 부족하면 후순위로 둡니다.
+
+화면의 유사도는 검색 점수이며 승소 가능성이 아닙니다. 예시 화면의 사건번호와 판결 내용도 실제 서비스에서는 그대로 사용하지 않고 MCP가 반환한 공식 데이터로 교체합니다.
+
+## 13. 사용자·Redis·저장 기능
+
+회의에서 사용자 테이블을 만드는 방향은 정했습니다. 다만 로그인 기능은 아직 확정하지 않았습니다.
+
+추천안은 다음과 같습니다.
+
+```text
+비로그인 사용자
+→ session_id + Redis + TTL
+
+사용자가 저장하기 선택
+→ PostgreSQL에 질문·답변·근거 저장
+```
+
+Redis는 다음 항목만 임시 저장합니다.
+
+- 최근 대화
+- 요청 상태
+- Tool Timeline
+- 검색 Cache
+
+로그인까지 구현할지는 핵심 검색 기능이 완성된 뒤 결정하는 것이 좋습니다.
+
+## 14. 작업 일정
+
+```text
+09.04
+→ 문서와 팀 계약 정리
+→ DB/Open API/Agent 구조 확정
+→ Frontend 기준 화면 반영
+
+주말
+→ 각 담당자가 구현 준비
+→ LaborAgent + Mock Tool 준비
+→ DB Migration과 Seed 준비
+→ MCP Tool Skeleton 준비
+
+월요일
+→ DB → MCP → Agent → Backend → Frontend 통합
+→ 퇴직금 대표 질문 한 건을 먼저 E2E로 완성
+→ 성공 후 나머지 카테고리 확장
+```
+
+## 팀에서 마지막으로 확인할 사항
+
+다음 항목은 문서 공유 후 팀 승인이 필요합니다.
+
+1. DB 7개 테이블과 ID 정책을 Team Contract v1로 승인할지
+2. 승인받은 Open API 계정의 실제 호출 제한
+3. 익명 사용자와 저장하기 방식으로 갈지
+4. 간단 로그인까지 MVP에 포함할지
+
+위 네 가지 외의 핵심 구조는 세 문서에 서로 같은 기준으로 반영했습니다.
