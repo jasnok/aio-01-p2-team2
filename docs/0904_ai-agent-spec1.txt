@@ -1,0 +1,683 @@
+# 생활 법률 검색 AI Agent 아키텍처 명세서
+
+> 문서 버전: MVP v0.2  
+> 대상: Backend AI Agent, MCP 연동, Agent 단위·통합 테스트  
+> 관련 이전 문서: `docs/ai-agent-spec-v1.md`
+
+## 1. 프로젝트 개요
+
+| 항목 | 내용 |
+|---|---|
+| 프로젝트명 | 생활 법률 검색 AI Agent |
+| 목적 | 사용자의 생활 법률 질문을 담당 분야로 분류하고, 관련 법령과 유사 사례를 검색하여 출처가 포함된 정보를 제공한다. |
+| AI Agent | OpenAI Model이 질문과 MCP Tool Result를 보고 다음 Tool 호출 또는 최종 답변을 판단한다. |
+| Agent 실행 | 공통 Python `AgentRuntime`이 Model 호출, MCP Tool 실행, 반복과 종료를 관리한다. |
+| 전문 Agent | `HousingAgent`, `LaborAgent`, `ConsumerAgent` |
+| Tool 연결 | MCP Server를 통한 `search_laws`, `search_cases`, `get_law_article` 호출 |
+| 검색 데이터 | PostgreSQL + pgvector 또는 결정적인 Mock 데이터 |
+| Backend | FastAPI |
+| 핵심 결과 | 관련 법령, 유사 사례, 검색 근거, 출처, 주의사항이 포함된 답변 |
+
+이 시스템의 세 Agent는 서로 메시지를 주고받지 않는다. 질문에 따라 하나의 전문 Agent를 선택하여 독립적으로 실행하므로, Coordinator를 사용하는 Multi-Agent Orchestration이 아니라 여러 개의 독립적인 Single Agent 구조로 본다.
+
+최우선 성공 조건은 다음 흐름 하나가 끝까지 동작하는 것이다.
+
+```text
+질문
+→ 전문 Agent 선택
+→ LLM의 MCP Tool 선택
+→ 법령·사례 검색
+→ Tool Result 기반 재판단
+→ 법령/사례 Top 3
+→ 출처와 주의사항이 포함된 최종 답변
+```
+
+## 2. Agent Profile 공통 구조
+
+전문 Agent의 설정과 공통 실행 코드를 분리한다. Agent별 차이는 `AgentProfile`에 선언하고, 실행은 하나의 `AgentRuntime`이 담당한다.
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class AgentProfile:
+    agent_id: str
+    name: str
+    goal: str
+    description: str
+    example_question: str
+    instructions: str
+    allowed_tools: frozenset[str]
+```
+
+| 필드 | 타입 | 역할 |
+|---|---|---|
+| `agent_id` | `str` | API, Registry, State에서 Agent를 구분하는 고유 ID |
+| `name` | `str` | 화면과 응답에 표시할 Agent 이름 |
+| `goal` | `str` | Agent가 한 실행에서 달성할 업무 목표 |
+| `description` | `str` | 담당 법률 분야와 사용자 대상 설명 |
+| `example_question` | `str` | 화면 및 테스트에서 사용할 대표 질문 |
+| `instructions` | `str` | Tool 선택, 근거 사용, 금지 행동에 관한 Model 지침 |
+| `allowed_tools` | `frozenset[str]` | 해당 Agent가 호출할 수 있는 MCP Tool Allowlist |
+
+모든 Agent에 적용하는 공통 답변 규칙은 다음과 같다.
+
+- MCP Tool Result에 포함된 법령, 사례와 출처만 답변 근거로 사용한다.
+- 검색되지 않은 법령명, 조문, 사건번호와 URL을 생성하지 않는다.
+- 법률 자문, 위법성, 범죄 성립과 승소 가능성을 확정적으로 표현하지 않는다.
+- 사실관계가 부족하면 필요한 추가 정보를 명시한다.
+- 검색 결과가 없으면 추측하지 않고 근거 부족을 알린다.
+- 최종 답변에 일반 법률정보라는 주의사항을 포함한다.
+
+## 3. Agent별 설계
+
+### 3.1 HousingAgent
+
+```python
+HOUSING_AGENT = AgentProfile(
+    agent_id="housing",
+    name="임대차·주거 Agent",
+    goal="임대차·주거 질문과 관련된 법령 및 유사 사례를 검색한다.",
+    description="전세, 월세, 보증금, 계약갱신과 임대차 분쟁을 담당한다.",
+    example_question="계약이 끝났는데 임대인이 보증금을 돌려주지 않습니다.",
+    instructions="""
+사용자의 임대차·주거 질문을 분석하세요.
+적용 가능성이 있는 법령은 search_laws로 검색하세요.
+유사한 사실관계가 필요하면 search_cases를 사용하세요.
+법률명과 조문 번호가 명확하면 get_law_article을 사용하세요.
+계약 유형, 보증금, 계약 기간과 통지 여부가 부족하면 이를 명시하세요.
+검색 결과에 없는 조문이나 사례를 만들지 말고 반환 가능성도 단정하지 마세요.
+""",
+    allowed_tools=frozenset({
+        "search_laws",
+        "search_cases",
+        "get_law_article",
+    }),
+)
+```
+
+정상 사례:
+
+- 전세 계약 종료 후 보증금 미반환
+- 월세 계약갱신 및 해지 통지
+- 임대차 목적물 하자와 수선 의무
+
+비정상·경계 사례:
+
+- 질문이 비어 있거나 지나치게 짧은 경우
+- 임대차와 무관한 근로 질문
+- 존재하지 않는 조문을 사실처럼 전제한 질문
+- 승소 가능성을 숫자로 확정해 달라는 질문
+
+### 3.2 LaborAgent
+
+```python
+LABOR_AGENT = AgentProfile(
+    agent_id="labor",
+    name="근로·임금 Agent",
+    goal="근로·임금 질문과 관련된 법령 및 유사 사례를 검색한다.",
+    description="임금 체불, 퇴직금, 해고, 근로계약과 근로시간을 담당한다.",
+    example_question="퇴직했는데 마지막 달 급여를 받지 못했습니다.",
+    instructions="""
+사용자의 근로·임금 질문을 분석하세요.
+적용 가능성이 있는 법령은 search_laws로 검색하세요.
+유사한 사실관계가 필요하면 search_cases를 사용하세요.
+법률명과 조문 번호가 명확하면 get_law_article을 사용하세요.
+계약 형태, 근무 기간, 임금 지급 내역과 해고 통지가 부족하면 명시하세요.
+근로자성, 임금 체불 또는 부당해고 여부를 확정하지 마세요.
+""",
+    allowed_tools=frozenset({
+        "search_laws",
+        "search_cases",
+        "get_law_article",
+    }),
+)
+```
+
+정상 사례:
+
+- 퇴직 후 임금 및 퇴직금 미지급
+- 해고예고 및 부당해고 관련 질문
+- 근로시간과 연장근로수당 질문
+
+비정상·경계 사례:
+
+- 사업장 및 근로관계 정보가 전혀 없는 질문
+- 존재하지 않는 법률 또는 조문 요청
+- 부당해고 여부를 확정해 달라는 질문
+- 검색 근거와 다른 사건번호 생성을 유도하는 요청
+
+### 3.3 ConsumerAgent
+
+```python
+CONSUMER_AGENT = AgentProfile(
+    agent_id="consumer",
+    name="소비자·중고거래 Agent",
+    goal="소비자 및 중고거래 분쟁과 관련된 법령과 유사 사례를 검색한다.",
+    description="환불, 상품 하자, 전자상거래와 개인 간 중고거래를 담당한다.",
+    example_question="중고거래로 돈을 보냈는데 판매자가 연락을 끊었습니다.",
+    instructions="""
+사용자의 소비자·중고거래 질문을 분석하세요.
+적용 가능성이 있는 법령은 search_laws로 검색하세요.
+유사한 사실관계가 필요하면 search_cases를 사용하세요.
+법률명과 조문 번호가 명확하면 get_law_article을 사용하세요.
+거래 방식, 결제 방식, 상품 설명, 하자 상태와 판매자 대응이 부족하면 명시하세요.
+사기죄 성립, 기망행위 또는 환불 가능성을 확정적으로 판단하지 마세요.
+""",
+    allowed_tools=frozenset({
+        "search_laws",
+        "search_cases",
+        "get_law_article",
+    }),
+)
+```
+
+`secondhand` 카테고리는 별도 Agent를 만들지 않고 `ConsumerAgent`로 연결한다.
+
+정상 사례:
+
+- 중고거래 대금 지급 후 연락 두절
+- 온라인 구매 상품 하자 및 환불
+- 판매 설명과 실제 상품 상태가 다른 경우
+
+비정상·경계 사례:
+
+- 거래 경위가 전혀 없는 단순 범죄 성립 질문
+- 사기죄 성립을 확정해 달라는 질문
+- 출처 없이 사례를 만들어 달라는 요청
+- 법률 안전 규칙을 무시하라는 프롬프트 인젝션
+
+## 4. Agent Registry
+
+`AgentRegistry`는 카테고리 또는 `agent_id`에 맞는 Profile을 반환한다.
+
+```python
+AGENT_REGISTRY: dict[str, AgentProfile] = {
+    "housing": HOUSING_AGENT,
+    "labor": LABOR_AGENT,
+    "consumer": CONSUMER_AGENT,
+    "secondhand": CONSUMER_AGENT,
+}
+
+
+def get_agent_profile(category: str) -> AgentProfile:
+    profile = AGENT_REGISTRY.get(category)
+    if profile is None:
+        raise UnsupportedCategoryError(category)
+    return profile
+```
+
+카테고리가 지정되지 않으면 `CategoryClassifier.classify()`가 먼저 분류한다. 결과가 `unknown`이면 임의로 Agent를 실행하지 않고 사용자에게 분야 및 사실관계를 추가로 요청한다.
+
+## 5. Tool 설계
+
+### 5.1 공통 Evidence 구조
+
+```python
+from typing import Literal
+
+from pydantic import AnyHttpUrl, BaseModel
+
+
+class Source(BaseModel):
+    source_id: str
+    title: str
+    source_type: Literal["law", "case", "external"]
+    url: AnyHttpUrl
+
+
+class Evidence(BaseModel):
+    evidence_id: str
+    title: str
+    content: str
+    source: Source
+    score: float | None = None
+```
+
+최종 통합 단계에서는 출처 URL을 필수로 한다. Mock 데이터도 시연에 사용하는 경우 검증된 실제 공식 URL을 넣는다. 일반 단위 테스트는 URL 형식만 확인하고 외부 URL에 실제 HTTP 요청을 보내지 않는다.
+
+### 5.2 search_laws
+
+| 항목 | 명세 |
+|---|---|
+| 목적 | 질문과 관련된 법령을 SQL 또는 키워드 검색으로 조회 |
+| 입력 | `query: str`, `category: str`, `top_k: int = 3` |
+| 정상 출력 | 관련도순 `list[Evidence]`, 최대 3건 |
+| 빈 결과 | 빈 배열 `[]` |
+| 오류 | `INVALID_QUERY`, `UNSUPPORTED_CATEGORY`, `SEARCH_ERROR` |
+| 위험도 | `read` |
+
+### 5.3 search_cases
+
+| 항목 | 명세 |
+|---|---|
+| 목적 | 질문과 유사한 사실관계의 사례를 pgvector로 조회 |
+| 입력 | `query: str`, `category: str`, `top_k: int = 3` |
+| 정상 출력 | 유사도순 `list[Evidence]`, 최대 3건 |
+| 빈 결과 | 빈 배열 `[]` |
+| 오류 | `INVALID_QUERY`, `UNSUPPORTED_CATEGORY`, `SEARCH_ERROR` |
+| 위험도 | `read` |
+
+### 5.4 get_law_article
+
+| 항목 | 명세 |
+|---|---|
+| 목적 | 법률명과 조문 번호로 정확한 조문 조회 |
+| 입력 | `law_name: str`, `article_number: str` |
+| 정상 출력 | `Evidence` 1건 |
+| 빈 결과 | `null` 또는 `ARTICLE_NOT_FOUND` 중 MCP 계약으로 확정 필요 |
+| 오류 | `INVALID_LAW_NAME`, `INVALID_ARTICLE_NUMBER`, `SEARCH_ERROR` |
+| 위험도 | `read` |
+
+### 5.5 Tool Result 공통 Envelope
+
+```python
+class ToolResult(BaseModel):
+    success: bool
+    tool: str
+    data: list[Evidence] | Evidence | None
+    error_code: str | None = None
+    message: str | None = None
+```
+
+MCP 담당자와 다음 사항을 통합 전에 확정한다.
+
+- 정확한 Tool 이름
+- arguments 필드명과 타입
+- 빈 결과 표현 방식
+- 오류 코드와 HTTP/MCP 오류 매핑
+- `score` 범위와 정렬 방향
+- 출처 URL 필수 여부
+
+## 6. 공통 Python Agent Loop
+
+세 Agent는 하나의 `run_single_agent()`를 사용한다.
+
+```text
+1. AgentProfile과 사용자 질문으로 AgentState 생성
+2. Profile의 allowed_tools를 Model에 제공
+3. 최초 LLM 호출
+4. Function Call이 있으면 이름과 arguments 검증
+5. 허용된 read Tool이면 MCP를 통해 실행
+6. 모든 Tool Result를 LLM에 다시 전달
+7. LLM이 새 Tool을 선택하면 반복
+8. Tool Call 없이 답변을 반환하면 정상 종료
+9. 최대 단계에 도달하면 안전하게 중단
+```
+
+핵심 함수 계약:
+
+```python
+async def run_single_agent(
+    profile: AgentProfile,
+    question: str,
+) -> AgentState:
+    ...
+
+
+async def execute_tool_call(
+    profile: AgentProfile,
+    call: ToolCall,
+) -> ToolResult:
+    ...
+
+
+def validate_tool_call(
+    profile: AgentProfile,
+    call: ToolCall,
+) -> None:
+    ...
+```
+
+Tool 실행 전 반드시 확인한다.
+
+```python
+if call.tool_name not in profile.allowed_tools:
+    raise InvalidToolCallError(
+        f"{profile.agent_id}에 허용되지 않은 Tool: {call.tool_name}"
+    )
+```
+
+정상 종료 조건:
+
+```python
+calls = [
+    item
+    for item in response.output
+    if item.type == "function_call"
+]
+
+if not calls:
+    state.status = "completed"
+    state.termination_reason = "model_finished"
+    state.answer = response.output_text
+```
+
+실행 제한:
+
+```python
+MAX_AGENT_STEPS = 4
+MAX_TOOL_CALLS = 3
+MCP_TIMEOUT_SECONDS = 10
+LLM_TIMEOUT_SECONDS = 20
+MAX_MODEL_RETRIES = 1
+DEFAULT_TOP_K = 3
+MAX_QUESTION_LENGTH = 2000
+```
+
+| 상황 | `status` | `termination_reason` |
+|---|---|---|
+| Agent 또는 Client 초기화 실패 | `failed` | `startup_error` |
+| OpenAI 호출 실패 | `failed` | `model_error` |
+| Tool 이름 또는 arguments 오류 | `failed` | `invalid_tool_call` |
+| MCP Tool 실행 실패 | `failed` | `mcp_tool_error` |
+| 최대 단계 이후에도 Tool Call 존재 | `stopped` | `max_steps_exceeded` |
+| Tool Call 없이 최종 답변 반환 | `completed` | `model_finished` |
+| 검색 결과 없음 | `completed` | `no_evidence` |
+
+## 7. Agent State
+
+```python
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field
+
+
+class TraceEvent(BaseModel):
+    owner: Literal["runtime", "ai_agent", "mcp", "policy"]
+    stage: str
+    step: int
+    details: dict[str, Any] = Field(default_factory=dict)
+
+
+class AgentState(BaseModel):
+    request_id: str
+    agent_id: str
+    agent_name: str
+    goal: str
+    question: str
+    model: str
+    status: Literal["running", "completed", "failed", "stopped"]
+    termination_reason: str | None = None
+    current_step: int = 0
+    llm_calls: int = 0
+    tool_calls: int = 0
+    evidence_count: int = 0
+    trace: list[TraceEvent] = Field(default_factory=list)
+    answer: str | None = None
+```
+
+| 필드 | 역할 |
+|---|---|
+| `request_id` | API 요청, 로그와 테스트 증거 연결 |
+| `agent_id` | 실행 중인 전문 Agent 구분 |
+| `goal` | 해당 Agent가 달성할 목표 |
+| `status` | 실행 중, 완료, 실패 또는 안전 중단 상태 |
+| `termination_reason` | 완료·실패·중단의 구체적인 이유 |
+| `current_step` | 현재 Agent Loop 단계 |
+| `llm_calls` | 실제 Model 호출 횟수 |
+| `tool_calls` | 실제 MCP Tool 실행 횟수 |
+| `evidence_count` | 수집한 검색 근거 개수 |
+| `trace` | 판단과 실행 과정의 시간순 기록 |
+| `answer` | 최종 사용자 답변 |
+
+State는 API 응답만을 위한 데이터가 아니라 Agent가 무엇을 관찰하고 어떤 Tool을 거쳐 종료했는지 설명하는 테스트 근거다.
+
+## 8. Trace 설계
+
+Trace의 `owner`는 판단과 실행의 책임 주체를 구분한다.
+
+| `owner` | 기록 예시 |
+|---|---|
+| `runtime` | 실행 시작, Model 오류, 최대 단계 초과, 실행 종료 |
+| `ai_agent` | Model의 Tool 선택과 최종 답변 |
+| `mcp` | MCP Tool 실행과 결과 개수 |
+| `policy` | 금지 Tool, 잘못된 arguments, 출처 없는 결과 차단 |
+
+```json
+[
+  {
+    "owner": "runtime",
+    "stage": "run_started",
+    "step": 0,
+    "details": {"agent_id": "labor"}
+  },
+  {
+    "owner": "ai_agent",
+    "stage": "model_selected_tool",
+    "step": 1,
+    "details": {"tool": "search_laws"}
+  },
+  {
+    "owner": "mcp",
+    "stage": "tool_executed",
+    "step": 1,
+    "details": {"tool": "search_laws", "result_count": 3}
+  },
+  {
+    "owner": "ai_agent",
+    "stage": "model_selected_tool",
+    "step": 2,
+    "details": {"tool": "search_cases"}
+  },
+  {
+    "owner": "ai_agent",
+    "stage": "model_final_answer",
+    "step": 3,
+    "details": {}
+  }
+]
+```
+
+운영 로그에는 질문 전문과 개인정보를 그대로 남기지 않는다. 테스트 환경에서는 결정적인 Mock 질문을 사용하고 `request_id`, 선택 Agent, Tool, result count, 실행 시간과 종료 원인을 기록한다.
+
+## 9. Tool 위험도 정책
+
+| 위험도 | 의미 | 실행 방식 |
+|---|---|---|
+| `read` | 조회, 검색처럼 외부 상태를 변경하지 않음 | 검증 후 자동 실행 |
+| `change` | 외부 상태 또는 사용자 데이터 변경 | 현재 MVP에 없음 |
+| `forbidden` | Agent에 허용되지 않은 행동 | 항상 차단 |
+
+```python
+TOOL_RISK = {
+    "search_laws": "read",
+    "search_cases": "read",
+    "get_law_article": "read",
+}
+
+FORBIDDEN_TOOLS = {
+    "submit_complaint",
+    "send_legal_document",
+    "delete_user_document",
+}
+```
+
+Model의 Instructions는 행동 지침이며 보안 경계가 아니다. 실제 Tool 이름, arguments, 호출 횟수와 위험도는 Python Backend가 검사한다.
+
+## 10. State 저장과 Audit
+
+MVP에서는 `request_id` 기준으로 실행 결과를 로그에 남긴다.
+
+```text
+request_id
+agent_id
+status
+termination_reason
+llm_calls
+tool_calls
+evidence_count
+trace
+duration_ms
+```
+
+Redis, 영구 State Store와 사용자별 대화 Context는 핵심 검색 흐름 완성 이후로 미룬다. 운영 확장 시에는 State와 Audit을 별도 저장소에 기록하고 개인정보 마스킹 및 접근 제어를 적용한다.
+
+## 11. Backend API
+
+| Method | Endpoint | 역할 |
+|---|---|---|
+| `GET` | `/health` | Backend와 의존 서비스 상태 확인 |
+| `GET` | `/api/legal/agents` | Agent Profile과 지원 카테고리 조회 |
+| `POST` | `/api/legal/questions` | 질문을 분류하고 Agent를 실행하여 최종 답변 반환 |
+| `GET` | `/api/legal/runs/{request_id}` | 개발·테스트용 Agent State 조회(선택 구현) |
+
+질문 요청:
+
+```json
+{
+  "question": "퇴직했는데 마지막 달 급여를 받지 못했습니다.",
+  "category": null
+}
+```
+
+최종 응답:
+
+```json
+{
+  "request_id": "req-1234",
+  "agent_id": "labor",
+  "status": "completed",
+  "termination_reason": "model_finished",
+  "answer": "검색된 자료에 따르면 임금 지급 관련 법령을 검토할 수 있습니다.",
+  "related_laws": [],
+  "similar_cases": [],
+  "search_basis": [],
+  "sources": [],
+  "cautions": [
+    "구체적인 판단은 사실관계에 따라 달라질 수 있습니다.",
+    "이 답변은 일반적인 법률정보이며 법률 자문이 아닙니다."
+  ]
+}
+```
+
+`trace`는 기본 사용자 응답에서 제외하고 개발·테스트 로그 또는 실행 조회 API를 통해 확인한다.
+
+## 12. 파일별 책임
+
+```text
+backend/app/
+├─ agents/
+│  ├─ models.py              # AgentProfile, AgentState, TraceEvent
+│  ├─ housing_agent.py       # Housing Agent Profile
+│  ├─ labor_agent.py         # Labor Agent Profile
+│  ├─ consumer_agent.py      # Consumer Agent Profile
+│  ├─ registry.py            # Agent 등록과 조회
+│  └─ runtime.py             # 공통 LLM·Tool 반복 및 종료 처리
+├─ providers/
+│  └─ openai.py              # 최초·후속 OpenAI Model 호출
+├─ mcp_clients/
+│  └─ legal_mcp.py           # 법률 MCP Tool 실행
+├─ policies/
+│  └─ tool_policy.py         # Allowlist, arguments와 위험도 검증
+├─ schemas/
+│  ├─ agent.py               # Agent API 및 State 스키마
+│  └─ legal.py               # Evidence, Source, 최종 응답 스키마
+├─ services/
+│  └─ legal_question_service.py  # 분류, Profile 선택, Runtime 연결
+└─ routers/
+   └─ legal.py               # HTTP 요청과 응답
+```
+
+| 파일 | 책임 |
+|---|---|
+| `agents/models.py` | 공통 Profile, State와 Trace 모델 |
+| `agents/*_agent.py` | 분야별 Goal, Instructions와 Allowed Tools |
+| `agents/registry.py` | 카테고리에 맞는 Profile 반환 |
+| `agents/runtime.py` | Model·Tool 반복, 실행 제한과 종료 |
+| `providers/openai.py` | OpenAI 호출과 후속 Tool Result 전달 |
+| `mcp_clients/legal_mcp.py` | MCP Server의 법률 Tool 호출 |
+| `policies/tool_policy.py` | Tool 이름, arguments, 위험도 검증 |
+| `services/legal_question_service.py` | Router와 Agent Runtime 연결 |
+
+Backend와 Agent는 DB에 직접 접근하지 않는다. DB 검색은 MCP Server의 Tool만 수행한다.
+
+## 13. 테스트 기준
+
+### 13.1 Agent Profile 및 Registry
+
+- 세 Agent의 `agent_id`, `goal`, `instructions`, `allowed_tools`가 정의되어 있는가?
+- 임대차 질문이 `HousingAgent`로 연결되는가?
+- 근로 질문이 `LaborAgent`로 연결되는가?
+- 소비자와 중고거래 질문이 `ConsumerAgent`로 연결되는가?
+- `unknown` 카테고리는 임의 Agent 실행 없이 추가 정보를 요청하는가?
+
+### 13.2 Tool 선택 및 실행
+
+- 적용 법령 질문에 `search_laws`가 선택되는가?
+- 유사 사례 질문에 `search_cases`가 선택되는가?
+- 정확한 조문 질문에 `get_law_article`이 선택되는가?
+- 복합 질문에서 Tool Result를 본 뒤 필요한 다음 Tool을 선택하는가?
+- Agent Allowlist에 없는 Tool이 Backend에서 차단되는가?
+- Tool arguments가 잘못되면 MCP 실행 전에 실패하는가?
+
+### 13.3 Agent Loop와 종료
+
+- Tool Call이 없으면 `model_finished`로 정상 종료하는가?
+- 검색 결과가 없으면 `no_evidence`로 종료하고 추측하지 않는가?
+- 최대 반복 횟수를 넘으면 `max_steps_exceeded`로 중단하는가?
+- Model 오류와 MCP 오류가 서로 다른 종료 원인으로 기록되는가?
+- `llm_calls`와 `tool_calls`가 실제 실행 횟수와 일치하는가?
+
+### 13.4 근거와 법률 안전성
+
+- 법령과 사례가 각각 최대 Top 3인가?
+- 모든 Evidence에 출처와 유효한 URL이 존재하는가?
+- 최종 답변의 법령명, 조문과 사건번호가 Tool Result에 존재하는가?
+- 검색 근거에 없는 법률 판단을 생성하지 않는가?
+- 승소 가능성, 범죄 성립과 위법성을 확정적으로 표현하지 않는가?
+- 법률정보 제공에 관한 주의사항을 포함하는가?
+- 안전 지침을 무시하라는 사용자 요청을 따르지 않는가?
+
+### 13.5 State와 Trace
+
+- 실행 시작, Tool 선택, Tool 실행과 최종 답변이 Trace에 기록되는가?
+- 각 Trace Event에 `owner`, `stage`, `step`이 존재하는가?
+- `status`와 `termination_reason` 조합이 실제 결과와 일치하는가?
+- 동일한 `request_id`로 로그와 테스트 결과를 연결할 수 있는가?
+
+### 13.6 대표 E2E 시나리오
+
+```text
+입력: “퇴직했는데 마지막 달 급여를 받지 못했습니다.”
+
+기대 결과:
+1. labor 카테고리 분류
+2. LaborAgent Profile 선택
+3. search_laws 또는 search_cases 선택
+4. MCP Tool Result 수집
+5. 필요한 경우 Tool Result를 보고 다음 Tool 선택
+6. 법령·사례 각 Top 3 이내 반환
+7. 출처와 주의사항이 포함된 최종 답변
+8. status=completed, termination_reason=model_finished
+9. 전체 과정이 Trace에 기록
+```
+
+## 14. 현재 한계와 운영 확장
+
+| 현재 MVP | 운영 확장 |
+|---|---|
+| 임대차·근로·소비자 분야 | 교통 및 추가 생활 법률 분야 |
+| 결정적인 Mock 또는 제한된 DB 데이터 | 검증된 최신 법령·판례 데이터 파이프라인 |
+| 최대 3개 검색 결과 | 품질 평가 기반 동적 검색 결과 수 |
+| 요청 단위 State와 로그 | 영구 State Store와 관리용 Audit 조회 |
+| 단기 단일 질문 | 개인정보를 통제한 대화 Context |
+| 단일 Backend Process | 분산 환경의 추적 및 장애 복구 |
+| 조회 전용 Tool | 외부 상태 변경 기능 추가 시 승인 정책 적용 |
+
+로그인, 관리자 기능, Redis, SSE, PDF RAG와 Multimodal은 핵심 Agent 검색 흐름이 완성된 후 구현한다.
+
+## 15. MVP 완료 조건
+
+- 세 Agent가 Profile로 명확하게 정의되어 있다.
+- 질문에 맞는 Agent Profile이 선택된다.
+- 공통 Agent Runtime이 LLM과 MCP Tool 사이의 반복을 관리한다.
+- Agent는 Allowlist에 포함된 Tool만 호출한다.
+- 법령과 사례가 각각 최대 Top 3까지 반환된다.
+- LLM은 Tool Result에 존재하는 근거만 최종 답변에 사용한다.
+- 모든 법령과 사례에 출처가 포함된다.
+- 근거가 없으면 추측성 답변을 생성하지 않는다.
+- 법률 자문과 승소 가능성을 확정적으로 표현하지 않는다.
+- 정상 완료, 오류와 최대 단계 중단이 State에 구분된다.
+- Agent 선택과 Tool 실행 과정이 Trace에 기록된다.
