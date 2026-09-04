@@ -1,4 +1,4 @@
-from backend.app.schemas.legal import LegalDocument
+from backend.app.schemas.legal import Evidence
 from legal_mcp.schemas.tools import SearchLegalDocumentsInput
 from legal_mcp.tools.search import search_legal_documents
 
@@ -9,5 +9,4 @@ def test_mcp_items_match_backend_legal_document_contract() -> None:
     )
     assert result.success is True
     for item in result.data["items"]:
-        LegalDocument.model_validate(item)
-
+        Evidence.model_validate(item)
