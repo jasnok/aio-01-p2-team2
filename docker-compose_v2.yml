@@ -1,0 +1,42 @@
+# 신규 팀원은 `docker compose up -d`로 PostgreSQL과 Redis를 함께 생성합니다.
+# 이미 legal-pgvector가 있는 현재 PC에서는 이름 충돌을 피하려고
+# `docker compose up -d redis`만 실행합니다.
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: legal-pgvector
+    restart: unless-stopped
+    ports:
+      # 외부 PC의 192.100.200.99:5434를 컨테이너의 PostgreSQL 5432로 연결합니다.
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: legal_ai
+      POSTGRES_USER: legal_user
+      # 실행 전에 PowerShell에서 $env:POSTGRES_PASSWORD를 설정해야 합니다.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+    volumes:
+      # 컨테이너를 재생성해도 PostgreSQL 데이터를 유지합니다.
+      - legal-pgvector-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: legal-redis
+    restart: unless-stopped
+    ports:
+      # 외부 PC의 192.100.200.99:6380을 컨테이너의 Redis 6379로 연결합니다.
+      - "6380:6379"
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --requirepass
+      # 실행 전에 PowerShell에서 $env:REDIS_PASSWORD를 설정해야 합니다.
+      - ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+    volumes:
+      # 컨테이너를 재생성해도 Redis 데이터를 유지합니다.
+      - legal-redis-data:/data
+
+volumes:
+  legal-pgvector-data:
+  legal-redis-data:
