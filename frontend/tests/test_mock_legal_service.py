@@ -33,3 +33,8 @@ def test_analysis_rejects_short_question(question: str) -> None:
 def test_unknown_category_is_rejected() -> None:
     with pytest.raises(ValueError):
         service.search_laws("criminal", "검색어")
+
+
+def test_term_search_filters_name_and_description() -> None:
+    assert service.search_terms("housing", "내용증명")[0][0] == "내용증명"
+    assert service.search_terms("housing", "없는용어") == []

@@ -10,12 +10,23 @@ html, body, [class*="st-"] {
   font-family: "Pretendard", "Noto Sans KR", sans-serif;
 }
 
-.stApp { background: #f8fafc; }
+.stApp { background: #ffffff; color: #17233a; }
+header[data-testid="stHeader"] { background: transparent; height: 0; }
+section[data-testid="stSidebar"] { width: 270px !important; background: #fbfdff; border-right: 1px solid var(--lawpath-border); }
+section[data-testid="stSidebar"] > div { width: 270px !important; }
+section[data-testid="stSidebar"] .block-container { padding: 1rem .65rem; }
 
 .block-container {
   max-width: 1480px;
   padding-top: 1.25rem;
   padding-bottom: 2rem;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+  border-color: var(--lawpath-border) !important;
+  border-radius: var(--lawpath-radius) !important;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(23, 57, 104, .035);
 }
 
 .lawpath-brand { color: var(--lawpath-navy); font-size: 2rem; font-weight: 800; line-height: 1; }
@@ -63,3 +74,6 @@ html, body, [class*="st-"] {
 
 div[data-testid="stButton"] > button { border-radius: 8px; font-weight: 650; }
 div[data-testid="stFormSubmitButton"] > button { border-radius: 8px; font-weight: 700; }
+button[kind="primary"] { background: linear-gradient(135deg, #2b6bd9, #2057bf) !important; border: 0 !important; }
+div[data-testid="stTextArea"] textarea, div[data-testid="stTextInput"] input { border-color: #b9cbe5; border-radius: 8px; }
+div[data-testid="stPopover"] button { border: 0; background: transparent; color: #52657e; }

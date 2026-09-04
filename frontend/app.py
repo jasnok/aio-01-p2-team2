@@ -4,12 +4,14 @@ from frontend.components.analysis_summary import render_analysis_summary
 from frontend.components.answer_view import render_analysis_result, render_case_results, render_law_results
 from frontend.components.app_header import load_theme, render_header
 from frontend.components.category_cards import render_category_cards
-from frontend.components.helper_sections import render_helper_feature
+from frontend.components.helper_sections import render_dashboard_helpers, render_helper_feature
 from frontend.components.question_form import render_question_form
+from frontend.components.qa_panel import render_qa_panel
 from frontend.components.search_forms import render_search_form
 from frontend.components.sidebar import render_sidebar
 from frontend.core.session import initialize_session
 from frontend.data.categories import get_category
+from frontend.core.config import get_frontend_settings
 from frontend.services.factory import get_legal_service
 
 
@@ -35,6 +37,8 @@ def render_workspace() -> None:
     category = get_category(category_code)
     service = get_legal_service()
     render_sidebar(category_code)
+    if get_frontend_settings().frontend_qa_mode:
+        render_qa_panel(service)
     render_header(show_home=True)
     labels = {"analysis": "내 사례 분석", "laws": "법 검색", "cases": "실제 사례", "terms": "쉬운 법률 용어", "documents": "필요 서류", "actions": "다음 행동", "faq": "FAQ", "history": "질의 이력"}
     st.caption(f"{category.name}  ›  {labels[st.session_state.selected_feature]}")
@@ -56,6 +60,7 @@ def render_workspace() -> None:
             render_analysis_summary(st.session_state.last_result)
         if st.session_state.last_result:
             render_analysis_result(st.session_state.last_result)
+            render_dashboard_helpers(category_code)
     elif feature == "laws":
         query = render_search_form("laws")
         if query:
@@ -67,7 +72,7 @@ def render_workspace() -> None:
             st.session_state.case_results = service.search_cases(category_code, query)
         render_case_results(st.session_state.case_results)
     else:
-        render_helper_feature(category_code, feature)
+        render_helper_feature(category_code, feature, service)
 
     st.markdown('<div class="footer-note">본 서비스는 법률 자문이 아니며 실제 사건의 승패를 예측하지 않습니다. 제공 정보는 참고용입니다.</div>', unsafe_allow_html=True)
 

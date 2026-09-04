@@ -7,11 +7,11 @@ FEATURES = [
     ("analysis", "✎", "내 사례 분석", True),
     ("laws", "⌕", "법 검색", True),
     ("cases", "⚖", "실제 사례", True),
-    ("terms", "▣", "쉬운 법률 용어", False),
-    ("documents", "□", "필요 서류", False),
-    ("actions", "◷", "다음 행동", False),
-    ("faq", "?", "FAQ", False),
-    ("history", "↶", "질의 이력", False),
+    ("terms", "▣", "쉬운 법률 용어", True),
+    ("documents", "□", "필요 서류", True),
+    ("actions", "◷", "다음 행동", True),
+    ("faq", "?", "FAQ", True),
+    ("history", "↶", "질의 이력", True),
 ]
 
 

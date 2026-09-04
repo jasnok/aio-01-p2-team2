@@ -35,6 +35,14 @@ class MockLegalService:
     def search_cases(self, category: str, query: str) -> list[dict]:
         return self._search(category, query, "cases")
 
+    def search_terms(self, category: str, query: str) -> list[tuple[str, str]]:
+        get_category(category)
+        normalized = query.strip().lower()
+        terms = MOCK_CATALOG[category]["terms"]
+        if not normalized:
+            return deepcopy(terms)
+        return [deepcopy(item) for item in terms if normalized in f"{item[0]} {item[1]}".lower()]
+
     @staticmethod
     def _search(category: str, query: str, key: str) -> list[dict]:
         get_category(category)
