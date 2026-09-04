@@ -19,6 +19,7 @@ def initialize_session() -> None:
         "document_checks": {},
         "action_checks": {},
         "notifications": ["DEMO 모드로 실행 중입니다."],
+        "presentation_step": 1,
     }
     for key, value in defaults.items():
         if key not in st.session_state:

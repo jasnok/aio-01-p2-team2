@@ -3,12 +3,14 @@ import streamlit as st
 from frontend.components.case_card import render_case_card
 from frontend.components.law_card import render_law_card
 from frontend.components.result_state import render_demo_banner, render_empty
+from frontend.components.result_export import render_result_download
 
 
 def render_analysis_result(result: dict) -> None:
     render_demo_banner()
     st.markdown("### 분석 안내")
     st.write(result["answer"])
+    render_result_download(result)
     law_column, cases_column = st.columns([1, 2.5], gap="large")
     with law_column:
         st.markdown("### ▣ 관련 법령")

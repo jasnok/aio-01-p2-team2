@@ -82,6 +82,29 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 .coming-soon { color: #6b7a90; text-align: center; padding: 1.5rem; }
 .footer-note { color: #8190a5; font-size: .78rem; text-align: center; margin-top: 2rem; }
 
+.input-quality {
+  border-radius: 9px;
+  font-size: .78rem;
+  line-height: 1.6;
+  margin: -.25rem 0 .75rem;
+  padding: .65rem .8rem;
+}
+.input-quality.warn { background: #fff8e8; border: 1px solid #f2d79b; color: #735817; }
+.input-quality.good { background: #eefaf4; border: 1px solid #bfe6d1; color: #226a49; }
+
+div[data-testid="stDownloadButton"] > button {
+  border: 1px solid #b9cbe5;
+  border-radius: 8px;
+  color: var(--lawpath-blue);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .block-container { padding-left: 1rem; padding-right: 1rem; }
+  .page-title { font-size: 1.6rem; }
+  .lawpath-brand { font-size: 1.65rem; }
+}
+
 div[data-testid="stButton"] > button { border-radius: 8px; font-weight: 650; }
 div[data-testid="stFormSubmitButton"] > button { border-radius: 8px; font-weight: 700; }
 button[kind="primary"] { background: linear-gradient(135deg, #2b6bd9, #2057bf) !important; border: 0 !important; }

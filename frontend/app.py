@@ -7,6 +7,7 @@ from frontend.components.category_cards import render_category_cards
 from frontend.components.helper_sections import render_dashboard_helpers, render_helper_feature
 from frontend.components.question_form import render_question_form
 from frontend.components.qa_panel import render_qa_panel
+from frontend.components.presentation_panel import render_presentation_panel
 from frontend.components.search_forms import render_search_form
 from frontend.components.sidebar import render_sidebar
 from frontend.core.session import initialize_session
@@ -37,8 +38,11 @@ def render_workspace() -> None:
     category = get_category(category_code)
     service = get_legal_service()
     render_sidebar(category_code)
-    if get_frontend_settings().frontend_qa_mode:
+    settings = get_frontend_settings()
+    if settings.frontend_qa_mode:
         render_qa_panel(service)
+    if settings.frontend_presentation_mode:
+        render_presentation_panel(service)
     render_header(show_home=True)
     labels = {"analysis": "내 사례 분석", "laws": "법 검색", "cases": "실제 사례", "terms": "쉬운 법률 용어", "documents": "필요 서류", "actions": "다음 행동", "faq": "FAQ", "history": "질의 이력"}
     st.caption(f"{category.name}  ›  {labels[st.session_state.selected_feature]}")

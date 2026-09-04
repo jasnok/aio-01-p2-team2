@@ -8,6 +8,7 @@ class FrontendSettings(BaseSettings):
     frontend_request_timeout_seconds: float = 30
     frontend_data_mode: str = "mock"
     frontend_qa_mode: bool = False
+    frontend_presentation_mode: bool = False
 
     # 통합 실행용 루트 .env를 먼저 읽고, 서비스 전용 파일이 있으면 덮어씁니다.
     model_config = SettingsConfigDict(env_file=(".env", "frontend/.env"), extra="ignore")
