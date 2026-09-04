@@ -1,109 +1,208 @@
-# Legal AI Agent
+# LawPath 생활 법률 검색 AI Agent
 
-일상생활 법률 문제를 대상으로 법령과 유사 사례를 검색하고 출처와 함께 설명하는 팀 프로젝트입니다.
+사용자가 생활 법률 상황을 입력하면 분야별 Agent가 공식 법령과 유사 판례를 검색하고, 출처와 함께 이해하기 쉽게 정리하는 팀 프로젝트입니다.
 
-현재 단계는 네 대의 컴퓨터에서 `Frontend → Backend → Mock MCP` 연결을 검증하기 위한 실행 가능한 뼈대입니다. Mock 결과는 실제 법률 정보가 아닙니다.
+이 저장소는 네 파트가 동시에 개발할 수 있는 실행 가능한 골조입니다. 현재 Mock 결과는 연결과 데이터 계약 확인용이며 실제 법률정보가 아닙니다.
 
-## 기술 기준
+## 1분 만에 구조 이해하기
+
+```text
+사용자
+  ↓
+frontend/   Streamlit 화면
+  ↓ HTTP
+backend/    FastAPI + 분야별 Agent + 실행 정책
+  ↓ MCP
+legal_mcp/  법령·판례 검색 Tool
+  ↓
+PostgreSQL + pgvector
+
+database/   Open API 수집·정규화·Chunk·Embedding
+```
+
+Frontend와 Backend는 DB를 직접 조회하지 않습니다. 법률 검색 DB 조회는 Legal MCP의 Repository를 통해서만 수행합니다.
+
+## 팀원별로 어디를 수정하나요?
+
+| 담당 | 주 작업 폴더 | 하는 일 |
+|---|---|---|
+| 상옥 | `frontend/` | Streamlit 화면, 사용자 입력, 결과 카드 |
+| 다혁 | `backend/` | FastAPI, AgentRuntime, LLM Provider, 정책 |
+| 병훈 | `legal_mcp/` | MCP Tool, 검색 Service, Repository |
+| 지혜 | `database/` | Schema, 수집, 정규화, Chunk, Embedding |
+
+파트 사이 데이터 형식은 `tests/contract/fixtures/`에 있습니다. 이 파일을 변경할 때는 사용하는 파트와 제공하는 파트의 테스트를 함께 수정합니다.
+
+## 주요 폴더
+
+```text
+frontend/              화면과 Backend Client
+backend/app/agents/    분야별 Agent 설정과 공통 Runtime
+backend/app/routers/   HTTP Endpoint
+backend/app/schemas/   Frontend에 공개하는 요청·응답
+backend/app/providers/ LLM Provider
+legal_mcp/tools/       search_laws, search_cases, get_law_article
+legal_mcp/services/    검색 규칙과 결과 가공
+legal_mcp/repositories/SQL·pgvector 조회 경계
+database/migrations/   PostgreSQL Schema
+database/ingestion/    수집·정규화·Chunk·Embedding
+tests/contract/        파트 사이 계약 테스트
+docs/architecture/     구조와 계약 설명
+scripts/               실행과 전체 테스트 명령
+```
+
+더 자세한 책임은 [디렉터리 구조](./docs/architecture/directory-structure.md)를 확인하세요.
+
+## 개발 환경 준비
+
+요구사항:
 
 - Python `>=3.12,<3.13`
-- Frontend: Streamlit
-- Backend: FastAPI
-- MCP 개발 전 연결 계약: FastAPI 기반 Mock endpoint
-- Database: PostgreSQL + pgvector
+- Docker Desktop 또는 PostgreSQL 16 + pgvector
+- PowerShell 기준
 
-## 설치
+처음 한 번만 실행합니다.
 
 ```powershell
 git clone https://github.com/jasnok/aio-01-p2-team2.git
 cd aio-01-p2-team2
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 Copy-Item .env.example .env
 ```
 
-위 명령은 한 PC에서 전체 테스트를 할 때만 사용합니다. 서버를 각 PC에서 분리할 때는 서비스별 가상환경과 의존성을 사용합니다. 자세한 내용은 [서비스별 실행 가이드](./docs/setup.md)를 참고합니다.
+`.env`의 기본값은 한 컴퓨터에서 실행하는 기준입니다. 서비스를 다른 팀원 PC에서 실행한다면 `127.0.0.1`을 해당 PC의 내부 IPv4로 변경합니다. `.env`와 API Key는 절대 commit하지 않습니다.
 
-서버를 각 팀원의 PC에서 분리해 실행할 때는 담당 서비스의 예시 파일을 복사합니다.
+서비스별 가상환경을 쓰려면 [서비스별 실행 가이드](./docs/setup.md)를 확인하세요.
 
-```powershell
-# 상옥 PC
-Copy-Item frontend/.env.example frontend/.env
+## 실행 순서
 
-# 다혁 PC
-Copy-Item backend/.env.example backend/.env
-
-# 병훈 PC
-Copy-Item legal_mcp/.env.example legal_mcp/.env
-
-# 지혜 PC
-Copy-Item database/.env.example database/.env
-```
-
-각 파일의 `127.0.0.1`은 실제 담당 PC의 내부 IPv4로 변경합니다. `.env` 파일과 API Key는 Git에 올리지 않습니다.
-
-## 실행
-
-### 1. MCP Mock Server
-
-```powershell
-legal_mcp\.venv\Scripts\python -m uvicorn legal_mcp.server:app --host 0.0.0.0 --port 8001
-```
-
-### 2. Backend
-
-다른 PC의 MCP에 연결한다면 `.env`의 `MCP_SERVER_URL`을 병훈 PC의 내부 IP로 변경합니다.
-
-```powershell
-backend\.venv\Scripts\python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
-```
-
-### 3. Frontend
-
-다른 PC의 Backend에 연결한다면 `.env`의 `BACKEND_API_URL`을 다혁 PC의 내부 IP로 변경합니다.
-
-```powershell
-frontend\.venv\Scripts\python -m streamlit run frontend\app.py --server.address 0.0.0.0 --server.port 8501
-```
-
-`.streamlit/config.toml`에 LAN 공개 설정이 포함되어 있으므로 다음 명령만 사용해도 됩니다.
-
-```powershell
-frontend\.venv\Scripts\python -m streamlit run frontend\app.py
-```
-
-상옥 PC의 IPv4가 `192.100.200.232`라면 같은 네트워크의 팀원은 `http://192.100.200.232:8501`로 접속합니다. IP는 네트워크 재접속 시 달라질 수 있으므로 실행 전에 `ipconfig`로 다시 확인합니다.
-
-### 4. PostgreSQL + pgvector
+### 1. PostgreSQL 실행
 
 ```powershell
 docker compose up -d postgres
 docker compose ps
 ```
 
-지혜 PC에서 `database/.env`를 사용할 때는 다음처럼 실행합니다.
+기존 개발 볼륨이 예전 Schema로 생성됐다면 [Database 계약](./docs/architecture/database-schema.md)의 주의사항을 먼저 확인하세요.
+
+### 2. Legal MCP 실행
 
 ```powershell
-docker compose --env-file database/.env up -d postgres
-docker compose --env-file database/.env ps
+.\scripts\run_mcp.ps1
 ```
 
-## 연결 확인
+확인:
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8001/health
+```
+
+### 3. Backend 실행
+
+새 PowerShell에서 가상환경을 활성화한 뒤 실행합니다.
+
+```powershell
+.\scripts\run_backend.ps1
+```
+
+확인:
+
+```powershell
 Invoke-RestMethod http://127.0.0.1:8000/health
 ```
 
-Frontend에서 카테고리와 질문을 입력하면 Backend가 Mock MCP 결과를 받아 구조화된 답변을 반환합니다.
+### 4. Frontend 실행
 
-## 주의
+다른 PowerShell에서 실행합니다.
 
-- `.env`와 API Key를 commit하지 않습니다.
-- Mock 결과에는 `is_mock=true`가 포함되며 실제 법률 정보로 사용하면 안 됩니다.
-- 실제 MCP 프로토콜과 RAG 구현은 담당 feature 브랜치에서 Mock 계약을 대체합니다.
+```powershell
+.\scripts\run_frontend.ps1
+```
 
-최종 설계와 역할은 [최종 계획서](./docs/최종%20plan.md), Agent 구조는 [AI Agent 명세서](./docs/AI%20agent%20명세서.md)를 참고합니다.
+브라우저에서 `http://127.0.0.1:8501`을 엽니다.
 
-Frontend → Backend → MCP 연결 확인은 [통합 Smoke Test 가이드](./docs/integration-smoke-test.md)를 참고합니다.
+## 현재 API 계약
+
+질문 Endpoint:
+
+```http
+POST /api/legal/questions
+```
+
+```json
+{
+  "session_id": "web-uuid",
+  "category": "labor",
+  "question": "퇴직했는데 퇴직금을 받지 못했습니다."
+}
+```
+
+지원 category:
+
+- `housing`: 임대차·주거
+- `labor`: 근로·임금
+- `consumer`: 소비자·중고거래
+
+자세한 응답 필드는 [Frontend–Backend API 계약](./docs/architecture/api-contract.md), Tool 형식은 [MCP Tool 계약](./docs/architecture/mcp-tool-contract.md)을 확인하세요.
+
+## 테스트
+
+모든 테스트:
+
+```powershell
+.\scripts\test_all.ps1
+```
+
+계약 테스트만 실행:
+
+```powershell
+python -m pytest tests/contract
+```
+
+기본 CI에서는 OpenAI와 국가법령정보 Open API를 실제 호출하지 않습니다. 외부 서비스가 없어도 Fixture와 Mock Repository로 계약을 확인할 수 있어야 합니다.
+
+## 개발 순서
+
+첫 통합 목표는 다음 한 경로입니다.
+
+```text
+퇴직금 질문
+→ LaborAgent
+→ search_cases
+→ Legal MCP
+→ pgvector
+→ 공식 판례 Top 3
+→ Backend 응답
+→ Frontend 표시
+```
+
+이 경로가 성공한 다음 HousingAgent, ConsumerAgent와 보조 화면을 확장합니다. 자세한 순서는 [통합 가이드](./docs/development/integration-guide.md)를 확인하세요.
+
+## 개발 규칙
+
+1. 자신의 담당 폴더를 중심으로 작업합니다.
+2. 공통 계약을 바꾸기 전에 관련 담당자에게 공유합니다.
+3. Mock은 응답과 화면에 `is_mock=true`를 표시합니다.
+4. 검색되지 않은 법령, 조문, 판례, 사건번호, URL을 생성하지 않습니다.
+5. 검색 점수를 승소 가능성으로 표현하지 않습니다.
+6. `.env`, API Key, DB 비밀번호와 개인정보를 commit하지 않습니다.
+7. PR 전에 `python -m pytest`를 실행합니다.
+8. PR 제목은 한글로 작성합니다.
+
+자세한 팀 규칙은 [팀 개발 규칙](./docs/team-rules.md)을 확인하세요.
+
+## 기준 문서
+
+- [최종 개발 계획](./docs/최종%20plan.md)
+- [AI Agent 명세서](./docs/AI%20agent%20명세서.md)
+- [디렉터리 구조](./docs/architecture/directory-structure.md)
+- [통합 Smoke Test](./docs/integration-smoke-test.md)
+
+## 현재 한계
+
+- Legal MCP의 법률 검색은 아직 Mock 호환 경로를 포함합니다.
+- AgentRuntime과 실제 pgvector Hybrid Search는 후속 기능 PR에서 구현합니다.
+- `mcp_server/FOOD.py`는 초기 네트워크 연결 확인용 레거시입니다.
+- 이 서비스는 법률 자문, 범죄 성립 판단 또는 승패 예측을 제공하지 않습니다.

@@ -84,11 +84,11 @@ def search_food_mock(
     )
 
 
-def ask_legal_question(category: str, message: str, session_id: str) -> dict:
+def ask_legal_question(category: str, question: str, session_id: str) -> dict:
     payload = _request(
         "POST",
         "/api/legal/questions",
-        json={"session_id": session_id, "category": category, "message": message},
+        json={"session_id": session_id, "category": category, "question": question},
     )
     try:
         return LegalQuestionView.model_validate(payload).model_dump(mode="json")

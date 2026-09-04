@@ -1,0 +1,9 @@
+:root {
+  --lawpath-navy: #173968;
+  --lawpath-blue: #2767d8;
+  --lawpath-border: #dce5f2;
+  --lawpath-surface: #f7faff;
+  --lawpath-radius: 12px;
+}
+
+/* 공통 색상과 간격만 관리합니다. Streamlit 자동 생성 class에는 의존하지 않습니다. */

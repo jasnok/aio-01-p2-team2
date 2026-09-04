@@ -1,0 +1,26 @@
+name: 기능 개발
+description: 파트별 기능 개발 또는 공통 구조 변경
+title: "[기능] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 목적
+      description: 해결할 문제와 사용자를 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: 작업 범위
+      description: 변경할 파트, 경로와 계약을 적어주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 완료 조건
+      description: 테스트 가능한 완료 기준을 적어주세요.
+    validations:
+      required: true

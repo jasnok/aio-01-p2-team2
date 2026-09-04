@@ -29,7 +29,7 @@
 | Frontend Flow | 예시 화면 기준 확정 | 사례 분석 중심 결과 화면과 기능별 사이드바를 결합 |
 | Frontend 디자인 | 예시 화면 기준 확정 | `docs/회의내용/0903_프론트엔드예시화면.png`의 LawPath 대시보드 구조 사용 |
 | AI Agent 명세서 | 생성 | `docs/AI agent 명세서.md` |
-| AI Agent 테스트 보고서 | 생성 | `docs/AI agent 테스트 보고서.md` |
+| Agent·검색 테스트 | 계획 확정 | 자동화 테스트와 `tests/evaluation` 결과로 관리 |
 
 ## 3. 확정 시스템 구조
 
@@ -542,7 +542,7 @@ consumer 5개 질문
 - 낮은 관련성은 빈 결과
 - 결과 최대 3개, score 내림차순
 
-테스트는 이번 주에 실행하며 결과를 `docs/AI agent 테스트 보고서.md`에 반영한다.
+테스트는 이번 주에 실행하며 자동화 결과와 평가 데이터를 `tests/evaluation`에서 관리한다.
 
 ## 17. 개발 순서
 

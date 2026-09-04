@@ -11,11 +11,15 @@ def render_answer(result: dict[str, Any]) -> None:
     st.subheader("상황 요약")
     st.write(result.get("question_summary") or "상황 요약이 제공되지 않았습니다.")
 
+    key_issues = result.get("key_issues") or []
+    if key_issues:
+        st.caption("핵심 쟁점: " + " · ".join(key_issues))
+
     st.subheader("답변")
     st.write(result.get("answer") or "답변이 제공되지 않았습니다.")
 
-    laws = result.get("laws") or []
-    cases = result.get("cases") or []
+    laws = result.get("related_laws") or []
+    cases = result.get("similar_cases") or []
     law_column, case_column = st.columns(2)
     with law_column:
         _render_documents("관련 법령", laws, "관련 법령을 찾지 못했습니다.")
@@ -28,13 +32,8 @@ def render_answer(result: dict[str, Any]) -> None:
         for question in follow_up_questions:
             st.markdown(f"- {question}")
 
-    st.info(result.get("disclaimer") or "이 답변은 법률 자문이 아닌 정보 제공입니다.")
-    with st.expander("Agent 실행 Trace", expanded=False):
-        trace = result.get("trace") or []
-        if trace:
-            st.json(trace)
-        else:
-            st.caption("표시할 Trace가 없습니다.")
+    cautions = result.get("cautions") or ["이 답변은 법률 자문이 아닌 정보 제공입니다."]
+    st.info("\n\n".join(cautions))
 
 
 def _render_documents(title: str, documents: list[dict[str, Any]], empty_message: str) -> None:
@@ -45,17 +44,16 @@ def _render_documents(title: str, documents: list[dict[str, Any]], empty_message
 
     for document in documents:
         with st.container(border=True):
-            document_type = document.get("document_type", "DOCUMENT")
-            st.caption(document_type)
             st.markdown(f"**{document.get('title', '제목 없음')}**")
             st.write(document.get("summary") or "요약이 없습니다.")
-            source_name = document.get("source_name") or "출처 미상"
-            source_url = document.get("source_url")
+            source = document.get("source") or {}
+            source_name = source.get("title") or "출처 미상"
+            source_url = source.get("url")
             if source_url:
                 st.markdown(f"출처: [{source_name}]({source_url})")
             else:
                 st.caption(f"출처: {source_name}")
-            if document.get("effective_date"):
-                st.caption(f"기준일: {document['effective_date']}")
+            if document.get("decided_at"):
+                st.caption(f"선고일: {document['decided_at']}")
             st.caption(f"문서 ID: {document.get('document_id', '-')}")
 

@@ -35,7 +35,7 @@ if submission:
             st.write("Backend에 법률 자료 검색을 요청합니다.")
             result = ask_legal_question(
                 category=submission.category,
-                message=submission.message,
+                question=submission.message,
                 session_id=st.session_state.session_id,
             )
             status.update(label="답변 준비가 완료되었습니다.", state="complete", expanded=False)
