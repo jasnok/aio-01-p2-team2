@@ -111,7 +111,7 @@ python -m venv .venv
 → 상옥 Frontend :8501
 → 다혁 Backend :8000
 → 병훈 MCP :8001
-→ 지혜 PostgreSQL :5432
+→ 지혜 PostgreSQL :5434
 ```
 
 각 서버는 다른 PC에서 접근할 수 있도록 `0.0.0.0`에 bind하고 Windows 방화벽에서 담당 포트의 사설 네트워크 접근을 허용한다.
