@@ -86,4 +86,25 @@ div[data-testid="stButton"] > button { border-radius: 8px; font-weight: 650; }
 div[data-testid="stFormSubmitButton"] > button { border-radius: 8px; font-weight: 700; }
 button[kind="primary"] { background: linear-gradient(135deg, #2b6bd9, #2057bf) !important; border: 0 !important; }
 div[data-testid="stTextArea"] textarea, div[data-testid="stTextInput"] input { border-color: #b9cbe5; border-radius: 8px; }
-div[data-testid="stPopover"] button { border: 0; background: transparent; color: #52657e; }
+div[data-testid="stPopover"] > button {
+  min-height: 2.4rem;
+  border: 1px solid transparent !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  color: #405574 !important;
+  font-size: .86rem;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+}
+div[data-testid="stPopover"] > button:hover {
+  border-color: #cfddf0 !important;
+  background: #f1f6ff !important;
+  color: #1f5fc7 !important;
+  transform: translateY(-1px);
+}
+div[data-testid="stPopoverBody"] {
+  border: 1px solid var(--lawpath-border);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(23, 57, 104, .14);
+}
