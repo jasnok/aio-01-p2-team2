@@ -2,7 +2,7 @@ from frontend.data.mock_community import ROLE_USERS, build_mock_questions
 from frontend.services.mock_community_service import can_edit_question, create_question, filter_public_questions, paginate_questions, sort_questions
 
 
-def test_questions_are_sorted_latest_first_and_paginated() -> None:
+def test_questions_are_sorted_pending_first_then_latest_and_paginated() -> None:
     questions = sort_questions(build_mock_questions())
     first = paginate_questions(questions, page=1, page_size=10)
     last = paginate_questions(questions, page=3, page_size=10)
@@ -11,7 +11,12 @@ def test_questions_are_sorted_latest_first_and_paginated() -> None:
     assert first["total_pages"] == 3
     assert len(first["items"]) == 10
     assert len(last["items"]) == 3
-    assert first["items"][0]["created_at"] >= first["items"][-1]["created_at"]
+    statuses = [item["status"] for item in questions]
+    assert statuses == sorted(statuses, key={"PENDING": 0, "ANSWERED": 1}.get)
+    pending = [item for item in questions if item["status"] == "PENDING"]
+    answered = [item for item in questions if item["status"] == "ANSWERED"]
+    assert pending == sorted(pending, key=lambda item: item["created_at"], reverse=True)
+    assert answered == sorted(answered, key=lambda item: item["created_at"], reverse=True)
 
 
 def test_page_is_corrected_when_requested_page_is_out_of_range() -> None:

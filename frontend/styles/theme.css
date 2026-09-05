@@ -22,8 +22,22 @@ html, body {
 
 .stApp { background: #ffffff; color: #17233a; }
 header[data-testid="stHeader"] { display: none !important; }
-section[data-testid="stSidebar"] { width: 270px !important; background: #fbfdff; border-right: 1px solid var(--lawpath-border); }
-section[data-testid="stSidebar"] > div { width: 270px !important; }
+/* 너비는 펼쳐진 상태에만 지정한다. 접힌 상태까지 강제하면 내용이 좁은 띠로 남는다. */
+section[data-testid="stSidebar"] { background: #fbfdff; border-right: 1px solid var(--lawpath-border); }
+section[data-testid="stSidebar"][aria-expanded="true"] { width: 270px !important; min-width: 270px !important; }
+section[data-testid="stSidebar"][aria-expanded="true"] > div:first-child { width: 270px !important; }
+section[data-testid="stSidebar"][aria-expanded="false"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  border-right: 0;
+}
+section[data-testid="stSidebar"][aria-expanded="false"] > div:first-child,
+section[data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarContent"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden;
+}
 section[data-testid="stSidebar"] .block-container { padding: 1rem .65rem; }
 
 .block-container {

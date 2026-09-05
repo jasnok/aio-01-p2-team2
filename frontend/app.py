@@ -5,6 +5,7 @@ from frontend.components.answer_view import render_analysis_result, render_case_
 from frontend.components.app_header import load_theme, render_header
 from frontend.components.category_cards import render_category_cards
 from frontend.components.helper_sections import render_dashboard_helpers, render_helper_feature
+from frontend.components.integration_smoke_test import render_integration_smoke_test
 from frontend.components.question_form import render_question_form
 from frontend.components.qa_panel import render_qa_panel
 from frontend.components.presentation_panel import render_presentation_panel
@@ -42,6 +43,7 @@ def render_workspace() -> None:
     settings = get_frontend_settings()
     if settings.frontend_qa_mode:
         render_qa_panel(service)
+        render_integration_smoke_test()
     if settings.frontend_presentation_mode:
         render_presentation_panel(service)
     render_header(show_home=True)

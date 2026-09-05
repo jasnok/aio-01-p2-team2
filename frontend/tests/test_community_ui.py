@@ -20,10 +20,14 @@ def test_public_question_board_paginates_and_guest_can_delete_own_question() -> 
 
     assert app.session_state["question_page"] == 1
     assert app.button(key="question-next")
+    first_page_titles = [item["title"] for item in app.session_state["public_questions"] if item["status"] == "PENDING"][:10]
     app.button(key="question-next").click().run(timeout=20)
     assert app.session_state["question_page"] == 2
+    assert app.button(key="question-page-1")
 
-    app.button(key="question-prev").click().run(timeout=20)
+    app.button(key="question-page-1").click().run(timeout=20)
+    assert app.session_state["question_page"] == 1
+    assert first_page_titles
     before = len(app.session_state["public_questions"])
     app.button(key="delete-question-1002").click().run(timeout=20)
     assert len(app.session_state["public_questions"]) == before - 1

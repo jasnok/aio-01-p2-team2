@@ -3,7 +3,16 @@ from uuid import uuid4
 
 
 def sort_questions(questions: list[dict]) -> list[dict]:
-    return sorted(questions, key=lambda item: (item["created_at"], item["id"]), reverse=True)
+    """답변 대기를 먼저, 각 상태 안에서는 최신 질문을 먼저 보여준다."""
+    status_order = {"PENDING": 0, "ANSWERED": 1}
+    return sorted(
+        questions,
+        key=lambda item: (
+            status_order.get(item["status"], 2),
+            -datetime.fromisoformat(item["created_at"]).timestamp(),
+            item["id"],
+        ),
+    )
 
 
 def paginate_questions(questions: list[dict], page: int, page_size: int = 10) -> dict:

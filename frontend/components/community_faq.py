@@ -7,7 +7,7 @@ from frontend.services.mock_community_service import can_edit_question, create_q
 
 
 CATEGORY_LABELS = {"all": "전체", **{item.code: item.name for item in CATEGORIES.values()}}
-STATUS_LABELS = {"all": "전체", "PENDING": "답변 대기", "ANSWERED": "답변 완료", "FAILED": "답변 실패"}
+STATUS_LABELS = {"all": "전체", "PENDING": "답변 대기", "ANSWERED": "답변 완료"}
 
 
 def _format_time(value: str) -> str:
@@ -49,6 +49,12 @@ def _ask_again(item: dict) -> None:
     copied = create_question(st.session_state.current_user, item["category"], f"{item['title']} (다시 질문)", item["content"], item["visibility"] == "PUBLIC")
     st.session_state.public_questions.append(copied)
     st.session_state.question_page = 1
+
+
+def _set_question_page(page: int) -> None:
+    """Streamlit 재실행 전 목표 페이지를 명시적으로 저장한다."""
+    total_pages = st.session_state.get("question_total_pages", 1)
+    st.session_state.question_page = max(1, min(page, total_pages))
 
 
 def render_community_faq(category_code: str) -> None:
@@ -93,6 +99,7 @@ def render_community_faq(category_code: str) -> None:
     filtered = filter_public_questions(st.session_state.public_questions, category_filter, status_filter, query)
     page = paginate_questions(filtered, st.session_state.question_page, st.session_state.question_page_size)
     st.session_state.question_page = page["page"]
+    st.session_state.question_total_pages = page["total_pages"]
     st.caption(f"전체 {page['total_items']}건 · {page['page']}/{page['total_pages']} 페이지")
 
     if not page["items"]:
@@ -124,7 +131,30 @@ def render_community_faq(category_code: str) -> None:
                         _save_edit(item["id"], edited_title, edited_content)
                         st.rerun()
 
-    controls = st.columns([1, 3, 1])
-    controls[0].button("← 이전", key="question-prev", disabled=not page["has_previous"], on_click=lambda: st.session_state.update(question_page=max(1, st.session_state.question_page - 1)), use_container_width=True)
-    controls[1].markdown(f"<div class='pagination-label'>{page['page']} / {page['total_pages']}</div>", unsafe_allow_html=True)
-    controls[2].button("다음 →", key="question-next", disabled=not page["has_next"], on_click=lambda: st.session_state.update(question_page=st.session_state.question_page + 1), use_container_width=True)
+    page_numbers = list(range(1, page["total_pages"] + 1))
+    controls = st.columns([1, *([0.55] * len(page_numbers)), 1])
+    controls[0].button(
+        "← 이전",
+        key="question-prev",
+        disabled=not page["has_previous"],
+        on_click=_set_question_page,
+        args=(page["page"] - 1,),
+        use_container_width=True,
+    )
+    for index, page_number in enumerate(page_numbers, start=1):
+        controls[index].button(
+            str(page_number),
+            key=f"question-page-{page_number}",
+            disabled=page_number == page["page"],
+            on_click=_set_question_page,
+            args=(page_number,),
+            use_container_width=True,
+        )
+    controls[-1].button(
+        "다음 →",
+        key="question-next",
+        disabled=not page["has_next"],
+        on_click=_set_question_page,
+        args=(page["page"] + 1,),
+        use_container_width=True,
+    )
