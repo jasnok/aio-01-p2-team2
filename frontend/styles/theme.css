@@ -6,4 +6,143 @@
   --lawpath-radius: 12px;
 }
 
-/* 공통 색상과 간격만 관리합니다. Streamlit 자동 생성 class에는 의존하지 않습니다. */
+html, body {
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+}
+
+.stApp p, .stApp label, .stApp input, .stApp textarea, .stApp button {
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+}
+
+/* Streamlit 아이콘은 전용 Material Symbols 폰트를 유지해야 글자로 깨지지 않습니다. */
+.material-symbols-rounded,
+.material-symbols-outlined {
+  font-family: "Material Symbols Rounded", "Material Symbols Outlined" !important;
+}
+
+.stApp { background: #ffffff; color: #17233a; }
+header[data-testid="stHeader"] { display: none !important; }
+/* 너비는 펼쳐진 상태에만 지정한다. 접힌 상태까지 강제하면 내용이 좁은 띠로 남는다. */
+section[data-testid="stSidebar"] { background: #fbfdff; border-right: 1px solid var(--lawpath-border); }
+section[data-testid="stSidebar"][aria-expanded="true"] { width: 270px !important; min-width: 270px !important; }
+section[data-testid="stSidebar"][aria-expanded="true"] > div:first-child { width: 270px !important; }
+section[data-testid="stSidebar"][aria-expanded="false"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  border-right: 0;
+}
+section[data-testid="stSidebar"][aria-expanded="false"] > div:first-child,
+section[data-testid="stSidebar"][aria-expanded="false"] [data-testid="stSidebarContent"] {
+  width: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden;
+}
+section[data-testid="stSidebar"] .block-container { padding: 1rem .65rem; }
+
+.block-container {
+  max-width: 1480px;
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+  border-color: var(--lawpath-border) !important;
+  border-radius: var(--lawpath-radius) !important;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(23, 57, 104, .035);
+}
+
+.lawpath-brand { color: var(--lawpath-navy); font-size: 2rem; font-weight: 800; line-height: 1; }
+.lawpath-tagline { color: #62718a; font-size: .82rem; margin-top: .35rem; }
+.page-kicker { color: var(--lawpath-blue); font-size: .82rem; font-weight: 700; letter-spacing: .08em; }
+.page-title { color: #173968; font-size: 2rem; font-weight: 800; margin: .25rem 0 .5rem; }
+.page-description { color: #64748b; margin-bottom: 1.6rem; }
+
+.demo-banner {
+  background: #fff8e8;
+  border: 1px solid #f4d58d;
+  border-radius: 10px;
+  color: #795a14;
+  padding: .7rem 1rem;
+  margin: .5rem 0 1rem;
+}
+
+.summary-box {
+  background: linear-gradient(135deg, #f7faff, #eef5ff);
+  border: 1px solid #cdddf5;
+  border-radius: var(--lawpath-radius);
+  padding: 1.25rem;
+  min-height: 190px;
+}
+.summary-box h3 { color: var(--lawpath-navy); margin: 0 0 .75rem; }
+.summary-box p { color: #334155; line-height: 1.7; }
+
+.issue-chip {
+  display: inline-block;
+  background: #eaf2ff;
+  border: 1px solid #d3e1fa;
+  border-radius: 7px;
+  color: #27528e;
+  font-size: .82rem;
+  margin: .2rem .35rem .2rem 0;
+  padding: .35rem .65rem;
+}
+
+.card-label { color: #6b7a90; font-size: .78rem; }
+.card-title { color: var(--lawpath-navy); font-size: 1rem; font-weight: 750; margin: .3rem 0; }
+.score-badge { color: #23885c; background: #e9f8f0; border-radius: 6px; padding: .2rem .45rem; font-size: .75rem; }
+.empty-state { color: #718096; text-align: center; padding: 2.5rem 1rem; }
+.coming-soon { color: #6b7a90; text-align: center; padding: 1.5rem; }
+.footer-note { color: #8190a5; font-size: .78rem; text-align: center; margin-top: 2rem; }
+.pagination-label { color: #52657f; font-weight: 700; padding: .55rem; text-align: center; }
+
+.input-quality {
+  border-radius: 9px;
+  font-size: .78rem;
+  line-height: 1.6;
+  margin: -.25rem 0 .75rem;
+  padding: .65rem .8rem;
+}
+.input-quality.warn { background: #fff8e8; border: 1px solid #f2d79b; color: #735817; }
+.input-quality.good { background: #eefaf4; border: 1px solid #bfe6d1; color: #226a49; }
+
+div[data-testid="stDownloadButton"] > button {
+  border: 1px solid #b9cbe5;
+  border-radius: 8px;
+  color: var(--lawpath-blue);
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .block-container { padding-left: 1rem; padding-right: 1rem; }
+  .page-title { font-size: 1.6rem; }
+  .lawpath-brand { font-size: 1.65rem; }
+}
+
+div[data-testid="stButton"] > button { border-radius: 8px; font-weight: 650; }
+div[data-testid="stFormSubmitButton"] > button { border-radius: 8px; font-weight: 700; }
+button[kind="primary"] { background: linear-gradient(135deg, #2b6bd9, #2057bf) !important; border: 0 !important; }
+div[data-testid="stTextArea"] textarea, div[data-testid="stTextInput"] input { border-color: #b9cbe5; border-radius: 8px; }
+div[data-testid="stPopover"] > button {
+  min-height: 2.4rem;
+  border: 1px solid transparent !important;
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  color: #405574 !important;
+  font-size: .86rem;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+}
+div[data-testid="stPopover"] > button:hover {
+  border-color: #cfddf0 !important;
+  background: #f1f6ff !important;
+  color: #1f5fc7 !important;
+  transform: translateY(-1px);
+}
+div[data-testid="stPopoverBody"] {
+  border: 1px solid var(--lawpath-border);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(23, 57, 104, .14);
+}

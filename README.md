@@ -96,7 +96,7 @@ docker compose ps
 확인:
 
 ```powershell
-Invoke-RestMethod http://127.0.0.1:8001/health
+Invoke-RestMethod http://127.0.0.1:8011/health
 ```
 
 ### 3. Backend 실행
@@ -122,6 +122,60 @@ Invoke-RestMethod http://127.0.0.1:8000/health
 ```
 
 브라우저에서 `http://127.0.0.1:8501`을 엽니다.
+
+### Frontend만 단독으로 확인하기
+
+현재 Frontend MVP는 기본값이 `FRONTEND_DATA_MODE=mock`이므로 Backend, MCP와 DB를 실행하지 않아도 됩니다.
+
+```powershell
+cd C:\dev\aio-01-p2-team2
+.\.venv\Scripts\Activate.ps1
+python -m streamlit run frontend\app.py
+```
+
+홈에서 `임대차·주거`, `근로·임금`, `소비자·중고거래` 중 하나를 선택한 뒤 다음 기능을 확인합니다.
+
+1. `내 사례 분석`에서 대표 질문을 불러오거나 5자 이상 입력합니다.
+2. `법 검색`에서 현재 분야의 키워드를 검색합니다.
+3. `실제 사례`에서 현재 분야의 키워드를 검색합니다.
+4. `쉬운 법률 용어`에서 용어를 검색합니다.
+5. `필요 서류`와 `다음 행동`을 체크하고 진행률·초기화를 확인합니다.
+6. `FAQ`를 검색하고 답변을 펼칩니다.
+7. `질의 이력`에서 결과를 다시 보거나 삭제합니다.
+8. `FAQ`에서 공지형 FAQ와 최신 사용자 질문을 확인하고 Mock 질문을 작성합니다.
+9. QA 모드에서 비회원·회원·관리자 역할을 바꿔 역할별 화면을 확인합니다.
+
+모든 결과는 `DEMO MODE`로 표시되는 UI 확인용 예시입니다.
+
+모든 Frontend 기능을 자동으로 한 번에 확인하려면 다음 명령을 실행합니다.
+
+```powershell
+python -m pytest frontend\tests
+```
+
+QA 버튼으로 여러 화면 상태를 빠르게 확인하려면 `.env`에서 다음 값을 사용합니다.
+
+```text
+FRONTEND_QA_MODE=true
+```
+
+Streamlit을 다시 실행하면 사이드바에 `QA 빠른 테스트`가 나타납니다. 임대차·근로·소비자 결과, 결과 없음, 긴 입력과 세션 초기화 상태를 버튼으로 불러올 수 있습니다. 일반 시연에서는 `false`로 둡니다.
+
+### 발표용 데모와 추가 화면 기능
+
+`.env`에서 아래 값을 켜고 Streamlit을 다시 실행하면 사이드바에서 대표 임대차 시나리오를 즉시 준비할 수 있습니다.
+
+```text
+FRONTEND_PRESENTATION_MODE=true
+```
+
+발표 순서는 `분야 선택 → 사례 분석 → 법령·판례 상세 확인 → Markdown 결과 저장`입니다. 일반 사용 때는 `false`로 둡니다.
+
+현재 Frontend는 입력 품질 안내, 법령·판례 상세 펼쳐 보기, 분석 결과 Markdown 저장과 작은 화면용 레이아웃 보정을 지원합니다.
+
+FAQ 하단에는 공개 사용자 질문이 최신순으로 10건씩 표시됩니다. Mock 비회원은 작성 후 7일, Mock 회원은 영구보관 예정 안내가 표시되며, 작성자는 답변 전 수정·삭제 또는 답변 후 `수정해서 다시 질문`을 사용할 수 있습니다. 관리자 Mock 역할에는 공지 FAQ 관리 메뉴가 나타납니다.
+
+상세 수동 점검 순서는 [프론트엔드 테스트 체크리스트](./docs/프론트엔드%20테스트%20체크리스트.md)를 확인하세요.
 
 ## 현재 API 계약
 
@@ -198,7 +252,7 @@ python -m pytest tests/contract
 - [최종 개발 계획](./docs/최종%20plan.md)
 - [AI Agent 명세서](./docs/AI%20agent%20명세서.md)
 - [디렉터리 구조](./docs/architecture/directory-structure.md)
-- [통합 Smoke Test](./docs/integration-smoke-test.md)
+- [개발 통합 및 연결 확인](./docs/development/integration-guide.md)
 
 ## 현재 한계
 

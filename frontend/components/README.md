@@ -7,3 +7,5 @@
 - 이후 분리: 상황 요약, 법령 카드, 판례 카드, 후속 질문, 결과 상태
 
 컴포넌트는 Backend를 직접 호출하지 않고, 전달받은 검증된 View Model만 표시합니다.
+
+현재 로컬 MVP는 `frontend/services/mock_legal_service.py`를 사용합니다. Backend 연동 시 UI를 수정하지 않고 `LegalService` 구현만 교체합니다.

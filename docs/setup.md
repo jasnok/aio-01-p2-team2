@@ -21,6 +21,11 @@ Copy-Item frontend\.env.example frontend\.env
 ```env
 BACKEND_API_URL=http://192.100.200.195:8000
 FRONTEND_REQUEST_TIMEOUT_SECONDS=30
+TEAM_FRONTEND_URL=http://192.100.200.232:8501
+TEAM_BACKEND_URL=http://192.100.200.195:8000
+TEAM_MCP_URL=http://192.100.200.72:8011
+TEAM_DATABASE_HOST=192.100.200.99
+TEAM_DATABASE_PORT=5434
 ```
 
 실행:
@@ -29,7 +34,7 @@ FRONTEND_REQUEST_TIMEOUT_SECONDS=30
 frontend\.venv\Scripts\python -m streamlit run frontend\app.py
 ```
 
-팀원은 `http://상옥_PC_IP:8501`로 접속한다.
+팀원은 `http://192.100.200.232:8501`로 접속한다. 팀 연결 점검 창을 사용하려면 `FRONTEND_QA_MODE=true`로 설정하고 Streamlit을 재시작한다.
 
 ## Backend — 다혁 PC
 
@@ -43,7 +48,7 @@ Copy-Item backend\.env.example backend\.env
 `backend/.env`에서 병훈 PC의 MCP 주소와 LLM 설정을 입력한다.
 
 ```env
-MCP_SERVER_URL=http://병훈_PC_IP:8001
+MCP_SERVER_URL=http://192.100.200.72:8011
 ```
 
 실행:
@@ -64,13 +69,13 @@ Copy-Item legal_mcp\.env.example legal_mcp\.env
 `legal_mcp/.env`에서 지혜 PC의 DB 주소와 필요한 Provider Key를 설정한다.
 
 ```env
-DATABASE_URL=postgresql://사용자:비밀번호@지혜_PC_IP:5434/legal_ai
+DATABASE_URL=postgresql://사용자:비밀번호@192.100.200.99:5434/legal_ai
 ```
 
 현재 Mock HTTP 서버 실행:
 
 ```powershell
-legal_mcp\.venv\Scripts\python -m uvicorn legal_mcp.server:app --host 0.0.0.0 --port 8001
+legal_mcp\.venv\Scripts\python -m uvicorn legal_mcp.server:app --host 0.0.0.0 --port 8011
 ```
 
 실제 MCP transport가 구현되면 병훈 담당 실행 명령으로 교체한다.
@@ -110,9 +115,11 @@ python -m venv .venv
 팀원 브라우저
 → 상옥 Frontend :8501
 → 다혁 Backend :8000
-→ 병훈 MCP :8001
+→ 병훈 MCP :8011
 → 지혜 PostgreSQL :5434
 ```
 
 각 서버는 다른 PC에서 접근할 수 있도록 `0.0.0.0`에 bind하고 Windows 방화벽에서 담당 포트의 사설 네트워크 접근을 허용한다.
+
+상세 확인 명령과 장애 점검 순서는 `docs/development/integration-guide.md`를 따른다.
 
