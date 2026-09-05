@@ -96,7 +96,7 @@ docker compose ps
 확인:
 
 ```powershell
-Invoke-RestMethod http://127.0.0.1:8001/health
+Invoke-RestMethod http://127.0.0.1:8011/health
 ```
 
 ### 3. Backend 실행
@@ -252,7 +252,7 @@ python -m pytest tests/contract
 - [최종 개발 계획](./docs/최종%20plan.md)
 - [AI Agent 명세서](./docs/AI%20agent%20명세서.md)
 - [디렉터리 구조](./docs/architecture/directory-structure.md)
-- [통합 Smoke Test](./docs/integration-smoke-test.md)
+- [개발 통합 및 연결 확인](./docs/development/integration-guide.md)
 
 ## 현재 한계
 
