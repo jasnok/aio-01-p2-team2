@@ -1,4 +1,4 @@
-# Backend–Legal MCP 계약
+# Backend–Legal MCP 도구 명세서
 
 ## 확정 Tool
 

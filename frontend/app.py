@@ -16,6 +16,9 @@ from frontend.core.session import initialize_session
 from frontend.data.categories import get_category
 from frontend.core.config import get_frontend_settings
 from frontend.services.factory import get_legal_service
+from frontend.core.workflow import MockScenarioError
+from frontend.components.analysis_progress import render_analysis_error, render_analysis_progress, render_workflow_run
+from frontend.components.follow_up_chat import render_follow_up_chat
 
 
 st.set_page_config(page_title="LawPath", page_icon="⚖️", layout="wide", initial_sidebar_state="expanded")
@@ -56,17 +59,38 @@ def render_workspace() -> None:
         with input_column:
             submission = render_question_form(category_code)
         if submission:
+            st.session_state.analysis_in_progress = True
+            st.session_state.analysis_error = None
             try:
-                with st.spinner("사례를 정리하고 화면용 자료를 찾고 있습니다..."):
-                    result = service.analyze_case(category_code, submission.message)
+                render_workflow_run(st.session_state.mock_scenario)
+                result = service.analyze_case(
+                    category_code,
+                    submission.message,
+                    scenario=st.session_state.mock_scenario,
+                )
                 st.session_state.last_result = result
                 st.session_state.session_history.append(result)
+            except MockScenarioError as error:
+                st.session_state.last_result = None
+                st.session_state.analysis_error = {
+                    "code": error.code,
+                    "stage": error.stage,
+                    "message": error.user_message,
+                    "next_action": error.next_action,
+                    "retryable": error.retryable,
+                }
             except ValueError as error:
                 st.error(str(error))
+            finally:
+                st.session_state.analysis_in_progress = False
+        if st.session_state.analysis_error:
+            render_analysis_error(st.session_state.analysis_error)
         with summary_column:
             render_analysis_summary(st.session_state.last_result)
         if st.session_state.last_result:
+            render_analysis_progress(completed=True)
             render_analysis_result(st.session_state.last_result)
+            render_follow_up_chat(st.session_state.last_result, service)
             render_dashboard_helpers(category_code)
     elif feature == "laws":
         query = render_search_form("laws")

@@ -51,7 +51,7 @@ docs/architecture/     구조와 계약 설명
 scripts/               실행과 전체 테스트 명령
 ```
 
-더 자세한 책임은 [디렉터리 구조](./docs/architecture/directory-structure.md)를 확인하세요.
+더 자세한 책임은 [디렉터리 구조](./docs/architecture/디렉터리%20구조.md)를 확인하세요.
 
 ## 개발 환경 준비
 
@@ -74,7 +74,7 @@ Copy-Item .env.example .env
 
 `.env`의 기본값은 한 컴퓨터에서 실행하는 기준입니다. 서비스를 다른 팀원 PC에서 실행한다면 `127.0.0.1`을 해당 PC의 내부 IPv4로 변경합니다. `.env`와 API Key는 절대 commit하지 않습니다.
 
-서비스별 가상환경을 쓰려면 [서비스별 실행 가이드](./docs/setup.md)를 확인하세요.
+서비스별 가상환경을 쓰려면 [서비스별 실행 가이드](./docs/개발환경%20구성.md)를 확인하세요.
 
 ## 실행 순서
 
@@ -85,7 +85,7 @@ docker compose up -d postgres
 docker compose ps
 ```
 
-기존 개발 볼륨이 예전 Schema로 생성됐다면 [Database 계약](./docs/architecture/database-schema.md)의 주의사항을 먼저 확인하세요.
+기존 개발 볼륨이 예전 Schema로 생성됐다면 [데이터베이스 명세서](./docs/architecture/데이터베이스%20명세서.md)의 주의사항을 먼저 확인하세요.
 
 ### 2. Legal MCP 실행
 
@@ -199,7 +199,7 @@ POST /api/legal/questions
 - `labor`: 근로·임금
 - `consumer`: 소비자·중고거래
 
-자세한 응답 필드는 [Frontend–Backend API 계약](./docs/architecture/api-contract.md), Tool 형식은 [MCP Tool 계약](./docs/architecture/mcp-tool-contract.md)을 확인하세요.
+자세한 응답 필드는 [API 명세서](./docs/architecture/API%20명세서.md), Tool 형식은 [MCP 도구 명세서](./docs/architecture/MCP%20도구%20명세서.md)를 확인하세요.
 
 ## 테스트
 
@@ -232,7 +232,7 @@ python -m pytest tests/contract
 → Frontend 표시
 ```
 
-이 경로가 성공한 다음 HousingAgent, ConsumerAgent와 보조 화면을 확장합니다. 자세한 순서는 [통합 가이드](./docs/development/integration-guide.md)를 확인하세요.
+이 경로가 성공한 다음 HousingAgent, ConsumerAgent와 보조 화면을 확장합니다. 자세한 순서는 [통합 가이드](./docs/development/개발%20통합%20가이드.md)를 확인하세요.
 
 ## 개발 규칙
 
@@ -245,14 +245,16 @@ python -m pytest tests/contract
 7. PR 전에 `python -m pytest`를 실행합니다.
 8. PR 제목은 한글로 작성합니다.
 
-자세한 팀 규칙은 [팀 개발 규칙](./docs/team-rules.md)을 확인하세요.
+자세한 팀 규칙은 [팀 개발 규칙](./docs/팀%20개발%20규칙.md)을 확인하세요.
 
 ## 기준 문서
 
 - [최종 개발 계획](./docs/최종%20plan.md)
 - [AI Agent 명세서](./docs/AI%20agent%20명세서.md)
-- [디렉터리 구조](./docs/architecture/directory-structure.md)
-- [개발 통합 및 연결 확인](./docs/development/integration-guide.md)
+- [API 명세서](./docs/architecture/API%20명세서.md)
+- [디렉터리 구조](./docs/architecture/디렉터리%20구조.md)
+- [개발 통합 및 연결 확인](./docs/development/개발%20통합%20가이드.md)
+- [팀 합의 요청사항](./docs/팀%20합의%20요청사항.md)
 
 ## 현재 한계
 

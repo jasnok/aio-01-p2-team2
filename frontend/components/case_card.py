@@ -3,7 +3,7 @@ import streamlit as st
 
 def render_case_card(case: dict, index: int) -> None:
     with st.container(border=True):
-        st.caption(f"DEMO {index} · {case['court']} · 관련도 {round(case['score'] * 100)}%")
+        st.caption(f"근거 C{index} · DEMO · {case['court']} · 관련도 {round(case['score'] * 100)}%")
         st.markdown(f"**{case['title']}**")
         st.caption(f"{case['case_number']} · {case['date']}")
         st.markdown(f"판결 결과: **{case['result']}**")
@@ -17,3 +17,4 @@ def render_case_card(case: dict, index: int) -> None:
             for point in case.get("points", []):
                 st.markdown(f"- {point}")
             st.info("관련도는 문서 유사도 예시이며 승소 가능성을 뜻하지 않습니다.")
+            st.caption("공식 판례 원문 URL은 Backend·MCP 연동 후 제공됩니다.")

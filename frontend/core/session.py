@@ -32,6 +32,11 @@ def initialize_session() -> None:
         "question_edit_id": None,
         "admin_faq_edit_id": None,
         "history_filter": "all",
+        "analysis_in_progress": False,
+        "analysis_error": None,
+        "mock_scenario": "success",
+        "conversation_messages": [],
+        "evaluation_results": [],
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -44,6 +49,8 @@ def select_category(category: str) -> None:
         st.session_state.law_results = None
         st.session_state.case_results = None
         st.session_state.question_message = ""
+        st.session_state.conversation_messages = []
+        st.session_state.analysis_error = None
     st.session_state.selected_category = category
     st.session_state.selected_feature = "analysis"
     st.session_state.current_page = "workspace"
