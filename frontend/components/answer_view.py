@@ -9,17 +9,32 @@ from frontend.components.result_export import render_result_download
 def render_analysis_result(result: dict) -> None:
     render_demo_banner()
     st.markdown("### 분석 안내")
+    state = result.get("result_state", "completed")
+    if state == "no_evidence":
+        st.warning("공식 근거가 부족합니다. 아래 안내는 법률 판단이 아닙니다.")
+    elif state == "no_results":
+        st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
     st.write(result["answer"])
+    if result.get("related_laws") or result.get("similar_cases"):
+        law_refs = " ".join(f"**[법령 {index}]**" for index, _ in enumerate(result.get("related_laws", []), 1))
+        case_refs = " ".join(f"**[판례 {index}]**" for index, _ in enumerate(result.get("similar_cases", []), 1))
+        st.caption(f"답변 근거: {law_refs} {case_refs}")
     render_result_download(result)
     law_column, cases_column = st.columns([1, 2.5], gap="large")
     with law_column:
         st.markdown("### ▣ 관련 법령")
-        for index, law in enumerate(result.get("related_laws", []), 1):
+        laws = result.get("related_laws", [])
+        if not laws:
+            render_empty("표시할 공식 법령 근거가 없습니다.")
+        for index, law in enumerate(laws, 1):
             render_law_card(law, index)
     with cases_column:
         st.markdown("### ⚖ 유사 판례 TOP 3")
+        cases = result.get("similar_cases", [])
+        if not cases:
+            render_empty("표시할 유사 판례가 없습니다.")
         case_columns = st.columns(3, gap="small")
-        for index, case in enumerate(result.get("similar_cases", []), 1):
+        for index, case in enumerate(cases, 1):
             with case_columns[index - 1]:
                 render_case_card(case, index)
     follow_ups = result.get("follow_up_questions", [])

@@ -96,6 +96,16 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 .coming-soon { color: #6b7a90; text-align: center; padding: 1.5rem; }
 .footer-note { color: #8190a5; font-size: .78rem; text-align: center; margin-top: 2rem; }
 .pagination-label { color: #52657f; font-weight: 700; padding: .55rem; text-align: center; }
+.workflow-step {
+  min-height: 78px;
+  padding: .65rem .35rem;
+  border: 1px solid var(--lawpath-border);
+  border-radius: 10px;
+  background: var(--lawpath-surface);
+  text-align: center;
+}
+.workflow-step span { display: block; font-size: 1.1rem; margin-bottom: .25rem; }
+.workflow-step small { color: #405574; font-weight: 700; line-height: 1.25; }
 
 .input-quality {
   border-radius: 9px;
@@ -118,6 +128,15 @@ div[data-testid="stDownloadButton"] > button {
   .block-container { padding-left: 1rem; padding-right: 1rem; }
   .page-title { font-size: 1.6rem; }
   .lawpath-brand { font-size: 1.65rem; }
+  .workflow-step { min-height: 64px; padding: .45rem .2rem; }
+  .workflow-step small { font-size: .68rem; }
+}
+
+@media (max-width: 640px) {
+  .block-container { padding-left: .65rem; padding-right: .65rem; }
+  .page-title { font-size: 1.35rem; line-height: 1.3; }
+  div[data-testid="stHorizontalBlock"] { flex-wrap: wrap; }
+  div[data-testid="column"] { min-width: min(100%, 280px) !important; flex: 1 1 100% !important; }
 }
 
 div[data-testid="stButton"] > button { border-radius: 8px; font-weight: 650; }
