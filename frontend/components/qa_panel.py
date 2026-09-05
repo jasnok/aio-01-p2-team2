@@ -1,6 +1,6 @@
 import streamlit as st
 
-from frontend.core.session import reset_session, select_category
+from frontend.core.session import reset_session, select_category, set_mock_role
 from frontend.data.mock_catalog import MOCK_CATALOG
 from frontend.services.base import LegalService
 
@@ -32,6 +32,10 @@ def render_qa_panel(service: LegalService) -> None:
     with st.sidebar:
         with st.expander("🧪 QA 빠른 테스트"):
             st.caption("개발용 화면 상태를 한 번에 불러옵니다.")
+            st.caption("역할 전환 · 실제 인증 아님")
+            role_columns = st.columns(3)
+            for column, role, label in zip(role_columns, ("GUEST", "USER", "ADMIN"), ("비회원", "회원", "관리자"), strict=True):
+                column.button(label, key=f"qa-role-{role.lower()}", on_click=set_mock_role, args=(role,), use_container_width=True)
             for category in MOCK_CATALOG:
                 label = {"housing": "임대차 결과", "labor": "근로 결과", "consumer": "소비자 결과"}[category]
                 st.button(label, key=f"qa-{category}", on_click=_load_scenario, args=(category, service), use_container_width=True)

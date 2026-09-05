@@ -27,6 +27,11 @@ def render_sidebar(category_code: str) -> None:
             if st.button(f"{icon}  {label}{suffix}", key=f"nav-{code}", type=button_type, use_container_width=True):
                 select_feature(code)
                 st.rerun()
+        if st.session_state.current_user["role"] == "ADMIN":
+            button_type = "primary" if st.session_state.selected_feature == "admin_faq" else "secondary"
+            if st.button("🛠  FAQ 관리 · MOCK", key="nav-admin-faq", type=button_type, use_container_width=True):
+                select_feature("admin_faq")
+                st.rerun()
         st.divider()
         st.caption("DEMO MODE · Backend 연결 없음")
         st.info("화면의 법령과 사례는 UI 확인용 예시이며 실제 법률정보가 아닙니다.")

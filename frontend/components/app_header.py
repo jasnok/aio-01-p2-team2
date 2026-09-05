@@ -29,10 +29,14 @@ def render_header(show_home: bool = False) -> None:
             else:
                 st.caption("새로운 알림이 없습니다.")
     with user_area:
-        with st.popover("👤 비로그인", use_container_width=True):
-            st.markdown("### 👤 비로그인 사용자")
+        user = st.session_state.current_user
+        role_label = {"GUEST": "비회원", "USER": "회원", "ADMIN": "관리자"}[user["role"]]
+        with st.popover(f"👤 {role_label}", use_container_width=True):
+            st.markdown(f"### 👤 {user['display_name']}")
+            st.caption("Mock 역할 · 실제 인증 아님")
             st.caption(f"현재 세션 · {st.session_state.session_id[-8:]}")
-            st.write("질의 이력과 체크 상태는 현재 브라우저 세션에만 보관됩니다.")
+            policy = "7일 보관 예정" if user["role"] == "GUEST" else "영구보관 예정"
+            st.write(f"질의 이력 정책: {policy}. 현재는 브라우저 Session에만 보관됩니다.")
             if st.button("🔄 세션 초기화", key="reset-session", use_container_width=True):
                 from frontend.core.session import reset_session
 

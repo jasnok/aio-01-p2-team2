@@ -8,6 +8,7 @@ from frontend.components.helper_sections import render_dashboard_helpers, render
 from frontend.components.question_form import render_question_form
 from frontend.components.qa_panel import render_qa_panel
 from frontend.components.presentation_panel import render_presentation_panel
+from frontend.components.admin_faq import render_admin_faq
 from frontend.components.search_forms import render_search_form
 from frontend.components.sidebar import render_sidebar
 from frontend.core.session import initialize_session
@@ -44,7 +45,7 @@ def render_workspace() -> None:
     if settings.frontend_presentation_mode:
         render_presentation_panel(service)
     render_header(show_home=True)
-    labels = {"analysis": "내 사례 분석", "laws": "법 검색", "cases": "실제 사례", "terms": "쉬운 법률 용어", "documents": "필요 서류", "actions": "다음 행동", "faq": "FAQ", "history": "질의 이력"}
+    labels = {"analysis": "내 사례 분석", "laws": "법 검색", "cases": "실제 사례", "terms": "쉬운 법률 용어", "documents": "필요 서류", "actions": "다음 행동", "faq": "FAQ", "history": "질의 이력", "admin_faq": "FAQ 관리"}
     st.caption(f"{category.name}  ›  {labels[st.session_state.selected_feature]}")
 
     feature = st.session_state.selected_feature
@@ -75,6 +76,8 @@ def render_workspace() -> None:
         if query:
             st.session_state.case_results = service.search_cases(category_code, query)
         render_case_results(st.session_state.case_results)
+    elif feature == "admin_faq":
+        render_admin_faq()
     else:
         render_helper_feature(category_code, feature, service)
 

@@ -3,6 +3,8 @@ import streamlit as st
 from frontend.core.session import restore_history_item
 from frontend.data.mock_catalog import MOCK_CATALOG
 from frontend.services.base import LegalService
+from frontend.components.community_faq import render_community_faq
+from frontend.components.unified_history import render_unified_history
 
 
 def _clear_checklist(keys: list[str]) -> None:
@@ -19,9 +21,9 @@ def render_helper_feature(category: str, feature: str, service: LegalService) ->
     elif feature == "actions":
         _render_checklist(category, "다음 행동", data["actions"], "action", numbered=True)
     elif feature == "faq":
-        _render_faq(category, data["faqs"])
+        render_community_faq(category)
     elif feature == "history":
-        _render_history()
+        render_unified_history()
 
 
 def _render_terms(category: str, service: LegalService) -> None:

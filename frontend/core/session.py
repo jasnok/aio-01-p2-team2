@@ -2,6 +2,9 @@ import uuid
 
 import streamlit as st
 
+from copy import deepcopy
+from frontend.data.mock_community import MOCK_FAQ_ARTICLES, ROLE_USERS, build_mock_questions
+
 
 def initialize_session() -> None:
     defaults = {
@@ -20,6 +23,15 @@ def initialize_session() -> None:
         "action_checks": {},
         "notifications": ["DEMO 모드로 실행 중입니다."],
         "presentation_step": 1,
+        "mock_role": "GUEST",
+        "current_user": deepcopy(ROLE_USERS["GUEST"]),
+        "faq_articles": deepcopy(MOCK_FAQ_ARTICLES),
+        "public_questions": build_mock_questions(),
+        "question_page": 1,
+        "question_page_size": 10,
+        "question_edit_id": None,
+        "admin_faq_edit_id": None,
+        "history_filter": "all",
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -43,6 +55,14 @@ def go_home() -> None:
 
 def select_feature(feature: str) -> None:
     st.session_state.selected_feature = feature
+
+
+def set_mock_role(role: str) -> None:
+    if role not in ROLE_USERS:
+        raise ValueError("지원하지 않는 Mock 역할입니다.")
+    st.session_state.mock_role = role
+    st.session_state.current_user = deepcopy(ROLE_USERS[role])
+    st.session_state.question_edit_id = None
 
 
 def reset_session() -> None:

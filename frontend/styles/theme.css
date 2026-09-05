@@ -81,6 +81,7 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
 .empty-state { color: #718096; text-align: center; padding: 2.5rem 1rem; }
 .coming-soon { color: #6b7a90; text-align: center; padding: 1.5rem; }
 .footer-note { color: #8190a5; font-size: .78rem; text-align: center; margin-top: 2rem; }
+.pagination-label { color: #52657f; font-weight: 700; padding: .55rem; text-align: center; }
 
 .input-quality {
   border-radius: 9px;
