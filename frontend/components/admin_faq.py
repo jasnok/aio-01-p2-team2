@@ -2,6 +2,7 @@ from uuid import uuid4
 
 import streamlit as st
 
+from frontend.core.config import get_frontend_settings
 from frontend.data.categories import CATEGORIES
 
 
@@ -24,6 +25,11 @@ def _save_faq(faq_id: str, question: str, answer: str, category: str) -> None:
 
 
 def render_admin_faq() -> None:
+    if get_frontend_settings().frontend_data_mode.lower() == "api":
+        from frontend.components.api_admin_faq import render_api_admin_faq
+
+        render_api_admin_faq()
+        return
     if st.session_state.current_user["role"] != "ADMIN":
         st.error("관리자 Mock 역할에서만 확인할 수 있습니다.")
         return

@@ -2,6 +2,7 @@ import streamlit as st
 
 from frontend.core.session import select_feature
 from frontend.data.categories import get_category
+from frontend.core.config import get_frontend_settings
 
 FEATURES = [
     ("analysis", "✎", "내 사례 분석", True),
@@ -33,5 +34,9 @@ def render_sidebar(category_code: str) -> None:
                 select_feature("admin_faq")
                 st.rerun()
         st.divider()
-        st.caption("DEMO MODE · Backend 연결 없음")
-        st.info("화면의 법령과 사례는 UI 확인용 예시이며 실제 법률정보가 아닙니다.")
+        if get_frontend_settings().frontend_data_mode.lower() == "api":
+            st.caption("API MODE · Backend 연결")
+            st.info("Backend 응답의 is_mock 표시와 공식 출처를 확인해 주세요.")
+        else:
+            st.caption("DEMO MODE · Backend 연결 없음")
+            st.info("화면의 법령과 사례는 UI 확인용 예시이며 실제 법률정보가 아닙니다.")

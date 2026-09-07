@@ -2,6 +2,7 @@ from datetime import datetime
 
 import streamlit as st
 
+from frontend.core.config import get_frontend_settings
 from frontend.data.categories import CATEGORIES
 from frontend.services.mock_community_service import (
     can_comment_question,
@@ -191,6 +192,11 @@ def _render_comments(question: dict, is_unlocked: bool) -> None:
 
 
 def render_community_faq(category_code: str) -> None:
+    if get_frontend_settings().frontend_data_mode.lower() == "api":
+        from frontend.components.api_community_faq import render_api_community_faq
+
+        render_api_community_faq(category_code)
+        return
     st.markdown("### 📌 자주 하는 질문")
     st.caption("모든 사용자가 확인할 수 있는 안내입니다.")
     articles = sorted(

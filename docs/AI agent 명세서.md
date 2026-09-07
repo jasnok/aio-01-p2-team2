@@ -5,6 +5,16 @@
 > 이전 버전: `docs/회의내용/0905_AI agent 명세서.md`
 > 범위: Frontend·Backend·Legal MCP·DB·Redis·Supabase 전체 프로젝트
 
+## 0. 2026-09-07 구현 상태
+
+- 일반 CRUD는 Agent/MCP가 아닌 Backend가 담당하며 Frontend와 실제 연동됐다.
+- Backend에 Agent Run 생성·조회·취소·SSE Endpoint가 존재한다.
+- Frontend API Client에 Agent Run 생성·조회·취소 연결 지점을 준비했다.
+- 현재 Streamlit 사례 분석은 기존 동기 API를 사용하며 polling/SSE UI는 아직 연결하지 않았다.
+- Backend의 MCP 초기화와 Tool 발견은 성공했지만 실제 법률 Tool 실행 결과는 재검증이 필요하다.
+- Database health는 `ok`, Redis는 `disabled` 상태다.
+- Frontend 자동 테스트 76개, MCP 비의존 실제 Frontend–Backend 통합 테스트 3개가 통과했다.
+
 ## 1. v1에서 변경된 점
 
 | 항목 | v1 | v2 |

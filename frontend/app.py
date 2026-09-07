@@ -144,12 +144,18 @@ def render_workspace() -> None:
     elif feature == "laws":
         query = render_search_form("laws")
         if query:
-            st.session_state.law_results = service.search_laws(category_code, query)
+            try:
+                st.session_state.law_results = service.search_laws(category_code, query)
+            except ValueError as error:
+                st.error(str(error))
         render_law_results(st.session_state.law_results)
     elif feature == "cases":
         query = render_search_form("cases")
         if query:
-            st.session_state.case_results = service.search_cases(category_code, query)
+            try:
+                st.session_state.case_results = service.search_cases(category_code, query)
+            except ValueError as error:
+                st.error(str(error))
         render_case_results(st.session_state.case_results)
     elif feature == "admin_faq":
         render_admin_faq()

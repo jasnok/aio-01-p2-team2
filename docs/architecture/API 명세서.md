@@ -6,7 +6,8 @@
 >
 > 적용 기준: 이 문서의 경로·필드·상태·오류 형식을 Frontend–Backend 구현 계약으로 사용한다.
 >
-> 현재 구현: Health, 법률 질문 API / 다음 구현: 인증, FAQ, 사용자 질문·댓글, 질의 이력, 알림
+> 현재 구현: Health, 인증, FAQ, 사용자 질문·댓글, 질의 이력, 알림, 관리자, Agent Run API
+> 전체 E2E 대기: 실제 MCP 법률 Tool 실행, Redis Session·진행 상태
 
 ## 1. 문서 목적
 
@@ -538,6 +539,7 @@ DELETE /api/questions/{question_id}
 - Frontend·로그·오류 응답에는 게시글 비밀번호와 Hash를 반환하지 않는다.
 - `PENDING` 질문만 원문 수정 가능하다.
 - `ANSWERED` 질문은 기존 근거 보존을 위해 직접 수정하지 않는다.
+- 관리자는 운영 목적으로 모든 질문을 삭제할 수 있다. 관리자 삭제 요청에는 `reason`이 필수이며 감사 로그를 남긴다.
 
 잠금 해제 요청:
 
@@ -728,7 +730,7 @@ GET    /api/notifications/unread-count
 PATCH  /api/notifications/{notification_id}/read
 PATCH  /api/notifications/read-all
 DELETE /api/notifications/{notification_id}
-DELETE /api/notifications/read
+DELETE /api/notifications/read-items
 ```
 
 규칙:
@@ -741,7 +743,24 @@ DELETE /api/notifications/read
 - 비밀번호, API Key, 내부 오류 전체 내용은 알림에 포함하지 않는다.
 - 알림 대상에 접근 권한이 없으면 관련 화면을 열지 않는다.
 
-## 16. Backend 구현 기준과 순서
+`read-items`처럼 고정된 경로는 `/{notification_id}`와 충돌하지 않게 구성한다.
+
+## 16. Agent 실행 상태 API — `Backend 확인 요청`
+
+```http
+POST /api/agent-runs
+GET  /api/agent-runs/{run_id}
+POST /api/agent-runs/{run_id}/cancel
+GET  /api/agent-runs/{run_id}/events
+```
+
+- 생성 요청에는 `Idempotency-Key`를 필수로 사용한다.
+- 상태는 `QUEUED`, `RUNNING`, `WAITING_APPROVAL`, `COMPLETED`, `FAILED`, `CANCELLED` 중 하나다.
+- 첫 연결은 `GET` polling으로 구현하고, 이후 `/events` SSE를 추가한다.
+- SSE 재연결 시 마지막 Event ID 이후부터 받을 수 있어야 한다.
+- 진행 상태는 Redis, 완료된 사용자 이력은 PostgreSQL에 저장한다.
+
+## 17. Backend 구현 기준과 순서
 
 Backend는 아래 구조로 책임을 나눈다.
 

@@ -5,6 +5,27 @@
 > 이전 버전: `docs/회의내용/0905_최종 plan.md`
 > 범위: 전체 프로젝트
 
+## 0. 2026-09-07 구현 현황
+
+완료:
+
+- Streamlit + CSS Frontend와 FastAPI Backend 일반 웹 기능 연동
+- 회원·비회원·관리자 인증과 권한
+- 공지 FAQ, 사용자 질문·댓글, 알림, 질의 이력
+- 관리자 FAQ와 사용자 질문 삭제
+- Frontend 자동 테스트 76개와 MCP 비의존 실제 통합 테스트 3개 통과
+- Backend `is_mock=false`, Database health `ok`
+
+진행 중·미완료:
+
+- 예시 화면에 가까운 Streamlit CSS·레이아웃 완성
+- MCP 실제 법률 Tool 실행과 법령·판례 결과 검증
+- Redis Session·Idempotency·Agent 진행 상태
+- polling 이후 SSE 연결
+- 네 PC 전체 E2E
+
+남은 일정에는 React 전환을 하지 않고 Streamlit + CSS 완성을 우선한다.
+
 ## 1. v1에서 수정된 점
 
 | 구분 | v1 | v2 |
