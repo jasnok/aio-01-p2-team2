@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 
 Category = Literal["housing", "labor", "consumer"]
-DocumentType = Literal["LAW", "CASE", "GUIDELINE"]
+DocumentType = Literal["LAW", "CASE"]
 
 
 class SearchLegalDocumentsInput(BaseModel):
