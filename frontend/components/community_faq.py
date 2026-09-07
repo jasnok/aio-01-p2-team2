@@ -3,7 +3,14 @@ from datetime import datetime
 import streamlit as st
 
 from frontend.data.categories import CATEGORIES
-from frontend.services.mock_community_service import can_edit_question, create_question, filter_public_questions, paginate_questions
+from frontend.services.mock_community_service import (
+    can_edit_question,
+    create_question,
+    filter_public_questions,
+    paginate_questions,
+    verify_question_password,
+)
+from frontend.services.mock_notification_service import add_notification
 
 
 CATEGORY_LABELS = {"all": "전체", **{item.code: item.name for item in CATEGORIES.values()}}
@@ -14,7 +21,7 @@ def _format_time(value: str) -> str:
     return datetime.fromisoformat(value).strftime("%Y-%m-%d %H:%M")
 
 
-def _submit_question(category: str, title: str, content: str, is_public: bool, privacy_checked: bool) -> None:
+def _submit_question(category: str, title: str, content: str, password: str, password_confirm: str, privacy_checked: bool) -> None:
     if len(title.strip()) < 2:
         st.error("제목을 2자 이상 입력해 주세요.")
         return
@@ -24,15 +31,34 @@ def _submit_question(category: str, title: str, content: str, is_public: bool, p
     if not privacy_checked:
         st.error("개인정보 주의사항을 확인해 주세요.")
         return
-    item = create_question(st.session_state.current_user, category, title, content, is_public)
+    if password != password_confirm:
+        st.error("게시글 비밀번호 확인이 일치하지 않습니다.")
+        return
+    try:
+        item = create_question(st.session_state.current_user, category, title, content, True, password)
+    except ValueError as error:
+        st.error(str(error))
+        return
     st.session_state.public_questions.append(item)
+    add_notification(
+        st.session_state.notifications,
+        "QUESTION_CREATED",
+        "질문이 등록되었습니다.",
+        f"'{item['title']}' 질문은 답변 대기 상태입니다.",
+        severity="success",
+        target_type="question",
+        target_id=item["id"],
+        category=item["category"],
+    )
     st.session_state.question_page = 1
     st.success("질문을 등록했습니다. 현재는 Mock 데이터로 Session에만 저장됩니다.")
+    st.rerun()
 
 
 def _delete_question(question_id: str) -> None:
     st.session_state.public_questions = [item for item in st.session_state.public_questions if item["id"] != question_id]
     st.session_state.question_edit_id = None
+    st.session_state.unlocked_question_ids.discard(question_id)
 
 
 def _save_edit(question_id: str, title: str, content: str) -> None:
@@ -46,9 +72,22 @@ def _save_edit(question_id: str, title: str, content: str) -> None:
 
 
 def _ask_again(item: dict) -> None:
-    copied = create_question(st.session_state.current_user, item["category"], f"{item['title']} (다시 질문)", item["content"], item["visibility"] == "PUBLIC")
+    copied = create_question(st.session_state.current_user, item["category"], f"{item['title']} (다시 질문)", item["content"], True, "temporary-demo")
+    copied["password_hash"] = item["password_hash"]
     st.session_state.public_questions.append(copied)
+    st.session_state.unlocked_question_ids.add(copied["id"])
     st.session_state.question_page = 1
+
+
+def _unlock_question(question_id: str, password: str) -> None:
+    question = next((item for item in st.session_state.public_questions if item["id"] == question_id), None)
+    if not question or not can_edit_question(question, st.session_state.current_user):
+        st.error("본인 질문만 확인할 수 있습니다.")
+        return
+    if not verify_question_password(question, password):
+        st.error("게시글 비밀번호가 올바르지 않습니다.")
+        return
+    st.session_state.unlocked_question_ids.add(question_id)
 
 
 def _set_question_page(page: int) -> None:
@@ -71,7 +110,7 @@ def render_community_faq(category_code: str) -> None:
 
     st.divider()
     st.markdown("### 💬 사용자 질문")
-    st.caption("공개에 동의한 질문이 최신순으로 표시됩니다. 작성자만 자신의 질문을 수정하거나 삭제할 수 있습니다.")
+    st.caption("글 제목은 누구나 볼 수 있지만 내용과 답변은 작성자만 게시글 비밀번호 확인 후 볼 수 있습니다.")
     user = st.session_state.current_user
     policy = "작성일로부터 7일 보관 예정" if user["role"] == "GUEST" else "회원 계정에 영구보관 예정"
     st.info(f"{user['display_name']} · {policy} · 현재는 실제 저장이 아닌 Mock Session입니다.")
@@ -81,11 +120,12 @@ def render_community_faq(category_code: str) -> None:
             question_category = st.selectbox("분야", options=[item.code for item in CATEGORIES.values()], format_func=lambda code: CATEGORY_LABELS[code], key="new-question-category")
             title = st.text_input("제목", max_chars=100, key="new-question-title")
             content = st.text_area("질문 내용", max_chars=2000, height=130, key="new-question-content")
-            is_public = st.checkbox("사용자 질문 게시판에 공개", value=True, key="new-question-public")
+            password = st.text_input("게시글 비밀번호", type="password", max_chars=20, key="new-question-password", help="내용 확인·수정·삭제에 사용할 4~20자 비밀번호입니다.")
+            password_confirm = st.text_input("게시글 비밀번호 확인", type="password", max_chars=20, key="new-question-password-confirm")
             privacy_checked = st.checkbox("이름, 연락처, 주소, 계좌번호 등 개인정보를 작성하지 않았습니다.", key="new-question-privacy")
             submitted = st.form_submit_button("질문 등록", type="primary", use_container_width=True)
         if submitted:
-            _submit_question(question_category, title, content, is_public, privacy_checked)
+            _submit_question(question_category, title, content, password, password_confirm, privacy_checked)
 
     filter_columns = st.columns([1, 1, 2])
     category_filter = filter_columns[0].selectbox("분야 필터", list(CATEGORY_LABELS), format_func=CATEGORY_LABELS.get, key="public-question-category")
@@ -109,14 +149,30 @@ def render_community_faq(category_code: str) -> None:
             badge = STATUS_LABELS.get(item["status"], item["status"])
             st.caption(f"{CATEGORY_LABELS[item['category']]} · {badge} · {item['display_name']} · {_format_time(item['created_at'])}")
             st.markdown(f"**{item['title']}**")
-            st.write(item["content"])
-            if item.get("answer"):
-                with st.expander("답변 보기"):
-                    st.write(item["answer"])
-                    st.caption("화면 확인용 DEMO 답변입니다.")
             if item.get("expires_at"):
                 st.caption(f"비회원 Mock 만료 예정: {_format_time(item['expires_at'])}")
-            if can_edit_question(item, user):
+            is_owner = can_edit_question(item, user)
+            is_unlocked = item["id"] in st.session_state.unlocked_question_ids
+            if not is_owner:
+                st.info("🔒 질문 내용은 작성자만 확인할 수 있습니다.")
+            elif not is_unlocked:
+                st.info("🔒 본인 글입니다. 게시글 비밀번호를 입력하면 내용과 답변을 확인할 수 있습니다.")
+                with st.form(f"unlock-form-{item['id']}"):
+                    unlock_password = st.text_input("게시글 비밀번호", type="password", key=f"unlock-password-{item['id']}")
+                    unlock_submitted = st.form_submit_button("내 글 확인", use_container_width=True)
+                if unlock_submitted:
+                    _unlock_question(item["id"], unlock_password)
+                    if item["id"] in st.session_state.unlocked_question_ids:
+                        st.rerun()
+            else:
+                st.markdown("**질문 내용**")
+                st.write(item["content"])
+                if item.get("answer"):
+                    with st.expander("답변 보기"):
+                        st.write(item["answer"])
+                        st.caption("화면 확인용 DEMO 답변입니다.")
+
+            if is_owner and is_unlocked:
                 action_columns = st.columns(3)
                 if item["status"] == "ANSWERED":
                     action_columns[0].button("수정해서 다시 질문", key=f"ask-again-{item['id']}", on_click=_ask_again, args=(item,), use_container_width=True)

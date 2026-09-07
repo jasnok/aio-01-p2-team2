@@ -13,7 +13,7 @@
 | Primary DB | PostgreSQL + pgvector | DB PC의 Docker PostgreSQL |
 | Supabase | 미확정 | 백업·외부 통합·수동 Fallback |
 | 사용자 | 익명 중심 | `GUEST`, `USER`, `ADMIN` |
-| 인증 | 로그인 미확정 | Backend + Redis Session 권장 |
+| 인증 | 로그인 미확정 | Streamlit Bearer Token + Redis Session 확정 |
 | 이력 | 명시적 저장 | 비회원 7일, 회원 동의 후 영구 |
 | FAQ | 고정 조회 | 공지형 FAQ + 개인 질문 CRUD |
 | Redis | 문맥·상태·Cache | DB PC 운영, Backend/MCP가 분리 사용 |
@@ -134,11 +134,12 @@ follow_up_questions, cautions, is_mock
 ```text
 회원 로그인
 → Backend가 임의 Session ID 발급
-→ HttpOnly Cookie
+→ Streamlit session_state에 임시 보관
+→ Authorization Bearer Header로 전달
 → Redis에서 user_id·role 확인
 ```
 
-비회원은 서명된 `guest_token` Cookie로 식별한다. 비밀번호 원문, 질문과 인증 Token을 Local Storage에 저장하지 않는다.
+비회원은 Streamlit Session별 `guest_id`로 식별한다. JWT는 사용하지 않으며 비밀번호 원문, 질문과 Session Token을 파일·Local Storage·로그에 저장하지 않는다.
 
 ## 10. FAQ, 사용자 질문 게시판과 통합 질의 이력
 

@@ -19,3 +19,12 @@ def test_small_screen_layout_has_wrapping_rules() -> None:
     assert "@media (max-width: 640px)" in css
     assert "flex-wrap: wrap" in css
     assert "flex: 1 1 100%" in css
+
+
+def test_tablet_header_and_columns_wrap_before_text_becomes_too_narrow() -> None:
+    css = THEME.read_text(encoding="utf-8")
+
+    assert "@media (max-width: 1100px)" in css
+    assert ':has(.lawpath-brand)' in css
+    assert "@media (max-width: 900px)" in css
+    assert "flex: 1 1 calc(50% - 1rem) !important" in css
