@@ -38,3 +38,12 @@ def test_question_board_has_status_and_visibility_design_tokens() -> None:
     assert ".question-badge.public" in css
     assert ".question-badge.private" in css
     assert ".question-title" in css
+
+
+def test_global_bordered_container_does_not_render_gradient_like_shadow() -> None:
+    css = THEME.read_text(encoding="utf-8")
+    container_rule = css.split('div[data-testid="stVerticalBlockBorderWrapper"] {', 1)[1].split("}", 1)[0]
+
+    assert "box-shadow: none" in container_rule
+    assert "transition: none" in container_rule
+    assert 'div[data-testid="stVerticalBlockBorderWrapper"]:hover' not in css
