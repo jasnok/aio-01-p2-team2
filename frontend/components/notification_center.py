@@ -122,9 +122,25 @@ def _render_api_notification_center() -> None:
     if columns[1].button("읽은 알림 삭제", key="api-notification-delete-read", use_container_width=True):
         try:
             backend_client.delete_read_notifications_api(token, guest_id)
+            st.toast("읽은 알림을 삭제했습니다.", icon="🗑️")
             st.rerun()
         except backend_client.BackendClientError as error:
-            st.error(error.user_message)
+            # 신규 일괄 삭제 API가 아직 배포되지 않았거나 경로가 충돌하는
+            # Backend와도 동작하도록 개별 삭제로 한 번 더 시도한다.
+            read_items = [item for item in notifications if item.get("is_read")]
+            failures = 0
+            for item in read_items:
+                try:
+                    backend_client.delete_notification_api(token, guest_id, item["id"])
+                except backend_client.BackendClientError:
+                    failures += 1
+            if read_items and failures == 0:
+                st.toast("읽은 알림을 개별 삭제했습니다.", icon="🗑️")
+                st.rerun()
+            elif not read_items:
+                st.info("삭제할 읽은 알림이 없습니다.")
+            else:
+                st.error(f"{error.user_message} 개별 삭제도 {failures}건 실패했습니다.")
     for notification in notifications:
         icon = SEVERITY_ICONS.get(notification.get("severity", "info"), "🔵")
         with st.container(border=True):

@@ -22,7 +22,11 @@ def render_api_admin_faq() -> None:
         pinned = st.checkbox("상단 고정")
         if st.form_submit_button("FAQ 추가", type="primary"):
             try:
-                backend_client.create_admin_faq(token, _body(category, question, answer, True, pinned, 999))
+                # 고정 FAQ는 일반 FAQ보다 작은 순서를 사용한다. 최종 정렬은 Backend도
+                # is_pinned DESC, display_order ASC 규칙을 보장해야 한다.
+                display_order = 0 if pinned else 999
+                backend_client.create_admin_faq(token, _body(category, question, answer, True, pinned, display_order))
+                st.toast("FAQ가 추가되었습니다.", icon="✅")
                 st.rerun()
             except backend_client.BackendClientError as error:
                 st.error(error.user_message)

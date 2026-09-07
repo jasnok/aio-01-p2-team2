@@ -190,8 +190,11 @@ def update_question_api(token: str | None, guest_id: str, question_id: str, body
     return _request("PATCH", f"/api/questions/{question_id}", json=body, headers=auth_headers(token, guest_id))
 
 
-def delete_question_api(token: str | None, guest_id: str, question_id: str, password: str) -> None:
-    _request("DELETE", f"/api/questions/{question_id}", json={"post_password": password}, headers=auth_headers(token, guest_id))
+def delete_question_api(token: str | None, guest_id: str, question_id: str, password: str, *, reason: str | None = None) -> None:
+    # 관리자는 삭제 사유만으로 권한을 검증하고, 작성자 삭제만 게시글
+    # 비밀번호를 사용한다. 빈 비밀번호를 보내면 Backend Schema에서 422가 난다.
+    body = {"reason": reason} if reason else {"post_password": password}
+    _request("DELETE", f"/api/questions/{question_id}", json=body, headers=auth_headers(token, guest_id))
 
 
 def resubmit_question(token: str | None, guest_id: str, question_id: str, password: str) -> dict:
@@ -244,4 +247,23 @@ def delete_notification_api(token: str | None, guest_id: str, notification_id: s
 
 
 def delete_read_notifications_api(token: str | None, guest_id: str) -> None:
-    _request("DELETE", "/api/notifications/read", headers=auth_headers(token, guest_id))
+    _request("DELETE", "/api/notifications/read-items", headers=auth_headers(token, guest_id))
+
+
+# Agent 진행 상태 API 계약 준비. Backend 구현 후 polling부터 연결하고,
+# 안정화 뒤 /events SSE로 전환한다.
+def create_agent_run(token: str | None, guest_id: str, category: str, question: str, idempotency_key: str) -> dict:
+    return _request(
+        "POST",
+        "/api/agent-runs",
+        json={"category": category, "question": question},
+        headers={**auth_headers(token, guest_id), "Idempotency-Key": idempotency_key},
+    )
+
+
+def get_agent_run(token: str | None, guest_id: str, run_id: str) -> dict:
+    return _request("GET", f"/api/agent-runs/{run_id}", headers=auth_headers(token, guest_id))
+
+
+def cancel_agent_run(token: str | None, guest_id: str, run_id: str) -> dict:
+    return _request("POST", f"/api/agent-runs/{run_id}/cancel", headers=auth_headers(token, guest_id))

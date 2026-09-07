@@ -11,7 +11,7 @@ class FrontendSettings(BaseSettings):
     frontend_presentation_mode: bool = False
     team_frontend_url: str = "http://192.100.200.232:8501"
     team_backend_url: str = "http://192.100.200.195:8000"
-    team_mcp_url: str = "http://192.100.200.72:8011"
+    team_mcp_url: str = "http://192.100.200.72:8013"
     team_database_host: str = "192.100.200.99"
     team_database_port: int = 5434
     team_database_user: str = "legal_user"

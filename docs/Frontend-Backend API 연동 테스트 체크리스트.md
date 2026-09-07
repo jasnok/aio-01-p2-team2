@@ -1,4 +1,17 @@
-# Frontend–Backend API 연동 테스트 체크리스트
+# Frontend-Backend API 연동 테스트 체크리스트
+
+## 2026-09-07 Frontend–Backend 최종 확인 결과(MCP 제외)
+
+- [x] Frontend 자동 테스트 76개 통과
+- [x] Backend·계약 로컬 테스트 8개 통과
+- [x] Frontend 서버 health 응답 확인
+- [x] MCP 새 주소 `192.100.200.72:8013` TCP 연결 확인
+- [x] DB `192.100.200.99:5434` TCP 연결 확인
+- [x] Backend `192.100.200.195:8000` health 확인 (`is_mock=false`)
+- [x] Backend 수정 반영 후 실제 CRUD·관리자 권한·알림 재검증
+- [ ] Backend → MCP 실제 Tool 호출 확인
+
+MCP가 필요한 사례 분석·법령·판례는 이번 Frontend–Backend 합격 범위에서 제외한다.
 
 > 확인일: 2026-09-07  
 > Frontend: `http://192.100.200.232:8501`  
@@ -11,13 +24,13 @@
 - [x] Frontend PC에서 Backend `/health` 호출 성공 (`200 OK`)
 - [x] Backend 상태가 `status=ok`, `service=backend`임
 - [x] OpenAPI에 사례 분석·법령·판례·용어·카테고리 API가 모두 존재함
-- [x] 실제 Backend 사례 분석 요청이 `completed`로 반환됨
-- [x] 사례 분석 응답에 `request_id`, `status`, `is_mock`이 있음
-- [x] 실제 Backend 법령 검색 요청 성공
-- [x] 실제 Backend 판례 검색 요청 성공
+- [ ] 실제 Backend 사례 분석 완료 — MCP Tool 실행 후 확인
+- [ ] 사례 분석 응답 계약 — MCP Tool 실행 후 확인
+- [ ] 실제 법령 검색 결과 — MCP·법률 데이터 연결 후 확인
+- [ ] 실제 판례 검색 결과 — MCP·법률 데이터 연결 후 확인
 - [x] 실제 Backend 용어·카테고리 요청 성공
-- [x] Streamlit API 모드에서 사례 분석 결과 화면이 예외 없이 표시됨
-- [x] Streamlit API 모드에서 법령·판례 검색 화면이 예외 없이 동작함
+- [ ] Streamlit API 모드 사례 분석 결과 — MCP 연동 후 확인
+- [ ] Streamlit API 모드 법령·판례 결과 — MCP 연동 후 확인
 - [x] Streamlit API 모드에서 쉬운 법률 용어가 표시됨
 - [x] 실제 로그인·현재 사용자·로그아웃 API 성공
 - [x] 실제 공개 FAQ 조회 성공
@@ -25,10 +38,13 @@
 - [x] 실제 비회원 질의 이력·알림 조회 및 정리 성공
 - [x] 실제 관리자 FAQ 생성·조회·수정·삭제 성공
 - [x] Streamlit API 모드 FAQ·질의 이력 화면이 예외 없이 표시됨
-- [x] Frontend 단위·Mock 회귀 테스트 71개 통과
+- [x] Frontend 단위·Mock 회귀 테스트 76개 통과
+- [x] 관리자 질문 삭제는 `reason`만 전송하며 실제 삭제 성공
+- [x] 작성자 질문 삭제는 `post_password`로 실제 삭제 성공
+- [x] 읽은 알림 삭제, 댓글 삭제 Body, 고정 FAQ 정렬 성공
 - [x] 저장소 전체 자동 테스트 통과
 
-현재 Backend의 `is_mock=true`, MCP=`mock`, Database=`mock`, Redis=`disabled`는 연결 실패가 아니다. Frontend–Backend 연결은 정상이고 Backend 뒤쪽 의존성이 아직 Mock이라는 뜻이다.
+현재 Backend는 `is_mock=false`이며 Frontend–Backend 일반 웹 기능은 정상이다. Redis는 `disabled`이고 실제 MCP Tool 실행은 전체 E2E 단계에서 확인한다.
 
 ## 2. 자동 통합 테스트 다시 실행하기
 
@@ -39,7 +55,7 @@ $env:BACKEND_API_URL="http://192.100.200.195:8000"
 python -m pytest tests/integration/test_frontend_backend_live.py -v
 ```
 
-정상이면 테스트 2개가 모두 `PASSED`로 끝난다. 평소 전체 테스트에서는 실제 서버가 없어도 되도록 이 검사는 자동으로 `SKIPPED`된다.
+MCP 제외 검사는 health·계약, 인증·커뮤니티 CRUD, 관리자 FAQ의 3개 테스트가 `PASSED`로 끝나야 한다. 전체 파일 실행 시 사례 분석 테스트는 MCP 상태에 따라 실패할 수 있다.
 
 ## 3. 사람이 Frontend에서 확인할 항목
 

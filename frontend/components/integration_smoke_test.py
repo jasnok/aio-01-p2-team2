@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import socket
 from time import perf_counter
+from urllib.parse import urlparse
 
 import httpx
 import streamlit as st
@@ -38,10 +39,14 @@ def _check_tcp(name: str, host: str, port: int, timeout: float = 3.0) -> dict:
 
 def run_team_connection_checks() -> list[dict]:
     settings = get_frontend_settings()
+    mcp_url = urlparse(settings.team_mcp_url)
     return [
         _check_http("Frontend", f"{settings.team_frontend_url.rstrip('/')}/_stcore/health"),
         _check_http("Backend", f"{settings.team_backend_url.rstrip('/')}/health"),
-        _check_http("MCP", f"{settings.team_mcp_url.rstrip('/')}/health"),
+        # MCP Streamable HTTP 서버는 /health가 없을 수 있다. 포트 검사는 서버
+        # 도달 여부를, 다음 Backend → MCP 검사는 실제 연동 상태를 확인한다.
+        _check_tcp("MCP", mcp_url.hostname or "", mcp_url.port or 80),
+        _check_http("Backend → MCP", f"{settings.team_backend_url.rstrip('/')}/api/integration/mcp"),
         _check_tcp("DB", settings.team_database_host, settings.team_database_port),
     ]
 
@@ -58,7 +63,7 @@ def render_integration_smoke_test() -> None:
     settings = get_frontend_settings()
     with st.sidebar:
         with st.expander("🔗 팀 서버 연결 테스트", expanded=False):
-            st.caption("Frontend → Backend → MCP → DB 연결 상태를 확인합니다.")
+            st.caption("각 서버 도달 여부와 Backend → MCP 연동 상태를 확인합니다.")
             st.code(
                 "\n".join(
                     (
@@ -70,7 +75,7 @@ def render_integration_smoke_test() -> None:
                 ),
                 language=None,
             )
-            st.caption("DB는 포트 접근만 검사합니다. SQL·인증·데이터 검사는 Backend health에서 확인해야 합니다.")
+            st.caption("MCP와 DB는 먼저 포트 접근을 검사합니다. Tool 호출과 SQL·인증 검사는 각각 Backend 연동 API와 Backend health에서 확인해야 합니다.")
             if st.button("전체 연결 테스트 실행", key="qa-team-connection-check", type="primary", use_container_width=True):
                 with st.spinner("팀 서버 연결을 확인하고 있습니다..."):
                     st.session_state.team_connection_results = run_team_connection_checks()

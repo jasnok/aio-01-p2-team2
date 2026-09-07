@@ -96,7 +96,7 @@ docker compose ps
 확인:
 
 ```powershell
-Invoke-RestMethod http://127.0.0.1:8011/health
+Invoke-RestMethod http://127.0.0.1:8013/health
 ```
 
 ### 3. Backend 실행

@@ -15,12 +15,13 @@ def test_team_connection_checks_cover_all_services(monkeypatch) -> None:
 
     results = integration_smoke_test.run_team_connection_checks()
 
-    assert [result["name"] for result in results] == ["Frontend", "Backend", "MCP", "DB"]
+    assert [result["name"] for result in results] == ["Frontend", "Backend", "MCP", "Backend → MCP", "DB"]
     assert all(result["ok"] for result in results)
     assert results[0]["message"].endswith(":8501/_stcore/health")
     assert results[1]["message"].endswith(":8000/health")
-    assert results[2]["message"].endswith(":8011/health")
-    assert results[3]["message"].endswith(":5434")
+    assert results[2]["message"].endswith(":8013")
+    assert results[3]["message"].endswith(":8000/api/integration/mcp")
+    assert results[4]["message"].endswith(":5434")
 
 
 def test_http_check_returns_failure_without_raising(monkeypatch) -> None:

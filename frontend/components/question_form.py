@@ -33,6 +33,7 @@ def render_question_form(category: str) -> QuestionSubmission | None:
         placeholder="언제, 누구와, 어떤 일이 있었는지 구체적으로 작성하면 검색 정확도가 높아집니다.",
     )
     _render_input_quality(message)
+    st.caption("입력 품질은 Streamlit이 입력값을 전달하는 시점(포커스 이동 또는 Ctrl+Enter)에 갱신됩니다.")
     submitted = st.button(
         "처리 중입니다..." if st.session_state.analysis_in_progress else "✦ 사례 분석하기",
         type="primary",
