@@ -1,12 +1,12 @@
 # LawPath Frontend–Backend API 명세서
 
-> 버전: 확정 v1.1
+> 버전: 확정 v1.2
 >
-> 최초 작성일: 2026-09-05 / 확정일: 2026-09-06
+> 최초 작성일: 2026-09-05 / v1.2 확정일: 2026-09-07
 >
 > 적용 기준: 이 문서의 경로·필드·상태·오류 형식을 Frontend–Backend 구현 계약으로 사용한다.
 >
-> 현재 구현: Health, 법률 질문 API / 다음 구현: 인증, FAQ, 사용자 질문, 질의 이력, 알림
+> 현재 구현: Health, 법률 질문 API / 다음 구현: 인증, FAQ, 사용자 질문·댓글, 질의 이력, 알림
 
 ## 1. 문서 목적
 
@@ -471,7 +471,7 @@ GET /api/questions?page=1&page_size=10&category=housing&status=PENDING&query=보
       "title": "보증금 반환 질문",
       "status": "PENDING",
       "visibility": "PUBLIC",
-      "content_visibility": "OWNER_ONLY",
+      "content_visibility": "PUBLIC",
       "display_name": "비회원",
       "is_owner": true,
       "created_at": "2026-09-05T20:10:00+09:00",
@@ -519,22 +519,35 @@ POST /api/questions
 - 비회원은 생성 시점부터 7일 후 `expires_at` 설정
 - 회원은 기본적으로 만료 없음
 
-### 9.3 질문 상세·수정·삭제
+### 9.3 질문 상세·잠금 해제·수정·삭제
 
 ```http
 GET    /api/questions/{question_id}
+POST   /api/questions/{question_id}/unlock
 PATCH  /api/questions/{question_id}
 DELETE /api/questions/{question_id}
 ```
 
-- 공개 목록에는 제목·분야·상태·작성시각만 반환하고 질문 내용과 답변은 반환하지 않는다.
-- 목록 검색은 제목만 대상으로 하며 비공개 내용을 검색하지 않는다.
-- 질문 내용·답변 조회는 작성자 Session과 게시글 비밀번호를 모두 확인한 경우만 허용한다.
+- 목록에서는 공개글과 비밀글의 제목·분야·상태·작성시각을 누구나 확인할 수 있다.
+- `PUBLIC` 상세 내용과 댓글은 누구나 조회할 수 있다.
+- `PRIVATE` 상세 내용과 댓글은 작성자 또는 관리자만 조회할 수 있다.
+- 비밀글 작성자는 Session 소유권과 게시글 비밀번호를 확인해 잠금을 해제한다. 잠금 해제 상태는 짧은 시간(권장 10분)만 유지한다.
+- 목록 검색은 공개글의 제목·본문, 비밀글의 제목만 대상으로 한다.
 - 수정·삭제도 작성자 Session과 게시글 비밀번호를 모두 확인한 경우만 허용한다.
 - 게시글 비밀번호 원문은 저장하지 않고 Backend에서 안전한 Password Hash로 저장한다.
 - Frontend·로그·오류 응답에는 게시글 비밀번호와 Hash를 반환하지 않는다.
 - `PENDING` 질문만 원문 수정 가능하다.
 - `ANSWERED` 질문은 기존 근거 보존을 위해 직접 수정하지 않는다.
+
+잠금 해제 요청:
+
+```json
+{
+  "post_password": "사용자가 입력한 게시글 비밀번호"
+}
+```
+
+성공하면 Backend가 현재 Session과 질문 ID에 묶인 단기 접근 권한을 발급한다. 비밀번호와 Hash는 응답하지 않는다.
 
 ### 9.4 답변 완료 질문 다시 질문
 
@@ -557,6 +570,45 @@ PATCH /api/admin/questions/{question_id}/answer
 ```
 
 성공 시 상태를 `ANSWERED`로 변경한다. 답변 생성 실패는 `FAILED` 게시판 상태로 저장하지 않고 요청 오류로 반환한다.
+
+### 9.6 사용자 댓글 조회·작성·수정·삭제
+
+```http
+GET    /api/questions/{question_id}/comments?page=1&page_size=20
+POST   /api/questions/{question_id}/comments
+PATCH  /api/questions/{question_id}/comments/{comment_id}
+DELETE /api/questions/{question_id}/comments/{comment_id}
+```
+
+작성 요청:
+
+```json
+{
+  "content": "도움이 되는 댓글 내용입니다.",
+  "comment_password": "비회원 댓글 수정·삭제용 비밀번호"
+}
+```
+
+수정 요청:
+
+```json
+{
+  "content": "수정한 댓글 내용입니다.",
+  "comment_password": "비회원인 경우에만 입력"
+}
+```
+
+규칙:
+
+- `PUBLIC` 질문은 비회원·회원·관리자 모두 댓글 조회와 작성이 가능하다.
+- `PRIVATE` 질문은 작성자와 관리자만 댓글 조회와 작성이 가능하다.
+- 댓글은 작성자만 수정·삭제할 수 있고, 관리자는 운영 목적으로 삭제할 수 있다.
+- 비회원 댓글은 4~20자의 댓글 비밀번호가 필수이며 원문 대신 안전한 Password Hash만 저장한다.
+- 회원 댓글은 로그인 Session 소유권으로 확인하므로 별도 댓글 비밀번호를 받지 않는다.
+- 댓글 내용은 2~1,000자이며 기본 정렬은 `created_at ASC, id ASC`로 한다.
+- 비회원 댓글은 연결된 비회원 Session 보관기간과 함께 만료한다.
+- 댓글 작성 시 질문 작성자에게 `COMMENT_CREATED` 알림을 생성하되, 비밀글 본문이나 댓글 원문은 알림 메시지에 포함하지 않는다.
+- 공개 댓글은 공식 법률 답변과 구분하며 관리자 답변 상태(`PENDING`, `ANSWERED`)를 변경하지 않는다.
 
 ## 10. 통합 질의 이력 API — `확정`
 
@@ -603,12 +655,16 @@ MCP → DB: 5초
 | 공개 FAQ·질문 조회 | 가능 | 가능 | 가능 |
 | 질문 작성 | 가능 | 가능 | 가능 |
 | 본인 질문 수정·삭제 | 가능 | 가능 | 가능 |
-| 비공개 질문 조회 | 본인만 | 본인만 | 정책에 따라 제한 |
+| 공개글 내용·댓글 조회 | 가능 | 가능 | 가능 |
+| 공개글 댓글 작성 | 가능 | 가능 | 가능 |
+| 비밀글 내용·댓글 조회 | 본인만 | 본인만 | 가능 |
+| 비밀글 댓글 작성 | 본인만 | 본인만 | 가능 |
+| 본인 댓글 수정·삭제 | 비밀번호 확인 | Session 확인 | 가능 |
 | 이력 보관 | 7일 | 영구 | 계정 정책 |
 | 공지 FAQ 관리 | 불가 | 불가 | 가능 |
 | 사용자 질문 답변 | 불가 | 불가 | 가능 |
 
-관리자도 개인정보가 포함된 사용자 원문을 무조건 열람할 수 있게 하지 않고, 운영 목적과 감사 로그 정책을 별도로 확정한다.
+관리자의 비밀글 열람과 댓글 삭제는 운영·신고 대응 목적에 한하며 감사 로그를 남긴다.
 
 ## 13. 계약 변경 규칙
 
@@ -639,6 +695,9 @@ Breaking Change는 필드 삭제, 타입 변경, Enum 변경, 의미 변경을 �
 8. 공통 오류 Envelope와 위 HTTP 상태 코드를 사용한다.
 9. 실제 권한과 소유권은 Backend에서 검증한다.
 10. Health 응답에서 Mock과 실제 연결 상태를 명확히 구분한다.
+11. 질문은 `PUBLIC`과 `PRIVATE`을 지원하며 생성 화면의 기본값은 `PRIVATE`이다.
+12. 공개글은 전체 공개, 비밀글은 작성자와 관리자만 상세·댓글에 접근한다.
+13. 비회원 댓글 비밀번호는 Hash로 저장하고 회원 댓글은 Session 소유권으로 확인한다.
 
 ## 15. 알림 API — `후속`
 

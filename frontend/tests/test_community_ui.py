@@ -100,6 +100,30 @@ def test_question_title_is_public_but_content_requires_owner_password() -> None:
     assert any(secret_content in item.value for item in app.markdown)
 
 
+def test_guest_can_create_public_question_and_comment_with_password() -> None:
+    app = _open_housing_workspace()
+    app.sidebar.button(key="nav-faq").click().run(timeout=20)
+    app.text_input(key="new-question-title").set_value("댓글 테스트 공개 질문")
+    app.text_area(key="new-question-content").set_value("누구나 내용을 보고 댓글을 작성할 수 있는 공개 질문입니다.")
+    app.text_input(key="new-question-password").set_value("1234")
+    app.text_input(key="new-question-password-confirm").set_value("1234")
+    app.checkbox(key="new-question-private").uncheck()
+    app.checkbox(key="new-question-privacy").check()
+    next(button for button in app.button if button.label == "질문 등록").click().run(timeout=20)
+    created = app.session_state["public_questions"][-1]
+
+    assert created["visibility"] == "PUBLIC"
+    assert created["content_visibility"] == "PUBLIC"
+    app.text_area(key=f"comment-content-{created['id']}").set_value("비회원이 작성한 공개 댓글입니다.")
+    app.text_input(key=f"comment-password-{created['id']}").set_value("5678")
+    app.button(key=f"FormSubmitter:comment-create-{created['id']}-댓글 등록").click().run(timeout=20)
+
+    assert len(created["comments"]) == 1
+    assert created["comments"][0]["content"] == "비회원이 작성한 공개 댓글입니다."
+    assert created["comments"][0]["password_hash"] != "5678"
+    assert any(item["type"] == "COMMENT_CREATED" for item in app.session_state["notifications"])
+
+
 def test_admin_role_exposes_admin_faq_screen() -> None:
     app = _open_housing_workspace()
     app.session_state["mock_role"] = "ADMIN"

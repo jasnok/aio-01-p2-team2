@@ -29,6 +29,7 @@ def build_mock_questions() -> list[dict]:
         category, title = topics[index % len(topics)]
         owner_id = "guest-demo" if index == 2 else f"seed-user-{index % 6}"
         created_at = now - timedelta(hours=index * 3)
+        is_public = index % 4 != 0
         questions.append({
             "id": f"question-{1000 + index}",
             "owner_id": owner_id,
@@ -37,11 +38,12 @@ def build_mock_questions() -> list[dict]:
             "category": category,
             "title": title,
             "content": f"{title} 관련해서 준비해야 할 사항과 확인 순서가 궁금합니다. 개인정보가 없는 화면 확인용 질문입니다.",
-            "visibility": "PUBLIC",
-            "content_visibility": "OWNER_ONLY",
+            "visibility": "PUBLIC" if is_public else "PRIVATE",
+            "content_visibility": "PUBLIC" if is_public else "OWNER_ONLY",
             "password_hash": hash_question_password("1234"),
             "status": "ANSWERED" if index % 3 else "PENDING",
             "answer": None if index % 3 == 0 else "상황에 맞는 계약서, 대화 기록과 지급 내역을 먼저 정리해 보세요. 현재는 DEMO 답변입니다.",
+            "comments": [],
             "created_at": created_at.isoformat(),
             "updated_at": created_at.isoformat(),
             "expires_at": (created_at + timedelta(days=7)).isoformat() if owner_id == "guest-demo" else None,
