@@ -4,7 +4,7 @@ from uuid import uuid4
 from fastapi import APIRouter, Header, HTTPException, Query
 
 from backend.app.schemas.legal import LegalQuestionRequest, LegalQuestionResponse
-from backend.app.services.legal_question_service import answer_question
+from backend.app.services.legal_question_service import answer_question, answer_question_from_mcp
 from backend.app.services.mock_store import iso, now, store
 from backend.app.core.config import get_settings
 
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/legal", tags=["legal"])
 
 
 @router.post("/questions", response_model=LegalQuestionResponse, summary="생활 법률 사례 분석", description="질문을 분야별로 분석합니다. Mock 모드에서는 실제 법률 판단 대신 연결 확인용 안내를 돌려줍니다. 중복 클릭 방지를 위해 Idempotency-Key Header 사용을 권장합니다.")
-def create_question(request: LegalQuestionRequest, idempotency_key: str | None = Header(default=None), x_guest_id: str | None = Header(default=None), x_mock_scenario: str | None = Header(default=None)) -> LegalQuestionResponse:
+async def create_question(request: LegalQuestionRequest, idempotency_key: str | None = Header(default=None), x_guest_id: str | None = Header(default=None), x_mock_scenario: str | None = Header(default=None)) -> LegalQuestionResponse:
     owner = x_guest_id or request.session_id
     if idempotency_key:
         cached = store.idempotency.get((owner, "/api/legal/questions", idempotency_key))
@@ -30,18 +30,15 @@ def create_question(request: LegalQuestionRequest, idempotency_key: str | None =
     elif x_mock_scenario == "no_evidence":
         response = LegalQuestionResponse(request_id=f"req-{owner}", agent_id=request.category, termination_reason="no_evidence", question_summary="근거가 부족합니다.", answer="공식 근거가 충분하지 않아 답변을 만들지 않았습니다.", cautions=["공식 기관 자료를 추가 확인해 주세요."], is_mock=True)
     else:
-        try:
+        if not get_settings().backend_mock_mode:
+            try:
+                response = await answer_question_from_mcp(request)
+            except TimeoutError as error:
+                raise HTTPException(status_code=504, detail={"code": "UPSTREAM_TIMEOUT", "message": "Legal MCP 응답 시간이 초과되었습니다."}) from error
+            except Exception as error:
+                raise HTTPException(status_code=502, detail={"code": "MCP_UNAVAILABLE", "message": "Legal MCP 검색 서비스에 연결할 수 없습니다."}) from error
+        else:
             response = answer_question(request)
-        except Exception:
-            # BACKEND_MOCK_MODE의 기본 경로다. 실제 MCP 장애와 Mock 기본값을
-            # 혼동하지 않도록 강제 장애는 X-Mock-Scenario에서만 표현한다.
-            response = LegalQuestionResponse(
-                request_id=f"req-{owner}-{uuid4()}", agent_id=request.category,
-                termination_reason="model_finished", question_summary=f"{request.category} 분야 Mock 사례 분석",
-                key_issues=["사실관계와 공식 근거 확인"],
-                answer="Mock 모드에서는 공식 법률 자료 연결 전의 안내만 제공합니다. 실제 연동 후 공식 출처를 확인해 주세요.",
-                cautions=["법률 자문이나 결과 보장이 아닌 정보 제공입니다."], is_mock=True,
-            )
     if idempotency_key:
         store.idempotency[(owner, "/api/legal/questions", idempotency_key)] = (now() + timedelta(hours=24), response.model_dump(mode="json"))
     store.history.setdefault(owner, []).append({"id": f"history-{response.request_id}", "type": "legal_analysis", "target_id": response.request_id, "category": request.category, "title": request.question[:100], "created_at": iso()})

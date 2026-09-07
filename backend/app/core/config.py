@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     backend_mock_mode: bool = True
     frontend_origin: str = "http://192.100.200.232:8501"
+    legal_mcp_url: str = "http://192.100.200.72:8011/mcp"
     mcp_server_url: str = "http://127.0.0.1:8001"
     food_mcp_url: str = "http://192.100.200.72:8011/mcp"
     enable_integration_debug: bool = False
