@@ -14,6 +14,8 @@ def initialize_session() -> None:
     guest_user["id"] = f"guest-{session_id}"
     defaults = {
         "session_id": session_id,
+        "auth_token": None,
+        "auth_expires_in": None,
         "current_page": "home",
         "selected_category": None,
         "selected_feature": "analysis",

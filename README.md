@@ -133,6 +133,17 @@ cd C:\dev\aio-01-p2-team2
 python -m streamlit run frontend\app.py
 ```
 
+### Frontend에서 Backend API 사용하기
+
+`frontend/.env`를 다음처럼 설정하고 Frontend를 재시작합니다.
+
+```env
+FRONTEND_DATA_MODE=api
+BACKEND_API_URL=http://192.100.200.195:8000
+```
+
+`api` 모드에서는 사례 분석, 법령·판례·용어 검색, 인증, 공지 FAQ, 사용자 질문·댓글, 질의 이력과 알림이 Backend API를 사용합니다. `mock` 모드에서는 Backend 없이 기존 Frontend Session 기능을 그대로 확인할 수 있습니다.
+
 홈에서 `임대차·주거`, `근로·임금`, `소비자·중고거래` 중 하나를 선택한 뒤 다음 기능을 확인합니다.
 
 1. `내 사례 분석`에서 대표 질문을 불러오거나 5자 이상 입력합니다.
