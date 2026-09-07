@@ -1,25 +1,13 @@
 import asyncio
-import uuid
 
 from fastapi import APIRouter, HTTPException
 
 from backend.app.core.config import get_settings
-from backend.app.mcp_clients.mcp_client import call_tool, discover_tools
-from backend.app.schemas.integration import FoodSearchRequest, FoodSearchResponse, McpStatusResponse
+from backend.app.mcp_clients.mcp_client import discover_tools
+from backend.app.schemas.integration import McpStatusResponse
 
 
 router = APIRouter(prefix="/api/integration", tags=["integration-smoke-test"])
-
-
-def _ensure_enabled() -> None:
-    if not get_settings().enable_integration_debug:
-        raise HTTPException(
-            status_code=404,
-            detail={
-                "code": "INTEGRATION_DEBUG_DISABLED",
-                "message": "통합 확인 기능이 비활성화되어 있습니다.",
-            },
-        )
 
 
 def _mcp_error(error: Exception) -> HTTPException:
@@ -47,21 +35,4 @@ async def get_mcp_status() -> McpStatusResponse:
     )
 
 
-@router.post("/mcp/food-search", response_model=FoodSearchResponse)
-async def search_food(request: FoodSearchRequest) -> FoodSearchResponse:
-    _ensure_enabled()
-    try:
-        payload = await call_tool("food", "search_restaurants", request.model_dump())
-    except Exception as error:
-        raise _mcp_error(error) from error
-    return FoodSearchResponse(
-        request_id=f"smoke-{uuid.uuid4()}",
-        path=["frontend", "backend", "food_mcp"],
-        server="food",
-        tool="search_restaurants",
-        items=payload.get("items", []),
-        count=payload.get("count", 0),
-        source=payload.get("source", "unknown"),
-        allergy_notice=payload.get("allergy_notice", ""),
-    )
 
