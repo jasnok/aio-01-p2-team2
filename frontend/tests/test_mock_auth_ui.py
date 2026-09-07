@@ -6,6 +6,33 @@ from streamlit.testing.v1 import AppTest
 APP = Path(__file__).parents[1] / "app.py"
 
 
+def _render_guest_auth(renderer_name: str) -> AppTest:
+    return AppTest.from_string(
+        f"""
+import streamlit as st
+from frontend.components.mock_auth import {renderer_name}
+
+st.session_state.current_user = {{"role": "GUEST"}}
+st.session_state.auth_message = None
+{renderer_name}()
+"""
+    ).run(timeout=20)
+
+
+def test_demo_accounts_are_copyable_in_mock_and_api_login() -> None:
+    expected_accounts = ["user@lawpath.demo", "Demo1234!", "admin@lawpath.demo", "Admin1234!"]
+
+    mock_app = _render_guest_auth("_render_local_auth")
+    api_app = _render_guest_auth("_render_api_auth")
+
+    assert not mock_app.exception
+    assert not api_app.exception
+    assert [code.value for code in mock_app.code] == expected_accounts
+    assert [code.value for code in api_app.code] == expected_accounts
+    assert mock_app.text_input(key="mock-login-email")
+    assert api_app.text_input(key="api-login-email")
+
+
 def test_member_login_and_logout_flow() -> None:
     app = AppTest.from_file(str(APP)).run(timeout=20)
     app.text_input(key="mock-login-email").set_value("user@lawpath.demo")
