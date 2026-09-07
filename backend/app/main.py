@@ -11,7 +11,31 @@ from backend.app.routers.legal import router as legal_router
 from backend.app.routers.mock_api import router as mock_api_router
 
 
-app = FastAPI(title="Legal AI Agent Backend", version="0.1.0")
+app = FastAPI(
+    title="LawPath Backend API",
+    version="0.1.0",
+    description="""
+## LawPath 생활 법률 안내 Backend
+
+Frontend는 이 API만 호출합니다. 현재는 **Mock 모드**이므로 외부 MCP, PostgreSQL, Redis 없이
+메모리 데이터로 동작하며, 서버를 다시 시작하면 생성한 데이터가 사라집니다.
+
+### 처음 시험하는 순서
+
+1. `GET /health`로 서버 상태를 확인합니다.
+2. `POST /api/auth/login`으로 Demo 계정에 로그인합니다.
+3. 응답의 `session_token`을 이후 요청 Header의 `Authorization: Bearer 토큰`에 넣습니다.
+4. 비회원 요청에는 `X-Guest-Id`를 넣습니다.
+
+비밀번호와 Session Token은 화면 캡처·로그·문서에 남기지 마세요.
+""",
+    openapi_tags=[
+        {"name": "health", "description": "서버가 실행 중인지와 현재 Mock/실연동 상태를 확인합니다."},
+        {"name": "legal", "description": "생활 법률 사례 분석과 법령·판례·용어 검색입니다."},
+        {"name": "mock-api", "description": "Mock 모드의 인증, FAQ, 질문, 댓글, 이력, 알림 API입니다."},
+        {"name": "integration-smoke-test", "description": "개발용 MCP 연결 확인 기능입니다. 기본적으로 비활성화됩니다."},
+    ],
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:8501", "http://127.0.0.1:8501", "http://192.100.200.232:8501"],

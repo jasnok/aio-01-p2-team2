@@ -12,7 +12,7 @@ from backend.app.core.config import get_settings
 router = APIRouter(prefix="/api/legal", tags=["legal"])
 
 
-@router.post("/questions", response_model=LegalQuestionResponse)
+@router.post("/questions", response_model=LegalQuestionResponse, summary="생활 법률 사례 분석", description="질문을 분야별로 분석합니다. Mock 모드에서는 실제 법률 판단 대신 연결 확인용 안내를 돌려줍니다. 중복 클릭 방지를 위해 Idempotency-Key Header 사용을 권장합니다.")
 def create_question(request: LegalQuestionRequest, idempotency_key: str | None = Header(default=None), x_guest_id: str | None = Header(default=None), x_mock_scenario: str | None = Header(default=None)) -> LegalQuestionResponse:
     owner = x_guest_id or request.session_id
     if idempotency_key:
@@ -49,8 +49,8 @@ def create_question(request: LegalQuestionRequest, idempotency_key: str | None =
     return response
 
 
-@router.get("/laws")
-@router.get("/cases")
+@router.get("/laws", summary="법령 검색", description="입력한 분야와 검색어로 법령을 찾습니다. 결과가 없으면 오류 대신 빈 배열을 반환합니다.")
+@router.get("/cases", summary="판례 검색", description="입력한 분야와 검색어로 판례를 찾습니다. 결과가 없으면 오류 대신 빈 배열을 반환합니다.")
 def search_documents(category: str, query: str = Query(min_length=2, max_length=200), top_k: int = Query(3, ge=1, le=10)) -> dict:
     if category not in {"housing", "labor", "consumer"}:
         raise HTTPException(status_code=422, detail={"code": "VALIDATION_ERROR", "message": "지원하지 않는 분야입니다."})
@@ -58,7 +58,7 @@ def search_documents(category: str, query: str = Query(min_length=2, max_length=
     return {"query": query.strip(), "category": category, "items": [], "total": 0}
 
 
-@router.get("/terms")
+@router.get("/terms", summary="쉬운 법률 용어 검색", description="어려운 법률 용어를 쉬운 말로 설명합니다.")
 def search_terms(category: str, query: str = Query(min_length=2, max_length=200)) -> dict:
     terms = {"labor": {"임금체불": "정해진 때에 임금이 지급되지 않은 상태입니다."}, "housing": {"보증금": "임대차 계약에서 반환 조건을 정하는 금액입니다."}, "consumer": {"청약철회": "일정한 거래에서 계약을 취소할 수 있는 권리입니다."}}
     matched = [{"term": term, "description": description} for term, description in terms.get(category, {}).items() if query.strip() in term or query.strip() in description]
