@@ -46,6 +46,13 @@ TARGET_LAWS = [
         "categories": ["housing"],
     },
     {
+        # 보증금 반환 시 최우선변제 범위 등 시행령의 세부 기준을
+        # 검색하기 위해 주택임대차보호법과 별도로 수집합니다.
+        "name": "주택임대차보호법 시행령",
+        "filename": "주택임대차보호법_시행령.xml",
+        "categories": ["housing"],
+    },
+    {
         "name": "근로기준법",
         "filename": "근로기준법.xml",
         "categories": ["labor"],
@@ -63,6 +70,13 @@ TARGET_LAWS = [
     {
         "name": "소비자기본법",
         "filename": "소비자기본법.xml",
+        "categories": ["consumer"],
+    },
+    {
+        # 중고거래에서 처음부터 물건을 보낼 의사 없이 대금을 받은 경우
+        # 사기죄 검토에 필요한 형법 제347조 등을 검색하기 위해 수집합니다.
+        "name": "형법",
+        "filename": "형법.xml",
         "categories": ["consumer"],
     },
 ]
