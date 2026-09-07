@@ -1,9 +1,14 @@
 import streamlit as st
 
+from frontend.clients import backend_client
+from frontend.core.config import get_frontend_settings
 from frontend.core.session import restore_history_item
 
 
 def render_unified_history() -> None:
+    if get_frontend_settings().frontend_data_mode.lower() == "api":
+        _render_api_history()
+        return
     st.markdown("### ↶ 통합 질의 이력")
     user = st.session_state.current_user
     policy = "작성일로부터 7일 보관 예정" if user["role"] == "GUEST" else "회원 계정에 영구보관 예정"
@@ -37,3 +42,34 @@ def render_unified_history() -> None:
                         st.write(item["answer"])
                 else:
                     st.info("🔒 질문 내용은 FAQ 게시판에서 게시글 비밀번호 확인 후 볼 수 있습니다.")
+
+
+def _render_api_history() -> None:
+    st.markdown("### ↶ 통합 질의 이력")
+    user = st.session_state.current_user
+    st.info("비회원 이력은 7일, 회원 이력은 계정에 영구 보관됩니다. 현재 목록은 Backend API에서 조회합니다.")
+    labels = {"all": "전체", "legal_analysis": "사례 분석", "user_question": "사용자 질문"}
+    history_type = st.radio("이력 유형", list(labels), format_func=labels.get, horizontal=True, key="api-history-type")
+    token = st.session_state.auth_token
+    guest_id = f"guest-{st.session_state.session_id}"
+    try:
+        payload = backend_client.list_history(token, guest_id, page=1, page_size=50, type=history_type)
+    except backend_client.BackendClientError as error:
+        st.error(error.user_message)
+        return
+    items = payload.get("items", [])
+    if not items:
+        st.info("저장된 질의 이력이 없습니다.")
+        return
+    for item in items:
+        with st.container(border=True):
+            item_type = item.get("type", item.get("history_type", "history"))
+            st.caption(f"{labels.get(item_type, item_type)} · {item.get('created_at', '')}")
+            st.markdown(f"**{item.get('title') or item.get('question') or '질의 이력'}**")
+            st.write(item.get("summary") or item.get("question_summary") or item.get("content") or "상세 내용을 확인해 주세요.")
+            if st.button("이력 삭제", key=f"api-history-delete-{item['id']}"):
+                try:
+                    backend_client.delete_history(token, guest_id, item["id"])
+                    st.rerun()
+                except backend_client.BackendClientError as error:
+                    st.error(error.user_message)

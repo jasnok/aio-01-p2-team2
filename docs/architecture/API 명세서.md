@@ -6,7 +6,8 @@
 >
 > 적용 기준: 이 문서의 경로·필드·상태·오류 형식을 Frontend–Backend 구현 계약으로 사용한다.
 >
-> 현재 구현: Health, 법률 질문 API / 다음 구현: 인증, FAQ, 사용자 질문·댓글, 질의 이력, 알림
+> 현재 구현: Health, 인증, FAQ, 사용자 질문·댓글, 질의 이력, 알림, 관리자, Agent Run API
+> 전체 E2E 대기: 실제 MCP 법률 Tool 실행, Redis Session·진행 상태
 
 ## 1. 문서 목적
 

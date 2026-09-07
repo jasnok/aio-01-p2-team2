@@ -1,4 +1,5 @@
 import streamlit as st
+from frontend.core.config import get_frontend_settings
 
 
 def render_search_form(kind: str) -> str | None:
@@ -7,7 +8,8 @@ def render_search_form(kind: str) -> str | None:
     key = "law_query" if is_law else "case_query"
     placeholder = "예: 보증금 반환, 퇴직금" if is_law else "예: 계약 종료 후 보증금 미반환"
     st.markdown(f"### {'⌕' if is_law else '⚖'} {title}")
-    st.caption("현재 선택한 법률 분야 안에서 화면용 예시 자료를 검색합니다.")
+    source = "Backend API 자료" if get_frontend_settings().frontend_data_mode.lower() == "api" else "화면용 예시 자료"
+    st.caption(f"현재 선택한 법률 분야 안에서 {source}를 검색합니다.")
     with st.form(f"{kind}-search-form"):
         query = st.text_input("검색어", key=key, placeholder=placeholder)
         submitted = st.form_submit_button("검색하기", type="primary", use_container_width=True)

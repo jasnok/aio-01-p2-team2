@@ -28,3 +28,13 @@ def test_tablet_header_and_columns_wrap_before_text_becomes_too_narrow() -> None
     assert ':has(.lawpath-brand)' in css
     assert "@media (max-width: 900px)" in css
     assert "flex: 1 1 calc(50% - 1rem) !important" in css
+
+
+def test_question_board_has_status_and_visibility_design_tokens() -> None:
+    css = THEME.read_text(encoding="utf-8")
+
+    assert ".question-badge.pending" in css
+    assert ".question-badge.answered" in css
+    assert ".question-badge.public" in css
+    assert ".question-badge.private" in css
+    assert ".question-title" in css

@@ -22,8 +22,16 @@ def render_header(show_home: bool = False) -> None:
     with notice_area:
         from frontend.components.notification_center import render_notification_center
         from frontend.services.mock_notification_service import unread_count
+        from frontend.core.config import get_frontend_settings
 
         unread = unread_count(st.session_state.get("notifications", []))
+        if get_frontend_settings().frontend_data_mode.lower() == "api":
+            from frontend.clients import backend_client
+
+            try:
+                unread = backend_client.get_unread_count(st.session_state.auth_token, f"guest-{st.session_state.session_id}")
+            except backend_client.BackendClientError:
+                unread = 0
         with st.popover(f"🔔 알림 {unread}", use_container_width=True):
             render_notification_center()
     with user_area:
@@ -37,7 +45,9 @@ def render_header(show_home: bool = False) -> None:
             st.divider()
             st.caption(f"현재 세션 · {st.session_state.session_id[-8:]}")
             policy = "7일 보관 예정" if user["role"] == "GUEST" else "영구보관 예정"
-            st.write(f"질의 이력 정책: {policy}. 현재는 브라우저 Session에만 보관됩니다.")
+            mode = get_frontend_settings().frontend_data_mode.lower()
+            location = "Backend API" if mode == "api" else "브라우저 Session"
+            st.write(f"질의 이력 정책: {policy}. 현재 저장 위치: {location}")
             if st.button("🔄 세션 초기화", key="reset-session", use_container_width=True):
                 from frontend.core.session import reset_session
 
