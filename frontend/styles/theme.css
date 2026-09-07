@@ -56,12 +56,8 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
   border-color: var(--lawpath-border) !important;
   border-radius: var(--lawpath-radius) !important;
   background: #ffffff;
-  box-shadow: 0 2px 10px rgba(23, 57, 104, .045);
-  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
-}
-div[data-testid="stVerticalBlockBorderWrapper"]:hover {
-  border-color: #c7d8ee !important;
-  box-shadow: var(--lawpath-shadow);
+  box-shadow: none;
+  transition: none;
 }
 
 .lawpath-brand { color: var(--lawpath-navy); font-size: 2rem; font-weight: 800; line-height: 1; }
