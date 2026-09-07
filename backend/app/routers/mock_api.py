@@ -5,7 +5,8 @@ from math import ceil
 from typing import Literal
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field, field_validator
 
 from backend.app.services.mock_store import hash_password, iso, now, store, verify_password
@@ -13,14 +14,15 @@ from backend.app.mock_data.catalog import CATALOG
 
 router = APIRouter(prefix="/api", tags=["mock-api"])
 Category = Literal["housing", "labor", "consumer"]
+bearer_scheme = HTTPBearer(auto_error=False, description="로그인 응답의 session_token을 붙여 넣습니다. Swagger에는 토큰값만 입력하세요.")
 
 
 def fail(status: int, code: str, message: str) -> None:
     raise HTTPException(status_code=status, detail={"code": code, "message": message})
 
 
-def actor(authorization: str | None = Header(default=None), x_guest_id: str | None = Header(default=None)) -> dict:
-    token = authorization.removeprefix("Bearer ").strip() if authorization and authorization.startswith("Bearer ") else None
+def actor(credentials: HTTPAuthorizationCredentials | None = Security(bearer_scheme), x_guest_id: str | None = Header(default=None, description="비회원의 브라우저 세션을 구분하는 UUID입니다.")) -> dict:
+    token = credentials.credentials if credentials else None
     try:
         return store.actor_for_token(token, x_guest_id)
     except PermissionError:
@@ -120,9 +122,9 @@ def login(body: Credentials) -> dict:
     return {"session_token": token, "expires_in": 28800, "user": public}
 
 
-@router.post("/auth/logout", status_code=204, summary="로그아웃", description="현재 Bearer Session Token을 즉시 폐기합니다.")
-def logout(authorization: str | None = Header(default=None)) -> None:
-    token = authorization.removeprefix("Bearer ").strip() if authorization and authorization.startswith("Bearer ") else None
+@router.post("/auth/logout", status_code=204, summary="로그아웃", description="현재 Bearer Session Token을 즉시 폐기합니다. Swagger 오른쪽 위 Authorize에서 로그인 토큰을 설정한 뒤 실행하세요.")
+def logout(credentials: HTTPAuthorizationCredentials | None = Security(bearer_scheme)) -> None:
+    token = credentials.credentials if credentials else None
     session = store.sessions.pop(token, None) if token else None
     if not session:
         fail(401, "AUTH_REQUIRED", "로그인이 필요합니다.")
