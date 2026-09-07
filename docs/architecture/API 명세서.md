@@ -132,6 +132,7 @@ FastAPI 기본 문자열 오류 대신 가능한 한 다음 Envelope를 사용�
 |---:|---|---|
 | 400 | `INVALID_REQUEST` | 일반 입력 오류 |
 | 401 | `AUTH_REQUIRED` | 로그인 필요 |
+| 401 | `AUTH_SESSION_EXPIRED` | 로그인 Session 만료, 다시 로그인 필요 |
 | 403 | `FORBIDDEN` | 역할 또는 소유권 부족 |
 | 404 | `NOT_FOUND` | 대상 없음 |
 | 409 | `CONFLICT` | 중복 또는 현재 상태와 충돌 |
@@ -405,7 +406,7 @@ POST /api/auth/logout
 GET /api/faqs?category=housing
 ```
 
-비회원 포함 누구나 조회 가능하다. `is_active=true`만 반환하며 `is_pinned DESC, display_order ASC`로 정렬한다.
+비회원 포함 누구나 조회 가능하다. `is_active=true`만 반환하며 `is_pinned DESC, display_order ASC, updated_at DESC`로 정렬한다. 상단 고정 FAQ의 `display_order=0`을 허용한다.
 
 ```json
 {
@@ -539,7 +540,7 @@ DELETE /api/questions/{question_id}
 - Frontend·로그·오류 응답에는 게시글 비밀번호와 Hash를 반환하지 않는다.
 - `PENDING` 질문만 원문 수정 가능하다.
 - `ANSWERED` 질문은 기존 근거 보존을 위해 직접 수정하지 않는다.
-- 관리자는 운영 목적으로 모든 질문을 삭제할 수 있다. 관리자 삭제 요청에는 `reason`이 필수이며 감사 로그를 남긴다.
+- 관리자는 운영 목적으로 모든 질문을 삭제할 수 있다. 이때 요청 Body의 `reason`은 필수이며 관리자 ID, 질문 ID, 사유, 삭제 시각을 감사 로그에 남긴다.
 
 잠금 해제 요청:
 
@@ -742,10 +743,9 @@ DELETE /api/notifications/read-items
 - 알림 목록은 읽지 않은 알림 우선, 같은 상태에서는 최신순으로 정렬한다.
 - 비밀번호, API Key, 내부 오류 전체 내용은 알림에 포함하지 않는다.
 - 알림 대상에 접근 권한이 없으면 관련 화면을 열지 않는다.
+- `read-items`는 동적 경로 `/{notification_id}`와 충돌하지 않도록 읽은 알림 일괄 삭제에 사용한다.
 
-`read-items`처럼 고정된 경로는 `/{notification_id}`와 충돌하지 않게 구성한다.
-
-## 16. Agent 실행 상태 API — `Backend 확인 요청`
+## 16. Agent 실행 상태 API — polling 우선
 
 ```http
 POST /api/agent-runs
@@ -754,11 +754,11 @@ POST /api/agent-runs/{run_id}/cancel
 GET  /api/agent-runs/{run_id}/events
 ```
 
-- 생성 요청에는 `Idempotency-Key`를 필수로 사용한다.
-- 상태는 `QUEUED`, `RUNNING`, `WAITING_APPROVAL`, `COMPLETED`, `FAILED`, `CANCELLED` 중 하나다.
-- 첫 연결은 `GET` polling으로 구현하고, 이후 `/events` SSE를 추가한다.
-- SSE 재연결 시 마지막 Event ID 이후부터 받을 수 있어야 한다.
-- 진행 상태는 Redis, 완료된 사용자 이력은 PostgreSQL에 저장한다.
+- `POST` 요청에는 `Idempotency-Key` Header가 필수다. 같은 사용자·같은 Key는 같은 `run_id`와 현재 상태를 반환한다.
+- 상태는 `QUEUED | RUNNING | WAITING_APPROVAL | COMPLETED | FAILED | CANCELLED`다.
+- 첫 연동에서는 `GET /api/agent-runs/{run_id}` polling을 사용한다.
+- `/events`는 현재 polling 호환 JSON 이벤트 목록이며, SSE는 polling 안정화 후 같은 경로로 확장한다.
+- Mock 단계의 실행 상태는 메모리에 저장되고 Backend 재시작 시 초기화된다.
 
 ## 17. Backend 구현 기준과 순서
 

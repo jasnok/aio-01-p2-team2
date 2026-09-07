@@ -12,9 +12,9 @@ from backend.app.core.config import get_settings
 def _mcp_servers() -> dict[str, dict[str, Any]]:
     settings = get_settings()
     return {
-        "food": {
+        "legal": {
             "transport": "streamable-http",
-            "url": settings.food_mcp_url,
+            "url": settings.legal_mcp_url,
         }
     }
 
