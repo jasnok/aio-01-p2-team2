@@ -68,6 +68,23 @@ def render_mock_auth() -> None:
         _render_local_auth()
 
 
+def _render_demo_login_accounts() -> None:
+    """로그인 테스트용 계정을 값별로 복사할 수 있게 안내한다."""
+    with st.expander("📋 테스트 로그인 계정 (클릭해서 복사)", expanded=True):
+        st.markdown("**일반 회원**")
+        st.caption("이메일")
+        st.code("user@lawpath.demo", language=None)
+        st.caption("비밀번호")
+        st.code("Demo1234!", language=None)
+
+        st.markdown("**관리자**")
+        st.caption("이메일")
+        st.code("admin@lawpath.demo", language=None)
+        st.caption("비밀번호")
+        st.code("Admin1234!", language=None)
+        st.caption("각 코드 상자 오른쪽의 복사 아이콘을 누른 뒤 로그인 입력란에 붙여 넣으세요.")
+
+
 def _render_local_auth() -> None:
     user = st.session_state.current_user
     st.warning("DEMO 인증입니다. 실제 개인정보나 사용 중인 비밀번호를 입력하지 마세요.")
@@ -82,8 +99,7 @@ def _render_local_auth() -> None:
 
     login_tab, signup_tab, reset_tab = st.tabs(["로그인", "회원가입", "비밀번호 재설정"])
     with login_tab:
-        st.caption("회원: user@lawpath.demo / Demo1234!")
-        st.caption("관리자: admin@lawpath.demo / Admin1234!")
+        _render_demo_login_accounts()
         with st.form("mock-login-form"):
             email = st.text_input("이메일", key="mock-login-email")
             password = st.text_input("비밀번호", type="password", key="mock-login-password")
@@ -137,6 +153,7 @@ def _render_api_auth() -> None:
 
     login_tab, signup_tab, reset_tab = st.tabs(["로그인", "회원가입", "비밀번호 재설정"])
     with login_tab:
+        _render_demo_login_accounts()
         with st.form("api-login-form"):
             email = st.text_input("이메일", key="api-login-email")
             password = st.text_input("비밀번호", type="password", key="api-login-password")
