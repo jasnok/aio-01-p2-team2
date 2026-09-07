@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 
 from backend.app.main import app
+from backend.app.services.mock_store import now, store
 
 
 client = TestClient(app)
@@ -68,3 +69,39 @@ def test_validation_envelope_has_request_id() -> None:
     assert response.status_code == 422
     assert response.json()["detail"]["code"] == "VALIDATION_ERROR"
     assert response.json()["detail"]["request_id"].startswith("req-")
+
+
+def test_admin_can_delete_any_question_only_with_audit_reason() -> None:
+    owner = {"X-Guest-Id": "guest-delete-owner"}
+    question = client.post("/api/questions", headers=owner, json=question_body()).json()
+    admin = login("admin@lawpath.demo", "Admin1234!")
+    missing_reason = client.request("DELETE", f"/api/questions/{question['id']}", headers=admin, json={})
+    assert missing_reason.status_code == 422
+    deleted = client.request("DELETE", f"/api/questions/{question['id']}", headers=admin, json={"reason": "신고된 게시글 운영 조치"})
+    assert deleted.status_code == 204
+    audit = store.audit_logs[-1]
+    assert audit["actor_id"] == "admin-demo"
+    assert audit["target_id"] == question["id"]
+    assert audit["reason"] == "신고된 게시글 운영 조치"
+
+
+def test_notification_read_items_and_agent_run_polling_contract() -> None:
+    guest = {"X-Guest-Id": "guest-run"}
+    client.post("/api/questions", headers=guest, json=question_body())
+    assert client.delete("/api/notifications/read-items", headers=guest).status_code == 204
+    created = client.post("/api/agent-runs", headers=guest | {"Idempotency-Key": "run-key-001"}, json={"category": "labor", "question": "퇴직금을 받지 못했습니다."})
+    assert created.status_code == 201
+    run_id = created.json()["id"]
+    repeated = client.post("/api/agent-runs", headers=guest | {"Idempotency-Key": "run-key-001"}, json={"category": "labor", "question": "다른 질문이어도 같은 키입니다."})
+    assert repeated.json()["id"] == run_id
+    assert client.get(f"/api/agent-runs/{run_id}", headers=guest).json()["status"] == "QUEUED"
+    assert client.post(f"/api/agent-runs/{run_id}/cancel", headers=guest).json()["status"] == "CANCELLED"
+
+
+def test_expired_session_uses_common_error_code() -> None:
+    headers = login("user@lawpath.demo", "Demo1234!")
+    token = headers["Authorization"].removeprefix("Bearer ")
+    store.sessions[token]["expires_at"] = now().replace(year=2000)
+    response = client.get("/api/auth/me", headers=headers)
+    assert response.status_code == 401
+    assert response.json()["detail"]["code"] == "AUTH_SESSION_EXPIRED"

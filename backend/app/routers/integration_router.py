@@ -26,22 +26,24 @@ def _mcp_error(error: Exception) -> HTTPException:
     code = "MCP_TIMEOUT" if isinstance(error, (TimeoutError, asyncio.TimeoutError)) else "MCP_UNAVAILABLE"
     return HTTPException(
         status_code=503,
-        detail={"code": code, "message": str(error) or "Food MCP 연결에 실패했습니다."},
+        detail={"code": code, "message": "Legal MCP 연결 또는 초기화에 실패했습니다."},
     )
 
 
 @router.get("/mcp", response_model=McpStatusResponse)
 async def get_mcp_status() -> McpStatusResponse:
-    _ensure_enabled()
     try:
         tools = await discover_tools()
     except Exception as error:
         raise _mcp_error(error) from error
     settings = get_settings()
+    legal_tools = [tool["name"] for tool in tools if tool["server"] == "legal"]
     return McpStatusResponse(
-        server="food",
-        url=settings.food_mcp_url,
-        tools=[tool["name"] for tool in tools if tool["server"] == "food"],
+        server="legal",
+        url=settings.legal_mcp_url,
+        initialized=True,
+        tools=legal_tools,
+        tool_count=len(legal_tools),
     )
 
 

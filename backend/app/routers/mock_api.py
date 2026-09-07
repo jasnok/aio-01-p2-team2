@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from math import ceil
 from typing import Literal
 from uuid import uuid4
@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, S
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field, field_validator
 
-from backend.app.services.mock_store import hash_password, iso, now, store, verify_password
+from backend.app.services.mock_store import SessionExpiredError, hash_password, iso, now, store, verify_password
 from backend.app.mock_data.catalog import CATALOG
 
 router = APIRouter(prefix="/api", tags=["mock-api"])
@@ -25,6 +25,8 @@ def actor(credentials: HTTPAuthorizationCredentials | None = Security(bearer_sch
     token = credentials.credentials if credentials else None
     try:
         return store.actor_for_token(token, x_guest_id)
+    except SessionExpiredError:
+        fail(401, "AUTH_SESSION_EXPIRED", "로그인 세션이 만료되었습니다. 다시 로그인해 주세요.")
     except PermissionError:
         fail(401, "AUTH_REQUIRED", "로그인이 필요하거나 세션이 만료되었습니다.")
 
@@ -144,7 +146,10 @@ def password_reset(body: PasswordReset) -> dict:
 @router.get("/faqs", summary="공개 FAQ 조회", description="누구나 조회할 수 있습니다. 고정 FAQ가 먼저, 그 다음 표시 순서대로 반환됩니다.")
 def faqs(category: Category | None = None) -> dict:
     items = [item.copy() for item in store.faqs.values() if item["is_active"] and (category is None or item["category"] == category)]
-    return {"items": sorted(items, key=lambda item: (not item["is_pinned"], item["display_order"]))}
+    items.sort(key=lambda item: datetime.fromisoformat(item["updated_at"]).timestamp(), reverse=True)
+    items.sort(key=lambda item: item["display_order"])
+    items.sort(key=lambda item: item["is_pinned"], reverse=True)
+    return {"items": items}
 
 
 class FaqBody(BaseModel):
@@ -192,6 +197,9 @@ class QuestionBody(BaseModel):
 
 
 class UnlockBody(BaseModel): post_password: str = Field(min_length=4, max_length=20)
+class QuestionDeleteBody(BaseModel):
+    post_password: str | None = Field(default=None, min_length=4, max_length=20, description="작성자 삭제 시 필요한 게시글 비밀번호입니다.")
+    reason: str | None = Field(default=None, min_length=2, max_length=500, description="관리자 삭제 시 필수인 운영·신고 처리 사유입니다.")
 class EditQuestion(BaseModel):
     title: str = Field(min_length=2, max_length=100)
     content: str = Field(min_length=10, max_length=2000)
@@ -255,10 +263,14 @@ def update_question(question_id: str, body: EditQuestion, value: dict = Depends(
     return question_view(question, value, detail=True)
 
 
-@router.delete("/questions/{question_id}", status_code=204, summary="질문 삭제", description="작성자와 게시글 비밀번호를 모두 확인한 뒤 삭제합니다.")
-def remove_question(question_id: str, body: UnlockBody, value: dict = Depends(actor)) -> None:
+@router.delete("/questions/{question_id}", status_code=204, summary="질문 삭제", description="작성자는 비밀번호 확인 후 삭제합니다. 관리자는 모든 질문을 삭제할 수 있지만 reason을 반드시 입력하며 감사 로그가 남습니다.")
+def remove_question(question_id: str, body: QuestionDeleteBody, value: dict = Depends(actor)) -> None:
     question = get_question(question_id)
-    if question["owner_id"] != value["id"] or not verify_password(body.post_password, question["password_hash"]):
+    if value["role"] == "ADMIN":
+        if not body.reason:
+            fail(422, "VALIDATION_ERROR", "관리자 삭제 사유를 입력해 주세요.")
+        store.audit(value, "QUESTION_DELETED_BY_ADMIN", question_id, body.reason.strip())
+    elif question["owner_id"] != value["id"] or not verify_password(body.post_password or "", question["password_hash"]):
         fail(403, "FORBIDDEN", "작성자와 게시글 비밀번호를 확인해 주세요.")
     store.questions.pop(question_id)
 
@@ -284,6 +296,10 @@ def answer(question_id: str, body: AnswerBody, value: dict = Depends(require_adm
 class CommentBody(BaseModel):
     content: str = Field(min_length=2, max_length=1000, description="댓글 내용입니다.")
     comment_password: str | None = Field(default=None, min_length=4, max_length=20, description="비회원 댓글을 수정·삭제할 때 필요한 비밀번호입니다. 회원은 입력하지 않습니다.")
+
+
+class CommentDeleteBody(BaseModel):
+    comment_password: str | None = Field(default=None, min_length=4, max_length=20, description="비회원이 자신의 댓글을 삭제할 때 필요한 비밀번호입니다.")
 
 
 def can_view_comments(question: dict, value: dict) -> bool:
@@ -326,13 +342,73 @@ def update_comment(question_id: str, comment_id: str, body: CommentBody, value: 
 
 
 @router.delete("/questions/{question_id}/comments/{comment_id}", status_code=204, summary="댓글 삭제", description="작성자는 자신의 댓글을 삭제할 수 있고, 관리자는 운영 목적으로 다른 사람 댓글을 삭제할 수 있습니다.")
-def remove_comment(question_id: str, comment_id: str, body: CommentBody | None = None, value: dict = Depends(actor)) -> None:
+def remove_comment(question_id: str, comment_id: str, body: CommentDeleteBody | None = None, value: dict = Depends(actor)) -> None:
     comment = store.comments.get(comment_id)
     if not comment or comment["question_id"] != question_id: fail(404, "NOT_FOUND", "댓글을 찾을 수 없습니다.")
     owner = comment["owner_id"] == value["id"] and (value["role"] != "GUEST" or verify_password((body.comment_password if body else "") or "", comment["password_hash"]))
     if not owner and value["role"] != "ADMIN": fail(403, "FORBIDDEN", "작성자만 댓글을 삭제할 수 있습니다.")
     if value["role"] == "ADMIN" and not owner: store.audit(value, "COMMENT_DELETED_BY_ADMIN", comment_id)
     store.comments.pop(comment_id)
+
+
+AgentRunStatus = Literal["QUEUED", "RUNNING", "WAITING_APPROVAL", "COMPLETED", "FAILED", "CANCELLED"]
+
+
+class AgentRunCreate(BaseModel):
+    category: Category
+    question: str = Field(min_length=5, max_length=2000, description="분석할 생활 법률 질문입니다.")
+
+
+def get_run(run_id: str, value: dict) -> dict:
+    run = store.agent_runs.get(run_id)
+    if not run:
+        fail(404, "NOT_FOUND", "Agent 실행 정보를 찾을 수 없습니다.")
+    if run["owner_id"] != value["id"] and value["role"] != "ADMIN":
+        fail(403, "FORBIDDEN", "다른 사용자의 Agent 실행 정보에는 접근할 수 없습니다.")
+    return run
+
+
+def run_view(run: dict) -> dict:
+    return {key: value for key, value in run.items() if key not in {"owner_id"}}
+
+
+@router.post("/agent-runs", status_code=201, summary="Agent 실행 생성", description="polling으로 조회할 Agent 실행을 만듭니다. Idempotency-Key Header가 필수이며 같은 키에는 같은 run_id를 돌려줍니다.")
+def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = Header(default=None), value: dict = Depends(actor)) -> dict:
+    if not idempotency_key:
+        fail(400, "INVALID_REQUEST", "Idempotency-Key Header가 필요합니다.")
+    key = (value["id"], "/api/agent-runs", idempotency_key)
+    cached = store.idempotency.get(key)
+    if cached and cached[0] > now():
+        return cached[1]
+    run_id = f"run-{uuid4()}"
+    timestamp = iso()
+    run = {"id": run_id, "owner_id": value["id"], "category": body.category, "question": body.question.strip(), "status": "QUEUED", "created_at": timestamp, "updated_at": timestamp, "events": [{"id": 1, "status": "QUEUED", "message": "분석 요청이 접수되었습니다.", "occurred_at": timestamp}]}
+    store.agent_runs[run_id] = run
+    result = run_view(run)
+    store.idempotency[key] = (now() + timedelta(hours=24), result)
+    return result
+
+
+@router.get("/agent-runs/{run_id}", summary="Agent 실행 상태 조회", description="Frontend polling용 API입니다. 현재 상태와 마지막 갱신 시각을 반환합니다.")
+def get_agent_run(run_id: str, value: dict = Depends(actor)) -> dict:
+    return run_view(get_run(run_id, value))
+
+
+@router.post("/agent-runs/{run_id}/cancel", summary="Agent 실행 취소", description="아직 완료·실패되지 않은 본인 Agent 실행을 취소합니다.")
+def cancel_agent_run(run_id: str, value: dict = Depends(actor)) -> dict:
+    run = get_run(run_id, value)
+    if run["status"] in {"COMPLETED", "FAILED", "CANCELLED"}:
+        fail(409, "CONFLICT", "이미 종료된 Agent 실행은 취소할 수 없습니다.")
+    timestamp = iso()
+    run.update({"status": "CANCELLED", "updated_at": timestamp})
+    run["events"].append({"id": len(run["events"]) + 1, "status": "CANCELLED", "message": "사용자가 분석을 취소했습니다.", "occurred_at": timestamp})
+    return run_view(run)
+
+
+@router.get("/agent-runs/{run_id}/events", summary="Agent 실행 이벤트 조회", description="SSE 도입 전 polling 호환용 JSON 이벤트 목록입니다. 이후 동일 경로를 SSE로 확장할 수 있습니다.")
+def get_agent_run_events(run_id: str, value: dict = Depends(actor)) -> dict:
+    run = get_run(run_id, value)
+    return {"run_id": run_id, "items": run["events"]}
 
 
 @router.get("/history", summary="내 질의 이력 조회", description="회원은 자신의 계정 이력, 비회원은 같은 X-Guest-Id의 이력만 볼 수 있습니다.")
@@ -379,13 +455,13 @@ def read_all(value: dict = Depends(actor)) -> dict:
     return {"updated": True}
 
 
+@router.delete("/notifications/read-items", status_code=204, summary="읽은 알림 일괄 삭제", description="현재 사용자에게 속한 읽은 알림만 모두 삭제합니다.")
+def delete_read_items(value: dict = Depends(actor)) -> None:
+    store.notifications[value["id"]] = [item for item in store.notifications.get(value["id"], []) if not item["is_read"]]
+
+
 @router.delete("/notifications/{notification_id}", status_code=204)
 def delete_notification(notification_id: str, value: dict = Depends(actor)) -> None:
     items = store.notifications.get(value["id"], [])
     if not any(item["id"] == notification_id for item in items): fail(404, "NOT_FOUND", "알림을 찾을 수 없습니다.")
     store.notifications[value["id"]] = [item for item in items if item["id"] != notification_id]
-
-
-@router.delete("/notifications/read", status_code=204)
-def delete_read(value: dict = Depends(actor)) -> None:
-    store.notifications[value["id"]] = [item for item in store.notifications.get(value["id"], []) if not item["is_read"]]

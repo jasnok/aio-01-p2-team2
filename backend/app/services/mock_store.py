@@ -15,6 +15,10 @@ from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 
+class SessionExpiredError(PermissionError):
+    """만료된 Token과 Token 누락을 API 응답에서 구분한다."""
+
+
 def now() -> datetime:
     return datetime.now(timezone.utc)
 
@@ -53,6 +57,7 @@ class MemoryStore:
         self.history: dict[str, list[dict]] = {}
         self.unlocks: dict[tuple[str, str], datetime] = {}
         self.idempotency: dict[tuple[str, str, str], tuple[datetime, dict]] = {}
+        self.agent_runs: dict[str, dict] = {}
         self.audit_logs: list[dict] = []
         self._seed()
 
@@ -86,8 +91,11 @@ class MemoryStore:
     def actor_for_token(self, token: str | None, guest_id: str | None) -> dict:
         if token:
             session = self.sessions.get(token)
-            if not session or session["expires_at"] <= now():
+            if not session:
                 raise PermissionError("AUTH_REQUIRED")
+            if session["expires_at"] <= now():
+                self.sessions.pop(token, None)
+                raise SessionExpiredError("AUTH_SESSION_EXPIRED")
             return self.public_user(self.users[session["user_id"]])
         return {"id": guest_id or "guest-anonymous", "role": "GUEST", "display_name": "비회원"}
 
@@ -95,8 +103,8 @@ class MemoryStore:
         item = {"id": f"notification-{uuid4()}", "type": kind, "title": title, "message": message, "severity": severity, "target_type": target_type, "target_id": target_id, "category": category, "created_at": iso(), "is_read": False}
         self.notifications.setdefault(owner_id, []).append(item)
 
-    def audit(self, actor: dict, action: str, target_id: str) -> None:
-        self.audit_logs.append({"id": str(uuid4()), "actor_id": actor["id"], "action": action, "target_id": target_id, "created_at": iso()})
+    def audit(self, actor: dict, action: str, target_id: str, reason: str | None = None) -> None:
+        self.audit_logs.append({"id": str(uuid4()), "actor_id": actor["id"], "action": action, "target_id": target_id, "reason": reason, "created_at": iso()})
 
 
 store = MemoryStore()

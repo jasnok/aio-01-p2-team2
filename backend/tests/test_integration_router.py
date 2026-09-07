@@ -7,11 +7,18 @@ from backend.app.routers import integration_router
 client = TestClient(app)
 
 
-def test_integration_route_is_hidden_when_disabled(monkeypatch) -> None:
-    settings = type("Settings", (), {"enable_integration_debug": False})()
+def test_legal_mcp_status_reports_initialization_and_tools(monkeypatch) -> None:
+    settings = type("Settings", (), {"legal_mcp_url": "http://legal.test:8013/mcp"})()
     monkeypatch.setattr(integration_router, "get_settings", lambda: settings)
+
+    async def fake_discover_tools():
+        return [{"server": "legal", "name": "search_cases"}, {"server": "legal", "name": "get_law_article"}]
+
+    monkeypatch.setattr(integration_router, "discover_tools", fake_discover_tools)
     response = client.get("/api/integration/mcp")
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.json()["initialized"] is True
+    assert response.json()["tools"] == ["search_cases", "get_law_article"]
 
 
 def test_food_search_returns_mcp_payload(monkeypatch) -> None:
