@@ -17,8 +17,8 @@ from legal_mcp.tools.search_legal_documents import (
     search_legal_documents as search_legal_documents_tool,
 )
 
-MCP_HOST = os.getenv("MCP_HOST", "0.0.0.0")
-MCP_PORT = int(os.getenv("MCP_PORT", "8011"))
+MCP_HOST = os.getenv("MCP_HOST", "192.100.200.72")
+MCP_PORT = int(os.getenv("MCP_PORT", "8012"))
 
 mcp = FastMCP(
     "legal-research-mcp",
