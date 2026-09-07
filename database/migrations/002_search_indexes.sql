@@ -1,4 +1,4 @@
-"""검색 속도를 위한 SQL"""
+/*검색 속도를 위한 SQL*/
 
 CREATE INDEX IF NOT EXISTS idx_legal_documents_category_type
     ON legal_documents (category, document_type);

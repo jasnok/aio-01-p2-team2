@@ -1,0 +1,78 @@
+{
+  "collected_at": "2026-09-07T08:10:55.867186+00:00",
+  "documents": [
+    {
+      "law_name": "민법",
+      "law_id": "001706",
+      "law_mst": "284415",
+      "effective_date": "20260317",
+      "categories": [
+        "housing",
+        "consumer"
+      ],
+      "filename": "민법.xml",
+      "source": "국가법령정보센터",
+      "status": "downloaded"
+    },
+    {
+      "law_name": "주택임대차보호법",
+      "law_id": "001248",
+      "law_mst": "276291",
+      "effective_date": "20260102",
+      "categories": [
+        "housing"
+      ],
+      "filename": "주택임대차보호법.xml",
+      "source": "국가법령정보센터",
+      "status": "downloaded"
+    },
+    {
+      "law_name": "근로기준법",
+      "law_id": "001872",
+      "law_mst": "283457",
+      "effective_date": "20260820",
+      "categories": [
+        "labor"
+      ],
+      "filename": "근로기준법.xml",
+      "source": "국가법령정보센터",
+      "status": "downloaded"
+    },
+    {
+      "law_name": "근로자퇴직급여 보장법",
+      "law_id": "009883",
+      "law_mst": "284455",
+      "effective_date": "20260701",
+      "categories": [
+        "labor"
+      ],
+      "filename": "근로자퇴직급여_보장법.xml",
+      "source": "국가법령정보센터",
+      "status": "downloaded"
+    },
+    {
+      "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+      "law_id": "009318",
+      "law_mst": "282793",
+      "effective_date": "20260721",
+      "categories": [
+        "consumer"
+      ],
+      "filename": "전자상거래법.xml",
+      "source": "국가법령정보센터",
+      "status": "downloaded"
+    },
+    {
+      "law_name": "소비자기본법",
+      "law_id": "001589",
+      "law_mst": "277233",
+      "effective_date": "20260102",
+      "categories": [
+        "consumer"
+      ],
+      "filename": "소비자기본법.xml",
+      "source": "국가법령정보센터",
+      "status": "downloaded"
+    }
+  ]
+}

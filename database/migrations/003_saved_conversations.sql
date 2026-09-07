@@ -1,4 +1,4 @@
-"""사용자가 명시적으로 저장한 대화만 PostgreSQL에 장기 보관할 때 필요"""
+/*사용자가 명시적으로 저장한 대화만 PostgreSQL에 장기 보관할 때 필요*/
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
