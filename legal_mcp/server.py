@@ -4,6 +4,7 @@ import os
 from typing import Literal
 
 from mcp.server.fastmcp import FastMCP
+from legal_mcp.tools.search_laws import search_laws as search_laws_tool
 
 from legal_mcp.schemas.tools import (
     LawArticleInput,
@@ -42,6 +43,23 @@ def search_cases(
     """질의와 유사한 판례를 검색합니다."""
 
     result = search_cases_tool(
+        SearchInput(
+            query=query,
+            category=category,
+            top_k=top_k,
+        )
+    )
+    return result.model_dump(mode="json")
+
+@mcp.tool()
+def search_laws(
+    query: str,
+    category: Literal["housing", "labor", "consumer"],
+    top_k: int = 3,
+) -> dict:
+    """질의와 유사한 법령 조문을 검색합니다."""
+
+    result = search_laws_tool(
         SearchInput(
             query=query,
             category=category,

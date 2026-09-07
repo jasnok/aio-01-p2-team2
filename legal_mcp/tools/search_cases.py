@@ -37,7 +37,7 @@ def search_cases(arguments: SearchInput) -> ToolResult:
                 judgment_result=row["judgment_result"],
                 metadata={
                     "category": arguments.category,
-                    "retrieval_method": "vector",
+                    "retrieval_method": "hybrid",
                 },
             )
             for row in rows

@@ -1,15 +1,17 @@
 """PostgreSQL + pgvector 연결을 제공한다."""
 
 import os
-from contextlib import contextmanager
 from collections.abc import Iterator
+from contextlib import contextmanager
+from pathlib import Path
 
 import psycopg
 from dotenv import load_dotenv
 from pgvector.psycopg import register_vector
 from psycopg.rows import dict_row
 
-load_dotenv()
+ENV_FILE = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(ENV_FILE)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 

@@ -74,7 +74,7 @@ def search_legal_documents(
                 "category": arguments.category,
                 "document_types": arguments.document_types,
                 "result_count": len(items),
-                "retrieval_method": "vector",
+                "retrieval_method": "hybrid",
             },
             error=None,
         )

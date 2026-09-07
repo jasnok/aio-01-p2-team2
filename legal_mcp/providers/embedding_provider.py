@@ -3,7 +3,7 @@
 import os
 from typing import Protocol
 
-import httpx
+from openai import OpenAI
 
 
 class EmbeddingProvider(Protocol):
@@ -13,49 +13,57 @@ class EmbeddingProvider(Protocol):
     def embed(self, texts: list[str]) -> list[list[float]]: ...
 
 
-class OllamaEmbeddingProvider:
-    """Ollama의 /api/embed API를 사용하는 임베딩 Provider."""
+class OpenAIEmbeddingProvider:
+    """OpenAI Embeddings API를 사용하는 Provider."""
 
     def __init__(
         self,
-        base_url: str | None = None,
         model: str | None = None,
-        timeout: float = 30.0,
+        dimension: int | None = None,
     ) -> None:
-        self.base_url = (
-            base_url
-            or os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
-        ).rstrip("/")
+        api_key = os.getenv("OPENAI_API_KEY")
+
+        if not api_key:
+            raise RuntimeError("OPENAI_API_KEY 환경변수가 설정되지 않았습니다.")
+
         self.model = model or os.getenv(
             "EMBEDDING_MODEL",
-            "nomic-embed-text",
+            "text-embedding-3-small",
         )
-        self.timeout = timeout
-        self.dimension = int(os.getenv("EMBEDDING_DIMENSION", "768"))
+        self.dimension = dimension or int(
+            os.getenv("EMBEDDING_DIMENSION", "1536")
+        )
+        self.client = OpenAI(api_key=api_key)
 
     def embed(self, texts: list[str]) -> list[list[float]]:
         if not texts:
             return []
 
-        response = httpx.post(
-            f"{self.base_url}/api/embed",
-            json={
-                "model": self.model,
-                "input": texts,
-            },
-            timeout=self.timeout,
+        response = self.client.embeddings.create(
+            model=self.model,
+            input=texts,
+            encoding_format="float",
         )
-        response.raise_for_status()
 
-        embeddings = response.json().get("embeddings")
+        embeddings = [
+            list(item.embedding)
+            for item in sorted(response.data, key=lambda item: item.index)
+        ]
 
-        if not isinstance(embeddings, list) or len(embeddings) != len(texts):
-            raise ValueError("Ollama 임베딩 응답 형식이 올바르지 않습니다.")
+        if any(len(embedding) != self.dimension for embedding in embeddings):
+            raise ValueError(
+                f"임베딩 차원이 DB 설정과 다릅니다. "
+                f"expected={self.dimension}"
+            )
 
         return embeddings
 
 
 def create_embedding(text: str) -> list[float]:
-    """단일 검색 질의를 벡터로 변환한다."""
-    provider = OllamaEmbeddingProvider()
+    """단일 검색 질의를 1,536차원 벡터로 변환한다."""
+
+    if not text.strip():
+        raise ValueError("임베딩할 텍스트는 비어 있을 수 없습니다.")
+
+    provider = OpenAIEmbeddingProvider()
     return provider.embed([text])[0]
