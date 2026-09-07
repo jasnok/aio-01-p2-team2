@@ -4,11 +4,16 @@ import streamlit as st
 
 from copy import deepcopy
 from frontend.data.mock_community import MOCK_FAQ_ARTICLES, ROLE_USERS, build_mock_questions
+from frontend.services.mock_auth_service import build_demo_accounts
+from frontend.services.mock_notification_service import create_notification
 
 
 def initialize_session() -> None:
+    session_id = st.session_state.get("session_id", f"web-{uuid.uuid4()}")
+    guest_user = deepcopy(ROLE_USERS["GUEST"])
+    guest_user["id"] = f"guest-{session_id}"
     defaults = {
-        "session_id": f"web-{uuid.uuid4()}",
+        "session_id": session_id,
         "current_page": "home",
         "selected_category": None,
         "selected_feature": "analysis",
@@ -21,10 +26,17 @@ def initialize_session() -> None:
         "session_history": [],
         "document_checks": {},
         "action_checks": {},
-        "notifications": ["DEMO 모드로 실행 중입니다."],
+        "notifications": [
+            create_notification(
+                "DEMO_MODE",
+                "DEMO 모드로 실행 중입니다.",
+                "현재 결과와 알림은 화면 확인용이며 실제 법률정보가 아닙니다.",
+                severity="info",
+            )
+        ],
         "presentation_step": 1,
         "mock_role": "GUEST",
-        "current_user": deepcopy(ROLE_USERS["GUEST"]),
+        "current_user": guest_user,
         "faq_articles": deepcopy(MOCK_FAQ_ARTICLES),
         "public_questions": build_mock_questions(),
         "question_page": 1,
@@ -37,6 +49,9 @@ def initialize_session() -> None:
         "mock_scenario": "success",
         "conversation_messages": [],
         "evaluation_results": [],
+        "mock_accounts": build_demo_accounts(),
+        "auth_message": None,
+        "unlocked_question_ids": set(),
     }
     for key, value in defaults.items():
         if key not in st.session_state:
@@ -68,8 +83,12 @@ def set_mock_role(role: str) -> None:
     if role not in ROLE_USERS:
         raise ValueError("지원하지 않는 Mock 역할입니다.")
     st.session_state.mock_role = role
-    st.session_state.current_user = deepcopy(ROLE_USERS[role])
+    user = deepcopy(ROLE_USERS[role])
+    if role == "GUEST":
+        user["id"] = f"guest-{st.session_state.session_id}"
+    st.session_state.current_user = user
     st.session_state.question_edit_id = None
+    st.session_state.unlocked_question_ids = set()
 
 
 def reset_session() -> None:

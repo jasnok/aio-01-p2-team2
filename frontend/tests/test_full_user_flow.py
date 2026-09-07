@@ -11,7 +11,7 @@ def test_all_local_frontend_features_render() -> None:
     assert not app.exception
 
     app.button(key="category-housing").click().run(timeout=20)
-    app.text_area[0].set_value("계약이 끝났는데 보증금을 받지 못했습니다.")
+    app.text_area(key="question_message").set_value("계약이 끝났는데 보증금을 받지 못했습니다.")
     next(button for button in app.button if button.label == "✦ 사례 분석하기").click().run(timeout=20)
     assert not app.exception
     assert app.session_state["last_result"]["agent_id"] == "housing"
@@ -19,12 +19,12 @@ def test_all_local_frontend_features_render() -> None:
     assert any(expander.label == "판례 상세 보기" for expander in app.expander)
 
     app.sidebar.button(key="nav-laws").click().run(timeout=20)
-    app.text_input[0].set_value("보증금")
+    app.text_input(key="law_query").set_value("보증금")
     next(button for button in app.button if button.label == "검색하기").click().run(timeout=20)
     assert app.session_state["law_results"]
 
     app.sidebar.button(key="nav-cases").click().run(timeout=20)
-    app.text_input[0].set_value("보증금")
+    app.text_input(key="case_query").set_value("보증금")
     next(button for button in app.button if button.label == "검색하기").click().run(timeout=20)
     assert app.session_state["case_results"]
 

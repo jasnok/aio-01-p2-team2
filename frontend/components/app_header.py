@@ -20,20 +20,21 @@ def render_header(show_home: bool = False) -> None:
             st.markdown("1. 분야 선택\n2. 사례 입력\n3. 관련 법령·사례 확인")
             st.warning("현재는 화면 확인용 DEMO 데이터입니다.")
     with notice_area:
-        notices = st.session_state.get("notifications", [])
-        with st.popover(f"🔔 알림 {len(notices)}", use_container_width=True):
-            st.markdown("### 🔔 알림")
-            if notices:
-                for notice in notices:
-                    st.info(notice)
-            else:
-                st.caption("새로운 알림이 없습니다.")
+        from frontend.components.notification_center import render_notification_center
+        from frontend.services.mock_notification_service import unread_count
+
+        unread = unread_count(st.session_state.get("notifications", []))
+        with st.popover(f"🔔 알림 {unread}", use_container_width=True):
+            render_notification_center()
     with user_area:
         user = st.session_state.current_user
         role_label = {"GUEST": "비회원", "USER": "회원", "ADMIN": "관리자"}[user["role"]]
-        with st.popover(f"👤 {role_label}", use_container_width=True):
-            st.markdown(f"### 👤 {user['display_name']}")
-            st.caption("Mock 역할 · 실제 인증 아님")
+        label = "👤 로그인" if user["role"] == "GUEST" else f"👤 {role_label}"
+        with st.popover(label, use_container_width=True):
+            from frontend.components.mock_auth import render_mock_auth
+
+            render_mock_auth()
+            st.divider()
             st.caption(f"현재 세션 · {st.session_state.session_id[-8:]}")
             policy = "7일 보관 예정" if user["role"] == "GUEST" else "영구보관 예정"
             st.write(f"질의 이력 정책: {policy}. 현재는 브라우저 Session에만 보관됩니다.")

@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import hashlib
 from uuid import uuid4
 
 
@@ -32,7 +33,22 @@ def paginate_questions(questions: list[dict], page: int, page_size: int = 10) ->
     }
 
 
-def create_question(user: dict, category: str, title: str, content: str, is_public: bool) -> dict:
+def hash_question_password(password: str) -> str:
+    return hashlib.sha256(f"lawpath-question-demo::{password}".encode("utf-8")).hexdigest()
+
+
+def validate_question_password(password: str) -> None:
+    if not 4 <= len(password) <= 20:
+        raise ValueError("게시글 비밀번호를 4~20자로 입력해 주세요.")
+
+
+def verify_question_password(question: dict, password: str) -> bool:
+    password_hash = question.get("password_hash")
+    return bool(password_hash) and password_hash == hash_question_password(password)
+
+
+def create_question(user: dict, category: str, title: str, content: str, is_public: bool, password: str = "1234") -> dict:
+    validate_question_password(password)
     now = datetime.now().replace(microsecond=0)
     return {
         "id": f"question-{uuid4()}",
@@ -43,6 +59,8 @@ def create_question(user: dict, category: str, title: str, content: str, is_publ
         "title": title.strip(),
         "content": content.strip(),
         "visibility": "PUBLIC" if is_public else "PRIVATE",
+        "content_visibility": "OWNER_ONLY",
+        "password_hash": hash_question_password(password),
         "status": "PENDING",
         "answer": None,
         "created_at": now.isoformat(),
@@ -65,7 +83,8 @@ def filter_public_questions(questions: list[dict], category: str, status: str, q
             continue
         if status != "all" and item["status"] != status:
             continue
-        if normalized and normalized not in f"{item['title']} {item['content']}".lower():
+        # 내용은 작성자 전용이므로 공개 검색에는 제목만 사용한다.
+        if normalized and normalized not in item["title"].lower():
             continue
         results.append(item)
     return sort_questions(results)

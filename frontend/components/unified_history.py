@@ -31,6 +31,9 @@ def render_unified_history() -> None:
             else:
                 st.caption(f"사용자 질문 · {item['status']}")
                 st.markdown(f"**{item['title']}**")
-                st.write(item["content"])
-                if item.get("answer"):
-                    st.write(item["answer"])
+                if item["id"] in st.session_state.unlocked_question_ids:
+                    st.write(item["content"])
+                    if item.get("answer"):
+                        st.write(item["answer"])
+                else:
+                    st.info("🔒 질문 내용은 FAQ 게시판에서 게시글 비밀번호 확인 후 볼 수 있습니다.")

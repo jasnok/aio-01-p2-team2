@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from frontend.services.mock_community_service import hash_question_password
+
 
 ROLE_USERS = {
     "GUEST": {"id": "guest-demo", "role": "GUEST", "display_name": "비회원"},
@@ -36,6 +38,8 @@ def build_mock_questions() -> list[dict]:
             "title": title,
             "content": f"{title} 관련해서 준비해야 할 사항과 확인 순서가 궁금합니다. 개인정보가 없는 화면 확인용 질문입니다.",
             "visibility": "PUBLIC",
+            "content_visibility": "OWNER_ONLY",
+            "password_hash": hash_question_password("1234"),
             "status": "ANSWERED" if index % 3 else "PENDING",
             "answer": None if index % 3 == 0 else "상황에 맞는 계약서, 대화 기록과 지급 내역을 먼저 정리해 보세요. 현재는 DEMO 답변입니다.",
             "created_at": created_at.isoformat(),

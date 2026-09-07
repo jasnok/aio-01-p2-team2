@@ -1,5 +1,12 @@
 from frontend.data.mock_community import ROLE_USERS, build_mock_questions
-from frontend.services.mock_community_service import can_edit_question, create_question, filter_public_questions, paginate_questions, sort_questions
+from frontend.services.mock_community_service import (
+    can_edit_question,
+    create_question,
+    filter_public_questions,
+    paginate_questions,
+    sort_questions,
+    verify_question_password,
+)
 
 
 def test_questions_are_sorted_pending_first_then_latest_and_paginated() -> None:
@@ -43,3 +50,20 @@ def test_guest_question_has_expiry_and_member_question_does_not() -> None:
     assert guest["expires_at"] is not None
     assert member["expires_at"] is None
     assert guest["visibility"] == "PUBLIC"
+    assert guest["content_visibility"] == "OWNER_ONLY"
+    assert guest["password_hash"] != "1234"
+    assert verify_question_password(guest, "1234")
+    assert not verify_question_password(guest, "wrong")
+
+
+def test_public_search_does_not_search_private_content() -> None:
+    question = create_question(
+        ROLE_USERS["USER"],
+        "housing",
+        "공개 제목",
+        "내용에만있는비밀검색어",
+        True,
+        "1234",
+    )
+    assert filter_public_questions([question], "all", "all", "공개 제목")
+    assert filter_public_questions([question], "all", "all", "비밀검색어") == []
