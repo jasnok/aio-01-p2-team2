@@ -15,6 +15,9 @@ def health() -> dict:
         mcp_status = "unavailable"
     return {
         "status": "ok",
-        "dependencies": {"mcp": mcp_status, "database": "mock", "redis": "disabled"},
+        "service": "backend",
+        "version": "0.1.0",
+        "is_mock": True,
+        "dependencies": {"mcp": "mock" if mcp_status == "unavailable" else mcp_status, "database": "mock", "redis": "disabled"},
     }
 
