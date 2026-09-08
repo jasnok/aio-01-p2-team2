@@ -7,7 +7,8 @@ from frontend.components.result_export import render_result_download
 
 
 def render_analysis_result(result: dict) -> None:
-    render_demo_banner()
+    if result.get("is_mock", True):
+        render_demo_banner()
     st.markdown("### 분석 안내")
     state = result.get("result_state", "completed")
     if state == "no_evidence":
@@ -15,10 +16,11 @@ def render_analysis_result(result: dict) -> None:
     elif state == "no_results":
         st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
     st.write(result["answer"])
-    if result.get("related_laws") or result.get("similar_cases"):
+    if any(result.get(key) for key in ("related_laws", "similar_cases", "consultations")):
         law_refs = " ".join(f"**[법령 {index}]**" for index, _ in enumerate(result.get("related_laws", []), 1))
         case_refs = " ".join(f"**[판례 {index}]**" for index, _ in enumerate(result.get("similar_cases", []), 1))
-        st.caption(f"답변 근거: {law_refs} {case_refs}")
+        consultation_refs = " ".join(f"**[상담사례 {index}]**" for index, _ in enumerate(result.get("consultations", []), 1))
+        st.caption(f"답변 근거: {law_refs} {case_refs} {consultation_refs}")
     render_result_download(result)
     law_column, cases_column = st.columns([1, 2.5], gap="large")
     with law_column:
@@ -37,6 +39,19 @@ def render_analysis_result(result: dict) -> None:
         for index, case in enumerate(cases, 1):
             with case_columns[index - 1]:
                 render_case_card(case, index)
+    consultations = result.get("consultations", [])
+    if consultations:
+        st.markdown("### 소비자원 상담사례")
+        st.caption("공식 상담·피해구제 사례이며 법원 판례와 구분됩니다.")
+        for index, item in enumerate(consultations, 1):
+            with st.container(border=True):
+                st.markdown(f"#### [상담사례 {index}] {item['title']}")
+                st.write(item["content"])
+                source = item.get("source") or {}
+                st.caption(source.get("title", "출처 확인 필요"))
+                url = source.get("url", "")
+                if url.startswith(("https://", "http://")):
+                    st.link_button("공식 출처 보기", url)
     follow_ups = result.get("follow_up_questions", [])
     if follow_ups:
         with st.expander("추가로 확인할 내용"):
