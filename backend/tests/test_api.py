@@ -32,3 +32,4 @@ def test_legal_question_uses_public_contract(monkeypatch) -> None:
     assert payload["agent_id"] == "labor"
     assert payload["related_laws"] == []
     assert payload["similar_cases"] == []
+    assert payload["consultations"] == []

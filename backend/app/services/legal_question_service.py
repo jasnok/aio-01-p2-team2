@@ -37,6 +37,10 @@ async def answer_question_from_mcp(request: LegalQuestionRequest) -> LegalQuesti
     documents = [Evidence.model_validate(item) for item in raw_evidence]
     laws = [item for item in documents if item.source.source_type == "law"]
     cases = [item for item in documents if item.source.source_type == "case"]
+    consultations = [
+        item for item in documents
+        if item.source.source_type == "consultation"
+    ]
     sources = list({item.source.source_id: item.source for item in documents}.values())
     answer = (
         "검색된 공식 판례 자료를 바탕으로 확인할 사항을 정리했습니다. 구체적 적용은 사실관계와 원문을 추가로 확인해야 합니다."
@@ -63,7 +67,8 @@ async def answer_question_from_mcp(request: LegalQuestionRequest) -> LegalQuesti
         request.category,
         ["사실관계", "관련 자료", "요청 기록"],
         ),
-        related_laws=laws, similar_cases=cases, sources=sources,
+        related_laws=laws, similar_cases=cases, consultations=consultations,
+        sources=sources,
         cautions=["검색 결과는 법률 자문이나 결과 보장이 아닙니다."], is_mock=False,
         answer=answer,
     )
