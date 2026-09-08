@@ -14,8 +14,8 @@ def select_tools(profile: AgentProfile, question: str) -> list[str]:
 
     if profile.agent_id == "consumer":
         requested_tools = [
+            "search_laws",
             "search_consultations",
-            "search_legal_documents",
             "search_cases",
         ]
     elif any(keyword in normalized_question for keyword in LAW_SEARCH_KEYWORDS):

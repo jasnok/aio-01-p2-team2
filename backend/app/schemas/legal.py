@@ -39,6 +39,15 @@ class Evidence(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
+class LegalSearchResponse(BaseModel):
+    request_id: str
+    query: str
+    category: Category
+    items: list[Evidence] = Field(default_factory=list)
+    total: int = Field(ge=0)
+    is_mock: bool
+
+
 class LegalQuestionResponse(BaseModel):
     request_id: str
     agent_id: Category

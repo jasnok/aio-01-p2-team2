@@ -1,6 +1,9 @@
 from fastapi.testclient import TestClient
+import asyncio
 
 from backend.app.main import app
+from backend.app.schemas.legal import LegalQuestionResponse
+from backend.app.services import agent_run_service
 from backend.app.services.mock_store import now, store
 
 
@@ -85,17 +88,70 @@ def test_admin_can_delete_any_question_only_with_audit_reason() -> None:
     assert audit["reason"] == "신고된 게시글 운영 조치"
 
 
-def test_notification_read_items_and_agent_run_polling_contract() -> None:
+def test_notification_read_items_and_agent_run_sse_contract(monkeypatch) -> None:
+    async def fake_answer(request, event_callback=None):
+        return LegalQuestionResponse(
+            request_id="req-agent-run", agent_id=request.category,
+            termination_reason="model_finished", question_summary="테스트 요약",
+            answer="테스트 답변", is_mock=False,
+        )
+
+    monkeypatch.setattr(agent_run_service, "answer_question_from_mcp", fake_answer)
+    # TestClient의 요청 루프와 별개로 작업 본문을 명시 실행해 저장 순서를 검사한다.
+    monkeypatch.setattr("backend.app.routers.mock_api.start_run", lambda _run_id: None)
     guest = {"X-Guest-Id": "guest-run"}
     client.post("/api/questions", headers=guest, json=question_body())
     assert client.delete("/api/notifications/read-items", headers=guest).status_code == 204
     created = client.post("/api/agent-runs", headers=guest | {"Idempotency-Key": "run-key-001"}, json={"category": "labor", "question": "퇴직금을 받지 못했습니다."})
-    assert created.status_code == 201
-    run_id = created.json()["id"]
-    repeated = client.post("/api/agent-runs", headers=guest | {"Idempotency-Key": "run-key-001"}, json={"category": "labor", "question": "다른 질문이어도 같은 키입니다."})
-    assert repeated.json()["id"] == run_id
-    assert client.get(f"/api/agent-runs/{run_id}", headers=guest).json()["status"] == "QUEUED"
-    assert client.post(f"/api/agent-runs/{run_id}/cancel", headers=guest).json()["status"] == "CANCELLED"
+    assert created.status_code == 202
+    run_id = created.json()["run_id"]
+    assert created.json()["status"] == "queued"
+    repeated = client.post("/api/agent-runs", headers=guest | {"Idempotency-Key": "run-key-001"}, json={"category": "labor", "question": "퇴직금을 받지 못했습니다."})
+    assert repeated.json()["run_id"] == run_id
+    conflict = client.post("/api/agent-runs", headers=guest | {"Idempotency-Key": "run-key-001"}, json={"category": "labor", "question": "다른 질문입니다."})
+    assert conflict.status_code == 409
+
+    asyncio.run(agent_run_service.execute_run(run_id))
+    status = client.get(f"/api/agent-runs/{run_id}", headers=guest).json()
+    assert status["status"] == "completed"
+    assert status["result"]["is_mock"] is False
+    assert store.agent_runs[run_id]["events"][-1]["event"] == "run.completed"
+    assert "data:" in __import__("backend.app.routers.mock_api", fromlist=["sse_event"]).sse_event(store.agent_runs[run_id]["events"][-1])
+    replay = client.get(f"/api/agent-runs/{run_id}/events", headers=guest | {"Last-Event-ID": "1"})
+    assert replay.headers["content-type"].startswith("text/event-stream")
+    assert "id: 2" in replay.text and "run.completed" in replay.text
+    assert client.get(f"/api/agent-runs/{run_id}", headers={"X-Guest-Id": "someone-else"}).status_code == 404
+
+
+def test_agent_run_stops_for_clarification_and_hides_internal_failure(monkeypatch) -> None:
+    async def clarification(request, event_callback=None):
+        return LegalQuestionResponse(
+            request_id="req-clarify", agent_id=request.category, status="stopped",
+            termination_reason="needs_clarification", question_summary="추가 정보 필요",
+            answer="추가 정보를 알려주세요.", follow_up_questions=["계약 종료일을 알려주세요."],
+            is_mock=False,
+        )
+
+    monkeypatch.setattr(agent_run_service, "answer_question_from_mcp", clarification)
+    monkeypatch.setattr("backend.app.routers.mock_api.start_run", lambda _run_id: None)
+    headers = {"X-Guest-Id": "guest-clarification", "Idempotency-Key": "clarification-key"}
+    run_id = client.post("/api/agent-runs", headers=headers, json={"category": "housing", "question": "보증금이 걱정됩니다."}).json()["run_id"]
+    asyncio.run(agent_run_service.execute_run(run_id))
+    run = client.get(f"/api/agent-runs/{run_id}", headers=headers).json()
+    assert run["status"] == "stopped"
+    assert run["result"]["follow_up_questions"] == ["계약 종료일을 알려주세요."]
+
+    async def broken(request, event_callback=None):
+        raise RuntimeError("postgres password=secret must not escape")
+
+    monkeypatch.setattr(agent_run_service, "answer_question_from_mcp", broken)
+    headers["Idempotency-Key"] = "failure-key"
+    failed_id = client.post("/api/agent-runs", headers=headers, json={"category": "housing", "question": "보증금이 걱정됩니다."}).json()["run_id"]
+    asyncio.run(agent_run_service.execute_run(failed_id))
+    failed = client.get(f"/api/agent-runs/{failed_id}", headers=headers).json()
+    assert failed["status"] == "failed"
+    assert failed["error"]["code"] == "ANALYSIS_FAILED"
+    assert "secret" not in failed["error"]["message"]
 
 
 def test_expired_session_uses_common_error_code() -> None:
