@@ -1,9 +1,9 @@
 import uuid
 
-from backend.app.agents.models import AgentState
-from backend.app.agents.registry import get_agent_profile
-from backend.app.agents.runtime import LegalAgentRuntime
-from backend.app.schemas.legal import Evidence, LegalQuestionRequest, LegalQuestionResponse
+from app.agents.models import AgentState
+from app.agents.registry import get_agent_profile
+from app.agents.runtime import LegalAgentRuntime
+from app.schemas.legal import Evidence, LegalQuestionRequest, LegalQuestionResponse
 
 
 DISCLAIMER = "이 결과는 서버 연결 확인용 Mock이며 법률 자문이나 실제 법률 정보가 아닙니다."

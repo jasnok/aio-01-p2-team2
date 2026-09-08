@@ -3,10 +3,10 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
-from backend.app.schemas.legal import LegalQuestionRequest, LegalQuestionResponse
-from backend.app.services.legal_question_service import answer_question, answer_question_from_mcp
-from backend.app.services.mock_store import iso, now, store
-from backend.app.core.config import get_settings
+from app.schemas.legal import LegalQuestionRequest, LegalQuestionResponse
+from app.services.legal_question_service import answer_question, answer_question_from_mcp
+from app.services.mock_store import iso, now, store
+from app.core.config import get_settings
 
 
 router = APIRouter(prefix="/api/legal", tags=["legal"])

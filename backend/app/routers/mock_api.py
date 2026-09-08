@@ -9,8 +9,8 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, S
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field, field_validator
 
-from backend.app.services.mock_store import SessionExpiredError, hash_password, iso, now, store, verify_password
-from backend.app.mock_data.catalog import CATALOG
+from app.services.mock_store import SessionExpiredError, hash_password, iso, now, store, verify_password
+from app.mock_data.catalog import CATALOG
 
 router = APIRouter(prefix="/api", tags=["mock-api"])
 Category = Literal["housing", "labor", "consumer"]

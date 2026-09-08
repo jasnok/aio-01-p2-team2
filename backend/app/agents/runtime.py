@@ -5,9 +5,9 @@ MVP 구현은 최대 4 step, 최대 3 tool call, Evidence-only 정책을 지켜�
 
 from typing import Protocol
 
-from backend.app.agents.models import AgentProfile, AgentState
-from backend.app.mcp_clients.legal_mcp import search_cases
-from backend.app.policies.tool_policy import ensure_tool_allowed
+from app.agents.models import AgentProfile, AgentState
+from app.mcp_clients.legal_mcp import search_cases
+from app.policies.tool_policy import ensure_tool_allowed
 
 
 class AgentRuntime(Protocol):
