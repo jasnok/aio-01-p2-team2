@@ -17,6 +17,9 @@ from legal_mcp.tools.search_cases import search_cases as search_cases_tool
 from legal_mcp.tools.search_legal_documents import (
     search_legal_documents as search_legal_documents_tool,
 )
+from legal_mcp.tools.search_consultations import (
+    search_consultations as search_consultations_tool,
+)
 
 MCP_HOST = os.getenv("MCP_HOST", "192.100.200.72")
 MCP_PORT = int(os.getenv("MCP_PORT", "8012"))
@@ -43,6 +46,23 @@ def search_cases(
     """질의와 유사한 판례를 검색합니다."""
 
     result = search_cases_tool(
+        SearchInput(
+            query=query,
+            category=category,
+            top_k=top_k,
+        )
+    )
+    return result.model_dump(mode="json")
+
+@mcp.tool()
+def search_consultations(
+    query: str,
+    category: Literal["housing", "labor", "consumer"],
+    top_k: int = 3,
+) -> dict:
+    """질의와 유사한 공식 상담·해석 사례를 검색합니다."""
+
+    result = search_consultations_tool(
         SearchInput(
             query=query,
             category=category,

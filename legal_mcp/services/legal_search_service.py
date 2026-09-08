@@ -136,6 +136,21 @@ class LegalSearchService:
             top_k=top_k,
         )
 
+    def search_consultations(
+        self,
+        query: str,
+        category: str,
+        top_k: int = 3,
+    ) -> list[dict]:
+        """공식 상담·해석 사례를 Hybrid Search한다."""
+
+        return self._hybrid_search(
+            query=query,
+            category=category,
+            document_types=["CONSULTATION"],
+            top_k=top_k,
+        )
+
     def search_cases(
         self,
         query: str,

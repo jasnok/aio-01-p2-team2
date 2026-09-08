@@ -5,15 +5,19 @@ from pydantic import BaseModel, Field
 
 
 Category = Literal["housing", "labor", "consumer"]
-DocumentType = Literal["LAW", "CASE"]
+DocumentType = Literal["LAW", "CASE", "CONSULTATION"]
+
+SourceType = Literal["law", "case", "consultation", "external"]
+IntegratedDocumentType = Literal["LAW", "CASE"]
 
 
 class SearchLegalDocumentsInput(BaseModel):
     query: str = Field(min_length=5, max_length=2000)
     category: Category
-    document_types: list[DocumentType] = Field(default_factory=lambda: ["LAW", "CASE"])
+    document_types: list[IntegratedDocumentType] = Field(
+        default_factory=lambda: ["LAW", "CASE"]
+    )
     top_k: int = Field(default=3, ge=1, le=3)
-
 
 class SearchInput(BaseModel):
     query: str = Field(min_length=5, max_length=2000)
@@ -29,7 +33,7 @@ class LawArticleInput(BaseModel):
 class Source(BaseModel):
     source_id: str
     title: str
-    source_type: Literal["law", "case", "external"]
+    source_type: SourceType
     url: str
 
 
