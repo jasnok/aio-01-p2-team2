@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     llm_provider: str = "mock"
     openai_api_key: str | None = None
     openai_model: str = "gpt-5-mini"
-
+    database_url:str = "postgresql://legal_user:change-me@192.100.200.99:5434/legal_ai"
     # 통합 실행용 루트 .env를 먼저 읽고, 서비스 전용 파일이 있으면 덮어씁니다.
     model_config = SettingsConfigDict(env_file=(".env", "backend/.env"), extra="ignore")
 
