@@ -173,7 +173,8 @@ def parse_args() -> argparse.Namespace:
         "--threshold",
         type=float,
         default=0.25,
-        help="결과에 포함할Additionally, the query requests unified code file. Need continue code. Token budget okay. Ensure no 'download'. Continue.```python최소 결합 점수",
+        # help="결과에 포함할Additionally, the query requests unified code file. Need continue code. Token budget okay. Ensure no 'download'. Continue.```python최소 결합 점수",
+        help="결과에 포함할 최소 결합 점수",
     )
 
     return parser.parse_args()
