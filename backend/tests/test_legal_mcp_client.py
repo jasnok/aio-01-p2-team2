@@ -70,3 +70,35 @@ def test_search_consultations_calls_consultation_tool(monkeypatch) -> None:
         "top_k": 3,
     }
     assert result["success"] is True
+
+def test_search_laws_calls_law_tool(monkeypatch) -> None:
+    received = {}
+
+    async def fake_call_tool(
+        server_name: str,
+        tool_name: str,
+        arguments: dict,
+    ) -> dict:
+        received["server_name"] = server_name
+        received["tool_name"] = tool_name
+        received["arguments"] = arguments
+
+        return {"success": True, "data": []}
+
+    monkeypatch.setattr(legal_mcp, "call_tool", fake_call_tool)
+
+    result = asyncio.run(
+        legal_mcp.search_laws(
+            query="퇴직금 지급 기한 관련 법령",
+            category="labor",
+        )
+    )
+
+    assert received["server_name"] == "legal"
+    assert received["tool_name"] == "search_laws"
+    assert received["arguments"] == {
+        "query": "퇴직금 지급 기한 관련 법령",
+        "category": "labor",
+        "top_k": 3,
+    }
+    assert result["success"] is True
