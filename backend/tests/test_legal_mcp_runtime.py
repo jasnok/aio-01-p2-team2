@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from backend.app.agents.models import AgentState
 from backend.app.agents.profiles import (
-    LABOR_AGENT, 
+    LABOR_AGENT,
     HOUSING_AGENT,
     CONSUMER_AGENT,
 )
