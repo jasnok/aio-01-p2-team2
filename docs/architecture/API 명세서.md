@@ -224,6 +224,7 @@ Idempotency-Key: <uuid>
   "answer": "검색된 공식 자료를 바탕으로 정리한 답변입니다.",
   "related_laws": [],
   "similar_cases": [],
+  "consultations": [],
   "sources": [],
   "follow_up_questions": ["계속근로기간은 얼마인가요?"],
   "cautions": ["법률 자문이 아닌 정보 제공 목적입니다."],
@@ -238,7 +239,8 @@ Idempotency-Key: <uuid>
 
 ### 6.2 Evidence
 
-`related_laws`, `similar_cases`는 같은 Evidence 구조를 사용한다.
+`related_laws`, `similar_cases`, `consultations`는 같은 Evidence 구조를 사용한다.
+`consultations`는 소비자원 상담사례이며, 출처의 `source_type`은 `consultation`이다.
 
 ```json
 {

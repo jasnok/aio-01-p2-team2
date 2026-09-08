@@ -53,7 +53,8 @@ class ApiLegalService:
         result["related_laws"] = [_law_view(item) for item in result.get("related_laws", [])]
         result["similar_cases"] = [_case_view(item) for item in result.get("similar_cases", [])]
         result["question"] = question.strip()
-        result["result_state"] = "completed" if result.get("related_laws") or result.get("similar_cases") else "no_results"
+        result.setdefault("consultations", [])
+        result["result_state"] = "completed" if any(result.get(key) for key in ("related_laws", "similar_cases", "consultations")) else "no_results"
         return result
 
     def search_laws(self, category: str, query: str) -> list[dict]:
