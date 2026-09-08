@@ -14,7 +14,7 @@ def build_analysis_markdown(result: dict) -> str:
         for item in result.get("similar_cases", [])
     ) or "- 없음"
     consultations = "\n\n".join(
-        f"### [상담사례 {index}] {item['title']}\n\n{item['content']}\n\n출처: {(item.get('source') or {}).get('url', '')}"
+        f"### [상담사례 {index}] {item['title']}\n\n{item['content']}"
         for index, item in enumerate(result.get("consultations", []), 1)
     ) or "- 없음"
     notice = "이 문서는 DEMO 데이터를 사용한 참고 자료이며 법률 자문이나 판결 예측이 아닙니다." if result.get("is_mock", True) else "이 문서는 검색된 자료를 정리한 참고 자료이며 법률 자문이나 판결 예측이 아닙니다."

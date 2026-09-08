@@ -61,7 +61,7 @@ def _render_result(result: dict) -> None:
 
 def render_integration_smoke_test() -> None:
     settings = get_frontend_settings()
-    with st.sidebar:
+    with st.container():
         with st.expander("🔗 팀 서버 연결 테스트", expanded=False):
             st.caption("각 서버 도달 여부와 Backend → MCP 연동 상태를 확인합니다.")
             st.code(

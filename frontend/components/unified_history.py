@@ -47,7 +47,7 @@ def render_unified_history() -> None:
 def _render_api_history() -> None:
     st.markdown("### ↶ 통합 질의 이력")
     user = st.session_state.current_user
-    st.info("비회원 이력은 7일, 회원 이력은 계정에 영구 보관됩니다. 현재 목록은 Backend API에서 조회합니다.")
+    st.info("Backend API의 이력 목록입니다. DB 영속 저장과 이전 대화 복원은 연결 확인 전입니다.")
     labels = {"all": "전체", "legal_analysis": "사례 분석", "user_question": "사용자 질문"}
     history_type = st.radio("이력 유형", list(labels), format_func=labels.get, horizontal=True, key="api-history-type")
     token = st.session_state.auth_token

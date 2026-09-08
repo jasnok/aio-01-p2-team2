@@ -25,7 +25,7 @@ def test_consultation_only_response_is_valid_visible_and_exportable(monkeypatch)
     assert result["consultations"][0]["source"]["source_type"] == "consultation"
     exported = build_analysis_markdown(result)
     assert "상담사례 본문입니다." in exported
-    assert "https://example.test/source" in exported
+    assert "https://example.test/source" not in exported
     app = AppTest.from_string(
         "from frontend.components.answer_view import render_analysis_result\n"
         f"render_analysis_result({ascii(result)})"
