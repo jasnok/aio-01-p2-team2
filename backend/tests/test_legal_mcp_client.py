@@ -42,3 +42,31 @@ def test_search_legal_documents_uses_default_document_types(monkeypatch) -> None
     assert received["arguments"]["document_types"] == ["LAW", "CASE"]
     assert received["arguments"]["top_k"] == 3
     assert result["success"] is True
+
+
+def test_search_consultations_calls_consultation_tool(monkeypatch) -> None:
+    received = {}
+
+    async def fake_call_tool(server_name: str, tool_name: str, arguments: dict) -> dict:
+        received["server_name"] = server_name
+        received["tool_name"] = tool_name
+        received["arguments"] = arguments
+        return {"success": True, "data": []}
+
+    monkeypatch.setattr(legal_mcp, "call_tool", fake_call_tool)
+
+    result = asyncio.run(
+        legal_mcp.search_consultations(
+            query="할부 결제한 물건이 배송되지 않았습니다.",
+            category="consumer",
+        )
+    )
+
+    assert received["server_name"] == "legal"
+    assert received["tool_name"] == "search_consultations"
+    assert received["arguments"] == {
+        "query": "할부 결제한 물건이 배송되지 않았습니다.",
+        "category": "consumer",
+        "top_k": 3,
+    }
+    assert result["success"] is True
