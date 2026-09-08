@@ -40,3 +40,42 @@ async def search_legal_documents(
         "search_legal_documents",
         arguments,
     )
+
+async def search_laws(
+    query: str,
+    category: str,
+    top_k: int = 3,
+) -> dict:
+    return await call_tool(
+        "legal",
+        "search_laws",
+        {
+            "query": query,
+            "category": category,
+            "top_k": top_k,
+        },
+    )
+
+
+async def get_case_detail(document_id: int) -> dict:
+    return await call_tool(
+        "legal",
+        "get_case_detail",
+        {
+            "document_id": document_id,
+        },
+    )
+
+
+async def get_law_article(
+    law_name: str,
+    article_number: str,
+) -> dict:
+    return await call_tool(
+        "legal",
+        "get_law_article",
+        {
+            "law_name": law_name,
+            "article_number": article_number,
+        },
+    )
