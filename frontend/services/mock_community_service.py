@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import hashlib
 from uuid import uuid4
 
 
@@ -32,7 +33,26 @@ def paginate_questions(questions: list[dict], page: int, page_size: int = 10) ->
     }
 
 
-def create_question(user: dict, category: str, title: str, content: str, is_public: bool) -> dict:
+def hash_question_password(password: str) -> str:
+    return hashlib.sha256(f"lawpath-question-demo::{password}".encode("utf-8")).hexdigest()
+
+
+def hash_comment_password(password: str) -> str:
+    return hashlib.sha256(f"lawpath-comment-demo::{password}".encode("utf-8")).hexdigest()
+
+
+def validate_question_password(password: str) -> None:
+    if not 4 <= len(password) <= 20:
+        raise ValueError("게시글 비밀번호를 4~20자로 입력해 주세요.")
+
+
+def verify_question_password(question: dict, password: str) -> bool:
+    password_hash = question.get("password_hash")
+    return bool(password_hash) and password_hash == hash_question_password(password)
+
+
+def create_question(user: dict, category: str, title: str, content: str, is_public: bool, password: str = "1234") -> dict:
+    validate_question_password(password)
     now = datetime.now().replace(microsecond=0)
     return {
         "id": f"question-{uuid4()}",
@@ -43,8 +63,11 @@ def create_question(user: dict, category: str, title: str, content: str, is_publ
         "title": title.strip(),
         "content": content.strip(),
         "visibility": "PUBLIC" if is_public else "PRIVATE",
+        "content_visibility": "PUBLIC" if is_public else "OWNER_ONLY",
+        "password_hash": hash_question_password(password),
         "status": "PENDING",
         "answer": None,
+        "comments": [],
         "created_at": now.isoformat(),
         "updated_at": now.isoformat(),
         "expires_at": (now + timedelta(days=7)).isoformat() if user["role"] == "GUEST" else None,
@@ -55,17 +78,81 @@ def can_edit_question(question: dict, user: dict) -> bool:
     return question["owner_id"] == user["id"]
 
 
+def can_view_question(question: dict, user: dict, is_unlocked: bool = False) -> bool:
+    if question["visibility"] == "PUBLIC" or user["role"] == "ADMIN":
+        return True
+    return can_edit_question(question, user) and is_unlocked
+
+
+def can_comment_question(question: dict, user: dict, is_unlocked: bool = False) -> bool:
+    return can_view_question(question, user, is_unlocked)
+
+
+def create_comment(question: dict, user: dict, content: str, password: str = "") -> dict:
+    normalized = content.strip()
+    if not 2 <= len(normalized) <= 1000:
+        raise ValueError("댓글을 2~1,000자로 입력해 주세요.")
+    password_hash = None
+    if user["role"] == "GUEST":
+        validate_question_password(password)
+        password_hash = hash_comment_password(password)
+    now = datetime.now().replace(microsecond=0)
+    return {
+        "id": f"comment-{uuid4()}",
+        "question_id": question["id"],
+        "owner_id": user["id"],
+        "owner_role": user["role"],
+        "display_name": user["display_name"],
+        "content": normalized,
+        "password_hash": password_hash,
+        "created_at": now.isoformat(),
+        "updated_at": now.isoformat(),
+        "expires_at": (now + timedelta(days=7)).isoformat() if user["role"] == "GUEST" else None,
+    }
+
+
+def verify_comment_password(comment: dict, password: str) -> bool:
+    password_hash = comment.get("password_hash")
+    return bool(password_hash) and password_hash == hash_comment_password(password)
+
+
+def can_manage_comment(comment: dict, user: dict, password: str = "") -> bool:
+    if comment["owner_id"] != user["id"]:
+        return False
+    if user["role"] == "GUEST":
+        return verify_comment_password(comment, password)
+    return True
+
+
+def update_comment(comment: dict, user: dict, content: str, password: str = "") -> None:
+    if not can_manage_comment(comment, user, password):
+        raise PermissionError("본인 댓글만 수정할 수 있습니다.")
+    normalized = content.strip()
+    if not 2 <= len(normalized) <= 1000:
+        raise ValueError("댓글을 2~1,000자로 입력해 주세요.")
+    comment["content"] = normalized
+    comment["updated_at"] = datetime.now().replace(microsecond=0).isoformat()
+
+
+def delete_comment(question: dict, comment: dict, user: dict, password: str = "") -> None:
+    if user["role"] != "ADMIN" and not can_manage_comment(comment, user, password):
+        raise PermissionError("본인 댓글만 삭제할 수 있습니다.")
+    question["comments"] = [item for item in question.get("comments", []) if item["id"] != comment["id"]]
+
+
 def filter_public_questions(questions: list[dict], category: str, status: str, query: str) -> list[dict]:
     normalized = query.strip().lower()
     results = []
     for item in questions:
-        if item["visibility"] != "PUBLIC":
-            continue
         if category != "all" and item["category"] != category:
             continue
         if status != "all" and item["status"] != status:
             continue
-        if normalized and normalized not in f"{item['title']} {item['content']}".lower():
+        searchable = item["title"]
+        if item["visibility"] == "PUBLIC":
+            searchable = f"{searchable} {item['content']}"
+        # 비밀글 본문은 공개 검색 대상에 포함하지 않는다.
+        if normalized and normalized not in searchable.lower():
             continue
         results.append(item)
     return sort_questions(results)

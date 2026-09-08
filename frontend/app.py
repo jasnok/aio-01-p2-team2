@@ -19,6 +19,7 @@ from frontend.services.factory import get_legal_service
 from frontend.core.workflow import MockScenarioError
 from frontend.components.analysis_progress import render_analysis_error, render_analysis_progress, render_workflow_run
 from frontend.components.follow_up_chat import render_follow_up_chat
+from frontend.services.mock_notification_service import add_notification
 
 
 st.set_page_config(page_title="LawPath", page_icon="⚖️", layout="wide", initial_sidebar_state="expanded")
@@ -61,6 +62,7 @@ def render_workspace() -> None:
         if submission:
             st.session_state.analysis_in_progress = True
             st.session_state.analysis_error = None
+            refresh_after_notification = False
             try:
                 render_workflow_run(st.session_state.mock_scenario)
                 result = service.analyze_case(
@@ -70,6 +72,41 @@ def render_workspace() -> None:
                 )
                 st.session_state.last_result = result
                 st.session_state.session_history.append(result)
+                result_state = result.get("result_state", "completed")
+                if result_state == "no_evidence":
+                    add_notification(
+                        st.session_state.notifications,
+                        "ANALYSIS_NO_EVIDENCE",
+                        "공식 근거가 부족합니다.",
+                        "단정적인 답변을 생성하지 않았습니다. 질문을 구체화해 다시 시도해 주세요.",
+                        severity="warning",
+                        target_type="analysis",
+                        target_id=result["request_id"],
+                        category=category_code,
+                    )
+                elif result_state == "no_results":
+                    add_notification(
+                        st.session_state.notifications,
+                        "ANALYSIS_NO_RESULTS",
+                        "검색 결과가 없습니다.",
+                        "질문에 날짜, 상대방과 요청 내용을 추가해 보세요.",
+                        severity="warning",
+                        target_type="analysis",
+                        target_id=result["request_id"],
+                        category=category_code,
+                    )
+                else:
+                    add_notification(
+                        st.session_state.notifications,
+                        "ANALYSIS_COMPLETED",
+                        "사례 분석이 완료되었습니다.",
+                        "상황 요약과 관련 법령·판례를 확인해 주세요.",
+                        severity="success",
+                        target_type="analysis",
+                        target_id=result["request_id"],
+                        category=category_code,
+                    )
+                refresh_after_notification = True
             except MockScenarioError as error:
                 st.session_state.last_result = None
                 st.session_state.analysis_error = {
@@ -79,10 +116,22 @@ def render_workspace() -> None:
                     "next_action": error.next_action,
                     "retryable": error.retryable,
                 }
+                add_notification(
+                    st.session_state.notifications,
+                    "ANALYSIS_FAILED",
+                    "사례 분석을 완료하지 못했습니다.",
+                    f"{error.stage}: {error.user_message}",
+                    severity="error",
+                    target_type="analysis",
+                    category=category_code,
+                )
+                refresh_after_notification = True
             except ValueError as error:
                 st.error(str(error))
             finally:
                 st.session_state.analysis_in_progress = False
+            if refresh_after_notification:
+                st.rerun()
         if st.session_state.analysis_error:
             render_analysis_error(st.session_state.analysis_error)
         with summary_column:
@@ -95,12 +144,18 @@ def render_workspace() -> None:
     elif feature == "laws":
         query = render_search_form("laws")
         if query:
-            st.session_state.law_results = service.search_laws(category_code, query)
+            try:
+                st.session_state.law_results = service.search_laws(category_code, query)
+            except ValueError as error:
+                st.error(str(error))
         render_law_results(st.session_state.law_results)
     elif feature == "cases":
         query = render_search_form("cases")
         if query:
-            st.session_state.case_results = service.search_cases(category_code, query)
+            try:
+                st.session_state.case_results = service.search_cases(category_code, query)
+            except ValueError as error:
+                st.error(str(error))
         render_case_results(st.session_state.case_results)
     elif feature == "admin_faq":
         render_admin_faq()

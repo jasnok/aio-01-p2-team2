@@ -7,7 +7,7 @@ from mcp.server.fastmcp import FastMCP
 
 
 MCP_HOST = os.getenv("MCP_HOST", "192.100.200.72")
-MCP_PORT = int(os.getenv("MCP_PORT", "8011"))
+MCP_PORT = int(os.getenv("MCP_PORT", "8013"))
 
 mcp = FastMCP(
     "mini-agent-food",

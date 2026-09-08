@@ -5,6 +5,16 @@
 > 이전 버전: `docs/회의내용/0905_AI agent 명세서.md`
 > 범위: Frontend·Backend·Legal MCP·DB·Redis·Supabase 전체 프로젝트
 
+## 0. 2026-09-07 구현 상태
+
+- 일반 CRUD는 Agent/MCP가 아닌 Backend가 담당하며 Frontend와 실제 연동됐다.
+- Backend에 Agent Run 생성·조회·취소·SSE Endpoint가 존재한다.
+- Frontend API Client에 Agent Run 생성·조회·취소 연결 지점을 준비했다.
+- 현재 Streamlit 사례 분석은 기존 동기 API를 사용하며 polling/SSE UI는 아직 연결하지 않았다.
+- Backend의 MCP 초기화와 Tool 발견은 성공했지만 실제 법률 Tool 실행 결과는 재검증이 필요하다.
+- Database health는 `ok`, Redis는 `disabled` 상태다.
+- Frontend 자동 테스트 76개, MCP 비의존 실제 Frontend–Backend 통합 테스트 3개가 통과했다.
+
 ## 1. v1에서 변경된 점
 
 | 항목 | v1 | v2 |
@@ -13,7 +23,7 @@
 | Primary DB | PostgreSQL + pgvector | DB PC의 Docker PostgreSQL |
 | Supabase | 미확정 | 백업·외부 통합·수동 Fallback |
 | 사용자 | 익명 중심 | `GUEST`, `USER`, `ADMIN` |
-| 인증 | 로그인 미확정 | Backend + Redis Session 권장 |
+| 인증 | 로그인 미확정 | Streamlit Bearer Token + Redis Session 확정 |
 | 이력 | 명시적 저장 | 비회원 7일, 회원 동의 후 영구 |
 | FAQ | 고정 조회 | 공지형 FAQ + 개인 질문 CRUD |
 | Redis | 문맥·상태·Cache | DB PC 운영, Backend/MCP가 분리 사용 |
@@ -134,11 +144,12 @@ follow_up_questions, cautions, is_mock
 ```text
 회원 로그인
 → Backend가 임의 Session ID 발급
-→ HttpOnly Cookie
+→ Streamlit session_state에 임시 보관
+→ Authorization Bearer Header로 전달
 → Redis에서 user_id·role 확인
 ```
 
-비회원은 서명된 `guest_token` Cookie로 식별한다. 비밀번호 원문, 질문과 인증 Token을 Local Storage에 저장하지 않는다.
+비회원은 Streamlit Session별 `guest_id`로 식별한다. JWT는 사용하지 않으며 비밀번호 원문, 질문과 Session Token을 파일·Local Storage·로그에 저장하지 않는다.
 
 ## 10. FAQ, 사용자 질문 게시판과 통합 질의 이력
 

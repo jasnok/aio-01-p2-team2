@@ -29,7 +29,11 @@ def render_helper_feature(category: str, feature: str, service: LegalService) ->
 def _render_terms(category: str, service: LegalService) -> None:
     st.markdown("### ▣ 쉬운 법률 용어")
     query = st.text_input("용어 검색", key=f"term-query-{category}", placeholder="용어나 설명을 검색하세요")
-    results = service.search_terms(category, query)
+    try:
+        results = service.search_terms(category, query)
+    except ValueError as error:
+        st.error(str(error))
+        return
     if not results:
         st.info("검색 결과가 없습니다.")
     for term, description in results:

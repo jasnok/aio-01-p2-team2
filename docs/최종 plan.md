@@ -5,6 +5,27 @@
 > 이전 버전: `docs/회의내용/0905_최종 plan.md`
 > 범위: 전체 프로젝트
 
+## 0. 2026-09-07 구현 현황
+
+완료:
+
+- Streamlit + CSS Frontend와 FastAPI Backend 일반 웹 기능 연동
+- 회원·비회원·관리자 인증과 권한
+- 공지 FAQ, 사용자 질문·댓글, 알림, 질의 이력
+- 관리자 FAQ와 사용자 질문 삭제
+- Frontend 자동 테스트 76개와 MCP 비의존 실제 통합 테스트 3개 통과
+- Backend `is_mock=false`, Database health `ok`
+
+진행 중·미완료:
+
+- 예시 화면에 가까운 Streamlit CSS·레이아웃 완성
+- MCP 실제 법률 Tool 실행과 법령·판례 결과 검증
+- Redis Session·Idempotency·Agent 진행 상태
+- polling 이후 SSE 연결
+- 네 PC 전체 E2E
+
+남은 일정에는 React 전환을 하지 않고 Streamlit + CSS 완성을 우선한다.
+
 ## 1. v1에서 수정된 점
 
 | 구분 | v1 | v2 |
@@ -15,7 +36,7 @@
 | 역할 | 익명 중심 | 비회원·회원·관리자 |
 | FAQ | 조회형 | 공지 FAQ + 최신 사용자 질문 게시판·CRUD·페이지네이션 |
 | 이력 | 저장하기 중심 | 사례·FAQ 통합, 비회원 7일·회원 영구 |
-| 인증 | 후순위 | Backend + Redis Session 권장 |
+| 인증 | 후순위 | Streamlit Bearer Token + Redis Session 확정 |
 | Redis | 문맥·Cache | DB PC 운영, Backend/MCP 분리 사용 |
 | 장애 | 일반 오류 | 저하 운영과 수동 Fallback |
 
@@ -109,7 +130,8 @@ category/document_type filter
 - `GUEST`: 공개 질문 조회, 본인 질문 7일 CRUD
 - `USER`: 공개 질문 조회, 본인 질문 영구, 여러 기기 조회
 - `ADMIN`: 공지 FAQ 관리와 운영정보
-- 인증은 Backend가 HttpOnly Cookie와 Redis Session으로 처리한다.
+- 인증은 Backend가 불투명 Session Token을 발급하고 Redis Session으로 검증한다.
+- Streamlit은 Token을 `session_state`에만 보관하고 Backend 요청의 Bearer Header로 전달한다.
 - 관리자도 사용자 원문은 기본적으로 조회하지 않는다.
 - 답변 완료 질문은 수정하지 않고 새 질문으로 재분석한다.
 - 사용자 질문 목록은 `created_at DESC, id DESC` 최신순과 서버 페이지네이션을 사용한다.
