@@ -39,7 +39,7 @@ def test_error_analysis_creates_error_notification() -> None:
 def test_notification_target_opens_related_question_screen() -> None:
     app = AppTest.from_file(str(APP)).run(timeout=20)
     app.button(key="category-housing").click().run(timeout=20)
-    app.sidebar.button(key="nav-faq").click().run(timeout=20)
+    app.button(key="nav-faq").click().run(timeout=20)
     app.text_input(key="new-question-title").set_value("알림 이동 질문")
     app.text_area(key="new-question-content").set_value("알림 관련 화면 이동을 확인하기 위한 질문입니다.")
     app.text_input(key="new-question-password").set_value("1234")

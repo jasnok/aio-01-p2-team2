@@ -30,6 +30,15 @@ class EvidenceView(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
+class SearchResultsView(BaseModel):
+    request_id: str = Field(min_length=1)
+    query: str
+    category: Literal["housing", "labor", "consumer"]
+    items: list[EvidenceView]
+    total: int = Field(ge=0)
+    is_mock: bool
+
+
 class LegalQuestionView(BaseModel):
     request_id: str
     agent_id: Literal["housing", "labor", "consumer"]

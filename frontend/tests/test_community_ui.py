@@ -16,7 +16,7 @@ def _open_housing_workspace() -> AppTest:
 
 def test_public_question_board_paginates() -> None:
     app = _open_housing_workspace()
-    app.sidebar.button(key="nav-faq").click().run(timeout=20)
+    app.button(key="nav-faq").click().run(timeout=20)
 
     assert app.session_state["question_page"] == 1
     assert app.button(key="question-next")
@@ -32,7 +32,7 @@ def test_public_question_board_paginates() -> None:
 
 def test_guest_can_create_and_edit_own_pending_question() -> None:
     app = _open_housing_workspace()
-    app.sidebar.button(key="nav-faq").click().run(timeout=20)
+    app.button(key="nav-faq").click().run(timeout=20)
     before = len(app.session_state["public_questions"])
     app.text_input(key="new-question-title").set_value("보증금 질문")
     app.text_area(key="new-question-content").set_value("보증금 반환을 위해 어떤 자료가 필요한지 궁금합니다.")
@@ -58,7 +58,7 @@ def test_guest_can_create_and_edit_own_pending_question() -> None:
 
 def test_guest_can_unlock_and_delete_own_question() -> None:
     app = _open_housing_workspace()
-    app.sidebar.button(key="nav-faq").click().run(timeout=20)
+    app.button(key="nav-faq").click().run(timeout=20)
     app.text_input(key="new-question-title").set_value("삭제할 질문")
     app.text_area(key="new-question-content").set_value("본인 질문 삭제 동작을 확인하기 위한 내용입니다.")
     app.text_input(key="new-question-password").set_value("1234")
@@ -75,7 +75,7 @@ def test_guest_can_unlock_and_delete_own_question() -> None:
 
 def test_question_title_is_public_but_content_requires_owner_password() -> None:
     app = _open_housing_workspace()
-    app.sidebar.button(key="nav-faq").click().run(timeout=20)
+    app.button(key="nav-faq").click().run(timeout=20)
     secret_content = "작성자만 확인해야 하는 비공개 질문 내용입니다."
     app.text_input(key="new-question-title").set_value("공개되는 글 제목")
     app.text_area(key="new-question-content").set_value(secret_content)
@@ -102,7 +102,7 @@ def test_question_title_is_public_but_content_requires_owner_password() -> None:
 
 def test_guest_can_create_public_question_and_comment_with_password() -> None:
     app = _open_housing_workspace()
-    app.sidebar.button(key="nav-faq").click().run(timeout=20)
+    app.button(key="nav-faq").click().run(timeout=20)
     app.text_input(key="new-question-title").set_value("댓글 테스트 공개 질문")
     app.text_area(key="new-question-content").set_value("누구나 내용을 보고 댓글을 작성할 수 있는 공개 질문입니다.")
     app.text_input(key="new-question-password").set_value("1234")
@@ -130,8 +130,9 @@ def test_admin_role_exposes_admin_faq_screen() -> None:
     app.session_state["current_user"] = ROLE_USERS["ADMIN"].copy()
     app.run(timeout=20)
 
-    assert app.sidebar.button(key="nav-admin-faq")
-    app.sidebar.button(key="nav-admin-faq").click().run(timeout=20)
+    assert "nav-admin-faq" not in [button.key for button in app.button]
+    app.button(key="nav-faq").click().run(timeout=20)
+    app.button(key="open-admin-faq").click().run(timeout=20)
     assert not app.exception
     assert any("관리자 FAQ 관리" in item.value for item in app.markdown)
 
@@ -140,7 +141,7 @@ def test_unified_history_contains_analysis_and_own_questions() -> None:
     app = _open_housing_workspace()
     app.text_area(key="question_message").set_value("계약이 끝났는데 집주인이 보증금을 돌려주지 않습니다.")
     next(button for button in app.button if button.label == "✦ 사례 분석하기").click().run(timeout=20)
-    app.sidebar.button(key="nav-history").click().run(timeout=20)
+    app.button(key="nav-history").click().run(timeout=20)
 
     assert not app.exception
     assert app.session_state["session_history"]

@@ -19,6 +19,8 @@ def _law_view(item: dict) -> dict:
         "summary": summary,
         "detail": item.get("content") or summary,
         "source": _source_label(item),
+        "source_url": (item.get("source") or {}).get("url", ""),
+        "is_mock": False,
     }
 
 
@@ -33,6 +35,8 @@ def _case_view(item: dict) -> dict:
         "result": item.get("judgment_result") or item.get("summary") or "판결 결과 확인 필요",
         "points": deepcopy(item.get("similar_points") or []),
         "source": _source_label(item),
+        "source_url": (item.get("source") or {}).get("url", ""),
+        "is_mock": False,
     }
 
 
@@ -50,11 +54,18 @@ class ApiLegalService:
             result = backend_client.ask_legal_question(category, question.strip(), self.session_id, scenario=scenario)
         except backend_client.BackendClientError as error:
             raise ValueError(error.user_message) from error
+        return self.adapt_analysis(result, question)
+
+    @staticmethod
+    def adapt_analysis(result: dict, question: str) -> dict:
+        result = deepcopy(result)
         result["related_laws"] = [_law_view(item) for item in result.get("related_laws", [])]
         result["similar_cases"] = [_case_view(item) for item in result.get("similar_cases", [])]
         result["question"] = question.strip()
         result.setdefault("consultations", [])
         result["result_state"] = "completed" if any(result.get(key) for key in ("related_laws", "similar_cases", "consultations")) else "no_results"
+        if result.get("termination_reason") == "needs_clarification":
+            result["result_state"] = "needs_clarification"
         return result
 
     def search_laws(self, category: str, query: str) -> list[dict]:
@@ -89,5 +100,13 @@ class ApiLegalService:
     @staticmethod
     def _validate_search(category: str, query: str) -> None:
         get_category(category)
-        if len(query.strip()) < 2:
-            raise ValueError("검색어를 2자 이상 입력해 주세요.")
+        if not 2 <= len(query.strip()) <= 200:
+            raise ValueError("검색어를 2~200자로 입력해 주세요.")
+
+    def search_consultations(self, category: str, query: str) -> list[dict]:
+        self._validate_search(category, query)
+        try:
+            payload = backend_client.search_consultations(category, query.strip())
+        except backend_client.BackendClientError as error:
+            raise ValueError(error.user_message) from error
+        return deepcopy(payload["items"])

@@ -1,17 +1,15 @@
 import streamlit as st
 
 from frontend.components.analysis_summary import render_analysis_summary
-from frontend.components.answer_view import render_analysis_result, render_case_results, render_law_results
+from frontend.components.answer_view import render_analysis_result
 from frontend.components.app_header import load_theme, render_header
 from frontend.components.category_cards import render_category_cards
-from frontend.components.helper_sections import render_dashboard_helpers, render_helper_feature
+from frontend.components.helper_sections import render_helper_feature
 from frontend.components.integration_smoke_test import render_integration_smoke_test
 from frontend.components.question_form import render_question_form
-from frontend.components.qa_panel import render_qa_panel
 from frontend.components.presentation_panel import render_presentation_panel
 from frontend.components.admin_faq import render_admin_faq
-from frontend.components.search_forms import render_search_form
-from frontend.components.sidebar import render_sidebar
+from frontend.components.top_navigation import render_top_navigation
 from frontend.core.session import initialize_session
 from frontend.data.categories import get_category
 from frontend.core.config import get_frontend_settings
@@ -20,9 +18,10 @@ from frontend.core.workflow import MockScenarioError
 from frontend.components.analysis_progress import render_analysis_error, render_analysis_progress
 from frontend.components.follow_up_chat import render_follow_up_chat
 from frontend.services.mock_notification_service import add_notification
+from frontend.components.stream_analysis import analyze_with_stream
 
 
-st.set_page_config(page_title="LawPath", page_icon="⚖️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="LawPath", page_icon="⚖️", layout="wide", initial_sidebar_state="collapsed")
 initialize_session()
 load_theme()
 
@@ -31,7 +30,7 @@ def render_home() -> None:
     render_header()
     st.markdown('<div class="page-kicker">LIFE LEGAL GUIDE</div>', unsafe_allow_html=True)
     st.markdown('<div class="page-title">어떤 법률 문제를 확인하고 싶으신가요?</div>', unsafe_allow_html=True)
-    st.markdown('<div class="page-description">생활 속 법률 분야를 선택하면 사례 분석, 법 검색, 실제 사례 검색을 시작할 수 있습니다.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="page-description">생활 속 법률 분야를 선택하면 사례 분석을 시작할 수 있습니다.</div>', unsafe_allow_html=True)
     render_category_cards()
     st.info("이 서비스는 법률 자문이나 판결 예측을 제공하지 않습니다. 현재 화면은 DEMO 데이터로 동작합니다.")
 
@@ -43,15 +42,14 @@ def render_workspace() -> None:
         st.rerun()
     category = get_category(category_code)
     service = get_legal_service()
-    render_sidebar(category_code)
     settings = get_frontend_settings()
-    if settings.frontend_qa_mode:
-        render_qa_panel(service)
+    render_header(show_home=True)
+    render_top_navigation(category_code)
+    if settings.frontend_connection_check_enabled:
         render_integration_smoke_test()
     if settings.frontend_presentation_mode:
         render_presentation_panel(service)
-    render_header(show_home=True)
-    labels = {"analysis": "내 사례 분석", "laws": "법 검색", "cases": "실제 사례", "terms": "쉬운 법률 용어", "documents": "필요 서류", "actions": "다음 행동", "faq": "FAQ", "history": "질의 이력", "admin_faq": "FAQ 관리"}
+    labels = {"analysis": "내 사례 분석", "laws": "법 검색", "consultations": "실제 사례 검색", "cases": "판례 검색", "faq": "FAQ", "history": "질의 이력", "admin_faq": "FAQ 관리"}
     st.caption(f"{category.name}  ›  {labels[st.session_state.selected_feature]}")
 
     feature = st.session_state.selected_feature
@@ -67,19 +65,25 @@ def render_workspace() -> None:
                 st.session_state.last_result = None
                 with st.status("사례를 분석하고 있습니다.", expanded=True) as progress:
                     try:
-                        result = service.analyze_case(
-                            category_code,
-                            submission.message,
-                            scenario=st.session_state.mock_scenario,
-                        )
+                        if settings.frontend_data_mode.lower() == "api" and settings.frontend_sse_enabled:
+                            result = analyze_with_stream(category_code, submission.message)
+                        else:
+                            result = service.analyze_case(
+                                category_code,
+                                submission.message,
+                                scenario=st.session_state.mock_scenario,
+                            )
                     except Exception:
                         progress.update(label="분석을 완료하지 못했습니다.", state="error")
                         raise
-                    progress.update(label="분석 요청 처리가 완료되었습니다.", state="complete", expanded=False)
+                    needs_input = result.get("result_state") == "needs_clarification"
+                    progress.update(label="추가 정보가 필요합니다." if needs_input else "분석 요청 처리가 완료되었습니다.", state="complete", expanded=needs_input)
                 st.session_state.last_result = result
                 st.session_state.session_history.append(result)
                 result_state = result.get("result_state", "completed")
-                if result_state == "no_evidence":
+                if result_state == "needs_clarification":
+                    st.info("아래 추가 질문에 답해 주세요.")
+                elif result_state == "no_evidence":
                     add_notification(
                         st.session_state.notifications,
                         "ANALYSIS_NO_EVIDENCE",
@@ -147,26 +151,13 @@ def render_workspace() -> None:
                 render_analysis_progress(completed=True)
             render_analysis_result(st.session_state.last_result)
             render_follow_up_chat(st.session_state.last_result, service)
-            render_dashboard_helpers(category_code)
-    elif feature == "laws":
-        query = render_search_form("laws")
-        if query:
-            try:
-                st.session_state.law_results = service.search_laws(category_code, query)
-            except ValueError as error:
-                st.error(str(error))
-        render_law_results(st.session_state.law_results)
-    elif feature == "cases":
-        query = render_search_form("cases")
-        if query:
-            try:
-                st.session_state.case_results = service.search_cases(category_code, query)
-            except ValueError as error:
-                st.error(str(error))
-        render_case_results(st.session_state.case_results)
     elif feature == "admin_faq":
         render_admin_faq()
     else:
+        if feature == "faq" and st.session_state.current_user["role"] == "ADMIN":
+            if st.button("FAQ 관리", key="open-admin-faq"):
+                st.session_state.selected_feature = "admin_faq"
+                st.rerun()
         render_helper_feature(category_code, feature, service)
 
     st.markdown('<div class="footer-note">본 서비스는 법률 자문이 아니며 실제 사건의 승패를 예측하지 않습니다. 제공 정보는 참고용입니다.</div>', unsafe_allow_html=True)

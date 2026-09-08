@@ -11,47 +11,30 @@ def render_analysis_result(result: dict) -> None:
         render_demo_banner()
     st.markdown("### 분석 안내")
     state = result.get("result_state", "completed")
+    if state == "needs_clarification":
+        st.warning("검색을 진행하려면 추가 정보가 필요합니다.")
+        st.write(result["answer"])
+        for question in result.get("follow_up_questions", []):
+            st.write(question)
+        return
     if state == "no_evidence":
         st.warning("공식 근거가 부족합니다. 아래 안내는 법률 판단이 아닙니다.")
     elif state == "no_results":
         st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
     st.write(result["answer"])
-    if any(result.get(key) for key in ("related_laws", "similar_cases", "consultations")):
-        law_refs = " ".join(f"**[법령 {index}]**" for index, _ in enumerate(result.get("related_laws", []), 1))
-        case_refs = " ".join(f"**[판례 {index}]**" for index, _ in enumerate(result.get("similar_cases", []), 1))
-        consultation_refs = " ".join(f"**[상담사례 {index}]**" for index, _ in enumerate(result.get("consultations", []), 1))
-        st.caption(f"답변 근거: {law_refs} {case_refs} {consultation_refs}")
     render_result_download(result)
-    law_column, cases_column = st.columns([1, 2.5], gap="large")
-    with law_column:
-        st.markdown("### ▣ 관련 법령")
-        laws = result.get("related_laws", [])
-        if not laws:
-            render_empty("표시할 공식 법령 근거가 없습니다.")
-        for index, law in enumerate(laws, 1):
-            render_law_card(law, index)
-    with cases_column:
-        st.markdown("### ⚖ 유사 판례 TOP 3")
-        cases = result.get("similar_cases", [])
-        if not cases:
-            render_empty("표시할 유사 판례가 없습니다.")
-        case_columns = st.columns(3, gap="small")
-        for index, case in enumerate(cases, 1):
-            with case_columns[index - 1]:
-                render_case_card(case, index)
-    consultations = result.get("consultations", [])
-    if consultations:
-        st.markdown("### 소비자원 상담사례")
-        st.caption("공식 상담·피해구제 사례이며 법원 판례와 구분됩니다.")
-        for index, item in enumerate(consultations, 1):
-            with st.container(border=True):
-                st.markdown(f"#### [상담사례 {index}] {item['title']}")
-                st.write(item["content"])
-                source = item.get("source") or {}
-                st.caption(source.get("title", "출처 확인 필요"))
-                url = source.get("url", "")
-                if url.startswith(("https://", "http://")):
-                    st.link_button("공식 출처 보기", url)
+    from frontend.components.evidence_card import render_evidence_card
+    for field, heading, kind in (
+        ("related_laws", "관련 법령", "law"),
+        ("similar_cases", "유사 판례", "case"),
+        ("consultations", "소비자원 상담사례", "consultation"),
+    ):
+        st.markdown(f"### {heading}")
+        items = result.get(field, [])
+        if not items:
+            render_empty("표시할 자료가 없습니다.")
+        for index, item in enumerate(items, 1):
+            render_evidence_card(item, index, kind)
     follow_ups = result.get("follow_up_questions", [])
     if follow_ups:
         with st.expander("추가로 확인할 내용"):

@@ -72,7 +72,7 @@ def test_signup_logs_in_new_mock_member() -> None:
 
 def test_admin_login_exposes_admin_menu_and_guest_cannot_see_it() -> None:
     app = AppTest.from_file(str(APP)).run(timeout=20)
-    assert "nav-admin-faq" not in [button.key for button in app.sidebar.button]
+    assert "nav-admin-faq" not in [button.key for button in app.button]
 
     app.text_input(key="mock-login-email").set_value("admin@lawpath.demo")
     app.text_input(key="mock-login-password").set_value("Admin1234!")
@@ -82,7 +82,8 @@ def test_admin_login_exposes_admin_menu_and_guest_cannot_see_it() -> None:
     app = app.run(timeout=20)
 
     assert app.session_state["current_user"]["role"] == "ADMIN"
-    assert app.sidebar.button(key="nav-admin-faq")
+    app.button(key="nav-faq").click().run(timeout=20)
+    assert app.button(key="open-admin-faq")
 
 
 def test_invalid_login_keeps_guest_role() -> None:
