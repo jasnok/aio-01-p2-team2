@@ -39,7 +39,10 @@ def test_consumer_response_places_consultations_in_separate_list(monkeypatch) ->
             LegalQuestionRequest(
                 session_id="consumer-test",
                 category="consumer",
-                question="할부 결제한 물건이 배송되지 않았습니다.",
+                question=(
+                    "할부 결제한 물건이 배송되지 않았고 "
+                    "카드사에 문의했습니다."
+                ),
             )
         )
     )
@@ -49,3 +52,30 @@ def test_consumer_response_places_consultations_in_separate_list(monkeypatch) ->
     assert len(response.consultations) == 1
     assert response.consultations[0].source.source_type == "consultation"
     assert response.sources[0].source_type == "consultation"
+
+
+def test_incomplete_question_skips_mcp_search(monkeypatch) -> None:
+    async def fail_if_runtime_is_called(self, profile, state):
+        raise AssertionError("정보가 부족한 질문은 MCP 검색을 실행하면 안 됩니다.")
+
+    monkeypatch.setattr(
+        legal_question_service.LegalAgentRuntime,
+        "run",
+        fail_if_runtime_is_called,
+    )
+
+    response = asyncio.run(
+        legal_question_service.answer_question_from_mcp(
+            LegalQuestionRequest(
+                session_id="intake-test",
+                category="consumer",
+                question="카드로 결제했는데 물건이 배송되지 않았습니다.",
+            )
+        )
+    )
+
+    assert response.status == "stopped"
+    assert response.termination_reason == "needs_clarification"
+    assert response.follow_up_questions == [
+        "판매자 또는 카드사에 문의했는지 알려주세요."
+    ]

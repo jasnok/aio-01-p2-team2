@@ -134,26 +134,35 @@ def test_housing_runtime_can_use_common_search_cases(monkeypatch) -> None:
     assert state.termination_reason == "no_results"
 
 
-def test_consumer_runtime_selects_search_consultations(monkeypatch) -> None:
+def test_consumer_runtime_returns_three_results_for_each_evidence_type(monkeypatch) -> None:
+    def make_evidence(source_type: str, prefix: str) -> list[dict]:
+        return [
+            {
+                "evidence_id": f"{prefix}-{number}",
+                "document_id": f"{prefix}-{number}",
+                "title": f"{source_type} {number}",
+                "content": f"{source_type} 본문 {number}",
+                "source": {
+                    "source_id": f"{prefix}-{number}",
+                    "title": f"{source_type} 출처",
+                    "source_type": source_type,
+                    "url": f"https://example.com/{prefix}-{number}",
+                },
+            }
+            for number in range(1, 4)
+        ]
+
+    async def fake_search_laws(query: str, category: str, top_k: int) -> dict:
+        assert category == "consumer"
+        assert top_k == 3
+        return {"success": True, "data": make_evidence("law", "law")}
+
     async def fake_search_consultations(query: str, category: str, top_k: int) -> dict:
         assert category == "consumer"
         assert top_k == 3
         return {
             "success": True,
-            "data": [
-                {
-                    "evidence_id": "consultation-1",
-                    "document_id": "consultation-1",
-                    "title": "소비자 상담사례",
-                    "content": "상담사례 내용",
-                    "source": {
-                        "source_id": "consultation-1",
-                        "title": "소비자원 상담사례",
-                        "source_type": "consultation",
-                        "url": "https://example.com/consultation-1",
-                    },
-                }
-            ],
+            "data": make_evidence("consultation", "consultation"),
         }
 
     monkeypatch.setattr(
@@ -161,15 +170,14 @@ def test_consumer_runtime_selects_search_consultations(monkeypatch) -> None:
         fake_search_consultations,
     )
 
-    async def fake_search_legal_documents(query: str, category: str, top_k: int) -> dict:
-        return {"success": True, "data": {"items": []}}
-
     async def fake_search_cases(query: str, category: str, top_k: int) -> dict:
-        return {"success": True, "data": []}
+        assert category == "consumer"
+        assert top_k == 3
+        return {"success": True, "data": make_evidence("case", "case")}
 
     monkeypatch.setattr(
-        "backend.app.agents.runtime.search_legal_documents",
-        fake_search_legal_documents,
+        "backend.app.agents.runtime.search_laws",
+        fake_search_laws,
     )
     monkeypatch.setattr(
         "backend.app.agents.runtime.search_cases",
@@ -189,8 +197,10 @@ def test_consumer_runtime_selects_search_consultations(monkeypatch) -> None:
         )
     )
 
-    assert evidence[0]["source"]["source_type"] == "consultation"
+    assert len(evidence) == 9
+    assert len([item for item in evidence if item["source"]["source_type"] == "law"]) == 3
+    assert len([item for item in evidence if item["source"]["source_type"] == "consultation"]) == 3
+    assert len([item for item in evidence if item["source"]["source_type"] == "case"]) == 3
     assert state.status == "completed"
-    assert state.termination_reason == "insufficient_evidence"
+    assert state.termination_reason == "model_finished"
     assert state.tool_calls == 3
-    assert state.trace[-1]["evidence_count"] == 1
