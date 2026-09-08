@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 class SourceView(BaseModel):
     source_id: str
     title: str
-    source_type: Literal["law", "case", "external"]
+    source_type: Literal["law", "case", "consultation", "external"]
     url: str
 
 
@@ -40,6 +40,7 @@ class LegalQuestionView(BaseModel):
     answer: str
     related_laws: list[EvidenceView] = Field(default_factory=list)
     similar_cases: list[EvidenceView] = Field(default_factory=list)
+    consultations: list[EvidenceView] = Field(default_factory=list)
     sources: list[SourceView] = Field(default_factory=list)
     follow_up_questions: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)

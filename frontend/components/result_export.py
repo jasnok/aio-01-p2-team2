@@ -13,11 +13,16 @@ def build_analysis_markdown(result: dict) -> str:
         f"- **{item['title']}** ({item.get('case_number', '-')}, {item.get('date', '-')}) — {item.get('result', '')}"
         for item in result.get("similar_cases", [])
     ) or "- 없음"
+    consultations = "\n\n".join(
+        f"### [상담사례 {index}] {item['title']}\n\n{item['content']}\n\n출처: {(item.get('source') or {}).get('url', '')}"
+        for index, item in enumerate(result.get("consultations", []), 1)
+    ) or "- 없음"
+    notice = "이 문서는 DEMO 데이터를 사용한 참고 자료이며 법률 자문이나 판결 예측이 아닙니다." if result.get("is_mock", True) else "이 문서는 검색된 자료를 정리한 참고 자료이며 법률 자문이나 판결 예측이 아닙니다."
     return f"""# LawPath 사례 분석 결과
 
 생성 시각: {datetime.now().strftime('%Y-%m-%d %H:%M')}
 
-> 이 문서는 DEMO 데이터를 사용한 참고 자료이며 법률 자문이나 판결 예측이 아닙니다.
+> {notice}
 
 ## 입력한 상황
 
@@ -42,6 +47,10 @@ def build_analysis_markdown(result: dict) -> str:
 ## 유사 판례
 
 {cases}
+
+## 소비자원 상담사례
+
+{consultations}
 """
 
 

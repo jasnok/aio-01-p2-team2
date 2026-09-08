@@ -17,7 +17,7 @@ from frontend.data.categories import get_category
 from frontend.core.config import get_frontend_settings
 from frontend.services.factory import get_legal_service
 from frontend.core.workflow import MockScenarioError
-from frontend.components.analysis_progress import render_analysis_error, render_analysis_progress, render_workflow_run
+from frontend.components.analysis_progress import render_analysis_error, render_analysis_progress
 from frontend.components.follow_up_chat import render_follow_up_chat
 from frontend.services.mock_notification_service import add_notification
 
@@ -64,12 +64,18 @@ def render_workspace() -> None:
             st.session_state.analysis_error = None
             refresh_after_notification = False
             try:
-                render_workflow_run(st.session_state.mock_scenario)
-                result = service.analyze_case(
-                    category_code,
-                    submission.message,
-                    scenario=st.session_state.mock_scenario,
-                )
+                st.session_state.last_result = None
+                with st.status("사례를 분석하고 있습니다.", expanded=True) as progress:
+                    try:
+                        result = service.analyze_case(
+                            category_code,
+                            submission.message,
+                            scenario=st.session_state.mock_scenario,
+                        )
+                    except Exception:
+                        progress.update(label="분석을 완료하지 못했습니다.", state="error")
+                        raise
+                    progress.update(label="분석 요청 처리가 완료되었습니다.", state="complete", expanded=False)
                 st.session_state.last_result = result
                 st.session_state.session_history.append(result)
                 result_state = result.get("result_state", "completed")
@@ -137,7 +143,8 @@ def render_workspace() -> None:
         with summary_column:
             render_analysis_summary(st.session_state.last_result)
         if st.session_state.last_result:
-            render_analysis_progress(completed=True)
+            if settings.frontend_data_mode.lower() == "mock":
+                render_analysis_progress(completed=True)
             render_analysis_result(st.session_state.last_result)
             render_follow_up_chat(st.session_state.last_result, service)
             render_dashboard_helpers(category_code)
