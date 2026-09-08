@@ -65,4 +65,5 @@ async def answer_question_from_mcp(request: LegalQuestionRequest) -> LegalQuesti
         ),
         related_laws=laws, similar_cases=cases, sources=sources,
         cautions=["검색 결과는 법률 자문이나 결과 보장이 아닙니다."], is_mock=False,
+        answer=answer,
     )
