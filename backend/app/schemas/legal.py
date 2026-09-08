@@ -16,7 +16,7 @@ class LegalQuestionRequest(BaseModel):
 class Source(BaseModel):
     source_id: str
     title: str
-    source_type: Literal["law", "case", "external"]
+    source_type: Literal["law", "case", "consultation", "external"]
     url: str
 
 
@@ -39,6 +39,15 @@ class Evidence(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
+class LegalSearchResponse(BaseModel):
+    request_id: str
+    query: str
+    category: Category
+    items: list[Evidence] = Field(default_factory=list)
+    total: int = Field(ge=0)
+    is_mock: bool
+
+
 class LegalQuestionResponse(BaseModel):
     request_id: str
     agent_id: Category
@@ -49,6 +58,7 @@ class LegalQuestionResponse(BaseModel):
     answer: str
     related_laws: list[Evidence] = Field(default_factory=list)
     similar_cases: list[Evidence] = Field(default_factory=list)
+    consultations: list[Evidence] = Field(default_factory=list)
     sources: list[Source] = Field(default_factory=list)
     follow_up_questions: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)
