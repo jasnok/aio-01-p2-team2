@@ -10,6 +10,7 @@ from backend.app.agents.models import AgentProfile, AgentState
 from backend.app.agents.tool_selector import select_tools
 from backend.app.mcp_clients.legal_mcp import (
     search_cases,
+    search_consultations,
     search_legal_documents,
 )
 from backend.app.policies.tool_policy import ensure_tool_allowed
@@ -70,6 +71,13 @@ class LegalAgentRuntime:
                     top_k=3,
                 )
 
+            elif tool_name == "search_consultations":
+                payload = await search_consultations(
+                    state.question,
+                    profile.agent_id,
+                    top_k=3,
+                )
+
             else:
                 raise ValueError(f"지원하지 않는 Tool입니다: {tool_name}")
 
@@ -86,7 +94,7 @@ class LegalAgentRuntime:
                     or "MCP 검색에 실패했습니다."
                 )
 
-            if tool_name == "search_cases":
+            if tool_name in {"search_cases", "search_consultations"}:
                 evidence = payload.get("data") or []
 
             else:

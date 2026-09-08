@@ -16,7 +16,7 @@ class LegalQuestionRequest(BaseModel):
 class Source(BaseModel):
     source_id: str
     title: str
-    source_type: Literal["law", "case", "external"]
+    source_type: Literal["law", "case", "consultation", "external"]
     url: str
 
 

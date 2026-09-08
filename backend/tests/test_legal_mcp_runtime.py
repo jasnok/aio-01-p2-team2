@@ -109,18 +109,31 @@ def test_housing_runtime_can_use_common_search_cases(monkeypatch) -> None:
     assert state.termination_reason == "no_results"
 
 
-def test_consumer_runtime_can_use_common_search_cases(monkeypatch) -> None:
-    async def fake_search_cases(query: str, category: str, top_k: int) -> dict:
+def test_consumer_runtime_selects_search_consultations(monkeypatch) -> None:
+    async def fake_search_consultations(query: str, category: str, top_k: int) -> dict:
         assert category == "consumer"
         assert top_k == 3
         return {
             "success": True,
-            "data": [],
+            "data": [
+                {
+                    "evidence_id": "consultation-1",
+                    "document_id": "consultation-1",
+                    "title": "소비자 상담사례",
+                    "content": "상담사례 내용",
+                    "source": {
+                        "source_id": "consultation-1",
+                        "title": "소비자원 상담사례",
+                        "source_type": "consultation",
+                        "url": "https://example.com/consultation-1",
+                    },
+                }
+            ],
         }
 
     monkeypatch.setattr(
-        "backend.app.agents.runtime.search_cases",
-        fake_search_cases,
+        "backend.app.agents.runtime.search_consultations",
+        fake_search_consultations,
     )
 
     state = AgentState(
@@ -136,6 +149,7 @@ def test_consumer_runtime_can_use_common_search_cases(monkeypatch) -> None:
         )
     )
 
-    assert evidence == []
+    assert evidence[0]["source"]["source_type"] == "consultation"
     assert state.status == "completed"
-    assert state.termination_reason == "no_results"
+    assert state.termination_reason == "model_finished"
+    assert state.trace[-1]["tool"] == "search_consultations"
