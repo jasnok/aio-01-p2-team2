@@ -3,6 +3,17 @@ from backend.app.schemas.legal import Evidence
 
 
 class AnswerAgent:
+    def _titles_for(
+        self,
+        evidence: list[Evidence],
+        source_type: str,
+    ) -> list[str]:
+        return [
+            item.title
+            for item in evidence
+            if item.source.source_type == source_type
+        ]
+
     def create_draft(
         self,
         category: str,
@@ -22,21 +33,18 @@ class AnswerAgent:
                 ],
             )
 
-        laws = [
-            item
-            for item in evidence
-            if item.source.source_type == "law"
-        ]
-        consultations = [
-            item
-            for item in evidence
-            if item.source.source_type == "consultation"
-        ]
-        cases = [
-            item
-            for item in evidence
-            if item.source.source_type == "case"
-        ]
+        law_titles = self._titles_for(
+            evidence,
+            "law",
+        )
+        consultation_titles = self._titles_for(
+            evidence,
+            "consultation",
+        )
+        case_titles = self._titles_for(
+            evidence,
+            "case",
+        )
 
         return AnswerDraft(
             question_summary=(
@@ -44,9 +52,12 @@ class AnswerAgent:
             ),
             answer=(
                 "검색된 공식 자료를 기준으로 확인할 사항을 정리했습니다. "
-                f"법령 {len(laws)}건, "
-                f"상담사례 {len(consultations)}건, "
-                f"판례 {len(cases)}건을 확인했습니다. "
+                f"법령 {len(law_titles)}건: "
+                f"{', '.join(law_titles) or '없음'}. "
+                f"상담사례 {len(consultation_titles)}건: "
+                f"{', '.join(consultation_titles) or '없음'}. "
+                f"판례 {len(case_titles)}건: "
+                f"{', '.join(case_titles) or '없음'}. "
                 "각 출처의 원문과 구체적인 사실관계를 함께 확인해 주세요."
             ),
             key_issues=[

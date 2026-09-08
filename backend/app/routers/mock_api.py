@@ -1,15 +1,19 @@
 from __future__ import annotations
 
+import asyncio
+import json
 from datetime import datetime, timedelta
 from math import ceil
 from typing import Literal
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, Security
+from fastapi.responses import StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field, field_validator
 
 from backend.app.services.mock_store import SessionExpiredError, hash_password, iso, now, store, verify_password
+from backend.app.services.agent_run_service import create_run, public_run, start_run
 from backend.app.mock_data.catalog import CATALOG
 
 router = APIRouter(prefix="/api", tags=["mock-api"])
@@ -351,64 +355,78 @@ def remove_comment(question_id: str, comment_id: str, body: CommentDeleteBody | 
     store.comments.pop(comment_id)
 
 
-AgentRunStatus = Literal["QUEUED", "RUNNING", "WAITING_APPROVAL", "COMPLETED", "FAILED", "CANCELLED"]
-
-
 class AgentRunCreate(BaseModel):
     category: Category
     question: str = Field(min_length=5, max_length=2000, description="분석할 생활 법률 질문입니다.")
+
+    @field_validator("question", mode="before")
+    @classmethod
+    def trim_question(cls, value: str) -> str:
+        return value.strip() if isinstance(value, str) else value
 
 
 def get_run(run_id: str, value: dict) -> dict:
     run = store.agent_runs.get(run_id)
     if not run:
         fail(404, "NOT_FOUND", "Agent 실행 정보를 찾을 수 없습니다.")
-    if run["owner_id"] != value["id"] and value["role"] != "ADMIN":
-        fail(403, "FORBIDDEN", "다른 사용자의 Agent 실행 정보에는 접근할 수 없습니다.")
+    if run["owner_id"] != value["id"]:
+        # 존재 여부도 노출하지 않아 ID 추측으로 다른 사용자의 분석을 볼 수 없다.
+        fail(404, "NOT_FOUND", "Agent 실행 정보를 찾을 수 없습니다.")
     return run
 
 
-def run_view(run: dict) -> dict:
-    return {key: value for key, value in run.items() if key not in {"owner_id"}}
-
-
-@router.post("/agent-runs", status_code=201, summary="Agent 실행 생성", description="polling으로 조회할 Agent 실행을 만듭니다. Idempotency-Key Header가 필수이며 같은 키에는 같은 run_id를 돌려줍니다.")
-def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = Header(default=None), value: dict = Depends(actor)) -> dict:
-    if not idempotency_key:
+@router.post("/agent-runs", status_code=202, summary="비동기 Agent 분석 시작", description="즉시 run_id를 돌려주고 실제 분석은 백그라운드에서 진행합니다. 같은 소유자와 Idempotency-Key로 같은 본문을 다시 보내면 기존 작업을 반환합니다.")
+async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"), value: dict = Depends(actor)) -> dict:
+    if not idempotency_key or not idempotency_key.strip():
         fail(400, "INVALID_REQUEST", "Idempotency-Key Header가 필요합니다.")
-    key = (value["id"], "/api/agent-runs", idempotency_key)
-    cached = store.idempotency.get(key)
-    if cached and cached[0] > now():
-        return cached[1]
-    run_id = f"run-{uuid4()}"
-    timestamp = iso()
-    run = {"id": run_id, "owner_id": value["id"], "category": body.category, "question": body.question.strip(), "status": "QUEUED", "created_at": timestamp, "updated_at": timestamp, "events": [{"id": 1, "status": "QUEUED", "message": "분석 요청이 접수되었습니다.", "occurred_at": timestamp}]}
-    store.agent_runs[run_id] = run
-    result = run_view(run)
-    store.idempotency[key] = (now() + timedelta(hours=24), result)
-    return result
+    try:
+        run, created = create_run(value, body.category, body.question, idempotency_key.strip())
+    except ValueError:
+        fail(409, "IDEMPOTENCY_CONFLICT", "같은 Idempotency-Key에는 동일한 요청 본문만 사용할 수 있습니다.")
+    if created:
+        start_run(run["run_id"])
+    return {"run_id": run["run_id"], "status": run["status"]}
 
 
-@router.get("/agent-runs/{run_id}", summary="Agent 실행 상태 조회", description="Frontend polling용 API입니다. 현재 상태와 마지막 갱신 시각을 반환합니다.")
+@router.get("/agent-runs/{run_id}", summary="Agent 실행 상태 조회", description="SSE가 끊겼을 때에도 이 API로 최종 결과를 복구할 수 있습니다.")
 def get_agent_run(run_id: str, value: dict = Depends(actor)) -> dict:
-    return run_view(get_run(run_id, value))
+    return public_run(get_run(run_id, value))
 
 
-@router.post("/agent-runs/{run_id}/cancel", summary="Agent 실행 취소", description="아직 완료·실패되지 않은 본인 Agent 실행을 취소합니다.")
-def cancel_agent_run(run_id: str, value: dict = Depends(actor)) -> dict:
+def sse_event(item: dict) -> str:
+    return f"id: {item['id']}\nevent: {item['event']}\ndata: {json.dumps(item['data'], ensure_ascii=False)}\n\n"
+
+
+@router.get("/agent-runs/{run_id}/events", summary="Agent 분석 진행 SSE", description="Last-Event-ID 이후의 실제 Tool 실행 이벤트를 text/event-stream으로 재전송합니다.")
+async def get_agent_run_events(run_id: str, last_event_id: str | None = Header(default=None, alias="Last-Event-ID"), value: dict = Depends(actor)) -> StreamingResponse:
     run = get_run(run_id, value)
-    if run["status"] in {"COMPLETED", "FAILED", "CANCELLED"}:
-        fail(409, "CONFLICT", "이미 종료된 Agent 실행은 취소할 수 없습니다.")
-    timestamp = iso()
-    run.update({"status": "CANCELLED", "updated_at": timestamp})
-    run["events"].append({"id": len(run["events"]) + 1, "status": "CANCELLED", "message": "사용자가 분석을 취소했습니다.", "occurred_at": timestamp})
-    return run_view(run)
+    try:
+        last_id = int(last_event_id or 0)
+        if last_id < 0:
+            raise ValueError
+    except ValueError:
+        fail(422, "VALIDATION_ERROR", "Last-Event-ID는 0 이상의 정수여야 합니다.")
 
+    async def event_stream():
+        sent_id = last_id
+        while True:
+            pending = [item for item in run["events"] if item["id"] > sent_id]
+            for item in pending:
+                sent_id = item["id"]
+                yield sse_event(item)
+            if run["status"] in {"completed", "stopped", "failed"}:
+                return
+            try:
+                await asyncio.sleep(10)
+            except asyncio.CancelledError:
+                return
+            yield ": heartbeat\n\n"
 
-@router.get("/agent-runs/{run_id}/events", summary="Agent 실행 이벤트 조회", description="SSE 도입 전 polling 호환용 JSON 이벤트 목록입니다. 이후 동일 경로를 SSE로 확장할 수 있습니다.")
-def get_agent_run_events(run_id: str, value: dict = Depends(actor)) -> dict:
-    run = get_run(run_id, value)
-    return {"run_id": run_id, "items": run["events"]}
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 @router.get("/history", summary="내 질의 이력 조회", description="회원은 자신의 계정 이력, 비회원은 같은 X-Guest-Id의 이력만 볼 수 있습니다.")

@@ -204,3 +204,28 @@ def test_consumer_runtime_returns_three_results_for_each_evidence_type(monkeypat
     assert state.status == "completed"
     assert state.termination_reason == "model_finished"
     assert state.tool_calls == 3
+
+
+def test_runtime_reports_actual_tool_start_and_completion(monkeypatch) -> None:
+    async def fake_search_cases(query: str, category: str, top_k: int) -> dict:
+        return {"success": True, "data": []}
+
+    async def fake_search_documents(query: str, category: str, top_k: int) -> dict:
+        return {"success": True, "data": {"items": []}}
+
+    events: list[dict] = []
+
+    async def record(event: dict) -> None:
+        events.append(event.copy())
+
+    monkeypatch.setattr("backend.app.agents.runtime.search_cases", fake_search_cases)
+    monkeypatch.setattr("backend.app.agents.runtime.search_legal_documents", fake_search_documents)
+    asyncio.run(
+        LegalAgentRuntime().run(
+            LABOR_AGENT,
+            AgentState(request_id="req-sse", agent_id="labor", question="퇴직금을 받지 못했습니다."),
+            event_callback=record,
+        )
+    )
+    assert [event["stage"] for event in events] == ["tool_selected", "tool_completed", "tool_selected", "tool_completed"]
+    assert events[0]["tool"] == events[1]["tool"] == "search_cases"

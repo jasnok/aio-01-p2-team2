@@ -1,4 +1,5 @@
 import uuid
+from collections.abc import Awaitable, Callable
 
 from backend.app.agents.models import AgentState
 from backend.app.agents.registry import get_agent_profile
@@ -67,6 +68,7 @@ def answer_question(
 
 async def answer_question_from_mcp(
     request: LegalQuestionRequest,
+    event_callback: Callable[[dict], Awaitable[None]] | None = None,
 ) -> LegalQuestionResponse:
     clarification_response = create_clarification_response(
         request,
@@ -78,7 +80,15 @@ async def answer_question_from_mcp(
 
     profile = get_agent_profile(request.category)
     state = AgentState(request_id=f"req-{uuid.uuid4()}", agent_id=profile.agent_id, question=request.question)
-    state, raw_evidence = await LegalAgentRuntime().run(profile, state)
+    runtime = LegalAgentRuntime()
+    if event_callback is None:
+        state, raw_evidence = await runtime.run(profile, state)
+    else:
+        state, raw_evidence = await runtime.run(
+            profile,
+            state,
+            event_callback=event_callback,
+        )
     documents = [Evidence.model_validate(item) for item in raw_evidence]
     laws = [item for item in documents if item.source.source_type == "law"]
     cases = [item for item in documents if item.source.source_type == "case"]

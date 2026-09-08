@@ -4,6 +4,7 @@ MVP 구현은 최대 4 step, 최대 3 tool call,
 Evidence-only 정책을 지켜야 합니다.
 """
 
+from collections.abc import Awaitable, Callable
 from typing import Protocol
 
 from backend.app.agents.models import AgentProfile, AgentState
@@ -26,6 +27,7 @@ class AgentRuntime(Protocol):
         self,
         profile: AgentProfile,
         state: AgentState,
+        event_callback: Callable[[dict], Awaitable[None]] | None = None,
     ) -> tuple[AgentState, list[dict]]: ...
 
 
@@ -36,6 +38,7 @@ class LegalAgentRuntime:
         self,
         profile: AgentProfile,
         state: AgentState,
+        event_callback: Callable[[dict], Awaitable[None]] | None = None,
     ) -> tuple[AgentState, list[dict]]:
         if profile.agent_id not in {"labor", "housing", "consumer"}:
             raise ValueError("지원하지 않는 Agent Profile입니다.")
@@ -69,6 +72,8 @@ class LegalAgentRuntime:
                     "category": profile.agent_id,
                 }
             )
+            if event_callback:
+                await event_callback(state.trace[-1])
 
             if tool_name == "search_cases":
                 payload = await search_cases(
@@ -150,6 +155,8 @@ class LegalAgentRuntime:
                     "result_count": len(new_evidence),
                 }
             )
+            if event_callback:
+                await event_callback(state.trace[-1])
 
             if len(all_evidence) < TARGET_EVIDENCE_COUNT:
                 state.trace.append(

@@ -47,3 +47,6 @@ def test_answer_agent_summarizes_evidence_counts() -> None:
     assert "법령 1건" in draft.answer
     assert "상담사례 1건" in draft.answer
     assert "판례 1건" in draft.answer
+    assert "law 테스트 자료" in draft.answer
+    assert "consultation 테스트 자료" in draft.answer
+    assert "case 테스트 자료" in draft.answer
