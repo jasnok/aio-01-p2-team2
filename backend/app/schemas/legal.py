@@ -16,7 +16,7 @@ class LegalQuestionRequest(BaseModel):
 class Source(BaseModel):
     source_id: str
     title: str
-    source_type: Literal["law", "case", "external"]
+    source_type: Literal["law", "case", "consultation", "external"]
     url: str
 
 
@@ -49,6 +49,7 @@ class LegalQuestionResponse(BaseModel):
     answer: str
     related_laws: list[Evidence] = Field(default_factory=list)
     similar_cases: list[Evidence] = Field(default_factory=list)
+    consultations: list[Evidence] = Field(default_factory=list)
     sources: list[Source] = Field(default_factory=list)
     follow_up_questions: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)
