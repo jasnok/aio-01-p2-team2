@@ -42,10 +42,12 @@ async def answer_question_from_mcp(request: LegalQuestionRequest) -> LegalQuesti
         if item.source.source_type == "consultation"
     ]
     sources = list({item.source.source_id: item.source for item in documents}.values())
-    answer = (
-        "검색된 공식 판례 자료를 바탕으로 확인할 사항을 정리했습니다. 구체적 적용은 사실관계와 원문을 추가로 확인해야 합니다."
-        if documents else "현재 검색어로는 충분한 공식 판례 근거를 찾지 못했습니다. 사실관계나 검색어를 보완해 다시 확인해 주세요."
-    )
+    if not documents:
+        answer = "현재 검색어로는 충분한 공식 근거를 찾지 못했습니다. 사실관계나 검색어를 보완해 다시 확인해 주세요."
+    elif len(documents) < 3:
+        answer = "보완 검색을 했지만 공식 근거가 3건 미만입니다. 검색된 자료를 우선 확인하고 사실관계를 보완해 다시 검색해 주세요."
+    else:
+        answer = "검색된 공식 자료를 바탕으로 확인할 사항을 정리했습니다. 구체적 적용은 사실관계와 원문을 추가로 확인해야 합니다."
     category_summaries = {
     "labor": "근로·임금 분야의 관련 판례 자료를 검색했습니다.",
     "housing": "임대차·주거 분야의 관련 판례 자료를 검색했습니다.",
@@ -69,6 +71,13 @@ async def answer_question_from_mcp(request: LegalQuestionRequest) -> LegalQuesti
         ),
         related_laws=laws, similar_cases=cases, consultations=consultations,
         sources=sources,
-        cautions=["검색 결과는 법률 자문이나 결과 보장이 아닙니다."], is_mock=False,
+        cautions=[
+            "검색 결과는 법률 자문이나 결과 보장이 아닙니다.",
+            *(
+                ["공식 근거가 3건 미만이라 추가 확인이 필요합니다."]
+                if state.termination_reason == "insufficient_evidence"
+                else []
+            ),
+        ], is_mock=False,
         answer=answer,
     )

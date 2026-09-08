@@ -16,6 +16,10 @@ from backend.app.mcp_clients.legal_mcp import (
 from backend.app.policies.tool_policy import ensure_tool_allowed
 
 
+TARGET_EVIDENCE_COUNT = 3
+MAX_TOOL_CALLS = 3
+
+
 class AgentRuntime(Protocol):
     async def run(
         self,
@@ -40,12 +44,16 @@ class LegalAgentRuntime:
         if not selected_tools:
             raise ValueError("실행할 수 있는 MCP Tool이 없습니다.")
 
-        if len(selected_tools) > 3:
+        if len(selected_tools) > MAX_TOOL_CALLS:
             raise ValueError("MVP의 최대 Tool 호출 횟수를 초과했습니다.")
 
         all_evidence = []
+        evidence_keys: set[str] = set()
 
         for tool_name in selected_tools:
+            if len(all_evidence) >= TARGET_EVIDENCE_COUNT:
+                break
+
             ensure_tool_allowed(profile, tool_name)
 
             state.current_step += 1
@@ -106,20 +114,43 @@ class LegalAgentRuntime:
                     f"MCP {tool_name} 결과 형식이 올바르지 않습니다."
                 )
 
-            all_evidence.extend(evidence)
+            new_evidence = []
+            for item in evidence:
+                evidence_key = str(
+                    item.get("evidence_id")
+                    or item.get("document_id")
+                    or repr(item)
+                )
+                if evidence_key not in evidence_keys:
+                    evidence_keys.add(evidence_key)
+                    new_evidence.append(item)
+
+            all_evidence.extend(new_evidence)
 
             state.trace.append(
                 {
                     "stage": "tool_completed",
                     "tool": tool_name,
-                    "result_count": len(evidence),
+                    "result_count": len(new_evidence),
                 }
             )
 
+            if len(all_evidence) < TARGET_EVIDENCE_COUNT:
+                state.trace.append(
+                    {
+                        "stage": "evidence_insufficient",
+                        "evidence_count": len(all_evidence),
+                        "target_count": TARGET_EVIDENCE_COUNT,
+                    }
+                )
+
         state.evidence_count = len(all_evidence)
         state.status = "completed"
-        state.termination_reason = (
-            "model_finished" if all_evidence else "no_results"
-        )
+        if not all_evidence:
+            state.termination_reason = "no_results"
+        elif len(all_evidence) < TARGET_EVIDENCE_COUNT:
+            state.termination_reason = "insufficient_evidence"
+        else:
+            state.termination_reason = "model_finished"
 
         return state, all_evidence
