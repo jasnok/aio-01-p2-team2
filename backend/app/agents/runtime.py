@@ -53,14 +53,10 @@ class LegalAgentRuntime:
 
         all_evidence = []
         evidence_keys: set[str] = set()
-        require_all_selected_tools = profile.agent_id == "consumer"
 
         for tool_name in selected_tools:
-            if (
-                not require_all_selected_tools
-                and len(all_evidence) >= TARGET_EVIDENCE_COUNT
-            ):
-                break
+            # 법령 → 판례 → 문서 검색 순서를 끝까지 실행한다.
+            # 검색 결과 수가 충분하더라도 모든 검색 근거를 확보한다.
 
             ensure_tool_allowed(profile, tool_name)
 

@@ -11,17 +11,32 @@ def render_analysis_result(result: dict) -> None:
         render_demo_banner()
     st.markdown("### 분석 안내")
     state = result.get("result_state", "completed")
+    assessment = result.get("input_assessment")
+    message = assessment["message"] if assessment else None
+    if assessment:
+        if assessment["status"] != "needs_clarification":
+            st.info(message)
+        else:
+            st.warning(message)
     if state == "needs_clarification":
-        st.warning("검색을 진행하려면 추가 정보가 필요합니다.")
-        st.write(result["answer"])
-        for question in result.get("follow_up_questions", []):
-            st.write(question)
+        if not assessment:
+            st.warning("검색을 진행하려면 추가 정보가 필요합니다.")
+        if result["answer"] != message:
+            st.text(result["answer"])
+        for question in dict.fromkeys(result.get("follow_up_questions", [])):
+            st.text(question)
         return
     if state == "no_evidence":
         st.warning("공식 근거가 부족합니다. 아래 안내는 법률 판단이 아닙니다.")
     elif state == "no_results":
         st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
-    st.write(result["answer"])
+    if result["answer"] != message:
+        st.write(result["answer"])
+    follow_ups = result.get("follow_up_questions", [])
+    if follow_ups:
+        with st.expander("추가로 확인할 내용"):
+            for item in follow_ups:
+                st.markdown(f"- {item}")
     render_result_download(result)
     from frontend.components.evidence_card import render_evidence_card
     for field, heading, kind in (
@@ -29,17 +44,12 @@ def render_analysis_result(result: dict) -> None:
         ("similar_cases", "유사 판례", "case"),
         ("consultations", "소비자원 상담사례", "consultation"),
     ):
-        st.markdown(f"### {heading}")
         items = result.get(field, [])
-        if not items:
-            render_empty("표시할 자료가 없습니다.")
-        for index, item in enumerate(items, 1):
-            render_evidence_card(item, index, kind)
-    follow_ups = result.get("follow_up_questions", [])
-    if follow_ups:
-        with st.expander("추가로 확인할 내용"):
-            for item in follow_ups:
-                st.markdown(f"- {item}")
+        with st.expander(f"{heading} ({len(items)}건)", expanded=False):
+            if not items:
+                render_empty("표시할 자료가 없습니다.")
+            for index, item in enumerate(items, 1):
+                render_evidence_card(item, index, kind)
     st.info("\n\n".join(result.get("cautions", [])))
 
 
