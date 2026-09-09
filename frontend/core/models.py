@@ -39,6 +39,11 @@ class SearchResultsView(BaseModel):
     is_mock: bool
 
 
+class InputAssessmentView(BaseModel):
+    status: Literal["sufficient", "proceed_with_caution", "needs_clarification"]
+    message: str = Field(strict=True)
+
+
 class LegalQuestionView(BaseModel):
     request_id: str
     agent_id: Literal["housing", "labor", "consumer"]
@@ -47,6 +52,7 @@ class LegalQuestionView(BaseModel):
     question_summary: str
     key_issues: list[str] = Field(default_factory=list)
     answer: str
+    input_assessment: InputAssessmentView | None = None
     related_laws: list[EvidenceView] = Field(default_factory=list)
     similar_cases: list[EvidenceView] = Field(default_factory=list)
     consultations: list[EvidenceView] = Field(default_factory=list)

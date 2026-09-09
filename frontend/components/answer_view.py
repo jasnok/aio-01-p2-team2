@@ -10,18 +10,29 @@ def render_analysis_result(result: dict) -> None:
     if result.get("is_mock", True):
         render_demo_banner()
     st.markdown("### 분석 안내")
+    st.caption("아래 안내는 제출한 질문의 분석 결과입니다. 입력 중인 새 질문의 평가는 아닙니다.")
     state = result.get("result_state", "completed")
+    assessment = result.get("input_assessment")
+    message = assessment["message"] if assessment else None
+    if assessment:
+        if assessment["status"] == "sufficient":
+            st.info(message)
+        else:
+            st.warning(message)
     if state == "needs_clarification":
-        st.warning("검색을 진행하려면 추가 정보가 필요합니다.")
-        st.write(result["answer"])
-        for question in result.get("follow_up_questions", []):
-            st.write(question)
+        if not assessment:
+            st.warning("검색을 진행하려면 추가 정보가 필요합니다.")
+        if result["answer"] != message:
+            st.text(result["answer"])
+        for question in dict.fromkeys(result.get("follow_up_questions", [])):
+            st.text(question)
         return
     if state == "no_evidence":
         st.warning("공식 근거가 부족합니다. 아래 안내는 법률 판단이 아닙니다.")
     elif state == "no_results":
         st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
-    st.write(result["answer"])
+    if result["answer"] != message:
+        st.write(result["answer"])
     render_result_download(result)
     from frontend.components.evidence_card import render_evidence_card
     for field, heading, kind in (
