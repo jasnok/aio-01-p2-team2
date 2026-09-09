@@ -20,11 +20,15 @@ def initialize_session() -> None:
         "selected_category": None,
         "selected_feature": "analysis",
         "question_message": "",
+        "analysis_draft": "",
         "last_result": None,
         "law_query": "",
         "law_results": None,
         "case_query": "",
         "case_results": None,
+        "consultation_query": "",
+        "consultation_results": None,
+        "search_errors": {},
         "session_history": [],
         "document_checks": {},
         "action_checks": {},
@@ -62,6 +66,8 @@ def initialize_session() -> None:
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
+    if st.session_state.selected_feature not in {"analysis", "faq", "history", "admin_faq"}:
+        st.session_state.selected_feature = "analysis"
 
 
 def select_category(category: str) -> None:
@@ -69,7 +75,13 @@ def select_category(category: str) -> None:
         st.session_state.last_result = None
         st.session_state.law_results = None
         st.session_state.case_results = None
+        st.session_state.consultation_results = None
+        st.session_state.law_query = ""
+        st.session_state.case_query = ""
+        st.session_state.consultation_query = ""
+        st.session_state.search_errors = {}
         st.session_state.question_message = ""
+        st.session_state.analysis_draft = ""
         st.session_state.conversation_messages = []
         st.session_state.analysis_error = None
     st.session_state.selected_category = category
@@ -82,6 +94,10 @@ def go_home() -> None:
 
 
 def select_feature(feature: str) -> None:
+    if st.session_state.selected_feature == "analysis":
+        st.session_state.analysis_draft = st.session_state.get("question_message", "")
+    if feature == "analysis" and st.session_state.selected_feature != "analysis":
+        st.session_state.question_message = st.session_state.get("analysis_draft", "")
     st.session_state.selected_feature = feature
 
 
@@ -106,8 +122,9 @@ def reset_session() -> None:
 
 
 def restore_history_item(item: dict) -> None:
-    st.session_state.selected_category = item["agent_id"]
+    select_category(item["agent_id"])
     st.session_state.question_message = item["question"]
+    st.session_state.analysis_draft = item["question"]
     st.session_state.last_result = item
     st.session_state.selected_feature = "analysis"
     st.session_state.current_page = "workspace"

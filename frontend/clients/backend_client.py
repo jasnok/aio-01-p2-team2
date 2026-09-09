@@ -3,7 +3,7 @@ import hashlib
 from pydantic import ValidationError
 
 from frontend.core.config import get_frontend_settings
-from frontend.core.models import LegalQuestionView
+from frontend.core.models import LegalQuestionView, SearchResultsView
 
 
 ERROR_MESSAGES = {
@@ -54,6 +54,8 @@ def _extract_api_error(response: httpx.Response) -> tuple[str, str]:
         return "BACKEND_ERROR", f"Backend 요청에 실패했습니다. HTTP {response.status_code}"
 
     detail = payload.get("detail", payload)
+    if isinstance(detail, list):
+        return "VALIDATION_ERROR", "입력 내용을 확인해 주세요. 검색어는 2~200자입니다."
     if isinstance(detail, dict):
         return detail.get("code", "BACKEND_ERROR"), detail.get("message", "Backend 요청에 실패했습니다.")
     return "BACKEND_ERROR", str(detail)
@@ -108,11 +110,32 @@ def ask_legal_question(category: str, question: str, session_id: str, *, scenari
 
 
 def search_laws(category: str, query: str, top_k: int = 3) -> dict:
-    return _request("GET", "/api/legal/laws", params={"category": category, "query": query, "top_k": top_k})
+    return _search_documents("laws", "law", category, query, top_k)
 
 
 def search_cases(category: str, query: str, top_k: int = 3) -> dict:
-    return _request("GET", "/api/legal/cases", params={"category": category, "query": query, "top_k": top_k})
+    return _search_documents("cases", "case", category, query, top_k)
+
+
+def search_consultations(category: str, query: str, top_k: int = 3) -> dict:
+    return _search_documents("consultations", "consultation", category, query, top_k)
+
+
+def _search_documents(kind: str, source_type: str, category: str, query: str, top_k: int) -> dict:
+    query = query.strip()
+    if category not in {"housing", "labor", "consumer"} or not 2 <= len(query) <= 200 or not 1 <= top_k <= 10:
+        raise BackendClientError("카테고리와 검색어(2~200자)를 확인해 주세요.", "VALIDATION_ERROR")
+    payload = _request("GET", f"/api/legal/{kind}", params={"category": category, "query": query, "top_k": top_k})
+    try:
+        result = SearchResultsView.model_validate(payload)
+        if (result.category != category or result.query != query
+                or result.total != len(result.items) or len(result.items) > top_k
+                or result.is_mock
+                or any(item.source.source_type != source_type for item in result.items)):
+            raise ValueError("검색 응답 내용 불일치")
+        return result.model_dump(mode="json")
+    except (ValidationError, ValueError) as error:
+        raise BackendClientError("검색 API 응답이 확정 계약과 다릅니다. 백엔드 배포 상태를 확인해 주세요.", "CONTRACT_MISMATCH") from error
 
 
 def search_terms(category: str, query: str) -> dict:

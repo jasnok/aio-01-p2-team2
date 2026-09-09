@@ -29,9 +29,8 @@ def test_checklist_normal_analysis_and_evidence_render() -> None:
     assert len(app.session_state["last_result"]["similar_cases"]) >= 1
     visible = "\n".join(item.value for item in (*app.markdown, *app.caption, *app.info))
     assert "Agent 진행 상태" in visible
-    assert "근거 L1" in visible
-    assert "근거 C1" in visible
-    assert "승소 가능성" in visible
+    assert "[법령 1]" in visible
+    assert "[판례 1]" in visible
     assert app.get("download_button")
 
 
