@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     legal_mcp_url: str = "http://192.100.200.72:8013/mcp"
     mcp_request_timeout_seconds: float = 15
     request_timeout_seconds: float = 15
+    input_assessment_timeout_seconds: float = 8
     max_tool_calls: int = 3
     llm_provider: str = "mock"
     openai_api_key: str | None = None

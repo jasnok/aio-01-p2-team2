@@ -81,23 +81,48 @@ async def execute_run(run_id: str) -> None:
         "message": "법률 분석을 시작했습니다.",
     })
     step_ids: dict[str, list[str]] = {}
+    validation_step_id: str | None = None
+    tool_messages = {
+        "search_laws": "관련 법령을 검색하고 있습니다.",
+        "search_cases": "유사 판례를 검색하고 있습니다.",
+        "search_consultations": "상담사례를 검색하고 있습니다.",
+        "search_legal_documents": "관련 법률 자료를 검색하고 있습니다.",
+    }
 
     async def on_runtime_event(trace: dict) -> None:
+        nonlocal validation_step_id
         tool = trace.get("tool")
-        if trace.get("stage") == "tool_selected":
+        stage = trace.get("stage")
+        if stage == "validation_started":
+            validation_step_id = f"validation-{uuid4()}"
+            append_event(run, "step.started", {
+                "run_id": run_id, "step_id": validation_step_id, "stage": "validation",
+                "status": "started", "tool": None,
+                "message": "질문 내용을 확인하고 있습니다.", "result_count": None,
+            })
+        elif stage == "validation_completed":
+            append_event(run, "step.completed", {
+                "run_id": run_id,
+                "step_id": validation_step_id or f"validation-{uuid4()}",
+                "stage": "validation", "status": "completed", "tool": None,
+                "message": "질문 내용을 확인했습니다.", "result_count": None,
+            })
+        elif stage == "tool_selected":
             step_id = f"{tool}-{uuid4()}"
             step_ids.setdefault(str(tool), []).append(step_id)
             append_event(run, "step.started", {
                 "run_id": run_id, "step_id": step_id, "stage": "retrieval",
                 "status": "started", "tool": tool,
-                "message": f"{tool} 실행 중", "result_count": None,
+                "message": tool_messages.get(str(tool), "관련 법률 자료를 검색하고 있습니다."),
+                "result_count": None,
             })
-        elif trace.get("stage") == "tool_completed":
+        elif stage == "tool_completed":
             step_id = step_ids.get(str(tool), [f"{tool}-unknown"]).pop(0)
             append_event(run, "step.completed", {
                 "run_id": run_id, "step_id": step_id, "stage": "retrieval",
                 "status": "completed", "tool": tool,
-                "message": f"{tool} 검색 완료", "result_count": trace.get("result_count"),
+                "message": "관련 자료 검색을 완료했습니다.",
+                "result_count": trace.get("result_count"),
             })
 
     try:

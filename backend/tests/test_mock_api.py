@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 import asyncio
 
 from backend.app.main import app
-from backend.app.schemas.legal import LegalQuestionResponse
+from backend.app.schemas.legal import InputAssessment, LegalQuestionResponse
 from backend.app.services import agent_run_service
 from backend.app.services.mock_store import now, store
 
@@ -90,10 +90,16 @@ def test_admin_can_delete_any_question_only_with_audit_reason() -> None:
 
 def test_notification_read_items_and_agent_run_sse_contract(monkeypatch) -> None:
     async def fake_answer(request, event_callback=None):
+        assert event_callback is not None
+        await event_callback({"stage": "validation_started"})
+        await event_callback({"stage": "validation_completed"})
         return LegalQuestionResponse(
             request_id="req-agent-run", agent_id=request.category,
             termination_reason="model_finished", question_summary="테스트 요약",
             answer="테스트 답변", is_mock=False,
+            input_assessment=InputAssessment(
+                status="sufficient", message="질문 내용을 확인해 검색을 진행했습니다."
+            ),
         )
 
     monkeypatch.setattr(agent_run_service, "answer_question_from_mcp", fake_answer)
@@ -115,6 +121,14 @@ def test_notification_read_items_and_agent_run_sse_contract(monkeypatch) -> None
     status = client.get(f"/api/agent-runs/{run_id}", headers=guest).json()
     assert status["status"] == "completed"
     assert status["result"]["is_mock"] is False
+    assert status["result"]["input_assessment"]["status"] == "sufficient"
+    validation_events = [
+        event for event in store.agent_runs[run_id]["events"]
+        if event["data"].get("stage") == "validation"
+    ]
+    assert [event["event"] for event in validation_events] == ["step.started", "step.completed"]
+    assert validation_events[0]["data"]["step_id"] == validation_events[1]["data"]["step_id"]
+    assert validation_events[0]["data"]["tool"] is None
     assert store.agent_runs[run_id]["events"][-1]["event"] == "run.completed"
     assert "data:" in __import__("backend.app.routers.mock_api", fromlist=["sse_event"]).sse_event(store.agent_runs[run_id]["events"][-1])
     replay = client.get(f"/api/agent-runs/{run_id}/events", headers=guest | {"Last-Event-ID": "1"})
@@ -129,6 +143,9 @@ def test_agent_run_stops_for_clarification_and_hides_internal_failure(monkeypatc
             request_id="req-clarify", agent_id=request.category, status="stopped",
             termination_reason="needs_clarification", question_summary="추가 정보 필요",
             answer="추가 정보를 알려주세요.", follow_up_questions=["계약 종료일을 알려주세요."],
+            input_assessment=InputAssessment(
+                status="needs_clarification", message="상황을 조금 더 알려주세요."
+            ),
             is_mock=False,
         )
 
@@ -140,6 +157,9 @@ def test_agent_run_stops_for_clarification_and_hides_internal_failure(monkeypatc
     run = client.get(f"/api/agent-runs/{run_id}", headers=headers).json()
     assert run["status"] == "stopped"
     assert run["result"]["follow_up_questions"] == ["계약 종료일을 알려주세요."]
+    assert run["result"]["input_assessment"]["status"] == "needs_clarification"
+    assert store.agent_runs[run_id]["result"] is not None
+    assert store.agent_runs[run_id]["events"][-1]["event"] == "input.required"
 
     async def broken(request, event_callback=None):
         raise RuntimeError("postgres password=secret must not escape")

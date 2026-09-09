@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 
 from backend.app.main import app
+from backend.app.routers import legal as legal_router
 from backend.app.services import legal_question_service
 
 
@@ -14,6 +15,8 @@ def test_health_returns_backend_status() -> None:
 
 
 def test_legal_question_uses_public_contract(monkeypatch) -> None:
+    settings = type("Settings", (), {"backend_mock_mode": True})()
+    monkeypatch.setattr(legal_router, "get_settings", lambda: settings)
     monkeypatch.setattr(
         legal_question_service,
         "search_legal_documents",
