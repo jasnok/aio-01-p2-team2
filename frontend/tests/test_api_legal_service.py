@@ -48,7 +48,7 @@ def test_api_service_calls_search_and_catalog_endpoints(monkeypatch) -> None:
 
 def test_factory_selects_api_service(monkeypatch) -> None:
     monkeypatch.setattr(factory, "get_frontend_settings", lambda: SimpleNamespace(frontend_data_mode="api"))
-    monkeypatch.setattr(factory, "st", SimpleNamespace(session_state=SimpleNamespace(current_user={"id": "guest-web-api-test"})))
+    monkeypatch.setattr(factory, "st", SimpleNamespace(session_state=SimpleNamespace(current_user={"id": "guest-web-api-test"}, auth_token=None)))
 
     service = factory.get_legal_service()
 

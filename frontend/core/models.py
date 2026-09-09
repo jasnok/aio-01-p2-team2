@@ -68,4 +68,8 @@ class LegalQuestionView(BaseModel):
     follow_up_questions: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)
     is_mock: bool = False
+    saved: bool | None = Field(default=None, strict=True)
+    conversation_id: str | int | None = None
+    storage: Literal["member", "guest_temporary", "none"] | None = None
+    expires_at: str | None = None
 

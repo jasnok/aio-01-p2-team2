@@ -1,4 +1,4 @@
-from backend.app.agents.models import AgentProfile
+from app.agents.models import AgentProfile
 
 
 RETRIEVAL_ORDER = (

@@ -228,7 +228,13 @@ Idempotency-Key: <uuid>
   "sources": [],
   "input_assessment": {
     "status": "proceed_with_caution",
-    "message": "일반 법률 검색은 가능하지만 개별 결론에는 추가 사실 확인이 필요합니다."
+    "message": "일반 법률 검색은 가능하지만 개별 결론에는 추가 사실 확인이 필요합니다.",
+    "checks": {
+      "situation": "met",
+      "timing": "not_required",
+      "relationship": "met",
+      "request_evidence": "missing"
+    }
   },
   "follow_up_questions": ["계속근로기간은 얼마인가요?"],
   "cautions": ["법률 자문이 아닌 정보 제공 목적입니다."],
@@ -241,6 +247,10 @@ Idempotency-Key: <uuid>
 `needs_clarification` 중 하나다. `needs_clarification`이면 검색을 실행하지 않고
 응답의 `status`는 `stopped`, `termination_reason`은
 `needs_clarification`이며 검색 근거 배열은 비어 있다.
+`checks`는 선택 객체다. 없거나 `null`일 수 있으며, 제공할 때는 `situation`,
+`timing`, `relationship`, `request_evidence` 네 항목을 모두 포함한다. 각 값은
+`met`, `missing`, `not_required` 중 하나다. 체크 항목 수는 검색 진행 여부를
+결정하지 않고, 기존 `input_assessment.status`가 그 역할을 한다.
 
 실행 Fixture:
 

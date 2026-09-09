@@ -43,18 +43,24 @@ def _case_view(item: dict) -> dict:
 class ApiLegalService:
     """Backend API 응답을 기존 Frontend View Model로 변환한다."""
 
-    def __init__(self, session_id: str):
+    def __init__(self, session_id: str, token: str | None = None):
         self.session_id = session_id
+        self.token = token
 
-    def analyze_case(self, category: str, question: str, *, scenario: str = "success") -> dict:
+    def analyze_case(self, category: str, question: str, *, scenario: str = "success", save_selected: bool = False) -> dict:
         get_category(category)
         if len(question.strip()) < 5:
             raise ValueError("사례를 5자 이상 입력해 주세요.")
         try:
-            result = backend_client.ask_legal_question(category, question.strip(), self.session_id, scenario=scenario)
+            options = {"scenario": scenario}
+            if self.token:
+                options.update(token=self.token, save_selected=save_selected)
+            result = backend_client.ask_legal_question(category, question.strip(), self.session_id, **options)
         except backend_client.BackendClientError as error:
             raise ValueError(error.user_message) from error
-        return self.adapt_analysis(result, question)
+        view = self.adapt_analysis(result, question)
+        view["save_requested"] = bool(self.token and save_selected)
+        return view
 
     @staticmethod
     def adapt_analysis(result: dict, question: str) -> dict:

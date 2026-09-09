@@ -41,10 +41,8 @@ def _logout_mock() -> None:
 
 def _apply_api_session(payload: dict, message: str) -> None:
     _clear_auth_inputs()
-    st.session_state.auth_token = payload["session_token"]
-    st.session_state.auth_expires_in = payload.get("expires_in")
-    st.session_state.current_user = payload["user"]
-    st.session_state.mock_role = payload["user"]["role"]
+    from frontend.core.auth_session import apply_login
+    apply_login(payload)
     st.session_state.auth_message = message
     st.session_state.unlocked_question_ids = set()
 
@@ -55,9 +53,8 @@ def _logout_api() -> None:
             backend_client.logout(st.session_state.auth_token)
     except backend_client.BackendClientError as error:
         st.session_state.auth_message = error.user_message
-    st.session_state.auth_token = None
-    st.session_state.current_user = _guest_user()
-    st.session_state.mock_role = "GUEST"
+    from frontend.core.auth_session import expire_session
+    expire_session("로그아웃했습니다.")
     st.session_state.selected_feature = "analysis"
 
 

@@ -5,10 +5,10 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from backend.app.routers.health import router as health_router
-from backend.app.routers.integration_router import router as integration_router
-from backend.app.routers.legal import router as legal_router
-from backend.app.routers.mock_api import router as mock_api_router
+from app.routers.health import router as health_router
+from app.routers.integration_router import router as integration_router
+from app.routers.legal import router as legal_router
+from app.routers.mock_api import router as mock_api_router
 
 
 app = FastAPI(
