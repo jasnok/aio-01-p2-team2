@@ -2,6 +2,8 @@ from dataclasses import dataclass
 
 import streamlit as st
 
+from frontend.components.input_checklist import render_input_checklist
+
 
 DEMO_QUESTIONS = {
     "housing": "주택 임대차 계약이 끝났는데 임대인이 보증금을 돌려주지 않습니다. 어떤 법 조문을 확인해야 하나요?",
@@ -32,6 +34,7 @@ def render_question_form(category: str) -> QuestionSubmission | None:
         max_chars=2000,
         placeholder="언제, 누구와, 어떤 일이 있었는지 구체적으로 작성하면 검색 정확도가 높아집니다.",
     )
+    render_input_checklist(category, message, st.session_state.get("last_result"))
     submitted = st.button(
         "처리 중입니다..." if st.session_state.analysis_in_progress else "✦ 사례 분석하기",
         type="primary",

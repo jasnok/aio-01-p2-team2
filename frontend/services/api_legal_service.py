@@ -29,7 +29,7 @@ def _case_view(item: dict) -> dict:
         **deepcopy(item),
         "title": item.get("case_name") or item.get("title") or "판례 정보",
         "court": item.get("court") or "법원 정보 없음",
-        "score": item.get("score") or 0,
+        "score": item.get("score"),
         "case_number": item.get("case_number") or "사건번호 없음",
         "date": str(item.get("decided_at") or "선고일 정보 없음"),
         "result": item.get("judgment_result") or item.get("summary") or "판결 결과 확인 필요",
