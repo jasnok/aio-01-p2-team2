@@ -358,6 +358,8 @@ def remove_comment(question_id: str, comment_id: str, body: CommentDeleteBody | 
 class AgentRunCreate(BaseModel):
     category: Category
     question: str = Field(min_length=5, max_length=2000, description="분석할 생활 법률 질문입니다.")
+    save_selected: bool = Field(default=False, description="사용자가 선택한 경우에만 대화와 근거를 저장합니다.")
+    conversation_id: int | None = Field(default=None, gt=0, description="후속 질문에 사용할 본인 소유의 저장 대화 ID입니다.")
 
     @field_validator("question", mode="before")
     @classmethod
@@ -380,7 +382,14 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
     if not idempotency_key or not idempotency_key.strip():
         fail(400, "INVALID_REQUEST", "Idempotency-Key Header가 필요합니다.")
     try:
-        run, created = create_run(value, body.category, body.question, idempotency_key.strip())
+        run, created = create_run(
+            value,
+            body.category,
+            body.question,
+            idempotency_key.strip(),
+            save_selected=body.save_selected,
+            conversation_id=body.conversation_id,
+        )
     except ValueError:
         fail(409, "IDEMPOTENCY_CONFLICT", "같은 Idempotency-Key에는 동일한 요청 본문만 사용할 수 있습니다.")
     if created:
