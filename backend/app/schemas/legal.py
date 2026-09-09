@@ -11,6 +11,10 @@ class LegalQuestionRequest(BaseModel):
     session_id: str = Field(min_length=1, max_length=100)
     category: Category
     question: str = Field(min_length=5, max_length=2000)
+    # 저장은 사용자가 명시적으로 선택했을 때만 수행한다.
+    save_selected: bool = False
+    # 후속 질문에서만 전달한다. 없으면 기존 단발성 분석과 동일하게 동작한다.
+    conversation_id: int | None = Field(default=None, gt=0)
 
 
 class Source(BaseModel):
@@ -48,9 +52,17 @@ class LegalSearchResponse(BaseModel):
     is_mock: bool
 
 
+class InputAssessmentChecks(BaseModel):
+    situation: Literal["met", "missing", "not_required"]
+    timing: Literal["met", "missing", "not_required"]
+    relationship: Literal["met", "missing", "not_required"]
+    request_evidence: Literal["met", "missing", "not_required"]
+
+
 class InputAssessment(BaseModel):
     status: Literal["sufficient", "proceed_with_caution", "needs_clarification"]
     message: str
+    checks: InputAssessmentChecks | None = None
 
 
 class LegalQuestionResponse(BaseModel):
@@ -68,4 +80,5 @@ class LegalQuestionResponse(BaseModel):
     follow_up_questions: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)
     input_assessment: InputAssessment | None = None
+    conversation_id: int | None = None
     is_mock: bool = True

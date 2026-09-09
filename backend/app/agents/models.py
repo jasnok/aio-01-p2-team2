@@ -31,6 +31,18 @@ class AgentState(BaseModel):
     answer: str | None = None
 
 
+CheckStatus = Literal["met", "missing", "not_required"]
+
+
+class InputChecks(BaseModel):
+    """입력 판단 화면에 보여 줄 항목별 상태다. 부분 객체는 허용하지 않는다."""
+
+    situation: CheckStatus
+    timing: CheckStatus
+    relationship: CheckStatus
+    request_evidence: CheckStatus
+
+
 class IntakeResult(BaseModel):
     is_ready_for_search: bool
     status: Literal["sufficient", "proceed_with_caution", "needs_clarification"]
@@ -38,6 +50,7 @@ class IntakeResult(BaseModel):
     missing_fields: list[str] = Field(default_factory=list)
     follow_up_questions: list[str] = Field(default_factory=list, max_length=3)
     cautions: list[str] = Field(default_factory=list)
+    checks: InputChecks | None = None
 
 class AnswerDraft(BaseModel):
     question_summary: str

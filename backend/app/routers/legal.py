@@ -3,7 +3,7 @@ import logging
 import time
 from uuid import uuid4
 
-from fastapi import APIRouter, Header, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 
 from backend.app.agents.models import AgentState
 from backend.app.agents.registry import get_agent_profile
@@ -16,21 +16,36 @@ from backend.app.schemas.legal import (
     LegalSearchResponse,
 )
 from backend.app.services.legal_question_service import answer_question, answer_question_from_mcp
+from backend.app.services.conversation_service import ConversationService
 from backend.app.services.mock_store import iso, now, store
 from backend.app.core.config import get_settings
+from backend.app.routers.mock_api import actor
 
 
 router = APIRouter(prefix="/api/legal", tags=["legal"])
 logger = logging.getLogger(__name__)
+conversation_service = ConversationService()
 
 
 @router.post("/questions", response_model=LegalQuestionResponse, summary="생활 법률 사례 분석", description="질문을 분야별로 분석합니다. Mock 모드에서는 실제 법률 판단 대신 연결 확인용 안내를 돌려줍니다. 중복 클릭 방지를 위해 Idempotency-Key Header 사용을 권장합니다.")
-async def create_question(request: LegalQuestionRequest, idempotency_key: str | None = Header(default=None), x_guest_id: str | None = Header(default=None), x_mock_scenario: str | None = Header(default=None)) -> LegalQuestionResponse:
-    owner = x_guest_id or request.session_id
+async def create_question(request: LegalQuestionRequest, idempotency_key: str | None = Header(default=None), x_guest_id: str | None = Header(default=None), x_mock_scenario: str | None = Header(default=None), value: dict = Depends(actor)) -> LegalQuestionResponse:
+    # session_id는 기존 계약 호환용이고, 저장 대화의 소유자는 검증된 actor를 사용한다.
+    owner = value["id"]
     if idempotency_key:
         cached = store.idempotency.get((owner, "/api/legal/questions", idempotency_key))
         if cached and cached[0] > now():
             return LegalQuestionResponse.model_validate(cached[1])
+
+    if request.conversation_id is not None:
+        context = await conversation_service.build_context_for_actor(
+            conversation_id=request.conversation_id,
+            actor_key=owner,
+        )
+        if not context:
+            raise HTTPException(
+                status_code=404,
+                detail={"code": "CONVERSATION_NOT_FOUND", "message": "저장된 대화를 찾을 수 없습니다."},
+            )
     if x_mock_scenario and not get_settings().backend_mock_mode:
         raise HTTPException(status_code=400, detail={"code": "INVALID_REQUEST", "message": "운영 모드에서는 Mock 시나리오를 사용할 수 없습니다."})
     if x_mock_scenario in {"mcp_error", "database_error", "timeout", "invalid_response"}:
@@ -44,13 +59,39 @@ async def create_question(request: LegalQuestionRequest, idempotency_key: str | 
     else:
         if not get_settings().backend_mock_mode:
             try:
-                response = await answer_question_from_mcp(request)
+                if request.conversation_id is None:
+                    response = await answer_question_from_mcp(request)
+                else:
+                    response = await answer_question_from_mcp(
+                        request,
+                        conversation_context=context,
+                    )
             except TimeoutError as error:
                 raise HTTPException(status_code=504, detail={"code": "UPSTREAM_TIMEOUT", "message": "Legal MCP 응답 시간이 초과되었습니다."}) from error
             except Exception as error:
                 raise HTTPException(status_code=502, detail={"code": "MCP_UNAVAILABLE", "message": "Legal MCP 검색 서비스에 연결할 수 없습니다."}) from error
         else:
             response = answer_question(request)
+    if request.save_selected:
+        try:
+            saved = await conversation_service.save_if_selected(
+                save_selected=True,
+                actor_key=owner,
+                question=request.question,
+                response=response,
+                conversation_id=request.conversation_id,
+            )
+            response.conversation_id = saved["conversation_id"] if saved else None
+        except Exception as error:
+            logger.exception(
+                "conversation_save_failed request_id=%s reason=%s",
+                response.request_id,
+                type(error).__name__,
+            )
+            raise HTTPException(
+                status_code=503,
+                detail={"code": "CONVERSATION_SAVE_FAILED", "message": "대화 저장에 실패했습니다. 분석 결과는 저장되지 않았습니다."},
+            ) from error
     if idempotency_key:
         store.idempotency[(owner, "/api/legal/questions", idempotency_key)] = (now() + timedelta(hours=24), response.model_dump(mode="json"))
     store.history.setdefault(owner, []).append({"id": f"history-{response.request_id}", "type": "legal_analysis", "target_id": response.request_id, "category": request.category, "title": request.question[:100], "created_at": iso()})
