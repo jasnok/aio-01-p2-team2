@@ -31,8 +31,7 @@ def test_consultation_only_response_is_valid_visible_and_exportable(monkeypatch)
         f"render_analysis_result({ascii(result)})"
     ).run()
     assert not app.exception
-    assert any("소비자원 상담사례" in item.label for item in app.toggle), str(app)
-    app.toggle[2].set_value(True).run()
+    assert any("소비자원 상담사례" in item.label for item in app.expander), str(app)
     assert any("상담사례 본문입니다." in item.value for item in app.markdown)
     assert not any("검색 결과가 없습니다" in item.value for item in app.info)
 
