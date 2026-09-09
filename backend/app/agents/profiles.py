@@ -2,7 +2,14 @@
 
 from app.agents.models import AgentProfile
 
-LEGAL_READ_TOOLS = frozenset({"search_legal_documents", "search_cases", "get_law_article"})
+LEGAL_READ_TOOLS = frozenset(
+    {
+        "search_laws",
+        "search_legal_documents",
+        "search_cases",
+        "get_law_article",
+    }
+)
 CONSUMER_READ_TOOLS = LEGAL_READ_TOOLS | frozenset({"search_consultations"})
 
 HOUSING_AGENT = AgentProfile("housing", "임대차·주거 Agent", "주거 법률 근거 검색", "임대차·보증금·계약 분쟁", "계약이 끝났는데 보증금을 받지 못했습니다.", "검색된 Evidence만 사용한다.", LEGAL_READ_TOOLS)

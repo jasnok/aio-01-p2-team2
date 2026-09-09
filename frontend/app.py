@@ -1,25 +1,25 @@
 import streamlit as st
 
-from frontend.components.analysis_summary import render_analysis_summary
-from frontend.components.answer_view import render_analysis_result, render_case_results, render_law_results
-from frontend.components.app_header import load_theme, render_header
-from frontend.components.category_cards import render_category_cards
-from frontend.components.helper_sections import render_dashboard_helpers, render_helper_feature
-from frontend.components.integration_smoke_test import render_integration_smoke_test
-from frontend.components.question_form import render_question_form
-from frontend.components.qa_panel import render_qa_panel
-from frontend.components.presentation_panel import render_presentation_panel
-from frontend.components.admin_faq import render_admin_faq
-from frontend.components.search_forms import render_search_form
-from frontend.components.sidebar import render_sidebar
-from frontend.core.session import initialize_session
-from frontend.data.categories import get_category
-from frontend.core.config import get_frontend_settings
-from frontend.services.factory import get_legal_service
-from frontend.core.workflow import MockScenarioError
-from frontend.components.analysis_progress import render_analysis_error, render_analysis_progress
-from frontend.components.follow_up_chat import render_follow_up_chat
-from frontend.services.mock_notification_service import add_notification
+from components.analysis_summary import render_analysis_summary
+from components.answer_view import render_analysis_result, render_case_results, render_law_results
+from components.app_header import load_theme, render_header
+from components.category_cards import render_category_cards
+from components.helper_sections import render_dashboard_helpers, render_helper_feature
+from components.integration_smoke_test import render_integration_smoke_test
+from components.question_form import render_question_form
+from components.qa_panel import render_qa_panel
+from components.presentation_panel import render_presentation_panel
+from components.admin_faq import render_admin_faq
+from components.search_forms import render_search_form
+from components.sidebar import render_sidebar
+from core.session import initialize_session
+from data.categories import get_category
+from core.config import get_frontend_settings
+from services.factory import get_legal_service
+from core.workflow import MockScenarioError
+from components.analysis_progress import render_analysis_error, render_analysis_progress
+from components.follow_up_chat import render_follow_up_chat
+from services.mock_notification_service import add_notification
 
 
 st.set_page_config(page_title="LawPath", page_icon="⚖️", layout="wide", initial_sidebar_state="expanded")

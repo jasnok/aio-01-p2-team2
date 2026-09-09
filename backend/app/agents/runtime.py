@@ -7,7 +7,13 @@ Evidence-only 정책을 지켜야 합니다.
 from typing import Protocol
 
 from app.agents.models import AgentProfile, AgentState
-from app.mcp_clients.legal_mcp import search_cases
+from app.agents.tool_selector import is_comprehensive_search, select_tools
+from app.mcp_clients.legal_mcp import (
+    search_cases,
+    search_consultations,
+    search_laws,
+    search_legal_documents,
+)
 from app.policies.tool_policy import ensure_tool_allowed
 
 
@@ -35,6 +41,7 @@ class LegalAgentRuntime:
             raise ValueError("지원하지 않는 Agent Profile입니다.")
 
         selected_tools = select_tools(profile, state.question)
+        comprehensive_search = is_comprehensive_search(state.question)
 
         if not selected_tools:
             raise ValueError("실행할 수 있는 MCP Tool이 없습니다.")
@@ -46,7 +53,13 @@ class LegalAgentRuntime:
         evidence_keys: set[str] = set()
 
         for tool_name in selected_tools:
-            if len(all_evidence) >= TARGET_EVIDENCE_COUNT:
+            # 일반 검색은 빠른 응답을 위해 근거 3건을 확보하면 종료한다.
+            # 다만 "법령·판례·사례를 모두" 요청한 경우에는 선택된 각 Tool을
+            # 한 번씩 실행해 유형별 근거를 함께 반환한다.
+            if (
+                not comprehensive_search
+                and len(all_evidence) >= TARGET_EVIDENCE_COUNT
+            ):
                 break
 
             ensure_tool_allowed(profile, tool_name)
@@ -60,7 +73,14 @@ class LegalAgentRuntime:
                 }
             )
 
-            if tool_name == "search_cases":
+            if tool_name == "search_laws":
+                payload = await search_laws(
+                    state.question,
+                    profile.agent_id,
+                    top_k=3,
+                )
+
+            elif tool_name == "search_cases":
                 payload = await search_cases(
                     state.question,
                     profile.agent_id,
@@ -97,7 +117,11 @@ class LegalAgentRuntime:
                     or "MCP 검색에 실패했습니다."
                 )
 
-            if tool_name in {"search_cases", "search_consultations"}:
+            if tool_name in {
+                "search_laws",
+                "search_cases",
+                "search_consultations",
+            }:
                 evidence = payload.get("data") or []
 
             else:
