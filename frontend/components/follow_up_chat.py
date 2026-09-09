@@ -20,10 +20,11 @@ def _start_new_analysis() -> None:
 
 
 def render_follow_up_chat(result: dict, service: LegalService) -> None:
-    st.markdown("### 💬 추가로 궁금한 점")
+    needs_input = result.get("result_state") == "needs_clarification"
+    st.markdown("### 💬 추가 정보 입력" if needs_input else "### 💬 추가로 궁금한 점")
     st.caption("현재 질문에 추가 정보를 이어서 분석합니다. DB의 이전 대화를 조회하는 기능은 아직 연결되지 않았습니다.")
     suggestions = result.get("follow_up_questions", [])
-    if suggestions:
+    if suggestions and not needs_input:
         columns = st.columns(min(2, len(suggestions)))
         for index, suggestion in enumerate(suggestions[:2]):
             columns[index].button(
@@ -35,8 +36,8 @@ def render_follow_up_chat(result: dict, service: LegalService) -> None:
             )
 
     with st.form("follow-up-form", clear_on_submit=True):
-        question = st.text_input("후속 질문", key="follow_up_input", placeholder="예: 1년 3개월 근무했다면 어떻게 확인하나요?")
-        submitted = st.form_submit_button("후속 질문 분석", type="primary")
+        question = st.text_input("추가 정보" if needs_input else "후속 질문", key="follow_up_input", placeholder="예: 1년 3개월 근무했습니다.")
+        submitted = st.form_submit_button("추가 정보로 다시 분석" if needs_input else "후속 질문 분석", type="primary")
     if submitted:
         if len(question.strip()) < 5:
             st.warning("후속 질문을 5자 이상 입력해 주세요.")

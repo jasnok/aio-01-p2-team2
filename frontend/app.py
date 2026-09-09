@@ -147,7 +147,7 @@ def render_workspace() -> None:
         with summary_column:
             render_analysis_summary(st.session_state.last_result)
         if st.session_state.last_result:
-            if settings.frontend_data_mode.lower() == "mock":
+            if settings.frontend_data_mode.lower() == "mock" and st.session_state.last_result.get("result_state") != "needs_clarification":
                 render_analysis_progress(completed=True)
             render_analysis_result(st.session_state.last_result)
             render_follow_up_chat(st.session_state.last_result, service)
