@@ -14,7 +14,7 @@ def build_analysis_markdown(result: dict) -> str:
         for item in result.get("similar_cases", [])
     ) or "- 없음"
     consultations = "\n\n".join(
-        f"### [상담사례 {index}] {item['title']}\n\n{item['content']}\n\n출처: {(item.get('source') or {}).get('url', '')}"
+        f"### [상담사례 {index}] {item['title']}\n\n{item['content']}"
         for index, item in enumerate(result.get("consultations", []), 1)
     ) or "- 없음"
     notice = "이 문서는 DEMO 데이터를 사용한 참고 자료이며 법률 자문이나 판결 예측이 아닙니다." if result.get("is_mock", True) else "이 문서는 검색된 자료를 정리한 참고 자료이며 법률 자문이나 판결 예측이 아닙니다."
@@ -55,10 +55,16 @@ def build_analysis_markdown(result: dict) -> str:
 
 
 def render_result_download(result: dict) -> None:
+    try:
+        from frontend.components.pdf_export import build_analysis_pdf
+        pdf = build_analysis_pdf(result)
+    except Exception:
+        st.warning("PDF를 생성하지 못했습니다. 분석 결과는 화면에서 확인할 수 있습니다.")
+        return
     st.download_button(
-        "⬇️ 분석 결과 Markdown 저장",
-        data=build_analysis_markdown(result),
-        file_name=f"lawpath-{result.get('agent_id', 'result')}-analysis.md",
-        mime="text/markdown",
+        "⬇️ 분석 결과 PDF 저장",
+        data=pdf,
+        file_name=f"lawpath-{result.get('agent_id', 'result')}-analysis.pdf",
+        mime="application/pdf",
         use_container_width=True,
     )

@@ -7,8 +7,10 @@ class FrontendSettings(BaseSettings):
     backend_api_url: str = "http://127.0.0.1:8000"
     frontend_request_timeout_seconds: float = 30
     frontend_data_mode: str = "mock"
-    frontend_qa_mode: bool = False
+    frontend_connection_check_enabled: bool = False
     frontend_presentation_mode: bool = False
+    frontend_sse_enabled: bool = False
+    frontend_sse_total_timeout_seconds: float = 180
     team_frontend_url: str = "http://192.100.200.232:8501"
     team_backend_url: str = "http://192.100.200.195:8000"
     team_mcp_url: str = "http://192.100.200.72:8013"

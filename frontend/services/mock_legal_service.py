@@ -52,6 +52,9 @@ class MockLegalService:
     def search_cases(self, category: str, query: str) -> list[dict]:
         return self._search(category, query, "cases")
 
+    def search_consultations(self, category: str, query: str) -> list[dict]:
+        raise ValueError("실제 사례 검색은 API 모드에서 사용할 수 있습니다. Backend 연결을 설정해 주세요.")
+
     def search_terms(self, category: str, query: str) -> list[tuple[str, str]]:
         get_category(category)
         normalized = query.strip().lower()

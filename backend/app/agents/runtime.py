@@ -4,6 +4,7 @@ MVP 구현은 최대 4 step, 최대 3 tool call,
 Evidence-only 정책을 지켜야 합니다.
 """
 
+from collections.abc import Awaitable, Callable
 from typing import Protocol
 
 from app.agents.models import AgentProfile, AgentState
@@ -13,6 +14,7 @@ from app.mcp_clients.legal_mcp import (
     search_consultations,
     search_laws,
     search_legal_documents,
+    search_laws,
 )
 from app.policies.tool_policy import ensure_tool_allowed
 
@@ -26,6 +28,7 @@ class AgentRuntime(Protocol):
         self,
         profile: AgentProfile,
         state: AgentState,
+        event_callback: Callable[[dict], Awaitable[None]] | None = None,
     ) -> tuple[AgentState, list[dict]]: ...
 
 
@@ -36,6 +39,7 @@ class LegalAgentRuntime:
         self,
         profile: AgentProfile,
         state: AgentState,
+        event_callback: Callable[[dict], Awaitable[None]] | None = None,
     ) -> tuple[AgentState, list[dict]]:
         if profile.agent_id not in {"labor", "housing", "consumer"}:
             raise ValueError("지원하지 않는 Agent Profile입니다.")
@@ -53,14 +57,8 @@ class LegalAgentRuntime:
         evidence_keys: set[str] = set()
 
         for tool_name in selected_tools:
-            # 일반 검색은 빠른 응답을 위해 근거 3건을 확보하면 종료한다.
-            # 다만 "법령·판례·사례를 모두" 요청한 경우에는 선택된 각 Tool을
-            # 한 번씩 실행해 유형별 근거를 함께 반환한다.
-            if (
-                not comprehensive_search
-                and len(all_evidence) >= TARGET_EVIDENCE_COUNT
-            ):
-                break
+            # 법령 → 판례 → 문서 검색 순서를 끝까지 실행한다.
+            # 검색 결과 수가 충분하더라도 모든 검색 근거를 확보한다.
 
             ensure_tool_allowed(profile, tool_name)
 
@@ -72,6 +70,8 @@ class LegalAgentRuntime:
                     "category": profile.agent_id,
                 }
             )
+            if event_callback:
+                await event_callback(state.trace[-1])
 
             if tool_name == "search_laws":
                 payload = await search_laws(
@@ -101,6 +101,13 @@ class LegalAgentRuntime:
                     top_k=3,
                 )
 
+            elif tool_name == "search_laws":
+                payload = await search_laws(
+                    state.question,
+                    profile.agent_id,
+                    top_k=3,
+                )
+
             else:
                 raise ValueError(f"지원하지 않는 Tool입니다: {tool_name}")
 
@@ -118,9 +125,9 @@ class LegalAgentRuntime:
                 )
 
             if tool_name in {
-                "search_laws",
                 "search_cases",
                 "search_consultations",
+                "search_laws",
             }:
                 evidence = payload.get("data") or []
 
@@ -153,6 +160,8 @@ class LegalAgentRuntime:
                     "result_count": len(new_evidence),
                 }
             )
+            if event_callback:
+                await event_callback(state.trace[-1])
 
             if len(all_evidence) < TARGET_EVIDENCE_COUNT:
                 state.trace.append(
@@ -173,3 +182,49 @@ class LegalAgentRuntime:
             state.termination_reason = "model_finished"
 
         return state, all_evidence
+
+    async def run_single_tool(
+        self,
+        profile: AgentProfile,
+        state: AgentState,
+        tool_name: str,
+        top_k: int,
+    ) -> tuple[AgentState, list[dict]]:
+        """독립 검색 API에서 지정한 자료 유형만 한 번 검색한다."""
+        ensure_tool_allowed(profile, tool_name)
+        state.current_step += 1
+        state.trace.append(
+            {"stage": "tool_selected", "tool": tool_name, "category": profile.agent_id}
+        )
+
+        if tool_name == "search_laws":
+            payload = await search_laws(state.question, profile.agent_id, top_k=top_k)
+        elif tool_name == "search_cases":
+            payload = await search_cases(state.question, profile.agent_id, top_k=top_k)
+        elif tool_name == "search_consultations":
+            payload = await search_consultations(state.question, profile.agent_id, top_k=top_k)
+        else:
+            raise ValueError(f"독립 검색에서 지원하지 않는 Tool입니다: {tool_name}")
+
+        state.tool_calls += 1
+        if not payload.get("success", True):
+            error = payload.get("error") or {}
+            raise RuntimeError(
+                payload.get("message")
+                or error.get("message")
+                or payload.get("error_code")
+                or error.get("code")
+                or "MCP 검색에 실패했습니다."
+            )
+
+        evidence = payload.get("data") or []
+        if not isinstance(evidence, list):
+            raise ValueError(f"MCP {tool_name} 결과 형식이 올바르지 않습니다.")
+
+        state.evidence_count = len(evidence)
+        state.status = "completed"
+        state.termination_reason = "model_finished" if evidence else "no_results"
+        state.trace.append(
+            {"stage": "tool_completed", "tool": tool_name, "result_count": len(evidence)}
+        )
+        return state, evidence

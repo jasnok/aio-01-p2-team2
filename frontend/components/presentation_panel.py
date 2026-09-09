@@ -17,7 +17,7 @@ def _prepare_demo(service: LegalService) -> None:
 
 
 def render_presentation_panel(service: LegalService) -> None:
-    with st.sidebar:
+    with st.container():
         with st.container(border=True):
             st.markdown("#### 🎬 발표용 데모")
             st.caption("대표 시나리오를 한 번에 준비합니다.")

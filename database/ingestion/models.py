@@ -113,3 +113,27 @@ class NormalizedStatute(BaseModel):
     document: NormalizedLegalDocument
     # legal_chunks에 조문 단위로 저장할 원천 목록입니다.
     articles: list[NormalizedStatuteArticle]
+
+class NormalizedPrecedentSection(BaseModel):
+    """판례에서 추출한 의미 단위 본문입니다."""
+
+    section_type: Literal[
+        "holding",
+        "summary",
+        "reference_law",
+        "reference_case",
+        "reasoning",
+    ]
+
+    title: str
+    content: str
+
+
+class NormalizedPrecedent(BaseModel):
+    """판례 문서 1건과 해당 판례의 의미 단위 목록입니다."""
+
+    # legal_documents에 저장할 판례 전체 문서
+    document: NormalizedLegalDocument
+
+    # legal_chunks 생성에 사용할 판례 구성 부분
+    sections: list[NormalizedPrecedentSection]

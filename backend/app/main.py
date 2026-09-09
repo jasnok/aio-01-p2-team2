@@ -41,7 +41,7 @@ app.add_middleware(
     allow_origins=["http://localhost:8501", "http://127.0.0.1:8501", "http://192.100.200.232:8501"],
     allow_credentials=False,
     allow_methods=["*"],
-    allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "X-Guest-Id", "X-Mock-Scenario"],
+    allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "Last-Event-ID", "X-Guest-Id", "X-Mock-Scenario"],
 )
 app.include_router(health_router)
 app.include_router(legal_router)

@@ -1,15 +1,27 @@
 from datetime import timedelta
+import logging
+import time
 from uuid import uuid4
 
 from fastapi import APIRouter, Header, HTTPException, Query
 
-from app.schemas.legal import LegalQuestionRequest, LegalQuestionResponse
-from app.services.legal_question_service import answer_question, answer_question_from_mcp
-from app.services.mock_store import iso, now, store
-from app.core.config import get_settings
+from backend.app.agents.models import AgentState
+from backend.app.agents.registry import get_agent_profile
+from backend.app.agents.runtime import LegalAgentRuntime
+from backend.app.schemas.legal import (
+    Category,
+    Evidence,
+    LegalQuestionRequest,
+    LegalQuestionResponse,
+    LegalSearchResponse,
+)
+from backend.app.services.legal_question_service import answer_question, answer_question_from_mcp
+from backend.app.services.mock_store import iso, now, store
+from backend.app.core.config import get_settings
 
 
 router = APIRouter(prefix="/api/legal", tags=["legal"])
+logger = logging.getLogger(__name__)
 
 
 @router.post("/questions", response_model=LegalQuestionResponse, summary="생활 법률 사례 분석", description="질문을 분야별로 분석합니다. Mock 모드에서는 실제 법률 판단 대신 연결 확인용 안내를 돌려줍니다. 중복 클릭 방지를 위해 Idempotency-Key Header 사용을 권장합니다.")
@@ -46,13 +58,73 @@ async def create_question(request: LegalQuestionRequest, idempotency_key: str | 
     return response
 
 
-@router.get("/laws", summary="법령 검색", description="입력한 분야와 검색어로 법령을 찾습니다. 결과가 없으면 오류 대신 빈 배열을 반환합니다.")
-@router.get("/cases", summary="판례 검색", description="입력한 분야와 검색어로 판례를 찾습니다. 결과가 없으면 오류 대신 빈 배열을 반환합니다.")
-def search_documents(category: str, query: str = Query(min_length=2, max_length=200), top_k: int = Query(3, ge=1, le=10)) -> dict:
-    if category not in {"housing", "labor", "consumer"}:
-        raise HTTPException(status_code=422, detail={"code": "VALIDATION_ERROR", "message": "지원하지 않는 분야입니다."})
-    # Mock 단계에서는 실제 검색어와 맞는 자료만 돌려주며, 결과를 꾸며 내지 않는다.
-    return {"query": query.strip(), "category": category, "items": [], "total": 0}
+async def _search_by_tool(
+    *,
+    category: Category,
+    query: str,
+    top_k: int,
+    tool_name: str,
+    expected_source_type: str,
+) -> LegalSearchResponse:
+    request_id = f"req-{uuid4()}"
+    normalized_query = query.strip()
+    if not 2 <= len(normalized_query) <= 200:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "VALIDATION_ERROR", "message": "query는 공백을 제외하고 2~200자여야 합니다."},
+        )
+
+    started_at = time.perf_counter()
+    try:
+        profile = get_agent_profile(category)
+        state, raw_items = await LegalAgentRuntime().run_single_tool(
+            profile,
+            AgentState(request_id=request_id, agent_id=profile.agent_id, question=normalized_query),
+            tool_name,
+            top_k,
+        )
+        items = [Evidence.model_validate(item) for item in raw_items]
+        if any(item.source.source_type != expected_source_type for item in items):
+            raise ValueError("MCP가 요청한 자료 유형과 다른 결과를 반환했습니다.")
+        logger.info(
+            "legal_search request_id=%s tool=%s category=%s result_count=%s duration_ms=%s",
+            request_id,
+            tool_name,
+            category,
+            len(items),
+            round((time.perf_counter() - started_at) * 1000),
+        )
+        return LegalSearchResponse(
+            request_id=request_id,
+            query=normalized_query,
+            category=category,
+            items=items,
+            total=len(items),
+            is_mock=get_settings().backend_mock_mode,
+        )
+    except TimeoutError as error:
+        logger.warning("legal_search_failed request_id=%s tool=%s category=%s reason=timeout", request_id, tool_name, category)
+        raise HTTPException(status_code=504, detail={"code": "UPSTREAM_TIMEOUT", "message": "Legal MCP 응답 시간이 초과되었습니다."}) from error
+    except HTTPException:
+        raise
+    except Exception as error:
+        logger.exception("legal_search_failed request_id=%s tool=%s category=%s reason=%s", request_id, tool_name, category, type(error).__name__)
+        raise HTTPException(status_code=502, detail={"code": "MCP_UNAVAILABLE", "message": "Legal MCP 검색 서비스에 연결할 수 없습니다."}) from error
+
+
+@router.get("/laws", response_model=LegalSearchResponse, summary="법령 검색", description="Agent가 법령 검색 Tool만 실행합니다. 결과가 없으면 빈 배열을 반환합니다.")
+async def search_laws(category: Category, query: str, top_k: int = Query(3, ge=1, le=10)) -> LegalSearchResponse:
+    return await _search_by_tool(category=category, query=query, top_k=top_k, tool_name="search_laws", expected_source_type="law")
+
+
+@router.get("/cases", response_model=LegalSearchResponse, summary="판례 검색", description="Agent가 판례 검색 Tool만 실행합니다. 결과가 없으면 빈 배열을 반환합니다.")
+async def search_cases(category: Category, query: str, top_k: int = Query(3, ge=1, le=10)) -> LegalSearchResponse:
+    return await _search_by_tool(category=category, query=query, top_k=top_k, tool_name="search_cases", expected_source_type="case")
+
+
+@router.get("/consultations", response_model=LegalSearchResponse, summary="상담사례 검색", description="Agent가 상담사례 검색 Tool만 실행합니다. 결과가 없으면 빈 배열을 반환합니다.")
+async def search_consultations(category: Category, query: str, top_k: int = Query(3, ge=1, le=10)) -> LegalSearchResponse:
+    return await _search_by_tool(category=category, query=query, top_k=top_k, tool_name="search_consultations", expected_source_type="consultation")
 
 
 @router.get("/terms", summary="쉬운 법률 용어 검색", description="어려운 법률 용어를 쉬운 말로 설명합니다.")

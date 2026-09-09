@@ -39,6 +39,20 @@ class Evidence(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
+class LegalSearchResponse(BaseModel):
+    request_id: str
+    query: str
+    category: Category
+    items: list[Evidence] = Field(default_factory=list)
+    total: int = Field(ge=0)
+    is_mock: bool
+
+
+class InputAssessment(BaseModel):
+    status: Literal["sufficient", "proceed_with_caution", "needs_clarification"]
+    message: str
+
+
 class LegalQuestionResponse(BaseModel):
     request_id: str
     agent_id: Category
@@ -53,4 +67,5 @@ class LegalQuestionResponse(BaseModel):
     sources: list[Source] = Field(default_factory=list)
     follow_up_questions: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)
+    input_assessment: InputAssessment | None = None
     is_mock: bool = True
