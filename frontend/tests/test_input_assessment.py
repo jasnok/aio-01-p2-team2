@@ -49,7 +49,7 @@ def test_assessment_ui(status):
     app = AppTest.from_string('from frontend.components.answer_view import render_analysis_result\n'
                               f'render_analysis_result({ascii(result)})').run()
     assert not app.exception
-    notices = app.info if status == 'sufficient' else app.warning
+    notices = app.info if status != 'needs_clarification' else app.warning
     assert sum(x.value == '판단 안내' for x in notices) == 1
     if status == 'needs_clarification':
         assert not app.expander

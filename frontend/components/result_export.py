@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 import streamlit as st
 
@@ -58,7 +59,13 @@ def render_result_download(result: dict) -> None:
     try:
         from frontend.components.pdf_export import build_analysis_pdf
         pdf = build_analysis_pdf(result)
-    except Exception:
+    except ImportError:
+        logging.getLogger(__name__).error("PDF dependency unavailable")
+        st.warning("PDF 기능 준비가 필요합니다. 실행 환경의 PDF 라이브러리 설치를 확인해 주세요.")
+        return
+    except Exception as error:
+        # Do not log user text or exception messages that may contain document content.
+        logging.getLogger(__name__).error("PDF generation failed: %s", type(error).__name__)
         st.warning("PDF를 생성하지 못했습니다. 분석 결과는 화면에서 확인할 수 있습니다.")
         return
     st.download_button(
