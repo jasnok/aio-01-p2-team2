@@ -19,6 +19,7 @@ from frontend.components.analysis_progress import render_analysis_error, render_
 from frontend.components.follow_up_chat import render_follow_up_chat
 from frontend.services.mock_notification_service import add_notification
 from frontend.components.stream_analysis import analyze_with_stream
+from frontend.components.legal_terms_chat import render_legal_terms_chat
 
 
 st.set_page_config(page_title="LawPath", page_icon="⚖️", layout="wide", initial_sidebar_state="collapsed")
@@ -49,11 +50,13 @@ def render_workspace() -> None:
         render_integration_smoke_test()
     if settings.frontend_presentation_mode:
         render_presentation_panel(service)
-    labels = {"analysis": "내 사례 분석", "laws": "법 검색", "consultations": "실제 사례 검색", "cases": "판례 검색", "faq": "FAQ", "history": "질의 이력", "admin_faq": "FAQ 관리"}
+    labels = {"analysis": "내 사례 분석", "terms": "법률 용어 대화", "faq": "FAQ", "history": "질의 이력", "admin_faq": "FAQ 관리"}
     st.caption(f"{category.name}  ›  {labels[st.session_state.selected_feature]}")
 
     feature = st.session_state.selected_feature
-    if feature == "analysis":
+    if feature == "terms":
+        render_legal_terms_chat()
+    elif feature == "analysis":
         input_column, summary_column = st.columns([1, 1.35], gap="large")
         with input_column:
             submission = render_question_form(category_code)

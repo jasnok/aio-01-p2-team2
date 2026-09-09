@@ -89,7 +89,7 @@ def search_food_mock(
     )
 
 
-def ask_legal_question(category: str, question: str, session_id: str, *, scenario: str = "success") -> dict:
+def ask_legal_question(category: str, question: str, session_id: str, *, scenario: str = "success", save_selected: bool = False) -> dict:
     idempotency_source = f"{session_id}:{category}:{question}".encode("utf-8")
     headers = {
         "Idempotency-Key": hashlib.sha256(idempotency_source).hexdigest(),
@@ -100,7 +100,7 @@ def ask_legal_question(category: str, question: str, session_id: str, *, scenari
     payload = _request(
         "POST",
         "/api/legal/questions",
-        json={"session_id": session_id, "category": category, "question": question},
+        json={"session_id": session_id, "category": category, "question": question, "save_selected": save_selected},
         headers=headers,
     )
     try:
@@ -170,6 +170,41 @@ def request_password_reset(email: str) -> dict:
 
 def get_current_user(token: str | None, guest_id: str) -> dict:
     return _request("GET", "/api/auth/me", headers=auth_headers(token, guest_id))
+
+
+def list_saved_conversations(token: str) -> dict:
+    return _request("GET", "/api/saved-conversations", headers=auth_headers(token, ""))
+
+
+def get_saved_conversation(token: str, conversation_id: str) -> dict:
+    return _request("GET", f"/api/saved-conversations/{conversation_id}", headers=auth_headers(token, ""))
+
+
+def delete_saved_conversation(token: str, conversation_id: str) -> None:
+    _request("DELETE", f"/api/saved-conversations/{conversation_id}", headers=auth_headers(token, ""))
+
+
+def list_guest_temporary_history(guest_id: str) -> dict:
+    return _request("GET", "/api/guest/temporary-history", headers=auth_headers(None, guest_id))
+
+
+def chat_legal_terms(token: str | None, guest_id: str, message: str, *, save_selected: bool = False, conversation_id: str | None = None) -> dict:
+    body = {"message": message, "save_selected": save_selected}
+    if conversation_id:
+        body["conversation_id"] = conversation_id
+    return _request("POST", "/api/legal-terms/chat", json=body, headers=auth_headers(token, guest_id))
+
+
+def list_legal_term_conversations(token: str) -> dict:
+    return _request("GET", "/api/legal-terms/conversations", headers=auth_headers(token, ""))
+
+
+def get_legal_term_conversation(token: str, conversation_id: str) -> dict:
+    return _request("GET", f"/api/legal-terms/conversations/{conversation_id}", headers=auth_headers(token, ""))
+
+
+def delete_legal_term_conversation(token: str, conversation_id: str) -> None:
+    _request("DELETE", f"/api/legal-terms/conversations/{conversation_id}", headers=auth_headers(token, ""))
 
 
 def list_faqs(category: str | None = None) -> dict:
