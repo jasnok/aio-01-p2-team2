@@ -78,7 +78,7 @@ def test_validation_before_network(monkeypatch):
 
 
 def test_six_navigation_items():
-    assert [x[0] for x in FEATURES] == ["analysis", "faq", "history"]
+    assert [x[0] for x in FEATURES] == ["analysis", "terms", "faq", "history"]
 
 
 def test_category_change_and_legacy_navigation(monkeypatch):
