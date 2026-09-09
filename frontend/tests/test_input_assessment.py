@@ -23,7 +23,8 @@ def test_sync_and_sse_preserve_assessment(monkeypatch, status):
     streamed = final_result(dict(run_id='r1', status=raw['status'], result=raw), 'r1')
     for result in [sync, streamed]:
         adapted = ApiLegalService.adapt_analysis(result, '질문 내용입니다')
-        assert adapted['input_assessment'] == raw['input_assessment']
+        expected = {**raw['input_assessment'], 'checks': None} if status else None
+        assert adapted['input_assessment'] == expected
         if status == 'needs_clarification':
             assert adapted['result_state'] == 'needs_clarification'
     raw.pop('input_assessment')

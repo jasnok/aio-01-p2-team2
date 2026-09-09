@@ -6,6 +6,14 @@ from frontend.clients import backend_client as api
 from frontend.clients.agent_stream import receive_run
 from frontend.services.api_legal_service import ApiLegalService
 
+SEARCH_LABELS = {"search_laws": "법령 검색", "search_cases": "판례 검색", "search_consultations": "상담사례 검색"}
+
+
+def update_searches(searches, event, data):
+    if data.get("tool") in SEARCH_LABELS and event in {"step.started", "step.completed"}:
+        searches[data["tool"]] = "완료" if event == "step.completed" else "검색 중"
+    return 30 + sum(12 if state == "완료" else 4 for state in searches.values())
+
 
 def friendly_event(event, data):
     terminal = {
@@ -35,6 +43,21 @@ def friendly_event(event, data):
     return f"{phase}을 진행하고 있습니다." if event == "step.started" else f"{phase}을 마쳤습니다."
 
 
+def stage_progress(previous, event, data):
+    """Illustrative stage position, not a time-based completion estimate."""
+    stage = data.get("stage")
+    target = 5 if event == "run.started" else 0
+    if event in {"step.started", "step.completed"}:
+        start, end = {
+            "validation": (10, 20), "validate": (10, 20),
+            "routing": (20, 30), "retrieval": (35, 65),
+            "generation": (75, 85), "generate": (75, 85),
+            "verification": (85, 95),
+        }.get(stage, (35, 65) if data.get("tool") else (5, 5))
+        target = end if event == "step.completed" else start
+    return min(95, max(previous, target))
+
+
 def analyze_with_stream(category, question):
     guest_id = st.session_state.current_user["id"]
     token = st.session_state.auth_token
@@ -45,6 +68,22 @@ def analyze_with_stream(category, question):
                    "last_id": 0, "steps": {}, "finished": False}
         st.session_state.sse_pending = pending
     view = st.empty()
+    pending.setdefault("progress", 0)
+    pending.setdefault("message", "분석 요청을 준비하고 있습니다.")
+    pending.setdefault("searches", {})
+
+    def render():
+        with view.container():
+            st.progress(pending["progress"], text=pending["message"])
+            st.caption("단계 기준 진행 표시이며 실제 소요 시간의 완료율은 아닙니다.")
+            for tool, label in SEARCH_LABELS.items():
+                state = pending["searches"].get(tool, "호출 확인 전")
+                st.caption(f"{label} · {state}")
+            with st.expander("진행 이력"):
+                for step in pending["steps"].values():
+                    st.text(step["message"])
+
+    render()
     try:
         if pending["run_id"] is None:
             created = api.create_agent_run(token, guest_id, category, question.strip(), pending["key"])
@@ -53,16 +92,15 @@ def analyze_with_stream(category, question):
                 raise api.BackendClientError("작업 생성 API가 SSE 계약과 다릅니다.", "CONTRACT_MISMATCH")
             pending["run_id"] = run_id
 
-        def render():
-            with view.container():
-                for step in pending["steps"].values():
-                    marker = "✓" if step["done"] else "⟳"
-                    st.text(f"{marker} {step['message']}")
-
         def update(number, event, data):
             pending["last_id"] = number
             key = data.get("step_id") or event
             message = friendly_event(event, data)
+            if data.get("tool") in SEARCH_LABELS and event in {"step.started", "step.completed"}:
+                pending["progress"] = max(pending["progress"], update_searches(pending["searches"], event, data))
+            else:
+                pending["progress"] = stage_progress(pending["progress"], event, data)
+            pending["message"] = "최종 응답을 확인하고 있습니다." if event == "run.completed" else message
             pending["steps"][key] = {"message": message, "done": event not in {"step.started", "run.started"}}
             render()
 
@@ -71,8 +109,17 @@ def analyze_with_stream(category, question):
         pending["finished"] = True
         if raw["agent_id"] != category:
             raise api.BackendClientError("분석 분야가 요청과 다릅니다.", "CONTRACT_MISMATCH")
-        return ApiLegalService.adapt_analysis(raw, question)
+        result = ApiLegalService.adapt_analysis(raw, question)
+        if raw["status"] == "completed":
+            pending["progress"] = 100
+            pending["message"] = "분석 결과를 확인해 주세요."
+        else:
+            pending["message"] = "추가 정보가 필요합니다. 아래 보완 질문을 확인해 주세요."
+        render()
+        return result
     except api.BackendClientError as error:
+        pending["message"] = "분석을 마치지 못했습니다. 연결 상태와 오류 안내를 확인해 주세요."
+        render()
         if error.code == "RUN_FAILED":
             pending["finished"] = True
         raise ValueError(error.user_message) from error

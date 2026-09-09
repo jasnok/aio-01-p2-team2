@@ -39,9 +39,17 @@ class SearchResultsView(BaseModel):
     is_mock: bool
 
 
+class InputChecklistView(BaseModel):
+    situation: Literal["met", "missing", "not_required"]
+    timing: Literal["met", "missing", "not_required"]
+    relationship: Literal["met", "missing", "not_required"]
+    request_evidence: Literal["met", "missing", "not_required"]
+
+
 class InputAssessmentView(BaseModel):
     status: Literal["sufficient", "proceed_with_caution", "needs_clarification"]
     message: str = Field(strict=True)
+    checks: InputChecklistView | None = None
 
 
 class LegalQuestionView(BaseModel):

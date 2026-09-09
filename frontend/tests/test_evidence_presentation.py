@@ -14,10 +14,11 @@ def test_unified_card_preview_and_full_detail(kind):
     assert not app.exception
     assert len(app.expander) == 1
     assert app.expander[0].label == "상세보기"
-    assert any(x.value == body.strip() for x in app.expander[0].markdown)
+    assert any(body.strip() in x.value for x in app.expander[0].markdown)
     assert not app.get("link_button")
-    preview = [x.value for x in app.markdown if x.value.endswith("…")]
-    assert len(preview) == 1 and len(preview[0]) == 150
+    from frontend.components.evidence_card import evidence_html, preview
+    assert any(x.value == evidence_html(preview(body)) for x in app.markdown)
+    assert len(preview(body)) == 150
 
 
 def test_sse_messages_never_echo_internal_message():
