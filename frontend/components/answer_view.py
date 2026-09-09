@@ -10,12 +10,11 @@ def render_analysis_result(result: dict) -> None:
     if result.get("is_mock", True):
         render_demo_banner()
     st.markdown("### 분석 안내")
-    st.caption("아래 안내는 제출한 질문의 분석 결과입니다. 입력 중인 새 질문의 평가는 아닙니다.")
     state = result.get("result_state", "completed")
     assessment = result.get("input_assessment")
     message = assessment["message"] if assessment else None
     if assessment:
-        if assessment["status"] == "sufficient":
+        if assessment["status"] != "needs_clarification":
             st.info(message)
         else:
             st.warning(message)
@@ -33,6 +32,11 @@ def render_analysis_result(result: dict) -> None:
         st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
     if result["answer"] != message:
         st.write(result["answer"])
+    follow_ups = result.get("follow_up_questions", [])
+    if follow_ups:
+        with st.expander("추가로 확인할 내용"):
+            for item in follow_ups:
+                st.markdown(f"- {item}")
     render_result_download(result)
     from frontend.components.evidence_card import render_evidence_card
     for field, heading, kind in (
@@ -40,17 +44,15 @@ def render_analysis_result(result: dict) -> None:
         ("similar_cases", "유사 판례", "case"),
         ("consultations", "소비자원 상담사례", "consultation"),
     ):
-        st.markdown(f"### {heading}")
         items = result.get(field, [])
-        if not items:
-            render_empty("표시할 자료가 없습니다.")
-        for index, item in enumerate(items, 1):
-            render_evidence_card(item, index, kind)
-    follow_ups = result.get("follow_up_questions", [])
-    if follow_ups:
-        with st.expander("추가로 확인할 내용"):
-            for item in follow_ups:
-                st.markdown(f"- {item}")
+        # Toggle avoids nested expanders on older supported Streamlit versions.
+        opened = st.toggle(f"{heading} ({len(items)}건)", value=False,
+                           key=f"evidence-section-{result.get('request_id', 'result')}-{field}")
+        if opened:
+            if not items:
+                render_empty("표시할 자료가 없습니다.")
+            for index, item in enumerate(items, 1):
+                render_evidence_card(item, index, kind)
     st.info("\n\n".join(result.get("cautions", [])))
 
 
