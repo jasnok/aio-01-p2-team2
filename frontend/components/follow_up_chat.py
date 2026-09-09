@@ -10,6 +10,8 @@ def _set_follow_up(text: str) -> None:
 
 
 def _start_new_analysis() -> None:
+    for key in ("terms_identity", "terms_messages", "terms_conversation_id"):
+        st.session_state.pop(key, None)
     st.session_state.last_result = None
     st.session_state.question_message = ""
     st.session_state.analysis_draft = ""
@@ -21,6 +23,11 @@ def _start_new_analysis() -> None:
 
 def render_follow_up_chat(result: dict, service: LegalService) -> None:
     needs_input = result.get("result_state") == "needs_clarification"
+    if not needs_input:
+        from frontend.components.legal_terms_chat import render_legal_terms_chat
+        render_legal_terms_chat(result)
+        st.button("새 분석 시작", key="new-analysis", on_click=_start_new_analysis)
+        return
     st.markdown("### 💬 추가 정보 입력" if needs_input else "### 💬 추가로 궁금한 점")
     st.caption("현재 질문에 추가 정보를 이어서 분석합니다. DB의 이전 대화를 조회하는 기능은 아직 연결되지 않았습니다.")
     suggestions = result.get("follow_up_questions", [])

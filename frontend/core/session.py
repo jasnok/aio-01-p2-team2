@@ -66,7 +66,7 @@ def initialize_session() -> None:
     for key, value in defaults.items():
         if key not in st.session_state:
             st.session_state[key] = value
-    if st.session_state.selected_feature not in {"analysis", "terms", "faq", "history", "admin_faq"}:
+    if st.session_state.selected_feature not in {"analysis", "faq", "history", "admin_faq"}:
         st.session_state.selected_feature = "analysis"
 
 
