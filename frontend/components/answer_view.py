@@ -33,6 +33,11 @@ def render_analysis_result(result: dict) -> None:
         st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
     if result["answer"] != message:
         st.write(result["answer"])
+    follow_ups = result.get("follow_up_questions", [])
+    if follow_ups:
+        with st.expander("추가로 확인할 내용"):
+            for item in follow_ups:
+                st.markdown(f"- {item}")
     render_result_download(result)
     from frontend.components.evidence_card import render_evidence_card
     for field, heading, kind in (
@@ -46,11 +51,6 @@ def render_analysis_result(result: dict) -> None:
             render_empty("표시할 자료가 없습니다.")
         for index, item in enumerate(items, 1):
             render_evidence_card(item, index, kind)
-    follow_ups = result.get("follow_up_questions", [])
-    if follow_ups:
-        with st.expander("추가로 확인할 내용"):
-            for item in follow_ups:
-                st.markdown(f"- {item}")
     st.info("\n\n".join(result.get("cautions", [])))
 
 
