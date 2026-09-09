@@ -1,6 +1,6 @@
 """세 전문 Agent의 변경이 적은 설정값을 한곳에서 관리합니다."""
 
-from backend.app.agents.models import AgentProfile
+from app.agents.models import AgentProfile
 
 LEGAL_READ_TOOLS = frozenset(
     {
