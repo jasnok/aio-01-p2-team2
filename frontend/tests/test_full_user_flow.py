@@ -15,9 +15,7 @@ def test_all_local_frontend_features_render() -> None:
     next(button for button in app.button if button.label == "✦ 사례 분석하기").click().run(timeout=20)
     assert not app.exception
     assert app.session_state["last_result"]["agent_id"] == "housing"
-    assert not any(expander.label == "상세보기" for expander in app.expander)
-    for index in range(3):
-        app.toggle[index].set_value(True).run()
+    assert not app.toggle
     assert sum(expander.label == "상세보기" for expander in app.expander) >= 2
     assert not any("QA 빠른 테스트" in expander.label for expander in app.expander)
     assert not app.get("link_button")

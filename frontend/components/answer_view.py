@@ -45,10 +45,7 @@ def render_analysis_result(result: dict) -> None:
         ("consultations", "소비자원 상담사례", "consultation"),
     ):
         items = result.get(field, [])
-        # Toggle avoids nested expanders on older supported Streamlit versions.
-        opened = st.toggle(f"{heading} ({len(items)}건)", value=False,
-                           key=f"evidence-section-{result.get('request_id', 'result')}-{field}")
-        if opened:
+        with st.expander(f"{heading} ({len(items)}건)", expanded=False):
             if not items:
                 render_empty("표시할 자료가 없습니다.")
             for index, item in enumerate(items, 1):
