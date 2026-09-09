@@ -8,7 +8,7 @@ def test_top_navigation_preserves_analysis_and_has_no_sidebar():
     app = AppTest.from_file(str(APP)).run(timeout=20)
     app.button(key="category-housing").click().run(timeout=20)
     assert not app.sidebar.button
-    assert [b.key for b in app.button if (b.key or "").startswith("nav-")] == ["nav-analysis", "nav-terms", "nav-faq", "nav-history"]
+    assert [b.key for b in app.button if (b.key or "").startswith("nav-")] == ["nav-analysis", "nav-faq", "nav-history"]
     app.text_area(key="question_message").set_value("보증금 반환에 대해 질문합니다.").run()
     app.button(key="nav-faq").click().run(timeout=20)
     assert not app.exception

@@ -5,7 +5,6 @@ from frontend.data.categories import get_category
 
 FEATURES = [
     ("analysis", "내 사례 분석"),
-    ("terms", "법률 용어 대화"),
     ("faq", "FAQ"),
     ("history", "질의 이력"),
 ]

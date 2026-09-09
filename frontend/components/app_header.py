@@ -44,10 +44,11 @@ def render_header(show_home: bool = False) -> None:
             render_mock_auth()
             st.divider()
             st.caption(f"현재 세션 · {st.session_state.session_id[-8:]}")
-            policy = "7일 보관 예정" if user["role"] == "GUEST" else "영구보관 예정"
             mode = get_frontend_settings().frontend_data_mode.lower()
-            location = "Backend API" if mode == "api" else "브라우저 Session"
-            st.write(f"질의 이력 조회: {location}. DB 영속 저장과 보관 정책은 연결 확인 전입니다.")
+            if mode == "api":
+                st.caption("비회원 이력은 임시 보관됩니다." if user["role"] == "GUEST" else "저장을 선택한 분석과 대화는 질의 이력에서 확인할 수 있습니다.")
+            else:
+                st.caption("현재 이력은 DEMO 세션에만 보관됩니다.")
             if st.button("🔄 세션 초기화", key="reset-session", use_container_width=True):
                 from frontend.core.session import reset_session
 

@@ -19,11 +19,13 @@ from frontend.components.analysis_progress import render_analysis_error, render_
 from frontend.components.follow_up_chat import render_follow_up_chat
 from frontend.services.mock_notification_service import add_notification
 from frontend.components.stream_analysis import analyze_with_stream
-from frontend.components.legal_terms_chat import render_legal_terms_chat
 
 
 st.set_page_config(page_title="LawPath", page_icon="⚖️", layout="wide", initial_sidebar_state="collapsed")
 initialize_session()
+if get_frontend_settings().frontend_data_mode.lower() == "api":
+    from frontend.core.auth_session import refresh_auth
+    refresh_auth()
 load_theme()
 
 
@@ -54,9 +56,7 @@ def render_workspace() -> None:
     st.caption(f"{category.name}  ›  {labels[st.session_state.selected_feature]}")
 
     feature = st.session_state.selected_feature
-    if feature == "terms":
-        render_legal_terms_chat()
-    elif feature == "analysis":
+    if feature == "analysis":
         input_column, summary_column = st.columns([1, 1.35], gap="large")
         with input_column:
             submission = render_question_form(category_code)
@@ -69,7 +69,9 @@ def render_workspace() -> None:
                 with st.status("사례를 분석하고 있습니다.", expanded=True) as progress:
                     try:
                         if settings.frontend_data_mode.lower() == "api" and settings.frontend_sse_enabled:
-                            result = analyze_with_stream(category_code, submission.message)
+                            result = analyze_with_stream(category_code, submission.message, save_selected=submission.save_selected)
+                        elif settings.frontend_data_mode.lower() == "api":
+                            result = service.analyze_case(category_code, submission.message, save_selected=submission.save_selected)
                         else:
                             result = service.analyze_case(
                                 category_code,
@@ -153,6 +155,16 @@ def render_workspace() -> None:
             if settings.frontend_data_mode.lower() == "mock" and st.session_state.last_result.get("result_state") != "needs_clarification":
                 render_analysis_progress(completed=True)
             render_analysis_result(st.session_state.last_result)
+            result = st.session_state.last_result
+            if settings.frontend_data_mode.lower() == "api" and st.session_state.get("auth_token") and result.get("result_state", "completed") == "completed" and result.get("saved") is not True:
+                from frontend.components.result_save import render_result_save
+                render_result_save(result, kind="analysis", result_id=result.get("run_id"))
+            if result.get("saved") is True:
+                st.success("분석이 저장되었습니다. 질의 이력에서 확인할 수 있습니다.")
+            elif result.get("save_requested"):
+                st.info("분석은 완료됐지만 저장 완료는 확인되지 않았습니다. 질의 이력에서 확인해 주세요.")
+            if result.get("expires_at"):
+                st.caption(f"임시 보관 만료 시각: {result['expires_at']}")
             render_follow_up_chat(st.session_state.last_result, service)
     elif feature == "admin_faq":
         render_admin_faq()

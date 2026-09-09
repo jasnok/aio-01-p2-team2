@@ -58,13 +58,14 @@ def stage_progress(previous, event, data):
     return min(95, max(previous, target))
 
 
-def analyze_with_stream(category, question):
+def analyze_with_stream(category, question, *, save_selected=False):
     guest_id = st.session_state.current_user["id"]
     token = st.session_state.auth_token
     identity = (guest_id, category, question.strip())
     pending = st.session_state.get("sse_pending")
     if not pending or pending["identity"] != identity or pending.get("finished"):
         pending = {"identity": identity, "key": str(uuid4()), "run_id": None,
+                   "save_selected": bool(token and save_selected),
                    "last_id": 0, "steps": {}, "finished": False}
         st.session_state.sse_pending = pending
     view = st.empty()
@@ -86,7 +87,8 @@ def analyze_with_stream(category, question):
     render()
     try:
         if pending["run_id"] is None:
-            created = api.create_agent_run(token, guest_id, category, question.strip(), pending["key"])
+            created = api.create_agent_run(token, guest_id, category, question.strip(), pending["key"],
+                                           save_selected=pending.get("save_selected", False))
             run_id = created.get("run_id")
             if not isinstance(run_id, str) or not run_id:
                 raise api.BackendClientError("작업 생성 API가 SSE 계약과 다릅니다.", "CONTRACT_MISMATCH")
@@ -110,6 +112,8 @@ def analyze_with_stream(category, question):
         if raw["agent_id"] != category:
             raise api.BackendClientError("분석 분야가 요청과 다릅니다.", "CONTRACT_MISMATCH")
         result = ApiLegalService.adapt_analysis(raw, question)
+        result["run_id"] = pending["run_id"]
+        result["save_requested"] = pending.get("save_selected", False)
         if raw["status"] == "completed":
             pending["progress"] = 100
             pending["message"] = "분석 결과를 확인해 주세요."

@@ -66,13 +66,9 @@ def test_checklist_follow_up_and_new_analysis() -> None:
     app = _submit_analysis(_open_labor_workspace(), "퇴직했는데 퇴직금을 받지 못했습니다.")
     first_history_size = len(app.session_state["session_history"])
 
-    app.text_input(key="follow_up_input").set_value("1년 3개월 근무했다면 어떻게 확인하나요?")
-    next(button for button in app.button if button.label == "후속 질문 분석").click()
-    app = app.run(timeout=20)
-
-    assert len(app.session_state["conversation_messages"]) == 2
-    assert len(app.session_state["session_history"]) == first_history_size + 1
-    assert app.session_state["last_result"]["parent_request_id"]
+    assert any("법률 용어 대화" in m.value for m in app.markdown)
+    assert not any(b.label == "후속 질문 분석" for b in app.button)
+    assert len(app.session_state["session_history"]) == first_history_size
 
     app.button(key="new-analysis").click()
     app = app.run(timeout=20)
