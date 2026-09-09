@@ -226,11 +226,21 @@ Idempotency-Key: <uuid>
   "similar_cases": [],
   "consultations": [],
   "sources": [],
+  "input_assessment": {
+    "status": "proceed_with_caution",
+    "message": "일반 법률 검색은 가능하지만 개별 결론에는 추가 사실 확인이 필요합니다."
+  },
   "follow_up_questions": ["계속근로기간은 얼마인가요?"],
   "cautions": ["법률 자문이 아닌 정보 제공 목적입니다."],
   "is_mock": true
 }
 ```
+
+`input_assessment`는 실제 LLM 입력 판단에 성공한 경우에만 제공하며, 그 외에는
+`null`이다. `status`는 `sufficient`, `proceed_with_caution`,
+`needs_clarification` 중 하나다. `needs_clarification`이면 검색을 실행하지 않고
+응답의 `status`는 `stopped`, `termination_reason`은
+`needs_clarification`이며 검색 근거 배열은 비어 있다.
 
 실행 Fixture:
 
