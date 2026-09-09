@@ -33,11 +33,15 @@ class AgentState(BaseModel):
 
 class IntakeResult(BaseModel):
     is_ready_for_search: bool
+    status: Literal["sufficient", "proceed_with_caution", "needs_clarification"]
+    message: str
     missing_fields: list[str] = Field(default_factory=list)
-    follow_up_questions: list[str] = Field(default_factory=list)
+    follow_up_questions: list[str] = Field(default_factory=list, max_length=3)
+    cautions: list[str] = Field(default_factory=list)
 
 class AnswerDraft(BaseModel):
     question_summary: str
     answer: str
     key_issues: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)
+    used_evidence_ids: list[str] = Field(default_factory=list)
