@@ -55,10 +55,16 @@ def build_analysis_markdown(result: dict) -> str:
 
 
 def render_result_download(result: dict) -> None:
+    try:
+        from frontend.components.pdf_export import build_analysis_pdf
+        pdf = build_analysis_pdf(result)
+    except Exception:
+        st.warning("PDF를 생성하지 못했습니다. 분석 결과는 화면에서 확인할 수 있습니다.")
+        return
     st.download_button(
-        "⬇️ 분석 결과 Markdown 저장",
-        data=build_analysis_markdown(result),
-        file_name=f"lawpath-{result.get('agent_id', 'result')}-analysis.md",
-        mime="text/markdown",
+        "⬇️ 분석 결과 PDF 저장",
+        data=pdf,
+        file_name=f"lawpath-{result.get('agent_id', 'result')}-analysis.pdf",
+        mime="application/pdf",
         use_container_width=True,
     )
