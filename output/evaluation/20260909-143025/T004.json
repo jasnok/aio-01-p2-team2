@@ -1,0 +1,112 @@
+{
+  "id": "T004",
+  "group": "정상 요청",
+  "category": "housing",
+  "question": "전입신고와 확정일자는 어떤 차이가 있나요? 주택 임대차 관련 법 조문을 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "step_id": "validation-8d28b6a6-5584-4222-b707-19f5f61e9dbb",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "step_id": "validation-8d28b6a6-5584-4222-b707-19f5f61e9dbb",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "step_id": "search_cases-c92413c4-8123-418e-9ea3-b77dc23c77fb",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "step_id": "search_cases-c92413c4-8123-418e-9ea3-b77dc23c77fb",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "step_id": "search_legal_documents-4109c6e8-688f-431d-8ddf-a58beeb4ea70",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "step_id": "search_legal_documents-4109c6e8-688f-431d-8ddf-a58beeb4ea70",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-ec2a844e-91d4-44fc-8a11-3be709883482",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 35.031
+}

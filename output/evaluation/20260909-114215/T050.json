@@ -1,0 +1,449 @@
+{
+  "id": "T050",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "개인 중고거래와 쇼핑몰 구매의 청약철회 차이를 관련 법령으로 설명해주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+  "response": {
+    "request_id": "req-c13628de-2f89-435b-bd85-8ba1e1417abc",
+    "agent_id": "consumer",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "중고 개인 간 거래와 쇼핑몰에서 구매한 경우 청약철회 차이를 관련 법령에 따라 설명해 주세요.",
+    "key_issues": [
+      "개인 간 중고거래는 민법 계약으로서 전자상거래법 등 소비자 보호법 적용 제외 가능",
+      "쇼핑몰 구매는 전자상거래법 적용, 소비자에게 청약철회권 7일 이내 명확히 보장",
+      "전자상거래법 제17조에 따른 청약철회의 조건과 제한 사항(재화의 멸실 및 훼손)",
+      "상품 개봉만으로 청약철회 거부 불가능",
+      "개인간 거래는 소비자 보호법상 청약철회 규정 미적용 또는 제한적"
+    ],
+    "answer": "개인 간 중고거래는 일반적으로 민법 상의 계약에 해당하며, 별도의 소비자 보호법이 적용되지 않을 수 있습니다. 반면, 쇼핑몰 등 사업자가 운영하는 전자상거래로 구매한 경우 「전자상거래 등에서의 소비자보호에 관한 법률」이 적용되어 소비자는 상품 수령 후 7일 이내에는 단순 변심이라도 청약철회가 가능합니다(예: 전자상거래법 제17조). 또한, 상품 포장을 단순 개봉하였다는 이유로 청약철회를 거부할 수 없으며, 재화의 멸실·훼손이 소비자 책임인 경우에만 제한됩니다. 즉, 쇼핑몰 구매는 법적으로 청약철회 권리가 명확히 보장되나, 개인 간 중고거래는 이에 대한 법적 보호가 미흡하거나 제한적이므로 청약철회 규정에 차이가 있습니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "개인 중고거래와 쇼핑몰 구매의 청약철회 차이에 대해 관련 법령을 근거로 설명할 수 있습니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "not_required",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-704",
+        "document_id": "704",
+        "title": "소비자기본법",
+        "content": "법령명: 소비자기본법\n조문: 제46조\n조문 제목: 시정요청 등\n내용: 제46조(시정요청 등) ① 공정거래위원회 또는 시ㆍ도지사는 사업자가 제공한 물품등으로 인하여 소비자에게 위해발생이 우려되는 경우에는 관계중앙행정기관의 장에게 다음 각 호의 조치를 요청할 수 있다. <개정 2008.2.29, 2016.3.29, 2018.3.13> 1. 사업자가 다른 법령에서 정한 안전조치를 취하지 아니하는 경우에는 그 법령의 규정에 따른 조치 2. 다른 법령에서 안전기준이나 규격을 정하고 있지 아니하는 경우에는 다음 각 목의 조치 가. 제49조의 규정에 따른 수거ㆍ파기 등의 권고 나. 제50조의 규정에 따른 수거ㆍ파기 등의 명령 다. 제86조제1항제1호의 규정에 따른 과태료 처분 3. 그 밖에 물품등에 대한 위해방지대책의 강구 ② 제1항에 따라 공정거래위원회 또는 시ㆍ도지사의 요청을 받은 관계 중앙행정기관의 장은 조치 여부 및 그 내용을 신속히 공정거래위원회 또는 시ㆍ도지사에게 통보하여야 한다. <신설 2018.3.13>",
+        "source": {
+          "source_id": "704",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+        },
+        "score": 0.3167,
+        "summary": null,
+        "law_name": "소비자기본법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-01-02"
+        }
+      },
+      {
+        "evidence_id": "law-703",
+        "document_id": "703",
+        "title": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "content": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제32조의2\n조문 제목: 동의의결\n내용: 제32조의2(동의의결) ① 공정거래위원회의 조사나 심의를 받고 있는 사업자(이하 이 조에서 \"신청인\"이라 한다)는 해당 조사나 심의의 대상이 되는 행위(이하 이 조에서 \"해당 행위\"라 한다)로 인한 소비자 권익 침해 상태의 자발적 해소 등 거래질서의 개선, 소비자 피해 구제 등을 위하여 제3항에 따른 동의의결을 하여 줄 것을 공정거래위원회에 신청할 수 있다. 다만, 동의의결이 있기 전 신청인이 신청을 취소하는 경우 공정거래위원회는 동의의결을 하지 아니하고 이 법에 따른 심의 절차를 진행하여야 한다. ② 신청인이 제1항에 따른 신청을 하는 경우 다음 각 호의 사항을 기재한 서면으로 하여야 한다. 1. 해당 행위를 특정할 수 있는 사실관계 2. 해당 행위의 중지, 소비자 권익 침해 상태의 해소 등 거래질서의 적극적 개선을 위하여 필요한 시정방안 3. 소비자 또는 다른 사업자의 피해를 구제하거나 예방하기 위하여 필요한 시정방안 ③ 공정거래위원회는 해당 행위의 사실관계에 대한 조사를 마친 후 제2항제2호 및 제3호에 따른 시정방안(이하 이 조에서 \"시정방안\"이라 한다)이 다음 각 호의 요건을 모두 충족한다고 판단되는 경우에는 해당 행위 관련 심의 절차를 중단하고 시정방안과 같은 취지의 의결(이하 이 조 및 제32조의3에서 \"동의의결\"이라 한다)을 할 수 있다. 이 경우 신청인과 협의를 거쳐 시정방안을 수정할 수 있다. 1. 해당 행위가 이 법을 위반한 것으로 판단될 경우에 예상되는 시정조치, 그 밖의 제재와 균형을 이룰 것 2. 공정하고 자유로운 거래질서를 회복시키거나 소비자 또는 다른 사업자를 보호하기에 적절하다고 인정될 것 ④ 공정거래위원회의 동의의결은 해당 행위가 이 법에 위반된다고 인정한 것을 의미하지 아니하며, 누구든지 신청인이 동의의결을 받은 사실을 들어 해당 행위가 이 법에 위반된다고 주장할 수 없다. ⑤ 동의의결의 절차 및 취소에 관하여는 「독점규제 및 공정거래에 관한 법률」 제90조 및 제91조를 준용한다. 이 경우 같은 법 제90조제2항제3호 중 \"제89조제3항\"은 \"이 법 제32조의2제3항\"으로, 같은 법 제90조제3항 단서 중 \"제124조부터 제127조까지의 규정\"은 \"이 법 제40조, 제42조 및 제43조\"로, 같은 법 제90조제10항 각 호 외의 부분 본문 중 \"제80조제4항 및 제5항\"은 \"이 법 제26조제5항\"으로, \"제89조제1항\"은 \"이 법 제32조의2제1항\"으로, 같은 법 제91조제2항 전단 중 \"제89조제1항\"은 \"이 법 제32조의2제1항\"으로, 같은 법 제91조제2항 후단 중 \"제89조부터 제92조까지의 규정\"은 \"이 법 제32조의2 및 제32조의3\"으로, 같은 법 제91조제3항 중 \"제89조제3항\"은 \"이 법 제32조의2제3항\"으로 본다.",
+        "source": {
+          "source_id": "703",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+        },
+        "score": 0.3037,
+        "summary": null,
+        "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-07-21"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1174",
+        "document_id": "1174",
+        "title": "할부거래에관한법률위반",
+        "content": "사건명: 할부거래에관한법률위반\n사건번호: 2017도17611\n법원: 대법원\n선고일: 2018-01-24\n구분: 주문\n내용: 상 고 를 모 두 기 각 한 다 .",
+        "source": {
+          "source_id": "1174",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+        },
+        "score": 0.306,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2017도17611",
+        "case_name": "할부거래에관한법률위반",
+        "court": "대법원",
+        "decided_at": "2018-01-24",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1173",
+        "document_id": "1173",
+        "title": "청구이의",
+        "content": "사건명: 청구이의\n사건번호: 2000다8397\n법원: 대법원\n선고일: 2001-08-21\n구분: 판결이유\n내용: 원 심판 결 및 원 심 이 일부 인 용한 제 1 심판 결 이 유에 의 하 면 원 심 은 , 원 고가 광 고 물 제작 업 을 운영 하기 위 하 여 \n소 외 인 으 로 부터 이 사 건 전 사기 를 매 수 하 면서 , 그 매매 대 금 의 지 급 을 위 하 여 피 고 와 이 사 건 할 부 금 융 약 정을 \n체 결 하 였 고 , 할 부 금 융 여신거 래 기 본약 관 제 22 조 제 3 항 ( 이하 ' 이 사 건 약 관조 항 ' 이 라 고 한 다 ) 이 , 매 수 인이 상\n행 위를 목적 으 로 할 부 금 융 약 정을 체 결 한 경우에는 매 도 인 과의 할 부 판매계약 이 매 도 인 의 귀 책 사 유 로 무 효 , \n취 소 또 는 해제 된 경우에 매 수 인 에게 인 정 되 는 같 은 조 제 1 항 의 소정의 할 부 금 지 급 거 절권 을 행 사 할 수 없\n는 것 으 로 규 정 하고 있는 사 실 을 인 정한 다 음 , 매 도 인 의 귀 책 사 유 로 이 사 건 전 사기 의 매매계약 이 해제 된 경\n우라도 원 고가 위 와 같 이 상 행 위를 목적 으 로 신용제공자 인 피 고 와 이 사 건 할 부 금 융 약 정을 체 결 한 것 인 이\n상 , 이 사 건 약 관조 항 에 따 라 피 고 에 대 하 여 위 거 절권 을 행 사 할 수 없 다고 판단 하 였 으 며 ( 이 사 건 약 관조 항 이 \n약 관의 규 제에관한 법 률에 위 반 하 여 무 효 라는 원 고 의 주장도 배 척 하 였 다 .), 이 사 건 매매계약 이 취 소 또 는 해\n제 되 는 것 을 해제조 건 으 로 하 여 이 사 건 할 부 금 융 약 정 이 체 결 되 었 다 는 원 고 의 주장도 이 를 인 정 할 아무 런 증\n거 가 없 다고 하 여 배 척 하 였 다 .\n할 부거 래 에관한 법 률 제 2 조 제 2 항 소정의 ' 매 수 인이 상 행 위를 목적 으 로 할 부 계약 을 체 결 하 는 경우 ' 라 함 은 , \n \n매 수 인이 신용제공자의 여신으 로 매 수한 물건 을 다 른 소비자에게 판매할 목적 으 로 물건 을 할 부 로 구입한 경\n우만을 의미 하 는 것 이 아니라 , 자신의 소비만을 목적 으 로 한 경우 가 아 닌 영 리 를 목적 으 로 할 부 계약 을 체 결\n하 는 경우를 의미한 다고 해 석 함 이 타 당 하 며 , 약 관의 규 제에관한 법 률 제 30 조 제 3 항이 ' 특 정한 거 래분야 의 약\n관에 관 하 여 다 른 법 률 에 특별 한 규 정 이 있는 경우에는 이 법 의 규 정에 우선한 다 .' 라 고 규 정 하고 있 고 , 이 사\n건 할 부 금 융 약 정을 규 율 하 는 위 할 부거 래 에관한 법 률 제 2 조 제 2 항이 이 사 건 약 관조 항 의 내용과 동일 하 게 규\n정 되 어 있는 점 에 비 추 어 , 이 사 건 약 관조 항 이 약 관의 규 제에관한 법 률에 위 반되 거나 , 사 회 질 서 또 는 신의 칙 에 \n반 하 여 무 효 라 고 는 할 수 없 다 .\n위 법 리 및 기 록에 비 추 어 살 펴 보면 , 원 심 의 위 사 실 인 정 및 판단 은 모 두 정 당 하고 , 거 기 에 상 고이 유 로 서 주\n장 하 는 바 와 같 은 사 실 오 인이 나 법 리 오해의 위 법 이 있 다고 할 수 없 다 .\n그러 므 로 상 고 를 기 각 하고 , 상 고 비용은 패 소자의 부 담 으 로 하기로 하 여 관여 법 관의 일치 된 의 견 으 로 주문과 \n같 이 판 결 한 다 .\n대 법 관 손 지 열 ( 재판 장 ) 송 진 훈 윤 재식 ( 주 심 ) 이 규홍",
+        "source": {
+          "source_id": "1173",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+        },
+        "score": 0.3051,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2000다8397",
+        "case_name": "청구이의",
+        "court": "대법원",
+        "decided_at": "2001-08-21",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-741",
+        "document_id": "741",
+        "title": "부당이득금",
+        "content": "사건명: 부당이득금\n사건번호: 2020다288375\n법원: 대법원\n선고일: 2022-03-17\n구분: 판결요지\n내용: [1] 법률행위의 일부분이 무효인 때에는 그 전부를 무효로 하나, 그 무효 부분이 없더라도 법률행위를 하였을 것이라고 인정될 때에는 나머지 부분은 무효가 되지 아니한다(민법 제137조). 이와 같은 법률행위의 일부무효 법리는 여러 개의 계약이 체결된 경우에 그 계약 전부가 경제적, 사실적으로 일체로서 행하여져서하나의 계약인 것과 같은 관계에 있는 경우에도 적용된다. 이때 그 계약 전부가 일체로서 하나의 계약인 것과 같은 관계에 있는 것인지의 여부는 계약 체결의 경위와 목적 및 당사자의 의사 등을 종합적으로 고려하여 판단해야 한다.\n[2] 甲 등이 아파트 조성사업을 추진하는 乙 지역주택조합 추진위원회로부터 ‘약정한 날까지 사업계획이 승인되지 않는 경우 납부한 전액의 환불을 보장한다.’는 취지가 포함된 안심보장증서를 받고 분양목적물에 관한 조합가입계약을 체결하여 계약금을 납입하였다가, 조합가입계약의 무효 등을 주장하며 납입금 반환을 구한 사안에서, 안심보장증서상 환불보장 약정은 조합가입계약에 따른 납입금에 관한 특약 사항을 정하기 위한 목적으로 조합가입계약에 수반하여 경제적, 사실적으로 일체로서 체결된 것이어서 전체적으로 하나의 계약인 것과 같은 관계에 있으므로, 위 환불보장 약정이 총회의 결의 없이 이루어진 총유물의 처분행위에 해당하여 무효라면, 법률행위의 일부무효의 법리에 따라 이와 일체로서 체결된 조합가입계약도 무효가 되는 것이 원칙이고, 다만 환불보장 약정이 없더라도 조합가입계약을 체결하였을 것임이 인정되는 경우에는 조합가입계약이 여전히 효력을 가지게 되므로, 이에 관한 당사자들의 가정적 의사를 심리하여 조합가입계약의 무효 여부를 판단하였어야 하는데도, 당사자들의 가정적 의사를 살펴보지도 아니한 채 조합가입계약이 무효라는 甲 등의 주장을 배척한 원심의 판단에는 법리오해 등 잘못이 있다고 한 사례.",
+        "source": {
+          "source_id": "741",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=227207"
+        },
+        "score": 0.2899,
+        "summary": "[1] 법률행위의 일부분이 무효인 때에는 그 전부를 무효로 하나, 그 무효 부분이 없더라도 법률행위를 하였을 것이라고 인정될 때에는 나머지 부분은 무효가 되지 아니한다(민법 제137조). 이와 같은 법률행위의 일부무효 법리는 여러 개의 계약이 체결된 경우에 그 계약 전부가 경제적, 사실적으로 일체로서 행하여져서하나의 계약인 것과 같은 관계에 있는 경우에도 적용된다. 이때 그 계약 전부가 일체로서 하나의 계약인 것과 같은 관계에 있는 것인지의 여부는 계약 체결의 경위와 목적 및 당사자의 의사 등을 종합적으로 고려하여 판단해야 한다.\n[2] 甲 등이 아파트 조성사업을 추진하는 乙 지역주택조합 추진위원회로부터 ‘약정한 날까지 사업계획이 승인되지 않는 경우 납부한 전액의 환불을 보장한다.’는 취지가 포함된 안심보장증서를 받고 분양목적물에 관한 조합가입계약을 체결하여 계약금을 납입하였다가, 조합가입계약의 무효 등을 주장하며 납입금 반환을 구한 사안에서, 안심보장증서상 환불보장 약정은 조합가입계약에 따른 납입금에 관한 특약 사항을 정하기 위한 목적으로 조합가입계약에 수반하여 경제적, 사실적으로 일체로서 체결된 것이어서 전체적으로 하나의 계약인 것과 같은 관계에 있으므로, 위 환불보장 약정이 총회의 결의 없이 이루어진 총유물의 처분행위에 해당하여 무효라면, 법률행위의 일부무효의 법리에 따라 이와 일체로서 체결된 조합가입계약도 무효가 되는 것이 원칙이고, 다만 환불보장 약정이 없더라도 조합가입계약을 체결하였을 것임이 인정되는 경우에는 조합가입계약이 여전히 효력을 가지게 되므로, 이에 관한 당사자들의 가정적 의사를 심리하여 조합가입계약의 무효 여부를 판단하였어야 하는데도, 당사자들의 가정적 의사를 살펴보지도 아니한 채 조합가입계약이 무효라는 甲 등의 주장을 배척한 원심의 판단에는 법리오해 등 잘못이 있다고 한 사례.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2020다288375",
+        "case_name": "부당이득금",
+        "court": "대법원",
+        "decided_at": "2022-03-17",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [
+      {
+        "evidence_id": "consultation-114",
+        "document_id": "114",
+        "title": "온라인쇼핑몰에서 구입한 화장품 청약철회 요구",
+        "content": "제목: 온라인쇼핑몰에서 구입한 화장품 청약철회 요구\n\n품목: 보건/의료\n\n질문: 온라인쇼핑몰을 통해 CC크림을 구입했습니다. 배송된 제품의 상자를 열어 확인했으나 마음에 들지 않아 청약철회를 요구했으나 판매자는 제품 개봉 흔적이 있다며 청약철회를 거부했습니다. 이 경우 청약철회가 가능할까요?\n\n답변: 「전자상거래 등에서의 소비자보호에 관한 법률」제17조 제2항에 따르면 소비자에게 책임 있는 사유로 재화등이 멸실되거나 훼손된 경우 청약철회를 할 수 없으나, 재화등의 내용을 확인하기 위하여 포장 등을 훼손한 경우는 제외됩니다. 이에 제품 포장을 단순 개봉한 경우 청약철회 불가 사유에 해당하지 않아 청약철회가 가능합니다.",
+        "source": {
+          "source_id": "114",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4332,
+        "summary": "온라인쇼핑몰을 통해 CC크림을 구입했습니다. 배송된 제품의 상자를 열어 확인했으나 마음에 들지 않아 청약철회를 요구했으나 판매자는 제품 개봉 흔적이 있다며 청약철회를 거부했습니다. 이 경우 청약철회가 가능할까요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-38",
+        "document_id": "38",
+        "title": "전자상거래를 통해 의류 구입 후 반품했더니 7일 이내 반품 완료되지 않았다는 이유로 청약철회를 거절한 경우",
+        "content": "제목: 전자상거래를 통해 의류 구입 후 반품했더니 7일 이내 반품 완료되지 않았다는 이유로 청약철회를 거절한 경우\n\n품목: 의류/세탁\n\n질문: 2020. 2. 14. 인터넷을 통해 원피스 2점을 113,000원에 구입하고 2020. 2. 16. 제품을 수령했으나 마음에 들지 않아 2020. 2. 20. 반품 요청 후 제품을 반송했더니, 사업자가 7일 이내에 제품이 도착하지 않았다는 이유로 청약철회 불가를 주장하고 있는데 청약철회 불가능한가요?\n\n답변: - 「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제1항 제1호에 의하면, 소비자는 단순 변심에 의한 청약철회의 경우 상품 수령일로부터 7일 이내에 청약철회를 할 수 있다고 규정하고 있습니다.\r\n- 이 경우, 만약 사업자가 “반품은 상품이 7일 이내 쇼핑몰에 도착해야만 환불 가능하다”고 표시하였다고 하더라도, 이는 동법 제35조에 의해 제17조의 규정을 위반한 약정으로 소비자에게 불리한 것이므로 효력이 없습니다. \r\n- 즉, 소비자가 제품을 수령한 날로부터 7일 이내 청약철회 의사표시를 하고 반품절차를 진행했다면, 설령 반품한 상품이 7일 이내 쇼핑몰에 도착하지 못했다고 하더라도 이를 이유를 청약철회 권리를 제한할 수는 없습니다.",
+        "source": {
+          "source_id": "38",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4309,
+        "summary": "2020. 2. 14. 인터넷을 통해 원피스 2점을 113,000원에 구입하고 2020. 2. 16. 제품을 수령했으나 마음에 들지 않아 2020. 2. 20. 반품 요청 후 제품을 반송했더니, 사업자가 7일 이내에 제품이 도착하지 않았다는 이유로 청약철회 불가를 주장하고 있는데 청약철회 불가능한가요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-265",
+        "document_id": "265",
+        "title": "방문판매로 구입한 화장품에 대한 청약철회 가능 여부",
+        "content": "제목: 방문판매로 구입한 화장품에 대한 청약철회 가능 여부\n\n품목: 보건/의료\n\n질문: 2019. 9. 길거리에서 설문 조사에 응하다 화장품을 구입하고 50,000원을 지불했습니다. 구입한 제품을 사용하고자 하였으나 테스트한 피부부위에 발진현상이 발생하여 환불을 요구하니, 행사상품이라는 이유로 거부하고 있습니다.\n\n답변: 방문판매등에 관한 법률에 의하면 방문판매는 사업자가 영업소, 대리점 등 사업장외의 장소에서 소비자에게 권유하여 계약의 청약을 받거나 계약을 체결하여 재화 또는 용역을 판매하는 것을 의미합니다. 동법 제8조제1항에서는 계약서를 받은 날부터 14일 이내에 청약철회를 할 수 있도록 정하고 있으므로 소비자는 청약철회를 행사할 수 있으며 사업자는 소비자의 청약철회를 수용해야합니다.",
+        "source": {
+          "source_id": "265",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4262,
+        "summary": "2019. 9. 길거리에서 설문 조사에 응하다 화장품을 구입하고 50,000원을 지불했습니다. 구입한 제품을 사용하고자 하였으나 테스트한 피부부위에 발진현상이 발생하여 환불을 요구하니, 행사상품이라는 이유로 거부하고 있습니다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "704",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+      },
+      {
+        "source_id": "703",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+      },
+      {
+        "source_id": "114",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "38",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "265",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "1174",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+      },
+      {
+        "source_id": "1173",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+      },
+      {
+        "source_id": "741",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=227207"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "개인간 중고거래의 정확한 청약철회 가능 여부는 거래 조건과 구체적 상황에 따라 달라질 수 있으므로 추가 확인 필요",
+      "제공된 증거에는 개인 중고거래 관련 청약철회 법령 조항이 구체적으로 명시되어 있지 않음"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "validation-143a51dd-5ecc-498c-a3e5-ee951b20083a",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "validation-143a51dd-5ecc-498c-a3e5-ee951b20083a",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "search_laws-21756fca-26f9-4f91-89f8-effa452e626d",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "search_laws-21756fca-26f9-4f91-89f8-effa452e626d",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "search_consultations-e882e9ca-a0cc-4ffd-a145-a5320cfa8447",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "search_consultations-e882e9ca-a0cc-4ffd-a145-a5320cfa8447",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "search_cases-6a80fd7e-fc8c-4d7d-ac5c-2265081c102a",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "step_id": "search_cases-6a80fd7e-fc8c-4d7d-ac5c-2265081c102a",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-ce977224-2552-493f-ad05-a9c776c7bca6",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_laws",
+    "search_consultations",
+    "search_cases"
+  ],
+  "counts": {
+    "related_laws": 2,
+    "similar_cases": 3,
+    "consultations": 3
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 22.203
+}

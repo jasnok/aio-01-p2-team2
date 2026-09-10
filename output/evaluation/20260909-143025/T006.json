@@ -1,0 +1,112 @@
+{
+  "id": "T006",
+  "group": "정상 요청",
+  "category": "housing",
+  "question": "집주인이 월세를 한꺼번에 올리겠다고 합니다. 증액 제한 관련 조문을 찾아주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "step_id": "validation-393fc486-aac1-42de-b82e-51b24ef0d52b",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "step_id": "validation-393fc486-aac1-42de-b82e-51b24ef0d52b",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "step_id": "search_cases-87c3e428-79f5-484e-8ce9-b66a04177ba4",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "step_id": "search_cases-87c3e428-79f5-484e-8ce9-b66a04177ba4",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "step_id": "search_legal_documents-6efcdc38-6f56-4e14-a2c5-3737cf9079dd",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "step_id": "search_legal_documents-6efcdc38-6f56-4e14-a2c5-3737cf9079dd",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-4dd36d80-5647-4711-9b44-95d22bdd3e67",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 33.672
+}

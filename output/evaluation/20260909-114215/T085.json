@@ -1,0 +1,54 @@
+{
+  "id": "T085",
+  "group": "API 타임아웃",
+  "category": "labor",
+  "question": "회사가 최저임금보다 적게 지급합니다. 관련 법 조문을 찾아주세요.",
+  "mode": "isolated",
+  "expected": "검색 호출에 TimeoutError 주입; 실행 failed로 안전 종료",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-8330916f-a143-4206-9d55-92040c11d03d",
+    "status": "failed",
+    "result": null,
+    "error": {
+      "code": "ANALYSIS_FAILED",
+      "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-8330916f-a143-4206-9d55-92040c11d03d",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-8330916f-a143-4206-9d55-92040c11d03d",
+        "step_id": "search_cases-62c09047-778c-408c-a7ef-7f19deb91c07",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "run.failed",
+      "data": {
+        "run_id": "run-8330916f-a143-4206-9d55-92040c11d03d",
+        "status": "failed",
+        "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+      }
+    }
+  ],
+  "injected_search_calls": 1,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.0
+}

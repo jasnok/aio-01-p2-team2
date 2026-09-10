@@ -1,0 +1,100 @@
+{
+  "id": "T066",
+  "group": "정보 부족",
+  "category": "housing",
+  "question": "상담이 필요합니다. 무엇부터 알려드리면 되나요?",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "PASS",
+  "run_id": "run-58f02503-8522-408e-b4a4-fa44b261f408",
+  "response": {
+    "request_id": "req-344537ee-8194-4db2-a112-6dd5506e24f4",
+    "agent_id": "housing",
+    "status": "stopped",
+    "termination_reason": "needs_clarification",
+    "question_summary": "정확한 검색을 위해 추가 정보가 필요합니다.",
+    "key_issues": [],
+    "answer": "아래 질문에 답해 주시면 관련 법령과 사례를 더 정확하게 검색할 수 있습니다.",
+    "input_assessment": {
+      "status": "needs_clarification",
+      "message": "상담을 위해 구체적인 주제나 상황에 대해 알려주세요. 예를 들어, 주택 임대, 구매, 계약 관련 문제 등이 있습니다.",
+      "checks": {
+        "situation": "missing",
+        "timing": "missing",
+        "relationship": "missing",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [],
+    "similar_cases": [],
+    "consultations": [],
+    "sources": [],
+    "follow_up_questions": [
+      "어떤 주택 관련 문제에 대해 상담을 원하시나요?",
+      "현재 겪고 계신 구체적인 상황을 설명해주실 수 있나요?",
+      "원하시는 상담의 목적이나 요청하시는 도움을 구체적으로 알려주세요."
+    ],
+    "cautions": [
+      "추가 정보는 검색 정확도를 높이기 위한 것이며 법률 판단이 아닙니다.",
+      "제공된 정보가 부족하여 구체적인 법률 안내가 어렵습니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-58f02503-8522-408e-b4a4-fa44b261f408",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-58f02503-8522-408e-b4a4-fa44b261f408",
+        "step_id": "validation-1404fd85-b822-4261-ba79-276ac68684f4",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-58f02503-8522-408e-b4a4-fa44b261f408",
+        "step_id": "validation-1404fd85-b822-4261-ba79-276ac68684f4",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "input.required",
+      "data": {
+        "run_id": "run-58f02503-8522-408e-b4a4-fa44b261f408",
+        "status": "stopped",
+        "message": "정확한 분석을 위해 추가 정보가 필요합니다."
+      }
+    }
+  ],
+  "tools": [],
+  "counts": {
+    "related_laws": 0,
+    "similar_cases": 0,
+    "consultations": 0
+  },
+  "frontend_state": "needs_clarification",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 11.672
+}

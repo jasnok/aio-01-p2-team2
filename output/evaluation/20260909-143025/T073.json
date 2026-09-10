@@ -1,0 +1,137 @@
+{
+  "id": "T073",
+  "group": "검색 결과 없음",
+  "category": "consumer",
+  "question": "온라인 쇼핑몰에서 주문한 상품을 받지 못했습니다. 대금 환급 관련 조문을 알려주세요.",
+  "mode": "isolated",
+  "expected": "전체 검색 도구에 빈 결과 주입; 근거 배열이 비어 있고 제한 안내",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+    "status": "completed",
+    "result": {
+      "request_id": "req-d850b511-1c3a-422e-a749-b066e99dbb1e",
+      "agent_id": "consumer",
+      "status": "completed",
+      "termination_reason": "no_results",
+      "question_summary": "검색 결과가 없습니다.",
+      "key_issues": [],
+      "answer": "현재 입력한 내용과 관련된 공식 근거를 찾지 못했습니다.",
+      "related_laws": [],
+      "similar_cases": [],
+      "consultations": [],
+      "sources": [],
+      "follow_up_questions": [],
+      "cautions": [
+        "검색 결과가 없을 때는 추측으로 답변하지 않습니다.",
+        "사실관계나 검색어를 보완해 다시 확인해 주세요."
+      ],
+      "input_assessment": {
+        "status": "sufficient",
+        "message": "격리시험 입력 판단 대체"
+      },
+      "is_mock": false
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "step_id": "search_laws-5f7ee4d7-6804-4d83-a77d-2be5555d487c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "step_id": "search_laws-5f7ee4d7-6804-4d83-a77d-2be5555d487c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "step_id": "search_consultations-7d2cc4fc-fbc4-4b00-9d7f-3e53572e883d",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "step_id": "search_consultations-7d2cc4fc-fbc4-4b00-9d7f-3e53572e883d",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "step_id": "search_cases-5b635cad-7398-4f14-a37e-d88139abca23",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "step_id": "search_cases-5b635cad-7398-4f14-a37e-d88139abca23",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-73c2fd23-37b3-461b-a7f2-6ce9bc457407",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "injected_search_calls": 3,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.016
+}

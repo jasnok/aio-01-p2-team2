@@ -1,0 +1,44 @@
+[
+  {
+    "path": "C:\\Users\\Playdata\\Videos\\Captures\\회원가입.mp4",
+    "start": 0.0,
+    "duration": 56.266,
+    "timestamp": 0.0
+  },
+  {
+    "path": "C:\\Users\\Playdata\\Videos\\Captures\\로그인_소비자 사례 분석.mp4",
+    "start": 0.0,
+    "duration": 108.6,
+    "timestamp": 56.266
+  },
+  {
+    "path": "C:\\Users\\Playdata\\Videos\\Captures\\로그인_faq작성.mp4",
+    "start": 0.0,
+    "duration": 150.95,
+    "timestamp": 164.866
+  },
+  {
+    "path": "C:\\Users\\Playdata\\Videos\\Captures\\로그인_질의이력.mp4",
+    "start": 0.0,
+    "duration": 47.266,
+    "timestamp": 315.816
+  },
+  {
+    "path": "C:\\Users\\Playdata\\Videos\\Captures\\비회원_임대차 질문.mp4",
+    "start": 0.0,
+    "duration": 160.95,
+    "timestamp": 363.082
+  },
+  {
+    "path": "C:\\Users\\Playdata\\Videos\\Captures\\비회원_faq작성.mp4",
+    "start": 0.0,
+    "duration": 99.717,
+    "timestamp": 524.032
+  },
+  {
+    "path": "C:\\Users\\Playdata\\Videos\\Captures\\비회원_질의이력.mp4",
+    "start": 0.0,
+    "duration": 15.116,
+    "timestamp": 623.749
+  }
+]

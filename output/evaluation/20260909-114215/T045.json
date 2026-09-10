@@ -1,0 +1,138 @@
+{
+  "id": "T045",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "해외 구매대행 상품이 배송되지 않았습니다. 소비자 보호 관련 법령을 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "validation-e711fa18-8281-4241-8895-058dfdc78686",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "validation-e711fa18-8281-4241-8895-058dfdc78686",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "search_laws-aed46c74-975e-4a6f-9083-dd6909924cb3",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "search_laws-aed46c74-975e-4a6f-9083-dd6909924cb3",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "search_consultations-b713ff90-c86d-4fae-9d37-e528c3f5c702",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "search_consultations-b713ff90-c86d-4fae-9d37-e528c3f5c702",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "search_cases-ea63bd6a-5b0e-47db-aa83-385dac12c5d5",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "step_id": "search_cases-ea63bd6a-5b0e-47db-aa83-385dac12c5d5",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-f61966e7-9443-4521-af49-be77107390a4",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 23.562
+}

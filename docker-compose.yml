@@ -1,0 +1,73 @@
+# 신규 팀원은 `docker compose up -d`로 PostgreSQL과 Redis를 함께 생성합니다.
+# 이미 legal-pgvector가 있는 현재 PC에서는 이름 충돌을 피하려고
+# `docker compose up -d redis`만 실행합니다.
+
+# 실행:
+# docker compose --env-file .env -f docker-compose_v2.yml up -d
+#
+# 주의:
+# database/migrations의 SQL은 PostgreSQL 볼륨 최초 생성 시에만
+# /docker-entrypoint-initdb.d에서 자동 실행됩니다.
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: legal-pgvector
+    restart: unless-stopped
+
+    ports:
+      - "${POSTGRES_PORT:-5434}:5432"
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-legal_ai}
+      POSTGRES_USER: ${POSTGRES_USER:-legal_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+
+    volumes:
+      - legal-pgvector-data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d:ro
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-legal_user} -d ${POSTGRES_DB:-legal_ai}"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: legal-redis
+    restart: unless-stopped
+
+    ports:
+      - "${REDIS_PORT:-6380}:6379"
+
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --requirepass
+      - ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+
+    volumes:
+      - legal-redis-data:/data
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "REDISCLI_AUTH=$$REDIS_PASSWORD redis-cli ping | grep PONG"
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  legal-pgvector-data:
+  legal-redis-data:

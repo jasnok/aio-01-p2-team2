@@ -1,0 +1,49 @@
+국가법령정보 공동활용 Open API 활용가이드 : https://open.law.go.kr/LSO/openApi/guideList.do?utm_source=chatgpt.com
+
+판례 목록 조회 API 공식 명세 :
+https://open.law.go.kr/LSO/openApi/guideResult.do?htmlName=precListGuide&utm_source=chatgpt.com
+
+현행법령(시행일) 목록 조회 API 공식 명세 :
+https://open.law.go.kr/LSO/openApi/guideResult.do?htmlName=lsEfYdListGuide&utm_source=chatgpt.com
+해당 오픈 API 키로 활용할 수 있는 사이트는 이렇게 구성해도 좋을 것 같아요!
+법령 : 실제 법 목록
+판례 : 법으로 실행한 재판 결과 사례
+
+OPEN API 활용 가이드 :
+https://open.law.go.kr/LSO/openApi/guideList.do?utm_source=chatgpt.com
+
+판례 본문 조회 API 공식 명세 :
+https://open.law.go.kr/LSO/openApi/guideResult.do?htmlName=precInfoGuide&utm_source=chatgpt.com
+
+
+<데이터 전처리부터 Pgvector까지 과정>
+국가법령정보 공동활용
+https://open.law.go.kr/
+
+        ↓ API 신청
+
+      OC 인증값
+        │
+        ├───────────────┐
+        ↓               ↓
+    법령 API          판례 API
+        ↓               ↓
+  법령 목록 조회      판례 목록 조회
+        ↓               ↓
+  법령 본문 조회      판례 본문 조회
+        │               │
+        └───────┬───────┘
+                ↓
+              Raw
+                ↓
+            Normalize
+                ↓
+        legal_documents
+                ↓
+        Chunk + Embedding
+                ↓
+          legal_chunks
+                ↓
+            pgvector
+
+해당 순서대로 데이터를 받아서 저장 가능.
