@@ -1,0 +1,1856 @@
+{
+  "summary": {
+    "suite": "synthetic_local_runtime_v1",
+    "case_count": 100,
+    "group_counts": {
+      "normal": 45,
+      "no_results": 10,
+      "insufficient_evidence": 15,
+      "duplicate_evidence": 10,
+      "tool_failure": 10,
+      "invalid_payload": 5,
+      "over_limit": 5
+    },
+    "task_completed": 100,
+    "tool_selection_correct": 95,
+    "tool_selection_total": 95,
+    "response_consistent": 100,
+    "average_same_tool_retries": 0.0,
+    "note": "No same-tool retry exists in LegalAgentRuntime; different retrieval tools are tracked as tool calls, not retries."
+  },
+  "results": [
+    {
+      "id": "S001",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S002",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S003",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S004",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S005",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S006",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S007",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S008",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S009",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S010",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S011",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S012",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S013",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S014",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S015",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S016",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S017",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S018",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S019",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S020",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S021",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S022",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S023",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S024",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S025",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S026",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S027",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S028",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S029",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S030",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S031",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S032",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S033",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S034",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S035",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S036",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S037",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S038",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S039",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S040",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S041",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S042",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S043",
+      "group": "normal",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S044",
+      "group": "normal",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "model_finished",
+      "evidence_count": 6,
+      "error": null
+    },
+    {
+      "id": "S045",
+      "group": "normal",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "model_finished",
+      "evidence_count": 9,
+      "error": null
+    },
+    {
+      "id": "S046",
+      "group": "no_results",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S047",
+      "group": "no_results",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S048",
+      "group": "no_results",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S049",
+      "group": "no_results",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S050",
+      "group": "no_results",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S051",
+      "group": "no_results",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S052",
+      "group": "no_results",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S053",
+      "group": "no_results",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S054",
+      "group": "no_results",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S055",
+      "group": "no_results",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "no_results",
+      "evidence_count": 0,
+      "error": null
+    },
+    {
+      "id": "S056",
+      "group": "insufficient_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S057",
+      "group": "insufficient_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S058",
+      "group": "insufficient_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S059",
+      "group": "insufficient_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S060",
+      "group": "insufficient_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S061",
+      "group": "insufficient_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S062",
+      "group": "insufficient_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S063",
+      "group": "insufficient_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S064",
+      "group": "insufficient_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S065",
+      "group": "insufficient_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S066",
+      "group": "insufficient_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S067",
+      "group": "insufficient_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S068",
+      "group": "insufficient_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S069",
+      "group": "insufficient_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S070",
+      "group": "insufficient_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 1,
+      "error": null
+    },
+    {
+      "id": "S071",
+      "group": "duplicate_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S072",
+      "group": "duplicate_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S073",
+      "group": "duplicate_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S074",
+      "group": "duplicate_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S075",
+      "group": "duplicate_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S076",
+      "group": "duplicate_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S077",
+      "group": "duplicate_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S078",
+      "group": "duplicate_evidence",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 3,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S079",
+      "group": "duplicate_evidence",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S080",
+      "group": "duplicate_evidence",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 2,
+      "termination_reason": "insufficient_evidence",
+      "evidence_count": 2,
+      "error": null
+    },
+    {
+      "id": "S081",
+      "group": "tool_failure",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S082",
+      "group": "tool_failure",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S083",
+      "group": "tool_failure",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S084",
+      "group": "tool_failure",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S085",
+      "group": "tool_failure",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S086",
+      "group": "tool_failure",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S087",
+      "group": "tool_failure",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S088",
+      "group": "tool_failure",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S089",
+      "group": "tool_failure",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S090",
+      "group": "tool_failure",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "RuntimeError"
+    },
+    {
+      "id": "S091",
+      "group": "invalid_payload",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S092",
+      "group": "invalid_payload",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S093",
+      "group": "invalid_payload",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S094",
+      "group": "invalid_payload",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S095",
+      "group": "invalid_payload",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": true,
+      "selection_ok": true,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 1,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S096",
+      "group": "over_limit",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": false,
+      "selection_ok": null,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 0,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S097",
+      "group": "over_limit",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": false,
+      "selection_ok": null,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 0,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S098",
+      "group": "over_limit",
+      "category": "labor",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": false,
+      "selection_ok": null,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 0,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S099",
+      "group": "over_limit",
+      "category": "consumer",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_laws",
+        "search_consultations",
+        "search_cases"
+      ],
+      "selection_checked": false,
+      "selection_ok": null,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 0,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    },
+    {
+      "id": "S100",
+      "group": "over_limit",
+      "category": "housing",
+      "question": "보증금 반환과 계약 해지 관련 자료를 확인하고 싶습니다.",
+      "selected_tools": [
+        "search_cases",
+        "search_legal_documents"
+      ],
+      "selection_checked": false,
+      "selection_ok": null,
+      "passed": true,
+      "response_consistent": true,
+      "tool_calls": 0,
+      "termination_reason": null,
+      "evidence_count": 0,
+      "error": "ValueError"
+    }
+  ]
+}
