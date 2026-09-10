@@ -1,0 +1,221 @@
+# AI Agent 명세서 v1·v2 비교
+
+## 1. 비교 대상
+
+| 구분 | 파일 | 성격 |
+|---|---|---|
+| 기존 명세 | `docs/ai-agent-spec-v1.md` | 기능, API와 데이터 계약 중심 |
+| 새 명세 | `docs/ai-agent-spec.md` | Agent Profile, 공통 Runtime, State·Trace와 테스트 증거 중심 |
+
+두 문서 모두 `HousingAgent`, `LaborAgent`, `ConsumerAgent`와 세 MCP Tool을 사용한다. 새 명세는 기존 요구사항을 버린 것이 아니라, Agent가 실제로 판단하고 반복 실행되는 과정까지 구현할 수 있도록 구체화한 문서다.
+
+## 2. 핵심 차이 요약
+
+| 비교 항목 | 기존 명세 v1 | 새 명세 v2 | 변경 이유 |
+|---|---|---|---|
+| Agent 표현 | `BaseLegalAgent`를 상속한 클래스 3개 | `AgentProfile` 3개 | Agent별 코드 중복을 줄이고 Goal과 권한을 명시하기 위해 |
+| 공통 실행 | 각 Agent의 `run()` 중심 | 공통 `AgentRuntime.run_single_agent()` | Model·Tool 반복과 종료를 한 곳에서 관리하기 위해 |
+| Tool 선택 | `plan_tool_calls()`가 호출 목록을 미리 생성 | LLM이 Tool Result를 관찰하며 다음 Tool을 선택 | 단순 Workflow보다 Agent의 재판단 과정을 드러내기 위해 |
+| Tool 실행 통제 | Tool 이름별 분기 | Profile Allowlist와 Backend 검증 | Prompt가 아닌 코드로 Tool 권한을 통제하기 위해 |
+| Agent 구분 | 카테고리와 시스템 프롬프트 | ID, 이름, Goal, 설명, 예시, Instructions, Allowed Tools | 각 Agent의 명세를 평가 가능한 형태로 만들기 위해 |
+| 실행 상태 | 최종 `AgentResult` 위주 | `AgentState`에 상태·호출 횟수·종료 원인 기록 | 실행 과정과 실패 원인을 설명하기 위해 |
+| Trace | 로그 항목만 간단히 정의 | owner·stage·step 기반 이벤트 명세 | 테스트 보고서에서 Tool 실행 증거로 사용하기 위해 |
+| 정상 종료 | 최종 응답 반환 | `model_finished`, `no_evidence` | 종료 조건을 테스트할 수 있도록 명시하기 위해 |
+| 비정상 종료 | HTTP 오류 중심 | `startup_error`, `model_error`, `mcp_tool_error`, `max_steps_exceeded` | Agent 내부 오류와 API 오류를 분리하기 위해 |
+| Tool Result | `Evidence`를 직접 반환 | 공통 `ToolResult` Envelope 사용 | 성공, 빈 결과와 오류를 같은 계약으로 처리하기 위해 |
+| 위험도 | 명확한 분류 없음 | 세 법률 Tool을 `read`로 명시 | 향후 변경 Tool과 구분하고 자동 실행 근거를 남기기 위해 |
+| 테스트 | 결과와 API 중심 | Profile, Allowlist, Loop, 종료, State와 Trace까지 포함 | Agent가 실제로 동작했다는 증거를 검증하기 위해 |
+
+## 3. 유지된 내용
+
+다음 핵심 요구사항은 두 문서에서 동일하게 유지된다.
+
+- 담당 분야는 임대차·주거, 근로·임금, 소비자·중고거래다.
+- `secondhand`는 `ConsumerAgent`가 처리한다.
+- MCP Tool은 `search_laws`, `search_cases`, `get_law_article`이다.
+- 정확한 조문은 키워드·SQL 검색, 상황형 질문은 벡터 검색을 사용한다.
+- 법령과 사례는 각각 최대 Top 3을 반환한다.
+- Agent와 Backend는 DB에 직접 접근하지 않는다.
+- 최종 답변은 Tool Result의 근거만 사용한다.
+- 검색 결과에 없는 법령, 조문, 사건번호와 URL을 생성하지 않는다.
+- 출처와 주의사항을 최종 답변에 포함한다.
+- 법률 판단과 승소 가능성을 확정하지 않는다.
+- 검색 결과가 없으면 추측성 답변을 만들지 않는다.
+- Redis, SSE, 로그인, 관리자와 Multimodal은 후순위다.
+
+## 4. 구조 변경
+
+### 기존 명세
+
+```text
+LegalQuestionService
+→ AgentRegistry
+→ BaseLegalAgent의 하위 클래스
+→ plan_tool_calls()
+→ execute_tool_calls()
+→ generate_answer()
+→ AgentResult
+```
+
+기존 구조는 구현이 단순하고 결정적이다. 그러나 질문을 받기 전에 호출할 Tool 목록을 대부분 고정하므로, Tool Result를 보고 다음 행동을 다시 판단하는 과정이 약하다.
+
+### 새 명세
+
+```text
+LegalQuestionService
+→ AgentRegistry에서 AgentProfile 선택
+→ 공통 AgentRuntime
+→ LLM이 첫 Tool 선택
+→ Backend가 Allowlist와 arguments 검증
+→ MCP Tool 실행
+→ Tool Result를 LLM에 전달
+→ 다음 Tool 또는 최종 답변 판단
+→ AgentState와 Trace 저장
+```
+
+새 구조에서는 전문 Agent의 설정과 실행 엔진이 분리된다. Agent별 파일에는 분야별 Goal과 Instructions가 있고, 반복·오류·종료 처리는 `runtime.py` 한 곳에 구현한다.
+
+## 5. 코드 책임 변화
+
+### 기존 Agent 클래스
+
+```python
+class LaborAgent(BaseLegalAgent):
+    category = "labor"
+    system_prompt = LABOR_SYSTEM_PROMPT
+
+    def plan_tool_calls(self, question: str) -> list[ToolCall]:
+        ...
+```
+
+### 새 Agent Profile
+
+```python
+LABOR_AGENT = AgentProfile(
+    agent_id="labor",
+    name="근로·임금 Agent",
+    goal="근로·임금 질문과 관련된 법령 및 유사 사례를 검색한다.",
+    description="임금 체불, 퇴직금, 해고와 근로계약을 담당한다.",
+    example_question="퇴직했는데 마지막 달 급여를 받지 못했습니다.",
+    instructions="검색 결과만 사용하고 법률 판단을 단정하지 마세요.",
+    allowed_tools=frozenset({
+        "search_laws",
+        "search_cases",
+        "get_law_article",
+    }),
+)
+```
+
+새 구조에서는 Agent 파일이 실제 Tool 실행 코드를 갖지 않는다. 실행 코드는 공통 Runtime에 있고, Agent 파일은 무엇을 목표로 하며 무엇을 허용받았는지를 선언한다.
+
+## 6. 테스트 관점의 변화
+
+### 기존 명세로 확인할 수 있던 내용
+
+- 카테고리에 맞는 Agent 선택
+- 사전에 정한 Tool 목록
+- Tool arguments
+- Top 3 제한
+- 출처 포함 여부
+- HTTP 오류와 타임아웃
+
+### 새 명세에서 추가로 확인할 수 있는 내용
+
+- Agent별 Goal과 Allowed Tools가 올바른지
+- LLM이 Tool Result를 본 뒤 다음 Tool을 선택했는지
+- 허용되지 않은 Tool을 Backend가 차단했는지
+- 실제 LLM·Tool 호출 횟수
+- Tool 호출 순서
+- 정상 완료와 최대 단계 중단 조건
+- Model 오류와 MCP 오류의 구분
+- Trace에서 각 판단과 실행의 책임 주체
+- 최종 답변이 어느 Tool Result를 근거로 했는지
+
+예를 들어 기존 테스트는 결과만 확인한다.
+
+```python
+assert result.category == "labor"
+assert result.related_laws
+```
+
+새 테스트는 실행 과정도 확인한다.
+
+```python
+assert state.agent_id == "labor"
+assert state.status == "completed"
+assert state.termination_reason == "model_finished"
+assert state.tool_calls <= 3
+assert any(
+    event.stage == "model_selected_tool"
+    and event.details["tool"] == "search_laws"
+    for event in state.trace
+)
+```
+
+## 7. 새 명세에서 명확해진 계약
+
+### Tool Result Envelope
+
+기존 명세는 Tool이 `Evidence` 또는 목록을 직접 반환했다. 새 명세는 성공과 오류를 구분한다.
+
+```python
+class ToolResult(BaseModel):
+    success: bool
+    tool: str
+    data: list[Evidence] | Evidence | None
+    error_code: str | None = None
+    message: str | None = None
+```
+
+이에 따라 다음 세 상태를 구분할 수 있다.
+
+```text
+검색 성공 + 결과 있음
+검색 성공 + 결과 없음
+검색 실행 실패
+```
+
+### 종료 원인
+
+새 명세는 결과 상태와 종료 원인을 별도로 기록한다.
+
+```text
+completed + model_finished
+completed + no_evidence
+failed    + model_error
+failed    + mcp_tool_error
+stopped   + max_steps_exceeded
+```
+
+## 8. 구현 난이도와 선택 결과
+
+| 항목 | 기존 명세 | 새 명세 |
+|---|---:|---:|
+| 초기 구현 난이도 | 낮음 | 중간 |
+| 실행 결과 결정성 | 높음 | Model 판단에 따라 달라질 수 있음 |
+| LLM 호출 횟수 | 적음 | Tool 반복만큼 증가 |
+| Agent다운 재판단 | 제한적 | 명확함 |
+| Tool 권한 통제 | 보통 | Allowlist로 명확함 |
+| 실행 과정 설명력 | 낮음 | State와 Trace로 높음 |
+| 테스트 보고서 증거 | 결과 중심 | 결과와 실행 과정 모두 제공 |
+
+새 명세는 구현량이 조금 늘어나지만, 세 Agent의 코드 중복을 줄이고 “왜 AI Agent인가”를 Goal, Tool 선택, 반복, State와 Trace로 설명할 수 있다는 장점이 있다.
+
+## 9. 새 명세 적용 시 팀 합의가 필요한 항목
+
+다음 사항은 구현 전에 팀원과 확정해야 한다.
+
+1. MCP Tool의 정확한 이름과 arguments 스키마
+2. `get_law_article` 결과가 없을 때 `null`과 오류 중 어떤 형식을 사용할지
+3. `search_cases.score`의 범위와 정렬 방향
+4. 모든 Mock Evidence에 실제 공식 URL을 필수로 넣을지
+5. OpenAI Tool Result 전달과 후속 호출 방식
+6. `MAX_AGENT_STEPS`와 `MAX_TOOL_CALLS`
+7. `trace`를 사용자 API 응답에 포함할지 로그로만 보관할지
+8. 일부 Tool 실패 시 제한적 답변을 반환할지 전체 실패로 처리할지
+
+## 10. 최종 판단
+
+기존 명세는 API 응답과 법률 안전 요구사항을 정의하는 데 적합했다. 새 명세는 그 요구사항을 유지하면서 Agent Profile, 공통 실행 Loop, Tool 권한, State, Trace와 종료 조건을 추가해 실제 구현 및 테스트 보고서의 기준으로 사용할 수 있도록 발전시켰다.
+
+따라서 이후 구현은 새 명세를 기준으로 하되, 먼저 Mock MCP Client와 Mock Model Provider로 Agent Runtime의 정상·비정상 흐름을 테스트하고, 다른 팀원의 MCP와 DB 작업이 준비되면 동일한 계약으로 통합 테스트하는 순서가 적합하다.

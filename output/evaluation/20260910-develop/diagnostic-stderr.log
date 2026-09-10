@@ -1,0 +1,156 @@
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-f843a18d-f561-4350-b800-77afe9a1c126
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 75, in run
+    payload = await search_cases(
+              ^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\evaluate.py", line 115, in search
+    raise TimeoutError("controlled MCP timeout")
+TimeoutError: controlled MCP timeout
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-059a9517-6868-4b11-ae29-3319914d49fc
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 75, in run
+    payload = await search_cases(
+              ^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\evaluate.py", line 115, in search
+    raise TimeoutError("controlled MCP timeout")
+TimeoutError: controlled MCP timeout
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-3d5697f0-6a74-40cc-91ca-36a4cd0e7d18
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 96, in run
+    payload = await search_laws(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\evaluate.py", line 115, in search
+    raise TimeoutError("controlled MCP timeout")
+TimeoutError: controlled MCP timeout
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-0516d603-c8a0-4eaa-95f6-4b5b504de6bb
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 110, in run
+    raise RuntimeError(
+RuntimeError: controlled rate limit
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-2de75fc9-0f5c-4c26-9919-8e3ff27301a8
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 130, in run
+    raise ValueError(
+ValueError: MCP search_laws 결과 형식이 올바르지 않습니다.
+ERROR:backend.app.services.legal_question_service:llm_answer_generation_failed category=consumer
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 148, in answer_with_llm
+    raise ValueError("LLM response cited evidence that was not retrieved")
+ValueError: LLM response cited evidence that was not retrieved
+ERROR:backend.app.services.legal_question_service:llm_answer_generation_failed category=consumer
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 139, in answer_with_llm
+    result = await asyncio.to_thread(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Playdata\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: controlled answer timeout
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-9f683393-4b58-4159-b304-c7d476d1a074
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 75, in run
+    payload = await search_cases(
+              ^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\evaluate.py", line 115, in search
+    raise TimeoutError("controlled MCP timeout")
+TimeoutError: controlled MCP timeout
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-221ea89d-78e2-4376-bfa0-3c2be542666c
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 75, in run
+    payload = await search_cases(
+              ^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\evaluate.py", line 115, in search
+    raise TimeoutError("controlled MCP timeout")
+TimeoutError: controlled MCP timeout
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-8dbc79f7-e34d-4537-869a-af572a320c1d
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 96, in run
+    payload = await search_laws(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\evaluate.py", line 115, in search
+    raise TimeoutError("controlled MCP timeout")
+TimeoutError: controlled MCP timeout
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-57212793-e70f-4a23-8f0f-ea5353cf5b80
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 110, in run
+    raise RuntimeError(
+RuntimeError: controlled rate limit
+ERROR:backend.app.services.agent_run_service:agent_run_failed run_id=run-84c8738e-466e-47b4-bcdb-cba62d7af23d
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\agent_run_service.py", line 169, in execute_run
+    result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 186, in answer_question_from_mcp
+    state, raw_evidence = await runtime.run(
+                          ^^^^^^^^^^^^^^^^^^
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\agents\runtime.py", line 130, in run
+    raise ValueError(
+ValueError: MCP search_laws 결과 형식이 올바르지 않습니다.
+ERROR:backend.app.services.legal_question_service:llm_answer_generation_failed category=consumer
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 148, in answer_with_llm
+    raise ValueError("LLM response cited evidence that was not retrieved")
+ValueError: LLM response cited evidence that was not retrieved
+ERROR:backend.app.services.legal_question_service:llm_answer_generation_failed category=consumer
+Traceback (most recent call last):
+  File "C:\miniProject\aio-01-p2-team2\output\evaluation\20260910-develop\source\backend\app\services\legal_question_service.py", line 139, in answer_with_llm
+    result = await asyncio.to_thread(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Playdata\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: controlled answer timeout

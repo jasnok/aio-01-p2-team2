@@ -1,0 +1,7 @@
+aio-02-p2-team2/
+├─ legal_mcp/
+│  ├─ _ollama_pgvector.py(pgvector 연결, 질문 백터화, pgvector 데이터 조회)
+│  ├─ mcp_server.py
+│  ├─ mcp_server1.py
+│  ├─ mcp_server2.py
+│  └─ mcp_server3.py

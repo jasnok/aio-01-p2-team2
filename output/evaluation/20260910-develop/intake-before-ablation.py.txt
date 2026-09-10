@@ -1,0 +1,96 @@
+class IntakeAgent:
+    async def assess(
+        self,
+        category: str,
+        question: str,
+        event_callback: Callable[[dict], Awaitable[None]] | None = None,
+    ) -> IntakeResult:
+        """한 요청에서 한 번만 호출하며, 실패를 키워드 규칙으로 대체하지 않는다."""
+        settings = get_settings()
+        if settings.llm_provider == "mock":
+            raise IntakeAssessmentError("실제 LLM Provider가 설정되지 않았습니다.")
+
+        step_id = "validation"
+        if event_callback:
+            await event_callback({"stage": "validation_started", "step_id": step_id})
+
+        provider = get_provider(settings.llm_provider)
+        message = f"카테고리: {category}\n사용자 질문: {question}"
+        timeout_seconds = settings.input_assessment_timeout_seconds
+        started_at = asyncio.get_running_loop().time()
+        last_error: Exception | None = None
+
+        # 형식 오류는 한 번만 재시도한다. Provider 자체 재시도와 무한 중첩하지 않는다.
+        for attempt in range(1):
+            try:
+                suffix = "" if attempt == 0 else "\n이전 출력 형식이 올바르지 않았습니다. 계약 형식만 다시 반환하세요."
+                remaining_seconds = timeout_seconds - (
+                    asyncio.get_running_loop().time() - started_at
+                )
+                if remaining_seconds <= 0:
+                    raise TimeoutError
+                result = await asyncio.wait_for(
+                    asyncio.to_thread(
+                        provider.generate_structured,
+                        INTAKE_SYSTEM_PROMPT,
+                        message + suffix,
+                        IntakeDecision,
+                    ),
+                    timeout=remaining_seconds,
+                )
+                decision = IntakeDecision.model_validate(result.output)
+                assessment = self._to_result(decision, question)
+                if event_callback:
+                    await event_callback({
+                        "stage": "validation_completed",
+                        "step_id": step_id,
+                        "status": assessment.status,
+                    })
+                return assessment
+            except (ValidationError, ValueError) as error:
+                last_error = error
+                if attempt == 0:
+                    continue
+            except TimeoutError as error:
+                last_error = error
+                break
+            except Exception as error:
+                last_error = error
+                break
+
+        raise IntakeAssessmentError("입력 충분성 판단을 완료하지 못했습니다.") from last_error
+
+    @staticmethod
+    def _to_result(decision: IntakeDecision, question: str) -> IntakeResult:
+        allowed = {"sufficient", "proceed_with_caution", "needs_clarification"}
+        if decision.status not in allowed:
+            raise ValueError("입력 판단 상태가 올바르지 않습니다.")
+
+        is_ready = decision.status != "needs_clarification"
+        normalized_original = " ".join(question.split())
+        questions: list[str] = []
+        seen: set[str] = set()
+        for follow_up_question in decision.follow_up_questions:
+            normalized_question = " ".join(follow_up_question.split())
+            if (
+                not normalized_question
+                or normalized_question == normalized_original
+                or normalized_question in seen
+            ):
+                continue
+            seen.add(normalized_question)
+            questions.append(follow_up_question)
+            if len(questions) == 3:
+                break
+        if decision.status == "sufficient":
+            questions = []
+
+        return IntakeResult(
+            is_ready_for_search=is_ready,
+            status=decision.status,
+            message=decision.message,
+            missing_fields=[],
+            follow_up_questions=questions,
+            cautions=decision.cautions[:3],
+            checks=decision.checks,
+        )
