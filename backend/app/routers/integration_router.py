@@ -2,9 +2,9 @@ import asyncio
 
 from fastapi import APIRouter, HTTPException
 
-from app.core.config import get_settings
-from app.mcp_clients.mcp_client import discover_tools
-from app.schemas.integration import McpStatusResponse
+from backend.app.core.config import get_settings
+from backend.app.mcp_clients.mcp_client import discover_tools
+from backend.app.schemas.integration import McpStatusResponse
 
 
 router = APIRouter(prefix="/api/integration", tags=["integration-smoke-test"])

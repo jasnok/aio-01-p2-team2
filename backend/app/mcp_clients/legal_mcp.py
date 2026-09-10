@@ -1,4 +1,4 @@
-from app.mcp_clients.mcp_client import call_tool, discover_tools
+from backend.app.mcp_clients.mcp_client import call_tool, discover_tools
 
 
 async def get_mcp_health() -> dict:

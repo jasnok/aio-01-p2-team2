@@ -6,7 +6,7 @@ from typing import Any
 from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
 
-from app.core.config import get_settings
+from backend.app.core.config import get_settings
 
 
 def _mcp_servers() -> dict[str, dict[str, Any]]:

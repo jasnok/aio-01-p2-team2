@@ -7,16 +7,16 @@ Evidence-only 정책을 지켜야 합니다.
 from collections.abc import Awaitable, Callable
 from typing import Protocol
 
-from app.agents.models import AgentProfile, AgentState
-from app.agents.tool_selector import is_comprehensive_search, select_tools
-from app.mcp_clients.legal_mcp import (
+from backend.app.agents.models import AgentProfile, AgentState
+from backend.app.agents.tool_selector import select_tools
+from backend.app.mcp_clients.legal_mcp import (
     search_cases,
     search_consultations,
     search_laws,
     search_legal_documents,
     search_laws,
 )
-from app.policies.tool_policy import ensure_tool_allowed
+from backend.app.policies.tool_policy import ensure_tool_allowed
 
 
 TARGET_EVIDENCE_COUNT = 3
@@ -45,8 +45,6 @@ class LegalAgentRuntime:
             raise ValueError("지원하지 않는 Agent Profile입니다.")
 
         selected_tools = select_tools(profile, state.question)
-        comprehensive_search = is_comprehensive_search(state.question)
-
         if not selected_tools:
             raise ValueError("실행할 수 있는 MCP Tool이 없습니다.")
 

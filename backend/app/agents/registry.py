@@ -1,5 +1,5 @@
-from app.agents.models import AgentProfile
-from app.agents.profiles import CONSUMER_AGENT, HOUSING_AGENT, LABOR_AGENT
+from backend.app.agents.models import AgentProfile
+from backend.app.agents.profiles import CONSUMER_AGENT, HOUSING_AGENT, LABOR_AGENT
 
 AGENT_REGISTRY = {
     "housing": HOUSING_AGENT,
