@@ -1,4 +1,4 @@
-from app.agents.models import AgentProfile
+from backend.app.agents.models import AgentProfile
 
 
 def ensure_tool_allowed(profile: AgentProfile, tool_name: str) -> None:
