@@ -1,0 +1,447 @@
+{
+  "id": "T041",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "중고 물품의 설명과 실제 상태가 다릅니다. 계약 취소 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+  "response": {
+    "request_id": "req-77aefba0-e776-4577-8592-fcd98fd1ec4e",
+    "agent_id": "consumer",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "중고 물품을 구매할 때 설명과 실제 상태가 달라 계약을 취소하고자 함.",
+    "key_issues": [
+      "설명과 실제 물품 상태 불일치",
+      "소비자에게 불리한 계약 조항 무효 가능성",
+      "계약 취소 관련 법률 근거(전자상거래 등에서의 소비자보호에 관한 법률 제35조)"
+    ],
+    "answer": "중고 물품의 설명과 다르게 실제 상태가 다르다면, 이는 소비자에게 불리한 계약 내용에 해당할 수 있습니다. 전자상거래 등에서의 소비자보호에 관한 법률 제35조에 따르면, 소비자에게 불리한 계약 조항은 무효가 될 수 있습니다. 따라서 판매자가 제공한 설명이 사실과 다르고 이를 근거로 계약을 체결했다면, 계약 취소가 가능할 수 있습니다. 다만, 계약 취소 가능 여부와 절차의 구체적인 내용은 계약서 내용, 거래 형태, 관련 법령 등을 종합적으로 검토해야 하므로 추가 확인이 필요합니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "중고 물품의 설명과 실제 상태가 다를 때 계약 취소에 관한 법률 정보를 검색할 수 있습니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "not_required",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-703",
+        "document_id": "703",
+        "title": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "content": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제35조\n조문 제목: 소비자에게 불리한 계약의 금지\n내용: 제35조(소비자에게 불리한 계약의 금지) 제17조부터 제19조까지의 규정을 위반한 약정으로서 소비자에게 불리한 것은 효력이 없다.",
+        "source": {
+          "source_id": "703",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+        },
+        "score": 0.285,
+        "summary": null,
+        "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-07-21"
+        }
+      },
+      {
+        "evidence_id": "law-704",
+        "document_id": "704",
+        "title": "소비자기본법",
+        "content": "법령명: 소비자기본법\n조문: 제30조\n조문 제목: 등록의 취소\n내용: 제30조(등록의 취소) ①공정거래위원회 또는 지방자치단체의 장은 소비자단체가 거짓 그 밖의 부정한 방법으로 제29조의 규정에 따른 등록을 한 경우에는 등록을 취소하여야 한다. ②공정거래위원회 또는 지방자치단체의 장은 등록소비자단체가 제29조제1항 각 호의 요건을 갖추지 못하게 된 경우에는 3월 이내에 보완을 하도록 명할 수 있고, 그 기간이 경과하여도 요건을 갖추지 못하는 경우에는 등록을 취소할 수 있다.",
+        "source": {
+          "source_id": "704",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+        },
+        "score": 0.2765,
+        "summary": null,
+        "law_name": "소비자기본법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-01-02"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1173",
+        "document_id": "1173",
+        "title": "청구이의",
+        "content": "사건명: 청구이의\n사건번호: 2000다8397\n법원: 대법원\n선고일: 2001-08-21\n구분: 판결이유\n내용: 원 심판 결 및 원 심 이 일부 인 용한 제 1 심판 결 이 유에 의 하 면 원 심 은 , 원 고가 광 고 물 제작 업 을 운영 하기 위 하 여 \n소 외 인 으 로 부터 이 사 건 전 사기 를 매 수 하 면서 , 그 매매 대 금 의 지 급 을 위 하 여 피 고 와 이 사 건 할 부 금 융 약 정을 \n체 결 하 였 고 , 할 부 금 융 여신거 래 기 본약 관 제 22 조 제 3 항 ( 이하 ' 이 사 건 약 관조 항 ' 이 라 고 한 다 ) 이 , 매 수 인이 상\n행 위를 목적 으 로 할 부 금 융 약 정을 체 결 한 경우에는 매 도 인 과의 할 부 판매계약 이 매 도 인 의 귀 책 사 유 로 무 효 , \n취 소 또 는 해제 된 경우에 매 수 인 에게 인 정 되 는 같 은 조 제 1 항 의 소정의 할 부 금 지 급 거 절권 을 행 사 할 수 없\n는 것 으 로 규 정 하고 있는 사 실 을 인 정한 다 음 , 매 도 인 의 귀 책 사 유 로 이 사 건 전 사기 의 매매계약 이 해제 된 경\n우라도 원 고가 위 와 같 이 상 행 위를 목적 으 로 신용제공자 인 피 고 와 이 사 건 할 부 금 융 약 정을 체 결 한 것 인 이\n상 , 이 사 건 약 관조 항 에 따 라 피 고 에 대 하 여 위 거 절권 을 행 사 할 수 없 다고 판단 하 였 으 며 ( 이 사 건 약 관조 항 이 \n약 관의 규 제에관한 법 률에 위 반 하 여 무 효 라는 원 고 의 주장도 배 척 하 였 다 .), 이 사 건 매매계약 이 취 소 또 는 해\n제 되 는 것 을 해제조 건 으 로 하 여 이 사 건 할 부 금 융 약 정 이 체 결 되 었 다 는 원 고 의 주장도 이 를 인 정 할 아무 런 증\n거 가 없 다고 하 여 배 척 하 였 다 .\n할 부거 래 에관한 법 률 제 2 조 제 2 항 소정의 ' 매 수 인이 상 행 위를 목적 으 로 할 부 계약 을 체 결 하 는 경우 ' 라 함 은 , \n \n매 수 인이 신용제공자의 여신으 로 매 수한 물건 을 다 른 소비자에게 판매할 목적 으 로 물건 을 할 부 로 구입한 경\n우만을 의미 하 는 것 이 아니라 , 자신의 소비만을 목적 으 로 한 경우 가 아 닌 영 리 를 목적 으 로 할 부 계약 을 체 결\n하 는 경우를 의미한 다고 해 석 함 이 타 당 하 며 , 약 관의 규 제에관한 법 률 제 30 조 제 3 항이 ' 특 정한 거 래분야 의 약\n관에 관 하 여 다 른 법 률 에 특별 한 규 정 이 있는 경우에는 이 법 의 규 정에 우선한 다 .' 라 고 규 정 하고 있 고 , 이 사\n건 할 부 금 융 약 정을 규 율 하 는 위 할 부거 래 에관한 법 률 제 2 조 제 2 항이 이 사 건 약 관조 항 의 내용과 동일 하 게 규\n정 되 어 있는 점 에 비 추 어 , 이 사 건 약 관조 항 이 약 관의 규 제에관한 법 률에 위 반되 거나 , 사 회 질 서 또 는 신의 칙 에 \n반 하 여 무 효 라 고 는 할 수 없 다 .\n위 법 리 및 기 록에 비 추 어 살 펴 보면 , 원 심 의 위 사 실 인 정 및 판단 은 모 두 정 당 하고 , 거 기 에 상 고이 유 로 서 주\n장 하 는 바 와 같 은 사 실 오 인이 나 법 리 오해의 위 법 이 있 다고 할 수 없 다 .\n그러 므 로 상 고 를 기 각 하고 , 상 고 비용은 패 소자의 부 담 으 로 하기로 하 여 관여 법 관의 일치 된 의 견 으 로 주문과 \n같 이 판 결 한 다 .\n대 법 관 손 지 열 ( 재판 장 ) 송 진 훈 윤 재식 ( 주 심 ) 이 규홍",
+        "source": {
+          "source_id": "1173",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+        },
+        "score": 0.298,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2000다8397",
+        "case_name": "청구이의",
+        "court": "대법원",
+        "decided_at": "2001-08-21",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-741",
+        "document_id": "741",
+        "title": "부당이득금",
+        "content": "사건명: 부당이득금\n사건번호: 2020다288375\n법원: 대법원\n선고일: 2022-03-17\n구분: 판시사항\n내용: [1] 여러 개의 계약 전부가 경제적, 사실적으로 일체로서 행하여져 하나의 계약인 것과 같은 관계에 있는 경우, 법률행위의 일부무효 법리가 적용되는지 여부(적극) 및 이때 계약 전부가 일체로서 하나의 계약인 것과 같은 관계에 있는지 판단하는 방법\n[2] 甲 등이 아파트 조성사업을 추진하는 乙 지역주택조합 추진위원회로부터 ‘약정한 날까지 사업계획이 승인되지 않는 경우 납부한 전액의 환불을 보장한다.’는 취지가 포함된 안심보장증서를 받고 분양목적물에 관한 조합가입계약을 체결하여 계약금을 납입하였다가, 조합가입계약의 무효 등을 주장하며 납입금 반환을 구한 사안에서, 안심보장증서상 환불보장 약정은 조합가입계약과 전체적으로 하나의 계약인 것과 같은 관계에 있으므로, 위 환불보장 약정이 무효라면 환불보장 약정이 없더라도 조합가입계약을 체결하였을지에 관한 당사자들의 가정적 의사를 심리하여 조합가입계약의 무효 여부를 판단하였어야 하는데도, 이를 살펴보지도 아니한 채 조합가입계약이 무효라는 甲 등의 주장을 배척한 원심의 판단에는 법리오해 등 잘못이 있다고 한 사례",
+        "source": {
+          "source_id": "741",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=227207"
+        },
+        "score": 0.2948,
+        "summary": "[1] 법률행위의 일부분이 무효인 때에는 그 전부를 무효로 하나, 그 무효 부분이 없더라도 법률행위를 하였을 것이라고 인정될 때에는 나머지 부분은 무효가 되지 아니한다(민법 제137조). 이와 같은 법률행위의 일부무효 법리는 여러 개의 계약이 체결된 경우에 그 계약 전부가 경제적, 사실적으로 일체로서 행하여져서하나의 계약인 것과 같은 관계에 있는 경우에도 적용된다. 이때 그 계약 전부가 일체로서 하나의 계약인 것과 같은 관계에 있는 것인지의 여부는 계약 체결의 경위와 목적 및 당사자의 의사 등을 종합적으로 고려하여 판단해야 한다.\n[2] 甲 등이 아파트 조성사업을 추진하는 乙 지역주택조합 추진위원회로부터 ‘약정한 날까지 사업계획이 승인되지 않는 경우 납부한 전액의 환불을 보장한다.’는 취지가 포함된 안심보장증서를 받고 분양목적물에 관한 조합가입계약을 체결하여 계약금을 납입하였다가, 조합가입계약의 무효 등을 주장하며 납입금 반환을 구한 사안에서, 안심보장증서상 환불보장 약정은 조합가입계약에 따른 납입금에 관한 특약 사항을 정하기 위한 목적으로 조합가입계약에 수반하여 경제적, 사실적으로 일체로서 체결된 것이어서 전체적으로 하나의 계약인 것과 같은 관계에 있으므로, 위 환불보장 약정이 총회의 결의 없이 이루어진 총유물의 처분행위에 해당하여 무효라면, 법률행위의 일부무효의 법리에 따라 이와 일체로서 체결된 조합가입계약도 무효가 되는 것이 원칙이고, 다만 환불보장 약정이 없더라도 조합가입계약을 체결하였을 것임이 인정되는 경우에는 조합가입계약이 여전히 효력을 가지게 되므로, 이에 관한 당사자들의 가정적 의사를 심리하여 조합가입계약의 무효 여부를 판단하였어야 하는데도, 당사자들의 가정적 의사를 살펴보지도 아니한 채 조합가입계약이 무효라는 甲 등의 주장을 배척한 원심의 판단에는 법리오해 등 잘못이 있다고 한 사례.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2020다288375",
+        "case_name": "부당이득금",
+        "court": "대법원",
+        "decided_at": "2022-03-17",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-740",
+        "document_id": "740",
+        "title": "손해배상(기)",
+        "content": "사건명: 손해배상(기)\n사건번호: 2004다54633\n법원: 대법원\n선고일: 2006-07-28\n구분: 판시사항\n내용: [1] 여러 개의 계약이 체결된 경우, 그 계약 전부가 불가분의 관계에 있는지 여부의 판단 기준\n[2] 할부거래에 관한 법률 제12조 제2항에서 매수인의 신용제공자에 대한 할부금의 지급거절권을 인정한 취지 및 간접할부계약에서 신용제공자가 물품매매계약상 해제의 원인이 된 약정 내용을 알지 못한 경우에도 매수인은 위 조항에 따라 신용제공자에게 할부금의 지급을 거절할 수 있는지 여부(적극)\n[3] 할부거래에 관한 법률 제4조 제1항에서 할부계약의 주요 내용을 서면으로 하도록 한 취지\n[4] 할부거래에 관한 법률 제2조 제2항에 정한 ‘매수인이 상행위를 목적으로 할부계약을 체결하는 경우’의 의미\n[5] 매도인과 매수인 사이에서 매수인에 불리한 계약의 금지를 규정하고 있는 할부거래에 관한 법률 제13조가 매수인과 신용제공자 사이의 간접할부계약에도 유추적용되는지 여부(적극)\n[6] 자유로운 의사에 반하여 이루어진 비채변제의 경우 부당이득반환청구권의 상실 여부(소극)\n[7] 동시이행관계에 있는 자동채권과 수동채권이 서로 현실적으로 이행하여야 할 필요가 없는 경우 상계의 허용 여부(적극)",
+        "source": {
+          "source_id": "740",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194009"
+        },
+        "score": 0.2872,
+        "summary": "[1] 여러 개의 계약이 체결된 경우에 그 계약 전부가 하나의 계약인 것과 같은 불가분의 관계에 있는 것인지의 여부는 계약체결의 경위와 목적 및 당사자의 의사 등을 종합적으로 고려하여 판단하여야 한다.\n[2] 할부거래에 관한 법률 제12조 제2항에서 매수인의 신용제공자에 대한 할부금의 지급거절권을 인정한 취지는, 할부거래에서 할부금융약정이 물품매매계약의 자금조달에 기여하고 두 계약이 경제적으로 일체를 이루는 경우에 그 물품매매계약이 해제되어 더 이상 매매대금채무가 존재하지 아니하는데도 할부거래의 일방 당사자인 매수인에게 그 할부금의 지급을 강제하는 것이 형평의 이념에 반하므로, 매수인으로 하여금 매도인에 대한 항변사유를 들어 신용제공자에 대하여 할부금의 지급을 거절할 수 있는 권능을 부여한 것이라고 볼 것이다. 그러므로 이른바 간접할부계약에서 신용제공자가 물품매매계약상의 해제의 원인이 된 약정 내용을 알지 못하였다고 하더라도, 매수인은 매도인과 체결한 물품매매계약을 해제하면서 신용제공자에게도 할부거래에 관한 법률 제12조 제2항에 따라 지급거절의사를 통지한 후 그 할부금의 지급을 거절할 수 있다.\n[3] 할부거래에 관한 법률 제4조 제1항에서 할부계약의 주요 내용을 서면으로 하도록 한 취지는 할부거래에 있어서는 대금의 지급이 장기간에 걸쳐 계속되기 때문에 계약 내용이 복잡하고 소비자의 충동구매가 이루어지는 경우가 많은 현실을 감안하여, 매수인으로 하여금 할부계약의 내용을 이해할 수 있도록 함과 동시에 계약체결을 신중하게 하도록 함으로써 부당하게 불리한 특약으로부터 매수인을 보호하고, 분쟁을 사전에 예방하고자 한 데 있을 뿐이고, 그와 같은 서면 기재를 신용제공자에 대한 지급거절권의 행사요건으로 규정한 것은 아니다.\n[4] 할부거래에 관한 법률 제2조 제2항 소정의 ‘매수인이 상행위를 목적으로 할부계약을 체결하는 경우’라 함은, 매수인이 신용제공자의 여신으로 매수한 물건을 다른 소비자에게 판매할 목적으로 물건을 할부로 구입한 경우만을 의미하는 것이 아니라, 자신의 소비만을 목적으로 한 경우가 아닌 영리를 목적으로 할부계약을 체결하는 경우를 의미한다.\n[5] 할부거래에 관한 법률 제13조는 ‘매수인의 항변권’을 보호하기 위한 규정으로서, 할부계약의 내용 중에서 할부거래에 관한 법률 제12조에 의한 내용보다 매수인에게 불리한 것은 매도인뿐만 아니라 신용제공자에 대한 관계에서도 효력을 인정할 수 없다고 할 것이므로, 이른바 간접할부계약에도 유추적용된다.\n[6] 비채변제는 지급자가 채무 없음을 알면서도 임의로 지급한 경우에만 성립하고, 채무 없음을 알고 있었다 하더라도 변제를 강요당한 경우나 변제 거절로 인한 사실상의 손해를 피하기 위하여 부득이 변제하게 된 경우 등 그 변제가 자기의 자유로운 의사에 반하여 이루어진 것으로 볼 수 있는 사정이 있는 때에는 지급자가 그 반환청구권을 상실하지 않는다.\n[7] 상계제도는 서로 대립하는 채권·채무를 간이한 방법에 의하여 결제함으로써 양자의 채권·채무 관계를 원활하고 공평하게 처리함을 목적으로 하고 있으므로, 상계의 대상이 될 수 있는 자동채권과 수동채권이 동시이행관계에 있다고 하더라도 서로 현실적으로 이행하여야 할 필요가 없는 경우라면 상계로 인한 불이익이 발생할 우려가 없고 오히려 상계를 허용하는 것이 동시이행관계에 있는 채권·채무 관계를 간명하게 해소할 수 있으므로 특별한 사정이 없는 한 상계가 허용된다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2004다54633",
+        "case_name": "손해배상(기)",
+        "court": "대법원",
+        "decided_at": "2006-07-28",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [
+      {
+        "evidence_id": "consultation-667",
+        "document_id": "667",
+        "title": "보험약관 미교부시 계약 취소",
+        "content": "제목: 보험약관 미교부시 계약 취소\n\n품목: 금융/보험\n\n질문: 보험설계사의 권유에 따라 매달 보험료를 100만원씩 3년동안 내는 저축성 보험에 가입했는데 두달이 지나도록 보험증권과 약관이 오지 않았습니다. 전화를 걸어 물어보니 보험료 납입기간이 3년이 아닌 7년으로 계약되어 있었습니다. 속았다 싶어 계약을 취소하려는데 두달동안 납입한 보험료를 돌려 받을 수 있습니까?\n\n답변: 약관교부나 상품설명 의무를 위반시 3개월내 취소가 가능합니다.\r\n\r\n    저축성보험은 사고 보장기능에다 저축기능을 더한 상품입니다. 계약자가 납입한 보험료는 크게 저축보험료, 위험보험료, 부가보험료(사업비)로 나뉘어 집니다. \r\n    위험보험료는 본인에게 보험회사고가 발생하지 않더라도 동종의 위험을 가진 다른 계약자에게 그 사고가 발생되면 이에 대한 보험금으로 지급되어 매월 소멸되는 것이고, 부가보험료 즉 사업비는 보험회사가 계약의 유지관리와 회사경영을 위해 사용할 수 있는 국가가 승인한 일정비율의 금액으로 이 또한 매월 소멸되지만 이 사업비는 우선적으로 지출하여 모두 사용할 수 있고 이후에 납입하는 보험료로 먼저 지출한 사업비를 메울 수 있도록 규정하고 있습니다. 따라서 사업비의 선집행으로 중도에 조기 해약한 경우 지급되는 해약환급금은 그동안 납입한 보험료 보다 적거나 없을 수도 있습니다. \r\n    따라서 보험가입자는 보험 가입시 상품의 보장내용 뿐만 아니라 보험료, 보험료 납입기간, 납입방법, 보험료 가입금액, 기간별 해약환급금 규모 등을 꼼꼼히 확인하셔야 합니다. \r\n    또한 현행 생명보험약관은 첫 보험료를 낸 날로부터 15일 이내에는 언제든지 계약을 철회해서 보험료를 전액 돌려받을 수 있도록 하고 있으며, 이를 청약철회제도라고 합니다. 또한 정당한 절차에 따르지 않고 부실모집을 한 경우에는 청약일로부터 3개월 안에는 언제든지 계약을 취소할 수 있습니다. 이 때도 보험회사는 보험료 전액에 보험료를 받았던 기간에 대한 이자(약관대출 이율을 연 단위 복리로 계산)를 더하여 계약자에게 돌려주어야 하나 3개월이 지난 후 중도해약 하는 경우에는 계약자가 손해를 감수할 수 밖에 없습니다. \r\n    보험설계사는 상품에 대해 상세하게 설명을 해야 하고 약관과 청약서 부본, 보험증권을 전달해야 할 의무가 있으며, 설계사가 이런 의무를 이행하지 않거나, 계약자가 청약서에 자필서명을 하지 않았을 때에는 계약취소 사유가 됩니다.",
+        "source": {
+          "source_id": "667",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3827,
+        "summary": "보험설계사의 권유에 따라 매달 보험료를 100만원씩 3년동안 내는 저축성 보험에 가입했는데 두달이 지나도록 보험증권과 약관이 오지 않았습니다. 전화를 걸어 물어보니 보험료 납입기간이 3년이 아닌 7년으로 계약되어 있었습니다. 속았다 싶어 계약을 취소하려는데 두달동안 납입한 보험료를 돌려 받을 수 있습니까?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-68",
+        "document_id": "68",
+        "title": "이사 계약 시 주의사항",
+        "content": "제목: 이사 계약 시 주의사항\n\n품목: 관광/운송\n\n질문: 이사 계약 시 특별히 소비자가 주의하여야 할 점은 무엇이 있습니까?\n\n답변: 1. 무허가업체는 피해발생 시 보상받기 쉽지 않으므로 계약 체결 전 해당 업체의 화물자동차 운송주선사업 허가 여부, 적재물배상책임보험 가입 여부를 확인하고 계약합니다. \r\n  * 허가업체 확인방법 \r\n   - ‘허가이사종합정보’ 홈페이지(www.허가이사.org) \r\n   - ‘이사 허가업체 검색’ 모바일 앱 \r\n   - 해당업체 소재지 관할관청에 문의 \r\n\r\n2. 전화나 홈페이지를 통해 견적을 받을 경우 이사 날짜(손 없는 날, 월말 등은 비용 할증), 작업조건(사다리비용, 에어컨 설치, 피아노 운반 등) 및 이사화물 내역 등에 따라 추가요금이 발생할 수 있으므로, 가급적 업체의 방문견적을 통해 화물의 양과 주요 물품을 쌍방이 확인하며, 지나치게 저렴한 가격을 제시하는 업체는 이용하지 않는 것이 좋습니다. \r\n\r\n3. 계약서 작성 시 이사일시, 이사화물 내역, 작업인원 수, 추가서비스 내역 및 비용 등 계약사항을 상세히 기재하여 추가요금 요구 등 향후 분쟁에 대비합니다. \r\n\r\n4. 귀중품은 소비자가 별도 관리하며, 고가품과 골동품 등 파손 우려 품목은 업체와 물품의 상태를 상호 확인하고 완벽한 포장과 주의를 당부합니다. \r\n\r\n5. 이사 도중 피해사실을 확인한 경우에는 현장에서 책임자에게 피해내용에 대한 사실 확인서를 요구하고, 이사가 끝난 후에도 즉시 사진 등 입증자료를 확보한 후 해당 업체에 보상을 요구합니다.",
+        "source": {
+          "source_id": "68",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3574,
+        "summary": "이사 계약 시 특별히 소비자가 주의하여야 할 점은 무엇이 있습니까?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-321",
+        "document_id": "321",
+        "title": "법정대리인 동의없이 구입한 화장품 계약취소 요구",
+        "content": "제목: 법정대리인 동의없이 구입한 화장품 계약취소 요구\n\n품목: 기타\n\n질문: 학교근처에서 영업사원이 간단한 화장품 테스트를 한다고 하여 봉고차에 탑승하였는데 처음 설명과 달리 화장품을 싸게 판매한다고 권유해서 60만원 상당의 화장품을 12개월 할부로 계약했습니다. 이후 부모님께서 이 사실을 알게되어 계약취소를 요청하셨는데 사업자는 이미 제품을 사용하였다는 이유로 거부하고 있습니다. 취소가 가능한가요?\n\n답변: 민법 제5조에 의하면 미성년자(만19세미만)가 법정대리인의 동의 없이 행한 법률행위는 취소할 수 있고, 동법 제141조에서는 미성년자가 계약을 취소한 경우 그 계약으로 인하여 받은 이익이 현존하는 한도에서 반환할 책임이 있다고 규정하고 있습니다. 따라서 사용한 화장품을 현존상태 그대로 사업자에게 반환하고 계약을 취소할 수 있습니다.",
+        "source": {
+          "source_id": "321",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3566,
+        "summary": "학교근처에서 영업사원이 간단한 화장품 테스트를 한다고 하여 봉고차에 탑승하였는데 처음 설명과 달리 화장품을 싸게 판매한다고 권유해서 60만원 상당의 화장품을 12개월 할부로 계약했습니다. 이후 부모님께서 이 사실을 알게되어 계약취소를 요청하셨는데 사업자는 이미 제품을 사용하였다는 이유로 거부하고 있습니다. 취소가 가능한가요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "703",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+      },
+      {
+        "source_id": "704",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+      },
+      {
+        "source_id": "667",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "68",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "321",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "1173",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+      },
+      {
+        "source_id": "741",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=227207"
+      },
+      {
+        "source_id": "740",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194009"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "중고 물품 거래 시 계약 취소 가능 여부는 구체적인 상황과 계약 조건에 따라 다르므로 추가 법률 전문가 상담을 권장함",
+      "전자상거래가 아닌 오프라인 거래나 특수 거래 조건은 관련 법령 적용이 다를 수 있음"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "validation-11f51960-81f4-474b-9527-3e05e6aecd15",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "validation-11f51960-81f4-474b-9527-3e05e6aecd15",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "search_laws-3c75764b-90d0-4989-87c4-85c7eeccfbbf",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "search_laws-3c75764b-90d0-4989-87c4-85c7eeccfbbf",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "search_consultations-03d4f2bf-f735-4417-9377-cd7c23497c83",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "search_consultations-03d4f2bf-f735-4417-9377-cd7c23497c83",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "search_cases-e637a9d5-418b-42f1-ad30-015d3df521b4",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "step_id": "search_cases-e637a9d5-418b-42f1-ad30-015d3df521b4",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-dc3ad0bc-68c3-4983-b8db-510c7219ab94",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_laws",
+    "search_consultations",
+    "search_cases"
+  ],
+  "counts": {
+    "related_laws": 2,
+    "similar_cases": 3,
+    "consultations": 3
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 21.75
+}

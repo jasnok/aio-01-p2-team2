@@ -1,0 +1,54 @@
+{
+  "id": "T084",
+  "group": "API 타임아웃",
+  "category": "housing",
+  "question": "전입신고와 확정일자는 어떤 차이가 있나요? 주택 임대차 관련 법 조문을 알려주세요.",
+  "mode": "isolated",
+  "expected": "검색 호출에 TimeoutError 주입; 실행 failed로 안전 종료",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-aa616b29-c4dc-4551-aab1-cd96c6736e1c",
+    "status": "failed",
+    "result": null,
+    "error": {
+      "code": "ANALYSIS_FAILED",
+      "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-aa616b29-c4dc-4551-aab1-cd96c6736e1c",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-aa616b29-c4dc-4551-aab1-cd96c6736e1c",
+        "step_id": "search_cases-f5771063-964a-48d5-a206-a55af1e6045f",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "run.failed",
+      "data": {
+        "run_id": "run-aa616b29-c4dc-4551-aab1-cd96c6736e1c",
+        "status": "failed",
+        "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+      }
+    }
+  ],
+  "injected_search_calls": 1,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.0
+}

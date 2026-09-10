@@ -1,0 +1,137 @@
+{
+  "id": "T079",
+  "group": "검색 결과 없음",
+  "category": "consumer",
+  "question": "헬스장이 폐업했는데 카드 할부금이 남았습니다. 관련 상담사례를 찾아주세요.",
+  "mode": "isolated",
+  "expected": "전체 검색 도구에 빈 결과 주입; 근거 배열이 비어 있고 제한 안내",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+    "status": "completed",
+    "result": {
+      "request_id": "req-14ce3751-43f5-43ac-92ed-ec6ac1490617",
+      "agent_id": "consumer",
+      "status": "completed",
+      "termination_reason": "no_results",
+      "question_summary": "검색 결과가 없습니다.",
+      "key_issues": [],
+      "answer": "현재 입력한 내용과 관련된 공식 근거를 찾지 못했습니다.",
+      "related_laws": [],
+      "similar_cases": [],
+      "consultations": [],
+      "sources": [],
+      "follow_up_questions": [],
+      "cautions": [
+        "검색 결과가 없을 때는 추측으로 답변하지 않습니다.",
+        "사실관계나 검색어를 보완해 다시 확인해 주세요."
+      ],
+      "input_assessment": {
+        "status": "sufficient",
+        "message": "격리시험 입력 판단 대체"
+      },
+      "is_mock": false
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "step_id": "search_laws-74a23835-ed79-4996-b9f5-027362ddd052",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "step_id": "search_laws-74a23835-ed79-4996-b9f5-027362ddd052",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "step_id": "search_consultations-69dec222-75a1-4288-8f0c-da77271535db",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "step_id": "search_consultations-69dec222-75a1-4288-8f0c-da77271535db",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "step_id": "search_cases-969d8928-07de-4a02-9d57-8162c1c24166",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "step_id": "search_cases-969d8928-07de-4a02-9d57-8162c1c24166",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-2e8cfc2e-c114-41f4-998f-71de7089a31e",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "injected_search_calls": 3,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.016
+}

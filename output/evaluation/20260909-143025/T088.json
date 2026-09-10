@@ -1,0 +1,54 @@
+{
+  "id": "T088",
+  "group": "API 타임아웃",
+  "category": "labor",
+  "question": "사용하지 않은 연차휴가의 수당에 관한 법률 정보를 알려주세요.",
+  "mode": "isolated",
+  "expected": "검색 호출에 TimeoutError 주입; 실행 failed로 안전 종료",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-5dfedd60-78ac-49c4-a95a-b9c1233a452b",
+    "status": "failed",
+    "result": null,
+    "error": {
+      "code": "ANALYSIS_FAILED",
+      "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-5dfedd60-78ac-49c4-a95a-b9c1233a452b",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-5dfedd60-78ac-49c4-a95a-b9c1233a452b",
+        "step_id": "search_cases-57418ce2-3c1f-4b4e-afbd-53b562fe4b62",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "run.failed",
+      "data": {
+        "run_id": "run-5dfedd60-78ac-49c4-a95a-b9c1233a452b",
+        "status": "failed",
+        "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+      }
+    }
+  ],
+  "injected_search_calls": 1,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.0
+}

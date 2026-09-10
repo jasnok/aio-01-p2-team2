@@ -1,0 +1,54 @@
+{
+  "id": "T086",
+  "group": "API 타임아웃",
+  "category": "consumer",
+  "question": "중고거래 판매자가 돈을 받은 뒤 물건을 보내지 않습니다. 관련 법률 정보를 알려주세요.",
+  "mode": "isolated",
+  "expected": "검색 호출에 TimeoutError 주입; 실행 failed로 안전 종료",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-7f392a01-6dc5-4929-8d38-3e1c94ae8fd5",
+    "status": "failed",
+    "result": null,
+    "error": {
+      "code": "ANALYSIS_FAILED",
+      "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-7f392a01-6dc5-4929-8d38-3e1c94ae8fd5",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-7f392a01-6dc5-4929-8d38-3e1c94ae8fd5",
+        "step_id": "search_laws-94145cec-e905-486a-916f-7b44437d7029",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "run.failed",
+      "data": {
+        "run_id": "run-7f392a01-6dc5-4929-8d38-3e1c94ae8fd5",
+        "status": "failed",
+        "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+      }
+    }
+  ],
+  "injected_search_calls": 1,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.0
+}

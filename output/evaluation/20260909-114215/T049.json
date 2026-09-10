@@ -1,0 +1,138 @@
+{
+  "id": "T049",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "사업용으로 할부 구매한 기계가 인도되지 않았습니다. 소비자 할부계약과의 차이에 관한 판례를 찾아주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "validation-8f61560a-3860-4096-94ab-8c0165a24a50",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "validation-8f61560a-3860-4096-94ab-8c0165a24a50",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "search_laws-bcf2b8a3-ebf3-4c3d-9443-bc1a576bb933",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "search_laws-bcf2b8a3-ebf3-4c3d-9443-bc1a576bb933",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "search_consultations-ae3c4e83-1f6e-4c9f-86a4-e22f5fce3f76",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "search_consultations-ae3c4e83-1f6e-4c9f-86a4-e22f5fce3f76",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "search_cases-82de460c-a031-420c-ab7f-25b999e7980c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "step_id": "search_cases-82de460c-a031-420c-ab7f-25b999e7980c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-2fdbc16f-8ace-4762-857e-9642d743b8bf",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 23.672
+}

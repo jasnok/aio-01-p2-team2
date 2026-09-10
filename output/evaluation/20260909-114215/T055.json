@@ -1,0 +1,60 @@
+{
+  "id": "T055",
+  "group": "정보 부족",
+  "category": "labor",
+  "question": "이 상황에서 제가 무엇을 해야 하나요?",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "ERROR",
+  "run_id": "run-caa14c27-0c16-49ec-a1f2-510549e75cef",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-caa14c27-0c16-49ec-a1f2-510549e75cef",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-caa14c27-0c16-49ec-a1f2-510549e75cef",
+        "step_id": "validation-b7235032-f665-4a4c-9085-60b379f6e21e",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-caa14c27-0c16-49ec-a1f2-510549e75cef",
+        "step_id": "validation-b7235032-f665-4a4c-9085-60b379f6e21e",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "input.required",
+      "data": {
+        "run_id": "run-caa14c27-0c16-49ec-a1f2-510549e75cef",
+        "status": "stopped",
+        "message": "정확한 분석을 위해 추가 정보가 필요합니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 16.593
+}

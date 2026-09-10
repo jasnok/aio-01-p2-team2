@@ -1,0 +1,15 @@
+{
+  "id": "T009",
+  "group": "정상 요청",
+  "category": "housing",
+  "question": "계약 종료일에 집을 비웠는데 보증금이 반환되지 않았습니다. 반환 지연 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-b16c4adc-1465-497f-9797-ba2c0fa12daa",
+  "events": [],
+  "error_type": "ResponseNotRead",
+  "error_code": null,
+  "scope": "live frontend client",
+  "elapsed_seconds": 11.156
+}

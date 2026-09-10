@@ -1,0 +1,482 @@
+{
+  "id": "T047",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "주문 제작 상품이라는 이유로 반품을 거절합니다. 청약철회 제한 관련 법령을 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+  "response": {
+    "request_id": "req-ff7a3d10-5f2b-4aeb-9aee-e68dbeecfac2",
+    "agent_id": "consumer",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "주문 제작 상품이라는 이유로 반품을 거절하는 경우, 청약철회 제한 관련 법령이 무엇인지 문의하셨습니다.",
+    "key_issues": [
+      "전자상거래 등에서의 소비자보호에 관한 법률 제17조 및 시행령 제21조의 청약철회 제한 규정",
+      "‘소비자의 주문에 의하여 개별적으로 생산되는 재화’의 정의 및 범위",
+      "통신판매업자가 사전에 고지하고 소비자의 서면 동의를 받았는지 여부",
+      "단순한 주문 제작은 청약철회 제한 사유에 해당하지 않음",
+      "소비자에게 불리한 계약 조항은 효력이 없음(전소법 제35조)"
+    ],
+    "answer": "전자상거래 등에서의 소비자보호에 관한 법률(이하 전소법) 제17조와 그 시행령 제21조에 따르면, '소비자의 주문에 의하여 개별적으로 생산되는 재화'인 경우에 한하여, 통신판매업자가 회복할 수 없는 중대한 피해가 예상되고, 사전에 그 사실을 고지하며 소비자의 서면 동의를 받은 경우에만 청약철회 요청을 거부할 수 있습니다. 단순히 주문 제작이라고 해서 모두 청약철회 제한 사유에 해당하는 것은 아니고, 특정 개인의 요구에 따라 구성이나 제작이 개별적으로 달라지는 경우에만 해당합니다. 또한, 통신판매업자가 단순히 \"주문 즉시 제작 상품\"이라고 고지하는 것만으로는 제한 사유가 되지 않으며, 소비자가 반품을 요구하면 수락해야 합니다. 따라서 주문 제작 상품이라도 위 요건을 충족하지 않으면 청약철회가 가능합니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "주문 제작 상품의 반품 거절 및 청약철회 제한에 관한 법령 정보를 제공합니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "not_required",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-703",
+        "document_id": "703",
+        "title": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "content": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제19조\n조문 제목: 손해배상청구금액의 제한 등\n내용: 제19조(손해배상청구금액의 제한 등) ① 소비자에게 책임이 있는 사유로 재화등의 판매에 관한 계약이 해제된 경우 통신판매업자가 소비자에게 청구하는 손해배상액은 다음 각 호의 구분에 따라 정한 금액에 대금미납에 따른 지연배상금을 더한 금액을 초과할 수 없다. 1. 공급한 재화등이 반환된 경우: 다음 각 목의 금액 중 큰 금액 가. 반환된 재화등의 통상 사용료 또는 그 사용으로 통상 얻을 수 있는 이익에 해당하는 금액 나. 반환된 재화등의 판매가액(販賣價額)에서 그 재화등이 반환된 당시의 가액을 뺀 금액 2. 공급한 재화등이 반환되지 아니한 경우: 그 재화등의 판매가액에 해당하는 금액 ② 공정거래위원회는 통신판매업자와 소비자 간의 손해배상청구에 따른 분쟁의 원활한 해결을 위하여 필요하면 제1항에 따른 손해배상액을 산정하기 위한 기준을 정하여 고시할 수 있다.",
+        "source": {
+          "source_id": "703",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+        },
+        "score": 0.291,
+        "summary": null,
+        "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-07-21"
+        }
+      },
+      {
+        "evidence_id": "law-704",
+        "document_id": "704",
+        "title": "소비자기본법",
+        "content": "법령명: 소비자기본법\n조문: 제47조\n조문 제목: 결함정보의 보고의무\n내용: 제47조(결함정보의 보고의무) ①사업자는 다음 각 호의 어느 하나에 해당하는 경우에는 제조ㆍ수입ㆍ판매 또는 제공한 물품등의 결함을 소관 중앙행정기관의 장에게 보고(전자적 보고를 포함한다. 이하 같다)하여야 한다. 다만, 제2호에 해당하는 경우로서 사업자가 제48조에 따라 해당 물품등의 수거ㆍ파기ㆍ수리ㆍ교환ㆍ환급 또는 제조ㆍ수입ㆍ판매ㆍ제공의 금지 및 그 밖의 필요한 조치(이하 이 조에서 \"수거ㆍ파기등\"이라 한다)를 한 경우에는 그러하지 아니하다. <개정 2017.10.31> 1. 제조ㆍ수입ㆍ판매 또는 제공한 물품등에 소비자의 생명ㆍ신체 또는 재산에 위해를 끼치거나 끼칠 우려가 있는 제조ㆍ설계 또는 표시 등의 중대한 결함이 있다는 사실을 알게 된 경우 2. 제조ㆍ수입ㆍ판매 또는 제공한 물품등과 동일한 물품등에 대하여 외국에서 결함이 발견되어 사업자가 다음 각 목의 어느 하나에 해당하는 조치를 한 경우 또는 외국의 다른 사업자가 해당 조치를 한 사실을 알게 된 경우 가. 외국 정부로부터 수거ㆍ파기등의 권고 또는 명령을 받고 한 수거ㆍ파기등 나. 자발적으로 한 수거ㆍ파기등 ②제1항의 규정에 따른 보고를 받은 중앙행정기관의 장은 사업자가 보고한 결함의 내용에 관하여 제17조의 규정에 따른 시험ㆍ검사기관 또는 한국소비자원 등에 시험ㆍ검사를 의뢰하고, 시험ㆍ검사의 결과 그 물품등이 제49조 또는 제50조의 요건에 해당하는 경우에는 사업자에게 각각에 해당하는 규정에 따른 필요한 조치를 취하여야 한다. ③제1항의 규정에 따라 결함의 내용을 보고하여야 할 사업자는 다음 각 호와 같다. 1. 물품등을 제조ㆍ수입 또는 제공하는 자 2. 물품에 성명ㆍ상호 그 밖에 식별 가능한 기호 등을 부착함으로써 자신을 제조자로 표시한 자 3. 「유통산업발전법」 제2조제3호의 규정에 따른 대규모점포 중 대통령령이 정하는 대규모점포를 설치하여 운영하는 자 4. 그 밖에 소비자의 생명ㆍ신체 및 재산에 위해를 끼치거나 끼칠 우려가 있는 물품등을 제조ㆍ수입ㆍ판매 또는 제공하는 자로서 대통령령이 정하는 자 ④제1항의 규정에 따라 사업자가 보고하여야 할 중대한 결함의 범위, 보고기한 및 보고절차 등에 관하여 필요한 사항은 대통령령으로 정한다.",
+        "source": {
+          "source_id": "704",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+        },
+        "score": 0.2886,
+        "summary": null,
+        "law_name": "소비자기본법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-01-02"
+        }
+      },
+      {
+        "evidence_id": "law-724",
+        "document_id": "724",
+        "title": "형법",
+        "content": "법령명: 형법\n조문: 제348조의2\n조문 제목: 편의시설부정이용\n내용: 제348조의2(편의시설부정이용) 부정한 방법으로 대가를 지급하지 아니하고 자동판매기, 공중전화 기타 유료자동설비를 이용하여 재물 또는 재산상의 이익을 취득한 자는 3년 이하의 징역, 500만원 이하의 벌금, 구류 또는 과료에 처한다.",
+        "source": {
+          "source_id": "724",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%ED%98%95%EB%B2%95"
+        },
+        "score": 0.2864,
+        "summary": null,
+        "law_name": "형법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-09-13"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1174",
+        "document_id": "1174",
+        "title": "할부거래에관한법률위반",
+        "content": "사건명: 할부거래에관한법률위반\n사건번호: 2017도17611\n법원: 대법원\n선고일: 2018-01-24\n구분: 주문\n내용: 상 고 를 모 두 기 각 한 다 .",
+        "source": {
+          "source_id": "1174",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+        },
+        "score": 0.3036,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2017도17611",
+        "case_name": "할부거래에관한법률위반",
+        "court": "대법원",
+        "decided_at": "2018-01-24",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-738",
+        "document_id": "738",
+        "title": "부당이득금반환",
+        "content": "사건명: 부당이득금반환\n사건번호: 2008다39786\n법원: 대법원\n선고일: 2010-07-15\n구분: 판례내용\n내용: 이 상당하다. 그런데도 원심은 신동방의 보증책임 부담금액을 산정함에 있어서 진천공장에 관하여 설정된 근저당권의 청산가액은 피고가 신동방에 대한 기업개선작업 과정에서 신고한 진천공장의 유효담보가나 예상배당액 등에 비추어 79억 원 이상이라고 봄이 상당하다고 판단하였다. 이러한 원심의 판단에는 청산가액의 산정 및 보증책임의 범위 확정에 관한 법리 등을 오해하여 판결에 영향을 미친 위법이 있다. 이를 지적하는 상고이유의 주장은 이유 있다. 4. 결론 그러므로 나머지 상고이유에 대한 판단을 생략한 채 원심판결을 파기하고, 사건을 다시 심리·판단하게 하기 위하여 원심법원에 환송하기로 하여 관여 대법관의 일치된 의견으로 주문과 같이 판결한다. 대법관 박시환(재판장) 안대희 차한성(주심) 신영철",
+        "source": {
+          "source_id": "738",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=144864"
+        },
+        "score": 0.3035,
+        "summary": "[1] 연대보증인의 연대보증채무에 대한 부담금액이 대출 원금뿐이고 이자는 연대보증인이 기업구조조정 대상기업으로 선정되어 대출은행이 포함된 채권금융기관협의회의 주관은행과 체결한 경영정상화약정의 효력에 의해 모두 면제된 것이라면, 대출은행이 연대보증인으로부터 지급받은 금전 및 주채무자의 파산관재인으로부터 지급받은 금전 중 일부로 연대보증채무의 원금을 모두 변제받은 이상, 그 후 대출은행이 연대보증인으로부터 추가로 지급받아 연대보증채무의 이자의 변제에 충당한 금전은 그 전액이 대출은행이 연대보증인으로부터 초과 변제받은 금액이라고 보아야 함에도, 이와 달리 연대보증인이 대출은행에 지급한 금전의 합계액에서 원금을 뺀 나머지 금액이 초과 변제받은 금액이라고 판단한 원심판결에는 민사소송법 제424조 제1항 제6호가 규정하는 이유모순의 위법이 있다고 한 사례.\n[2] 민법 제742조에 정한 비채변제는 지급자가 채무 없음을 알면서도 임의로 지급한 경우에만 성립하고 채무 없음을 알고 있었다 하더라도 변제를 강제당한 경우나 변제거절로 인한 사실상의 손해를 피하기 위하여 부득이 변제하게 된 경우 등 그 변제가 자기의 자유로운 의사에 반하여 이루어진 것으로 볼 수 있는 사정이 있는 때에는 지급자가 그 반환청구권을 상실하지 않는다.\n[3] 기업개선작업을 통해 구조조정을 마치고 회사분할을 추진 중이던 연대보증인이 당초 이자채무가 면제되었다는 견해를 갖고 있었음에도 대출은행의 요구대로 이자채무를 포함하여 연대보증채무를 변제한 것은, 대출은행으로부터 그 은행 주장의 연대보증채무 상당액을 변제하지 아니하면 연대보증인 소유의 생산공장들에 설정된 근저당권에 기하여 경매절차를 실행하겠다는 통지를 받고, 그 경매절차가 진행될 경우 생산활동에 차질이 생길 뿐만 아니라 대외적인 신인도가 다시 추락함으로써 정상적인 기업으로서의 존속 자체가 불투명해지는 심각한 사태 등이 발생할 수 있으며, 당시 추진 중이던 회사분할 절차에도 타격을 입을 우려가 있어, 변제거절에 따른 손해를 피하기 위해 자유로운 의사에 반하여 부득이하게 지급한 것이므로 그 반환청구권을 상실하지 않는다고 본 사례.\n[4] 주채무자가 제공한 담보부동산에 설정된 저당권에 분배될 수 있는 청산가액의 액수에 따라 보증인이 부담하는 보증책임의 범위가 달라지도록 보증인과 저당권자가 합의하였는데, 그 후 그 청산가액의 액수 및 그 청산가액의 상환을 조건으로 한 저당권의 말소에 관하여 저당권자와 주채무자 사이에 합의가 이루어지고 보증인 또한 그 합의에 동의한 경우, 위와 같이 보증인과 저당권자 사이에서 이루어진 의사의 합치는 사후에 위 청산가액이 적정 청산가액보다 높거나 낮다는 점을 다투어 보증책임의 범위에 관하여 분쟁이 생기는 것을 방지하기 위한 취지의 합의라고 할 것이므로, 양 당사자 사이에서 보증책임의 범위를 산정하는 데 적용되는 저당권의 청산가액은 위 합의로써 확정되고, 저당권자는 특별한 사정이 없는 한 사후에 스스로 정한 청산가액의 적정성에 관하여 이의를 제기하며 보증책임의 범위를 다툴 수 없다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2008다39786",
+        "case_name": "부당이득금반환",
+        "court": "대법원",
+        "decided_at": "2010-07-15",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1173",
+        "document_id": "1173",
+        "title": "청구이의",
+        "content": "사건명: 청구이의\n사건번호: 2000다8397\n법원: 대법원\n선고일: 2001-08-21\n구분: 판결이유\n내용: 원 심판 결 및 원 심 이 일부 인 용한 제 1 심판 결 이 유에 의 하 면 원 심 은 , 원 고가 광 고 물 제작 업 을 운영 하기 위 하 여 \n소 외 인 으 로 부터 이 사 건 전 사기 를 매 수 하 면서 , 그 매매 대 금 의 지 급 을 위 하 여 피 고 와 이 사 건 할 부 금 융 약 정을 \n체 결 하 였 고 , 할 부 금 융 여신거 래 기 본약 관 제 22 조 제 3 항 ( 이하 ' 이 사 건 약 관조 항 ' 이 라 고 한 다 ) 이 , 매 수 인이 상\n행 위를 목적 으 로 할 부 금 융 약 정을 체 결 한 경우에는 매 도 인 과의 할 부 판매계약 이 매 도 인 의 귀 책 사 유 로 무 효 , \n취 소 또 는 해제 된 경우에 매 수 인 에게 인 정 되 는 같 은 조 제 1 항 의 소정의 할 부 금 지 급 거 절권 을 행 사 할 수 없\n는 것 으 로 규 정 하고 있는 사 실 을 인 정한 다 음 , 매 도 인 의 귀 책 사 유 로 이 사 건 전 사기 의 매매계약 이 해제 된 경\n우라도 원 고가 위 와 같 이 상 행 위를 목적 으 로 신용제공자 인 피 고 와 이 사 건 할 부 금 융 약 정을 체 결 한 것 인 이\n상 , 이 사 건 약 관조 항 에 따 라 피 고 에 대 하 여 위 거 절권 을 행 사 할 수 없 다고 판단 하 였 으 며 ( 이 사 건 약 관조 항 이 \n약 관의 규 제에관한 법 률에 위 반 하 여 무 효 라는 원 고 의 주장도 배 척 하 였 다 .), 이 사 건 매매계약 이 취 소 또 는 해\n제 되 는 것 을 해제조 건 으 로 하 여 이 사 건 할 부 금 융 약 정 이 체 결 되 었 다 는 원 고 의 주장도 이 를 인 정 할 아무 런 증\n거 가 없 다고 하 여 배 척 하 였 다 .\n할 부거 래 에관한 법 률 제 2 조 제 2 항 소정의 ' 매 수 인이 상 행 위를 목적 으 로 할 부 계약 을 체 결 하 는 경우 ' 라 함 은 , \n \n매 수 인이 신용제공자의 여신으 로 매 수한 물건 을 다 른 소비자에게 판매할 목적 으 로 물건 을 할 부 로 구입한 경\n우만을 의미 하 는 것 이 아니라 , 자신의 소비만을 목적 으 로 한 경우 가 아 닌 영 리 를 목적 으 로 할 부 계약 을 체 결\n하 는 경우를 의미한 다고 해 석 함 이 타 당 하 며 , 약 관의 규 제에관한 법 률 제 30 조 제 3 항이 ' 특 정한 거 래분야 의 약\n관에 관 하 여 다 른 법 률 에 특별 한 규 정 이 있는 경우에는 이 법 의 규 정에 우선한 다 .' 라 고 규 정 하고 있 고 , 이 사\n건 할 부 금 융 약 정을 규 율 하 는 위 할 부거 래 에관한 법 률 제 2 조 제 2 항이 이 사 건 약 관조 항 의 내용과 동일 하 게 규\n정 되 어 있는 점 에 비 추 어 , 이 사 건 약 관조 항 이 약 관의 규 제에관한 법 률에 위 반되 거나 , 사 회 질 서 또 는 신의 칙 에 \n반 하 여 무 효 라 고 는 할 수 없 다 .\n위 법 리 및 기 록에 비 추 어 살 펴 보면 , 원 심 의 위 사 실 인 정 및 판단 은 모 두 정 당 하고 , 거 기 에 상 고이 유 로 서 주\n장 하 는 바 와 같 은 사 실 오 인이 나 법 리 오해의 위 법 이 있 다고 할 수 없 다 .\n그러 므 로 상 고 를 기 각 하고 , 상 고 비용은 패 소자의 부 담 으 로 하기로 하 여 관여 법 관의 일치 된 의 견 으 로 주문과 \n같 이 판 결 한 다 .\n대 법 관 손 지 열 ( 재판 장 ) 송 진 훈 윤 재식 ( 주 심 ) 이 규홍",
+        "source": {
+          "source_id": "1173",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+        },
+        "score": 0.2953,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2000다8397",
+        "case_name": "청구이의",
+        "court": "대법원",
+        "decided_at": "2001-08-21",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [
+      {
+        "evidence_id": "consultation-198",
+        "document_id": "198",
+        "title": "전자상거래로 의류 구입 후 청약철회 요구하였으나 주문 즉시 제작한다는 이유로 거절한 경우",
+        "content": "제목: 전자상거래로 의류 구입 후 청약철회 요구하였으나 주문 즉시 제작한다는 이유로 거절한 경우\n\n품목: 의류/세탁\n\n질문: 전자상거래로 105,000원 상당의 스커트를 구매하면서 55,66 사이즈 중 55사이즈를 선택하였습니다. 이후 원단 재질 등이 생각과 달라 반품을 요청하였으나, 사업자는 위 상품은 주문 즉시 제작하는 ‘Order made' 상품이기 때문에 반품이 불가함을 고지하였다면서 거절하고 있습니다. 주문 즉시 제작하는 상품인 경우 청약철회에서 제외할 수 있는지, 반품이 정말 불가능한 것인지 궁금합니다.\n\n답변: 단순히 주문 이후 제작에 들어간다고 해서 항상 청약철회 제한 사유에 해당하는 것은 아닙니다. 위 사례의 경우 실제 법에서 정하고 있는 ‘주문제작’의 범위에 해당되는지 확인하여야 합니다.\r\n\r\n현행 ‘전자상거래등에서의소비자보호에관한법률’(이하 전소법)은 제 17조를 통해 소비자의 권리를 보호하고 있으나, 제17조 제2항으로 그 권리를 제한하고 있습니다. \r\n(소비자의 책임있는 사유로 재화 등이 멸실되거나 훼손된 경우, 소비자의 사용 또는 소비로 재화 등의 가치가 현저히 감소한 경우, 시간의 경과로 재판매가 곤란한 정도로 가치가 하락된 경우, 복제가 가능한 재화 등의 포장을 훼손한 경우 등)\r\n\r\n전소법 시행령 제21조에서는 ‘소비자의 주문에 의하여 개별적으로 생산되는 재화’ 또한 통신판매업자에게 회복할 수 없는 중대한 피해가 예상되는 경우로서 사전에 당해 거래에 대하여 별도로 그 사실을 고지하고 소비자의 서면(전자문서를 포함한다)에 의한 동의를 얻은 경우에는 청약철회 요청을 거부할 수 있다고 규정하고 있습니다.\r\n\r\n단, ‘소비자의 주문에 따라 개별적으로 생산되는 재화’는 특정 개인의 요구사항에 맞게 그 구성이 개별적으로 달리하게 되는 경우를 말하며, 위 사례는 이미 사이즈의 종류가 정해져 있는 상황에서 단순히 선택을 했을 뿐이므로 청약철회 제한사유에 해당하지 않습니다.\r\n\r\n오히려 통신판매사업자가 사전에 고지를 하였다는 이유로 청약철회를 거부하는 것은 전소법 제35조(소비자등에 불리한 계약의 금지)에 따라 효력이 없으므로, 소비자는 위 사례에 대해 청약철회를 요구할 수 있고 사업자는 이에 응하여야 합니다.",
+        "source": {
+          "source_id": "198",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4695,
+        "summary": "전자상거래로 105,000원 상당의 스커트를 구매하면서 55,66 사이즈 중 55사이즈를 선택하였습니다. 이후 원단 재질 등이 생각과 달라 반품을 요청하였으나, 사업자는 위 상품은 주문 즉시 제작하는 ‘Order made' 상품이기 때문에 반품이 불가함을 고지하였다면서 거절하고 있습니다. 주문 즉시 제작하는 상품인 경우 청약철회에서 제외할 수 있는지, 반품이 정말 불가능한 것인지 궁금합니다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-38",
+        "document_id": "38",
+        "title": "전자상거래를 통해 의류 구입 후 반품했더니 7일 이내 반품 완료되지 않았다는 이유로 청약철회를 거절한 경우",
+        "content": "제목: 전자상거래를 통해 의류 구입 후 반품했더니 7일 이내 반품 완료되지 않았다는 이유로 청약철회를 거절한 경우\n\n품목: 의류/세탁\n\n질문: 2020. 2. 14. 인터넷을 통해 원피스 2점을 113,000원에 구입하고 2020. 2. 16. 제품을 수령했으나 마음에 들지 않아 2020. 2. 20. 반품 요청 후 제품을 반송했더니, 사업자가 7일 이내에 제품이 도착하지 않았다는 이유로 청약철회 불가를 주장하고 있는데 청약철회 불가능한가요?\n\n답변: - 「전자상거래 등에서의 소비자보호에 관한 법률」 제17조 제1항 제1호에 의하면, 소비자는 단순 변심에 의한 청약철회의 경우 상품 수령일로부터 7일 이내에 청약철회를 할 수 있다고 규정하고 있습니다.\r\n- 이 경우, 만약 사업자가 “반품은 상품이 7일 이내 쇼핑몰에 도착해야만 환불 가능하다”고 표시하였다고 하더라도, 이는 동법 제35조에 의해 제17조의 규정을 위반한 약정으로 소비자에게 불리한 것이므로 효력이 없습니다. \r\n- 즉, 소비자가 제품을 수령한 날로부터 7일 이내 청약철회 의사표시를 하고 반품절차를 진행했다면, 설령 반품한 상품이 7일 이내 쇼핑몰에 도착하지 못했다고 하더라도 이를 이유를 청약철회 권리를 제한할 수는 없습니다.",
+        "source": {
+          "source_id": "38",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4456,
+        "summary": "2020. 2. 14. 인터넷을 통해 원피스 2점을 113,000원에 구입하고 2020. 2. 16. 제품을 수령했으나 마음에 들지 않아 2020. 2. 20. 반품 요청 후 제품을 반송했더니, 사업자가 7일 이내에 제품이 도착하지 않았다는 이유로 청약철회 불가를 주장하고 있는데 청약철회 불가능한가요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-173",
+        "document_id": "173",
+        "title": "전자상거래로 무스탕 구입 후 청약철회 요구하니 사전안내를 이유로 거부",
+        "content": "제목: 전자상거래로 무스탕 구입 후 청약철회 요구하니 사전안내를 이유로 거부\n\n품목: 의류/세탁\n\n질문: 2020.1월 인터넷을 통해 81만여원에 무스탕을 구입한 후 변심으로 반품요청하자 주문 시 “주문 즉시 제작되는 주문제작 상품으로 환불 불가”를 안내했다며 거부하는데, 사업자 주장을 받아들여야 하는지요?\n\n답변: 전소법 시행령 제21조에는 ‘소비자의 주문에 의하여 개별적으로 생산되는 재화’ 또한 통신판매업자에게 회복할 수 없는 중대한 피해가 예상되는 경우로서 사전에 당해 거래에 대하여 별도로 그 사실을 고지하고 소비자의 서면(전자문서를 포함한다)에 의한 동의를 얻은 경우에는 청약철회 요청을 거부할 수 있다고 규정하고 있습니다. 이때 ‘소비자의 주문에 따라 개별적으로 생산되는 재화’란 특정 개인의 요구사항에 맞게 그 구성이 개별적으로 달리하게 되는 경우를 말하는데, 이 사례의 경우 기성품과 구별되는 별도의 소비자 요구사항이 반영된 거래로 보기 어렵습니다. \r\n한편, 오히려 통신판매사업자가 사전에 고지를 하였다는 이유로 청약철회를 거부하는 것은 전소법 제35조(소비자에게 불리한 계약의 금지)에 따라 효력이 없으므로, 소비자는 위 사례에 대해 청약철회를 요구할 수 있고 사업자는 이에 응하여야 합니다.",
+        "source": {
+          "source_id": "173",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4322,
+        "summary": "2020.1월 인터넷을 통해 81만여원에 무스탕을 구입한 후 변심으로 반품요청하자 주문 시 “주문 즉시 제작되는 주문제작 상품으로 환불 불가”를 안내했다며 거부하는데, 사업자 주장을 받아들여야 하는지요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "703",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+      },
+      {
+        "source_id": "704",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+      },
+      {
+        "source_id": "724",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%ED%98%95%EB%B2%95"
+      },
+      {
+        "source_id": "198",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "38",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "173",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "1174",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+      },
+      {
+        "source_id": "738",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=144864"
+      },
+      {
+        "source_id": "1173",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "구체적인 주문제작 범위 및 개별성 판단에 따라 제한 여부가 달라질 수 있으므로, 해당 상품의 제작방식과 고지·동의 여부를 정확히 확인할 필요가 있습니다.",
+      "개별적 제작 여부에 대한 분쟁이 있을 경우 법원의 판단이 필요할 수 있습니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "validation-de2f4335-9e0d-422b-96b6-960f3407f737",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "validation-de2f4335-9e0d-422b-96b6-960f3407f737",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "search_laws-a212ddab-0923-41b8-890d-e081d40b4226",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "search_laws-a212ddab-0923-41b8-890d-e081d40b4226",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "search_consultations-cc60e294-c599-4876-bc2f-de8d118f5a8c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "search_consultations-cc60e294-c599-4876-bc2f-de8d118f5a8c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "search_cases-23d3a997-89f6-4a79-ab9c-4280a58a4f2f",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "step_id": "search_cases-23d3a997-89f6-4a79-ab9c-4280a58a4f2f",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-1f807f22-b99a-4c3c-b061-009933439355",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_laws",
+    "search_consultations",
+    "search_cases"
+  ],
+  "counts": {
+    "related_laws": 3,
+    "similar_cases": 3,
+    "consultations": 3
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 22.907
+}

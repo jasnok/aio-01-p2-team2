@@ -1,0 +1,20 @@
+{
+  "id": "T092",
+  "group": "인증 실패",
+  "category": "consumer",
+  "question": "처음부터 신용카드 6개월 할부로 구입한 물건이 배송되지 않았습니다. 항변권 관련 법령을 알려주세요.",
+  "mode": "isolated",
+  "expected": "유효하지 않은 Bearer 토큰으로 실행 생성; 401 또는 403, 실행 미생성",
+  "verdict": "PASS",
+  "http_status": 401,
+  "response": {
+    "detail": {
+      "code": "AUTH_REQUIRED",
+      "message": "로그인이 필요하거나 세션이 만료되었습니다.",
+      "request_id": "req-9652ff71-eed7-4aff-a617-654ba6b34744",
+      "field_errors": []
+    }
+  },
+  "scope": "local authorization route",
+  "elapsed_seconds": 0.0
+}

@@ -1,0 +1,100 @@
+{
+  "id": "T058",
+  "group": "정보 부족",
+  "category": "labor",
+  "question": "손해를 봤는데 상담해주세요.",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "PASS",
+  "run_id": "run-2315bc85-226b-4bab-8c27-4b339152ba45",
+  "response": {
+    "request_id": "req-73c047a9-4fb4-4247-a333-0999b7ce53b6",
+    "agent_id": "labor",
+    "status": "stopped",
+    "termination_reason": "needs_clarification",
+    "question_summary": "정확한 검색을 위해 추가 정보가 필요합니다.",
+    "key_issues": [],
+    "answer": "아래 질문에 답해 주시면 관련 법령과 사례를 더 정확하게 검색할 수 있습니다.",
+    "input_assessment": {
+      "status": "needs_clarification",
+      "message": "손해 관련 상담 요청이 있으나, 구체적인 상황과 손해 내용, 관련 시점, 상대방 관계 등이 불분명합니다. 추가 정보가 필요합니다.",
+      "checks": {
+        "situation": "missing",
+        "timing": "missing",
+        "relationship": "missing",
+        "request_evidence": "missing"
+      }
+    },
+    "related_laws": [],
+    "similar_cases": [],
+    "consultations": [],
+    "sources": [],
+    "follow_up_questions": [
+      "어떤 종류의 손해를 입으셨나요? 예를 들어, 금전적 손해인지, 정신적 손해인지 알려주세요.",
+      "손해가 발생한 구체적인 상황이나 사건이 있나요?",
+      "손해와 관련된 상대방이나 회사와의 관계는 어떻게 되나요?"
+    ],
+    "cautions": [
+      "추가 정보는 검색 정확도를 높이기 위한 것이며 법률 판단이 아닙니다.",
+      "구체적인 상황 없이 일반적인 조언만 가능합니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-2315bc85-226b-4bab-8c27-4b339152ba45",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2315bc85-226b-4bab-8c27-4b339152ba45",
+        "step_id": "validation-6bd9c6ab-7d15-4395-a050-c29744447502",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2315bc85-226b-4bab-8c27-4b339152ba45",
+        "step_id": "validation-6bd9c6ab-7d15-4395-a050-c29744447502",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "input.required",
+      "data": {
+        "run_id": "run-2315bc85-226b-4bab-8c27-4b339152ba45",
+        "status": "stopped",
+        "message": "정확한 분석을 위해 추가 정보가 필요합니다."
+      }
+    }
+  ],
+  "tools": [],
+  "counts": {
+    "related_laws": 0,
+    "similar_cases": 0,
+    "consultations": 0
+  },
+  "frontend_state": "needs_clarification",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 12.172
+}

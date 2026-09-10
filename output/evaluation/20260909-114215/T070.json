@@ -1,0 +1,294 @@
+{
+  "id": "T070",
+  "group": "정보 부족",
+  "category": "labor",
+  "question": "문서를 받았는데 법적 문제가 있는지 궁금합니다.",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "FAIL",
+  "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+  "response": {
+    "request_id": "req-b9ee7f1d-de74-47df-95dd-ce847ac3ee1d",
+    "agent_id": "labor",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "문서를 받았는데 법적 문제가 있는지 궁금합니다.",
+    "key_issues": [
+      "임금 미지급 여부",
+      "도급 계약 관련 의무",
+      "연대책임 발생 가능성",
+      "퇴직금 중간정산과 지연이율 적용 문제",
+      "근로기준법 및 근로자퇴직급여 보장법 적용"
+    ],
+    "answer": "제공된 증거에 따르면 문서 내용이 임금과 관련된 사안일 경우, 특히 도급 공사 대금 미지급이나 임금 미지급 문제 등이 포함된 경우 법적 분쟁이 발생할 수 있습니다. 예를 들어, 서울북부지방법원 2026나31232 사건에서는 도급 계약에서 정한 금액을 정당한 사유 없이 지급하지 않은 피고에게 임금을 지급할 연대책임이 있다고 판결하였습니다. 또한, 임금과 관련하여 근로기준법 및 근로자퇴직급여 보장법 등이 적용될 수 있으며, 퇴직금 중간정산 시 지연이율의 적용 여부도 법원에서 다투어진 사례가 있습니다. 만약 문서가 이와 유사한 임금 지급 의무나 퇴직금과 관련되어 있다면 법적 문제가 있을 가능성이 있습니다. 정확한 법적 문제 여부는 문서의 구체적 내용과 상황에 따라 다르므로, 추가적인 법률 상담이 필요할 수 있습니다.",
+    "input_assessment": {
+      "status": "proceed_with_caution",
+      "message": "사용자가 받은 문서에 법적 문제가 있는지 궁금하므로 일반적인 법률 정보 검색은 가능하지만, 구체적이고 확정적인 법률 의견을 위해서는 더 상세한 문서 내용과 상황 설명이 필요합니다.",
+      "checks": {
+        "situation": "missing",
+        "timing": "missing",
+        "relationship": "not_required",
+        "request_evidence": "missing"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-702",
+        "document_id": "702",
+        "title": "근로자퇴직급여 보장법",
+        "content": "법령명: 근로자퇴직급여 보장법\n조문: 제41조\n조문 제목: 청문\n내용: 제41조(청문) 고용노동부장관은 제27조제1항에 따른 등록취소 또는 제36조제2항에 따른 이전명령을 하려는 경우에는 청문을 하여야 한다.",
+        "source": {
+          "source_id": "702",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EC%9E%90%ED%87%B4%EC%A7%81%EA%B8%89%EC%97%AC%20%EB%B3%B4%EC%9E%A5%EB%B2%95"
+        },
+        "score": 0.2627,
+        "summary": null,
+        "law_name": "근로자퇴직급여 보장법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "document_type": "LAW",
+          "category": "labor"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-736",
+        "document_id": "736",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2025다213167\n법원: 대법원\n선고일: 2025-09-04\n구분: 참조판례\n내용: [1] 대법원 2022. 7. 28. 선고 2019다202146 판결(공2022하, 1737) / [2] 대법원 2002. 6. 11. 선고 2001다16722 판결(공2002하, 1610), 대법원 2005. 9. 9. 선고 2004다41217 판결(공2005하, 1588) / [3] 대법원 2020. 12. 10. 선고 2017다281817 판결 / [5] 대법원 2014. 10. 27. 선고 2012다70388 판결(공2014하, 2229)",
+        "source": {
+          "source_id": "736",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=615691"
+        },
+        "score": 0.2755,
+        "summary": "[1] 민사재판에서 관련 형사사건의 판결에서 인정된 사실을 배척할 수 있는지 여부(적극)\n[2] 평균임금 산정의 기초가 되는 임금 총액에 포함되는 금품의 범위 및 퇴직금 산정의 기초가 되는 평균임금에 산입될 수 있는지는 퇴직 당시를 기준으로 판단하여야 하는지 여부(원칙적 적극)\n[3] 근로자의 퇴직을 즈음한 일정 기간 특수하고 우연한 사정으로 인한 임금액의 변동으로 근로기준법 등이 정한 원칙에 따라 산정한 평균임금이 통상의 경우보다 현저하게 적거나 많은 경우, 통상적인 생활임금을 반영할 수 있는 합리적이고 타당한 다른 방법으로 평균임금을 따로 산정하여야 하는지 여부(적극)\n[4] 甲은 乙이 운영하는 미용실에서 근무하면서 기본급이나 고정급 없이 미용시술에 관한 선불권 등 매출에 따른 수수료만을 지급받았고, 甲이 퇴직한 후 乙은 甲이 지급받은 수수료에서 ‘선불권 매출 중 甲이 시술하지 않아 乙에게 반환하여야 하는 금원’을 공제한 차액을 기준으로 산정한 평균임금을 기초로 산출된 퇴직금을 지급하지 아니하였다는 범죄사실로 유죄판결을 선고받았는데, 甲이 乙을 상대로 퇴직 전 3개월간 乙로부터 지급받은 수수료 총액을 기준으로 계산된 평균임금으로 산정한 퇴직금의 지급을 구한 사안에서, 위 형사사건의 판결에서 甲이 퇴직 전 3개월 동안 지급받은 수수료 중 미시술분 수수료를 공제한 나머지 금액만을 기준으로 평균임금을 산정한 것은 부당한데도, 위 형사사건의 판결에서 인정한 甲의 퇴직금 액수를 그대로 인용한 원심판단에 법리오해 등의 잘못이 있다고 한 사례\n[5] 퇴직한 근로자가 최저임금에 미달하는 임금을 받아 온 경우, 퇴직금을 산정하는 방법",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025다213167",
+        "case_name": "임금",
+        "court": "대법원",
+        "decided_at": "2025-09-04",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-748",
+        "document_id": "748",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2025나31232\n법원: 서울북부지방법원\n선고일: 2026-07-24\n구분: 판결이유\n내용: 하 여 원 고 들의 임금 을 지 급 할 의무 가 있 다고 주장 하고 있는바 , 이 법 원에 현 전한 사 실 , 을 제 13 호 증 의 기 재 및 변 론 전체의 취 지 에 의 하 면 , I 이 피 고 를 상대 로 하 도 급 공 사 대 금 의 지 급 을 구 하 는 소를 제 기하 였 고 , 피 고가 위 소 송 에서 I 의 공 사 미 완 료 , 노 무비 이 중 청 구 등 을 주장 하 였 으나 피 고 의 주장 이 모 두 배 척 되 고 , 피 고가 I 에 미 지 급 공 사 대 금 140,000,000 원을 지 급 하 라는 판 결 이 2025. 7. 24. 선 고 된 점 (수원 지 방 법 원 2024 가 단 608201호 , 항 소 심 계 속 중 ) 등 을 종 합 하 면 , 피 고가 I 에 정 당 한 사 유 없 이 도 급 계약 에서 정한 도 급 금 액 지 급 일 에 도 급 금 액 을 지 급 하지 아니 하 였 다고 볼 수 있으 므 로 , 피 고 에게 원 고 들의 임금 을 지 급 할 연대 책 임 이 있 다고 봄 이 타 당 하다 . 따 라서 피 고 의 주장은 받 아들일 수 없 다 . 3. 결 론 그 렇 다 면 원 고 들의 청 구는 이 유 있어 이 를 인 용 하 여 야 한 다 . 제 1 심판 결 은 이 와 결 론 을 같 이하 여 정 당 하 므 로 , 피 고 의 항 소를 기 각 하기로 하 여 주문과 같 이 판 결 한 다 . 판 사 이 문세 ( 재판 장 ) 정 기하 우 승 민 미주 [1] [1] 근 로기 준법 제 44 조 제 1 항은 ' 사 업 이 여러 차 례 의 도 급 에 따 라 행 하 여 지 는 경우에 하 수 급 인 의 직 상 수 급 인 의 귀 책 사 유 로 근 로 자에게 임금 을 지 급 하지 못 한 경우에는 그 직 상 수 급 인 은 그 하 수 급 인 과 연대 하 여 책 임 을 진 다 ' 고 규 정 하고 있 고 , 같 은 조 제 2 항 및 근 로기 준법 시 행 령 제 24 조 제 1 호는 직 상 수 급 인 의 귀 책 사 유 중의 하 나 로 ' 정 당 한 사 유 없 이 도 급 계약 에서 정한 도 급 금 액 지 급 일에 도 급 금 액 을 지 급 하지 아니한 경우 ' 를 규 정 하고 있 다 .",
+        "source": {
+          "source_id": "748",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EB%B6%81%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EB%82%9831232"
+        },
+        "score": 0.2611,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025나31232",
+        "case_name": "임금",
+        "court": "서울북부지방법원",
+        "decided_at": "2026-07-24",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-737",
+        "document_id": "737",
+        "title": "임금[재직 중 중간정산 퇴직금에 구 근로기준법 제37조 제1항에 따른 연 20%의 지연이율을 적용할 수 있는지가 문제 된 사건]",
+        "content": "사건명: 임금[재직 중 중간정산 퇴직금에 구 근로기준법 제37조 제1항에 따른 연 20%의 지연이율을 적용할 수 있는지가 문제 된 사건]\n사건번호: 2025다214123\n법원: 대법원\n선고일: 2026-03-12\n구분: 참조조문\n내용: 구 근로기준법(2024. 10. 22. 법률 제20520호로 개정되기 전의 것) 제37조 제1항, 구 근로기준법 시행령(2025. 4. 8. 대통령령 제35436호로 개정되기 전의 것) 제17조, 근로기준법 제34조, 제36조, 근로자퇴직급여 보장법 제2조 제5호, 제4조 제1항, 제8조 제2항, 제9조 제1항, 제17조 제2항, 제3항",
+        "source": {
+          "source_id": "737",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=618511"
+        },
+        "score": 0.2554,
+        "summary": "구 근로기준법(2024. 10. 22. 법률 제20520호로 개정되기 전의 것, 이하 같다) 제37조 제1항, 구 근로기준법 시행령(2025. 4. 8. 대통령령 제35436호로 개정되기 전의 것, 이하 같다) 제17조에 따르면, 사용자는 \"근로기준법 제36조에 따라 지급하여야 하는 임금 및 근로자퇴직급여 보장법(이하 ‘퇴직급여법’이라 한다) 제2조 제5호에 따른 급여(일시금만 해당된다)의 전부 또는 일부\"를 그 지급 사유가 발생한 날부터 14일 이내에 지급하지 아니한 경우, 그다음 날부터 지급하는 날까지의 지연일수에 대하여 연 20%의 비율에 의한 지연이자를 지급하여야 함이 원칙이다.\n위 각 규정은 근로기준법 제36조에 따라 근로자가 사망 또는 퇴직한 경우 지급되어야 하는 임금 및 퇴직급여법 제2조 제5호에 따른 급여 중 퇴직급여제도에 의하여 지급되는 일시금에 적용된다. 그런데 퇴직급여제도는 기본적으로 근로기준법 제36조와 같이 퇴직하는 근로자에게 급여를 지급하기 위한 제도인 점(근로기준법 제34조, 퇴직급여법 제4조 제1항)을 감안하면, 퇴직급여법 제8조 제2항에 따라 근로자의 퇴직 전에 지급되는 중간정산 퇴직금이 구 근로기준법 제37조 제1항의 적용 대상인 퇴직급여제도에 의하여 지급되는 일시금에 해당한다고 단정하기 어렵다.\n또한 위 각 규정은 근로자의 퇴직 등으로 근로관계가 종료될 경우 사용자가 지급 사유가 발생한 때로부터 14일 이내에 임금 및 퇴직금 등 퇴직급여제도에 따른 일시금을 지급하여야 할 의무가 있음을 전제로(근로기준법 제36조, 퇴직급여법 제9조 제1항, 제17조 제2항, 제3항), 그 청산의무를 불이행한 사용자에 대하여 경제적 제재를 가함으로써 해당 의무의 이행을 유도함에 취지가 있다. 그런데 퇴직급여법은 중간정산 퇴직금에 대하여는 퇴직금 등과 달리 14일 이내의 청산의무에 관한 규정을 두지 않았고, 구 근로기준법 제37조 제1항이 중간정산 퇴직금에 대하여 그와 같은 청산의무를 새로이 창설하는 취지의 규정이라고 볼 수도 없다. 중간정산 퇴직금은 주택구입 등 일정한 사유가 있는 경우에 한하여 근로자와 사용자의 중간정산 합의에 따라 지급되는데, 그 지연 지급을 사유로 경제적 제재를 가한다면, 사용자가 근로자의 중간정산 요구를 승낙할 유인을 약화시켜 퇴직금 중간정산제도의 실효성을 저해할 우려도 있다.\n이러한 사정들을 종합적으로 고려하면, 근로자의 재직 중 지급되는 중간정산 퇴직금에 대한 지연손해금을 계산할 때에는 구 근로기준법 제37조 제1항, 구 근로기준법 시행령 제17조는 적용되지 아니한다고 보아야 한다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025다214123",
+        "case_name": "임금[재직 중 중간정산 퇴직금에 구 근로기준법 제37조 제1항에 따른 연 20%의 지연이율을 적용할 수 있는지가 문제 된 사건]",
+        "court": "대법원",
+        "decided_at": "2026-03-12",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [],
+    "sources": [
+      {
+        "source_id": "736",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=615691"
+      },
+      {
+        "source_id": "748",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EB%B6%81%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EB%82%9831232"
+      },
+      {
+        "source_id": "737",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=618511"
+      },
+      {
+        "source_id": "702",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EC%9E%90%ED%87%B4%EC%A7%81%EA%B8%89%EC%97%AC%20%EB%B3%B4%EC%9E%A5%EB%B2%95"
+      }
+    ],
+    "follow_up_questions": [
+      "문서에 어떤 내용이 포함되어 있나요?",
+      "문서와 관련된 구체적인 상황이나 배경이 있나요?",
+      "문서를 언제 받으셨나요?"
+    ],
+    "cautions": [
+      "일반적인 법률 정보 제공에 한정되며, 구체적인 법적 판단을 제공하지 않습니다.",
+      "문서 구체 내용을 알 수 없어 정확한 법적 판단이 어렵습니다.",
+      "임금 관련 분쟁은 상황에 따라 법원 판단이 다를 수 있으므로 추가 확인이 필요합니다.",
+      "법적 조언을 위해서는 전문 법률 상담이 권장됩니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "step_id": "validation-5cc74da9-d4c2-4089-9e56-6c8c658e8d7d",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "step_id": "validation-5cc74da9-d4c2-4089-9e56-6c8c658e8d7d",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "step_id": "search_cases-ee5d4aed-c206-479b-8c6e-fcc600bdc33a",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "step_id": "search_cases-ee5d4aed-c206-479b-8c6e-fcc600bdc33a",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "step_id": "search_legal_documents-93819f98-2cde-41b6-b712-6d6e5dd4f799",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "step_id": "search_legal_documents-93819f98-2cde-41b6-b712-6d6e5dd4f799",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 1
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-618d7377-96da-4a56-b7a5-8024ce32423d",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_cases",
+    "search_legal_documents"
+  ],
+  "counts": {
+    "related_laws": 1,
+    "similar_cases": 3,
+    "consultations": 0
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 22.078
+}

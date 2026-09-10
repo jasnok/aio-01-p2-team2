@@ -1,0 +1,352 @@
+{
+  "id": "T028",
+  "group": "정상 요청",
+  "category": "labor",
+  "question": "수습 기간이라는 이유로 임금을 지급하지 않습니다. 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+  "response": {
+    "request_id": "req-dc21f9d4-c91f-4902-a0a5-48db6163de93",
+    "agent_id": "labor",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "수습 기간 동안 임금을 지급하지 않는 행위에 대해 관련 법률과 판례에 근거한 임금 지급 의무를 알고 싶음",
+    "key_issues": [
+      "수습 기간이라도 근로 제공시 임금 지급 의무 존재",
+      "임금은 근로기준법에 따라 근로자에게 직접 전액 지급되어야 함",
+      "임금 미지급 시 지연손해금 청구 가능",
+      "수습 기간을 이유로 임금을 지급하지 않는 것은 법적으로 인정되지 않음"
+    ],
+    "answer": "제공된 판례(예: 사건번호 2024나118416)에서는 수습 기간이라 하더라도 근로를 제공한 경우 임금은 반드시 지급되어야 하며, 임금을 지급하지 않을 경우 소송을 통해 미지급 임금 및 이에 대한 지연손해금을 청구할 수 있음을 확인할 수 있습니다. 특히, 임금은 근로기준법에 따라 근로자에게 직접 전액 지급되어야 하므로, 수습 기간이라는 이유만으로 임금을 지급하지 않는 것은 법적으로 인정되지 않습니다. 따라서 수습 기간 근무에 대한 임금 미지급은 부당하며, 이는 소송을 통해 해결할 수 있습니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "수습 기간 중 임금 지급 의무에 관한 관련 법률 정보를 제공할 수 있습니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "met",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-701",
+        "document_id": "701",
+        "title": "근로기준법",
+        "content": "법령명: 근로기준법\n조문: 제49조\n조문 제목: 임금의 시효\n내용: 제49조(임금의 시효) 이 법에 따른 임금채권은 3년간 행사하지 아니하면 시효로 소멸한다.",
+        "source": {
+          "source_id": "701",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EA%B8%B0%EC%A4%80%EB%B2%95"
+        },
+        "score": 0.3441,
+        "summary": null,
+        "law_name": "근로기준법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "document_type": "LAW",
+          "category": "labor"
+        }
+      },
+      {
+        "evidence_id": "law-702",
+        "document_id": "702",
+        "title": "근로자퇴직급여 보장법",
+        "content": "법령명: 근로자퇴직급여 보장법\n조문: 제37조\n조문 제목: 금융거래정보의 제공 요청 등\n내용: 제37조(금융거래정보의 제공 요청 등) ① 고용노동부장관은 사용자가 제16조에 따른 급여 지급능력을 확보하였는지 등 퇴직연금제도 운영을 감독하기 위하여 필요한 경우 「금융실명거래 및 비밀보장에 관한 법률」 제4조 및 「신용정보의 이용 및 보호에 관한 법률」 제33조에도 불구하고 자산관리업무 및 운용관리업무 계약을 체결한 사업에 관한 다음 각 호의 금융거래에 관한 정보 또는 자료(이하 \"금융거래정보\"라 한다)의 제공을 퇴직연금사업자에게 요청할 수 있다. 1. 가입자 현황 2. 급여 지급 현황 3. 부담금 납입 현황 4. 적립금 운용현황에 관한 정보 ② 고용노동부장관이 제1항에 따라 금융거래정보를 요청할 때에는 다음 각 호의 사항을 적은 문서로 요청하여야 한다. 1. 요청대상 거래기간 2. 요청의 법적 근거 3. 사용목적 4. 요청하는 금융거래정보의 내용 ③ 제1항에 따른 금융거래정보의 요청은 퇴직연금제도 운영의 건전성 감독을 위하여 필요한 최소한도에 그쳐야 한다. ④ 제2항에 따라 퇴직연금사업자가 고용노동부장관에게 금융거래정보를 제공하는 경우에는 그 퇴직연금사업자는 금융거래정보를 제공한 날부터 10일 이내에 제공한 금융거래정보의 주요 내용, 사용목적, 제공받은 자 및 제공일자 등을 해당 사용자 또는 가입자에게 서면으로 알려야 한다. 이 경우 통지에 드는 비용에 관하여는 「금융실명거래 및 비밀보장에 관한 법률」 제4조의2제4항을 준용한다. ⑤ 고용노동부장관은 제1항에 따라 퇴직연금사업자에게 금융거래정보를 요구하는 경우에는 그 사실을 기록하여야 하며, 금융거래정보를 요구한 날부터 5년간 그 기록을 보관하여야 한다. ⑥ 제1항에 따라 금융거래정보를 제공받아 알게 된 자는 그 알게 된 금융거래정보를 타인에게 제공 또는 누설하거나 그 목적 외의 용도로 이용하여서는 아니 된다.",
+        "source": {
+          "source_id": "702",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EC%9E%90%ED%87%B4%EC%A7%81%EA%B8%89%EC%97%AC%20%EB%B3%B4%EC%9E%A5%EB%B2%95"
+        },
+        "score": 0.3427,
+        "summary": null,
+        "law_name": "근로자퇴직급여 보장법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "document_type": "LAW",
+          "category": "labor"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-752",
+        "document_id": "752",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2024나118416\n법원: 창원지방법원\n선고일: 2026-08-21\n구분: 판결이유\n내용: 이 유\n1. 인 정 사 실\n가 . 원 고 는 2024. 1. 15. 부터 피 고 에게 근 로 를 제공 하다가 2024. 5. 31. 퇴 사하 였 다 .\n나 . 피 고 는 원 고 에게 2024. 4. 분 임금 2,800,000 원 및 2024. 5. 분 임금 2,800,000 원 합 계 5,600,000 원을 지 급\n하지 않 았 다 .\n【 인 정 근 거 】 다 툼 없 는 사 실 , 갑 제 1 내 지 7 호 증 의 각 기 재 , 변 론 전체의 취 지\n2. 판단\n피 고가 원 고 에게 2024. 4. 분 및 2024. 5. 분 임금 을 지 급 하지 아니한 사 실 은 앞 서 살 펴 본 바 와 같 으 므 로 , 피 고\n는 원 고 에게 5,600,000 원 (= 2,800,000 원 × 2 개 월 ) 및 이 에 대 하 여 위 미 지 급 임금 의 최 종 지 급 기 일 이 후 로\n서 원 고가 구 하 는 2024. 6. 15. 부터 다 갚 는 날 까 지 근 로기 준법에서 정한 연 20% 의 비 율 로 계산 한 지 연 손 해\n금 을 지 급 할 의무 가 있 다 .\n이 에 대해 피 고 는 , 원 고가 피 고 의 명 예 를 훼 손 함 에 따 라 피 고가 고 객 들에게 환불 을 해주는 등 의 손 해 가 발생\n하 였 으 므 로 그 와 같 은 불법 행 위를 원 인 으 로 하 는 손 해 배 상 채 권 을 자동 채 권 으 로 하 여 원 고 의 임금 채 권 과 상\n계 를 한 다 는 취 지로 항변 하 나 , 근 로기 준법 제 43 조 제 1 항 본 문에 의 하 면 임금 은 통 화 로 직 접 근 로 자에게 그 \n전 액 을 지 급 하 여 야 하 는바 사 용자는 근 로 자에 대 하 여 가지 는 채 권 으 로 써 근 로 자의 임금 채 권 과 상 계 를 하지 \n못 하 는 것 이 원 칙 이 므 로 피 고 의 항변 은 이 유 없 다 .\n3. 결 론\n그 렇 다 면 원 고 의 이 사 건 청 구는 이 유 있어 인 용 하 여 야 한 다 . 제 1 심판 결 은 이 와 결 론 을 같 이하 여 정 당 하 므 로 \n피 고 의 항 소는 이 유 없 어 기 각 하기로 하 여 주문과 같 이 판 결 한 다 .\n판 사 강 병 훈 ( 재판 장 ) 김 수 현 제아 윤 강 병 훈",
+        "source": {
+          "source_id": "752",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%B0%BD%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2024%EB%82%98118416"
+        },
+        "score": 0.3407,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2024나118416",
+        "case_name": "임금",
+        "court": "창원지방법원",
+        "decided_at": "2026-08-21",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-737",
+        "document_id": "737",
+        "title": "임금[재직 중 중간정산 퇴직금에 구 근로기준법 제37조 제1항에 따른 연 20%의 지연이율을 적용할 수 있는지가 문제 된 사건]",
+        "content": "사건명: 임금[재직 중 중간정산 퇴직금에 구 근로기준법 제37조 제1항에 따른 연 20%의 지연이율을 적용할 수 있는지가 문제 된 사건]\n사건번호: 2025다214123\n법원: 대법원\n선고일: 2026-03-12\n구분: 참조조문\n내용: 구 근로기준법(2024. 10. 22. 법률 제20520호로 개정되기 전의 것) 제37조 제1항, 구 근로기준법 시행령(2025. 4. 8. 대통령령 제35436호로 개정되기 전의 것) 제17조, 근로기준법 제34조, 제36조, 근로자퇴직급여 보장법 제2조 제5호, 제4조 제1항, 제8조 제2항, 제9조 제1항, 제17조 제2항, 제3항",
+        "source": {
+          "source_id": "737",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=618511"
+        },
+        "score": 0.3381,
+        "summary": "구 근로기준법(2024. 10. 22. 법률 제20520호로 개정되기 전의 것, 이하 같다) 제37조 제1항, 구 근로기준법 시행령(2025. 4. 8. 대통령령 제35436호로 개정되기 전의 것, 이하 같다) 제17조에 따르면, 사용자는 \"근로기준법 제36조에 따라 지급하여야 하는 임금 및 근로자퇴직급여 보장법(이하 ‘퇴직급여법’이라 한다) 제2조 제5호에 따른 급여(일시금만 해당된다)의 전부 또는 일부\"를 그 지급 사유가 발생한 날부터 14일 이내에 지급하지 아니한 경우, 그다음 날부터 지급하는 날까지의 지연일수에 대하여 연 20%의 비율에 의한 지연이자를 지급하여야 함이 원칙이다.\n위 각 규정은 근로기준법 제36조에 따라 근로자가 사망 또는 퇴직한 경우 지급되어야 하는 임금 및 퇴직급여법 제2조 제5호에 따른 급여 중 퇴직급여제도에 의하여 지급되는 일시금에 적용된다. 그런데 퇴직급여제도는 기본적으로 근로기준법 제36조와 같이 퇴직하는 근로자에게 급여를 지급하기 위한 제도인 점(근로기준법 제34조, 퇴직급여법 제4조 제1항)을 감안하면, 퇴직급여법 제8조 제2항에 따라 근로자의 퇴직 전에 지급되는 중간정산 퇴직금이 구 근로기준법 제37조 제1항의 적용 대상인 퇴직급여제도에 의하여 지급되는 일시금에 해당한다고 단정하기 어렵다.\n또한 위 각 규정은 근로자의 퇴직 등으로 근로관계가 종료될 경우 사용자가 지급 사유가 발생한 때로부터 14일 이내에 임금 및 퇴직금 등 퇴직급여제도에 따른 일시금을 지급하여야 할 의무가 있음을 전제로(근로기준법 제36조, 퇴직급여법 제9조 제1항, 제17조 제2항, 제3항), 그 청산의무를 불이행한 사용자에 대하여 경제적 제재를 가함으로써 해당 의무의 이행을 유도함에 취지가 있다. 그런데 퇴직급여법은 중간정산 퇴직금에 대하여는 퇴직금 등과 달리 14일 이내의 청산의무에 관한 규정을 두지 않았고, 구 근로기준법 제37조 제1항이 중간정산 퇴직금에 대하여 그와 같은 청산의무를 새로이 창설하는 취지의 규정이라고 볼 수도 없다. 중간정산 퇴직금은 주택구입 등 일정한 사유가 있는 경우에 한하여 근로자와 사용자의 중간정산 합의에 따라 지급되는데, 그 지연 지급을 사유로 경제적 제재를 가한다면, 사용자가 근로자의 중간정산 요구를 승낙할 유인을 약화시켜 퇴직금 중간정산제도의 실효성을 저해할 우려도 있다.\n이러한 사정들을 종합적으로 고려하면, 근로자의 재직 중 지급되는 중간정산 퇴직금에 대한 지연손해금을 계산할 때에는 구 근로기준법 제37조 제1항, 구 근로기준법 시행령 제17조는 적용되지 아니한다고 보아야 한다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025다214123",
+        "case_name": "임금[재직 중 중간정산 퇴직금에 구 근로기준법 제37조 제1항에 따른 연 20%의 지연이율을 적용할 수 있는지가 문제 된 사건]",
+        "court": "대법원",
+        "decided_at": "2026-03-12",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-750",
+        "document_id": "750",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2024가단89347\n법원: 수원지방법원 안산지원\n선고일: 2026-08-14\n구분: 주문\n내용: 1. 원 고 들의 주위 적 피 고 주 식 회 사 N 에 대한 청 구를 모 두 기 각 한 다 .\n2. 예 비 적 피 고 주 식 회 사 O 는 원 고 A, B, C, D, E, F, G, H, I, J 에게 , 예 비 적 피 고 P 주 식 회 사 는 원 고 K, L, M\n \n에게 , 별 지 퇴 직금 산 정 표 의 ' 법 정 퇴 직금 ' 란 기 재 각 돈 및 위 각 돈 에 대 하 여 같 은 표 의 ' 지 연 손 해 금 기 산 일 ' 란 \n기 재 각 해 당 일부터 다 갚 는 날 까 지 연 20% 의 비 율 로 계산 한 돈 을 각 지 급 하 라 .\n3. 소 송 비용 중 원 고 들과 주위 적 피 고 주 식 회 사 N 사이 에 생 긴 부 분 은 원 고 들 이 부 담 하고 , 원 고 들과 예 비 적 \n피 고 주 식 회 사 O, P 주 식 회 사 사이 에 생 긴 부 분 은 위 피 고 들 이 부 담 한 다 .\n4. 제 2 항 은 가 집행할 수 있 다 .",
+        "source": {
+          "source_id": "750",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EC%95%88%EC%82%B0%EC%A7%80%EC%9B%90/2024%EA%B0%80%EB%8B%A889347"
+        },
+        "score": 0.3353,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2024가단89347",
+        "case_name": "임금",
+        "court": "수원지방법원 안산지원",
+        "decided_at": "2026-08-14",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-736",
+        "document_id": "736",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2025다213167\n법원: 대법원\n선고일: 2025-09-04\n구분: 참조조문\n내용: [1] 민사소송법 제202조 / [2] 근로기준법 제2조 제1항 제5호, 제6호, 근로자퇴직급여 보장법 제8조 제1항 / [3] 근로기준법 제2조 제1항 제5호, 제6호, 근로자퇴직급여 보장법 제8조 제1항 / [4] 근로기준법 제2조 제1항 제5호, 제6호, 근로자퇴직급여 보장법 제8조 제1항, 민사소송법 제202조 / [5] 최저임금법 제6조 제1항, 제3항, 근로자퇴직급여 보장법 제8조 제1항",
+        "source": {
+          "source_id": "736",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=615691"
+        },
+        "score": 0.3545,
+        "summary": "[1] 민사재판에서 관련 형사사건의 판결에서 인정된 사실을 배척할 수 있는지 여부(적극)\n[2] 평균임금 산정의 기초가 되는 임금 총액에 포함되는 금품의 범위 및 퇴직금 산정의 기초가 되는 평균임금에 산입될 수 있는지는 퇴직 당시를 기준으로 판단하여야 하는지 여부(원칙적 적극)\n[3] 근로자의 퇴직을 즈음한 일정 기간 특수하고 우연한 사정으로 인한 임금액의 변동으로 근로기준법 등이 정한 원칙에 따라 산정한 평균임금이 통상의 경우보다 현저하게 적거나 많은 경우, 통상적인 생활임금을 반영할 수 있는 합리적이고 타당한 다른 방법으로 평균임금을 따로 산정하여야 하는지 여부(적극)\n[4] 甲은 乙이 운영하는 미용실에서 근무하면서 기본급이나 고정급 없이 미용시술에 관한 선불권 등 매출에 따른 수수료만을 지급받았고, 甲이 퇴직한 후 乙은 甲이 지급받은 수수료에서 ‘선불권 매출 중 甲이 시술하지 않아 乙에게 반환하여야 하는 금원’을 공제한 차액을 기준으로 산정한 평균임금을 기초로 산출된 퇴직금을 지급하지 아니하였다는 범죄사실로 유죄판결을 선고받았는데, 甲이 乙을 상대로 퇴직 전 3개월간 乙로부터 지급받은 수수료 총액을 기준으로 계산된 평균임금으로 산정한 퇴직금의 지급을 구한 사안에서, 위 형사사건의 판결에서 甲이 퇴직 전 3개월 동안 지급받은 수수료 중 미시술분 수수료를 공제한 나머지 금액만을 기준으로 평균임금을 산정한 것은 부당한데도, 위 형사사건의 판결에서 인정한 甲의 퇴직금 액수를 그대로 인용한 원심판단에 법리오해 등의 잘못이 있다고 한 사례\n[5] 퇴직한 근로자가 최저임금에 미달하는 임금을 받아 온 경우, 퇴직금을 산정하는 방법",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025다213167",
+        "case_name": "임금",
+        "court": "대법원",
+        "decided_at": "2025-09-04",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "document_type": "CASE",
+          "category": "labor"
+        }
+      }
+    ],
+    "consultations": [],
+    "sources": [
+      {
+        "source_id": "752",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%B0%BD%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2024%EB%82%98118416"
+      },
+      {
+        "source_id": "737",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=618511"
+      },
+      {
+        "source_id": "750",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EC%95%88%EC%82%B0%EC%A7%80%EC%9B%90/2024%EA%B0%80%EB%8B%A889347"
+      },
+      {
+        "source_id": "736",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=615691"
+      },
+      {
+        "source_id": "701",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EA%B8%B0%EC%A4%80%EB%B2%95"
+      },
+      {
+        "source_id": "702",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EC%9E%90%ED%87%B4%EC%A7%81%EA%B8%89%EC%97%AC%20%EB%B3%B4%EC%9E%A5%EB%B2%95"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "본 답변은 일반적인 법률 정보 제공 목적으로, 구체적 사건에 대한 법적 조언은 아닙니다.",
+      "법령 조문 자체는 제공되지 않아 정확한 근거 조문 확인 필요",
+      "수습 기간 임금 관련 구체적인 법률 조항은 확인되지 않음"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "step_id": "validation-03f3b36e-c021-4b08-b04f-1f511d5542ad",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "step_id": "validation-03f3b36e-c021-4b08-b04f-1f511d5542ad",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "step_id": "search_cases-2c9dab2e-2af3-4084-9e1f-c920d8c30c0a",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "step_id": "search_cases-2c9dab2e-2af3-4084-9e1f-c920d8c30c0a",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "step_id": "search_legal_documents-4f42c220-1693-4697-9825-19b8034ca9ca",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "step_id": "search_legal_documents-4f42c220-1693-4697-9825-19b8034ca9ca",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-44cdbd4a-5e46-4762-8bbb-17724c8e6da3",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_cases",
+    "search_legal_documents"
+  ],
+  "counts": {
+    "related_laws": 2,
+    "similar_cases": 4,
+    "consultations": 0
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 12.187
+}

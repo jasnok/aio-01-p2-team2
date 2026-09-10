@@ -1,0 +1,100 @@
+{
+  "id": "T059",
+  "group": "정보 부족",
+  "category": "consumer",
+  "question": "상대방이 거절했습니다. 다음에는 어떻게 하나요?",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "PASS",
+  "run_id": "run-6eed91bf-b07e-4e39-a298-d37be4e8cc62",
+  "response": {
+    "request_id": "req-eb11bd91-80d1-4117-af2a-b4206c30a1b6",
+    "agent_id": "consumer",
+    "status": "stopped",
+    "termination_reason": "needs_clarification",
+    "question_summary": "정확한 검색을 위해 추가 정보가 필요합니다.",
+    "key_issues": [],
+    "answer": "아래 질문에 답해 주시면 관련 법령과 사례를 더 정확하게 검색할 수 있습니다.",
+    "input_assessment": {
+      "status": "needs_clarification",
+      "message": "질문의 상황과 요청 내용이 명확하지 않아 추가 설명이 필요합니다.",
+      "checks": {
+        "situation": "missing",
+        "timing": "missing",
+        "relationship": "missing",
+        "request_evidence": "missing"
+      }
+    },
+    "related_laws": [],
+    "similar_cases": [],
+    "consultations": [],
+    "sources": [],
+    "follow_up_questions": [
+      "거절한 상황에 대해 구체적으로 설명해 주시겠습니까? 예: 계약, 환불, 서비스 요청 등",
+      "상대방과의 관계는 무엇인가요? 예: 판매자, 서비스 제공자, 개인 등",
+      "거절된 후에 원하는 결과나 원하는 조치는 무엇인가요?"
+    ],
+    "cautions": [
+      "추가 정보는 검색 정확도를 높이기 위한 것이며 법률 판단이 아닙니다.",
+      "상황과 요청이 명확하지 않아 일반적인 법률 검색에 한정될 수 있습니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-6eed91bf-b07e-4e39-a298-d37be4e8cc62",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-6eed91bf-b07e-4e39-a298-d37be4e8cc62",
+        "step_id": "validation-84b38e94-56c8-48ea-b224-e812351acc98",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-6eed91bf-b07e-4e39-a298-d37be4e8cc62",
+        "step_id": "validation-84b38e94-56c8-48ea-b224-e812351acc98",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "input.required",
+      "data": {
+        "run_id": "run-6eed91bf-b07e-4e39-a298-d37be4e8cc62",
+        "status": "stopped",
+        "message": "정확한 분석을 위해 추가 정보가 필요합니다."
+      }
+    }
+  ],
+  "tools": [],
+  "counts": {
+    "related_laws": 0,
+    "similar_cases": 0,
+    "consultations": 0
+  },
+  "frontend_state": "needs_clarification",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 12.218
+}

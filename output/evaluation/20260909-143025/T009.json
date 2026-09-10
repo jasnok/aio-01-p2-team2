@@ -1,0 +1,254 @@
+{
+  "id": "T009",
+  "group": "정상 요청",
+  "category": "housing",
+  "question": "계약 종료일에 집을 비웠는데 보증금이 반환되지 않았습니다. 반환 지연 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+  "response": {
+    "request_id": "req-852239c9-0910-4f73-a853-07fb7896ab71",
+    "agent_id": "housing",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "계약 종료일에 집을 비웠음에도 임대인이 임대차보증금을 반환하지 않아 반환 지연 시 법률적 상황이 궁금함",
+    "key_issues": [
+      "임대차계약 종료 및 임대차목적물 반환 시점",
+      "임대차보증금 반환 의무 및 시기",
+      "임대인이 보증금에서 공제할 수 있는 금액 범위",
+      "임대인의 반환 지체에 대한 법적 상태"
+    ],
+    "answer": "임대차계약이 종료되어 임차인이 집(임대차목적물)을 반환하였음에도 임대인이 보증금을 반환하지 않는 경우, 임대인은 임대차보증금을 지체 없이 반환할 의무가 있습니다. 다만, 임대차목적물을 아직 반환하지 않았을 경우에는 보증금 반환 지체에 대한 책임을 물을 수 없습니다(사건 2026가단52364). 또한, 임대인은 임차인의 모든 채무를 확인하고 연체임대료 등 정당한 금액을 공제한 뒤 남은 금액을 반환하여야 하며, 임대인이 반환 의무를 지체하는 경우 이행지체 상태인 것으로 봅니다(사건 2002다52657, 2005다4529). 따라서 임대차계약 종료와 동시에 임차인이 집을 비웠다면 임대인은 지체 없이 보증금을 반환해야 하며, 반환 지연 시 임차인은 법적으로 대응할 수 있습니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "계약 종료 후 보증금 반환 지연에 관한 법률 정보를 검색할 수 있습니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "met",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1167",
+        "document_id": "1167",
+        "title": "보증금반환",
+        "content": "사건명: 보증금반환\n사건번호: 2026가단52364\n법원: 의정부지방법원 고양지원\n선고일: 2026-08-20\n구분: 판결이유\n내용: 1. 청 구의 표 시\n별 지 청 구원 인 기 재와 같 다 ( 지 연 손 해 금 부 분 기 각 : 원 고 의 주소 지가 이 사 건 임 대 차목적물 소 재 지 와 같 아 \n아 직 임 대 차목적물 을 반 환 하지 아니한 것 으 로 판단되 는바 , 이 러 할 경우 그 임차목적물 반 환 과 동 시이 행 관 계\n \n에 있는 임차 보 증 금반 환 의무에 관 하 여는 그 지 체 책 임 을 물 을 수 없 음 ).\n2. 적 용 법 조\n무 변 론 판 결 (민 사 소 송법 제 208 조 제 3 항 제 1 호, 제 257 조 제 1 항)\n판 사 김 양 섭\n별 지\n별 지",
+        "source": {
+          "source_id": "1167",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%9D%98%EC%A0%95%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EA%B3%A0%EC%96%91%EC%A7%80%EC%9B%90/2026%EA%B0%80%EB%8B%A852364"
+        },
+        "score": 0.3459,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2026가단52364",
+        "case_name": "보증금반환",
+        "court": "의정부지방법원 고양지원",
+        "decided_at": "2026-08-20",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "housing",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-727",
+        "document_id": "727",
+        "title": "구상금",
+        "content": "사건명: 구상금\n사건번호: 2005다4529\n법원: 대법원\n선고일: 2005-06-09\n구분: 판결요지\n내용: 주택임대차보호법 제3조의3 규정에 의한 임차권등기는 이미 임대차계약이 종료하였음에도 임대인이 그 보증금을 반환하지 않는 상태에서 경료되게 되므로, 이미 사실상 이행지체에 빠진 임대인의 임대차보증금의 반환의무와 그에 대응하는 임차인의 권리를 보전하기 위하여 새로이 경료하는 임차권등기에 대한 임차인의 말소의무를 동시이행관계에 있는 것으로 해석할 것은 아니고, 특히 위 임차권등기는 임차인으로 하여금 기왕의 대항력이나 우선변제권을 유지하도록 해 주는 담보적 기능만을 주목적으로 하는 점 등에 비추어 볼 때, 임대인의 임대차보증금의 반환의무가 임차인의 임차권등기 말소의무보다 먼저 이행되어야 할 의무이다.",
+        "source": {
+          "source_id": "727",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=193797"
+        },
+        "score": 0.3327,
+        "summary": "주택임대차보호법 제3조의3 규정에 의한 임차권등기는 이미 임대차계약이 종료하였음에도 임대인이 그 보증금을 반환하지 않는 상태에서 경료되게 되므로, 이미 사실상 이행지체에 빠진 임대인의 임대차보증금의 반환의무와 그에 대응하는 임차인의 권리를 보전하기 위하여 새로이 경료하는 임차권등기에 대한 임차인의 말소의무를 동시이행관계에 있는 것으로 해석할 것은 아니고, 특히 위 임차권등기는 임차인으로 하여금 기왕의 대항력이나 우선변제권을 유지하도록 해 주는 담보적 기능만을 주목적으로 하는 점 등에 비추어 볼 때, 임대인의 임대차보증금의 반환의무가 임차인의 임차권등기 말소의무보다 먼저 이행되어야 할 의무이다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2005다4529",
+        "case_name": "구상금",
+        "court": "대법원",
+        "decided_at": "2005-06-09",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "housing",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-728",
+        "document_id": "728",
+        "title": "건물명도",
+        "content": "사건명: 건물명도\n사건번호: 2002다52657\n법원: 대법원\n선고일: 2002-12-10\n구분: 판결요지\n내용: [1] 부동산임대차에 있어서 임차인이 임대인에게 지급하는 임대차보증금은 임대차관계가 종료되어 목적물을 반환하는 때까지 그 임대차관계에서 발생하는 임차인의 모든 채무를 담보하는 것으로서, 임대인의 임대차보증금 반환의무는 임대차관계가 종료되는 경우에 그 임대차보증금 중에서 목적물을 반환받을 때까지 생긴 연체차임 등 임차인의 모든 채무를 공제한 나머지 금액에 관하여서만 비로소 이행기에 도달하는 것이므로, 그 임대차보증금 반환 채권을 양도함에 있어서 임대인이 아무런 이의를 보류하지 아니한 채 채권양도를 승낙하였어도 임차 목적물을 개축하는 등 하여 임차인이 부담할 원상복구비용 상당의 손해배상액은 반환할 임대차보증금에서 당연히 공제할 수 있다 할 것이나, 임대인과 임차인 사이에서 장래 임대목적물 반환시 위 원상복구비용의 보증금 명목으로 지급하기로 약정한 금액은, 임대차관계에서 당연히 발생하는 임차인의 채무가 아니라 임대인과 임차인 사이의 약정에 기하여 비로소 발생하는 채무에 불과하므로, 반환할 임대차보증금에서 당연히 공제할 수 있는 것은 아니라 할 것이어서, 임대차보증금 반환 채권을 양도하기 전에 임차인과 사이에 이와 같은 약정을 한 임대인이 이와 같은 약정에 기한 원상복구비용의 보증금 청구 채권이 존재한다는 이의를 보류하지 아니한 채 채권양도를 승낙하였다면 민법 제451조 제1항이 적용되어 그 원상복구비용의 보증금 청구 채권으로 채권양수인에게 대항할 수 없다.\n[2] 임대차계약서에 임차인의 원상복구의무를 규정하고 원상복구비용을 임대차보증금에서 공제할 수 있는 것으로 약정하였다 하더라도 임대인이 원상복구할 의사 없이 임차인이 설치한 시설을 그대로 이용하여 타에 다시 임대하려 하는 경우에는 원상복구비용을 임대차보증금에서 공제할 수 없다고 보아야 한다.\n[3] 피상고인은 상고권이 소멸된 후에도 부대상고를 할 수 있지만 상고이유서 제출기간 내에 부대상고를 제기하고 부대상고이유서를 제출하여야 한다.",
+        "source": {
+          "source_id": "728",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367"
+        },
+        "score": 0.3324,
+        "summary": "[1] 부동산임대차에 있어서 임차인이 임대인에게 지급하는 임대차보증금은 임대차관계가 종료되어 목적물을 반환하는 때까지 그 임대차관계에서 발생하는 임차인의 모든 채무를 담보하는 것으로서, 임대인의 임대차보증금 반환의무는 임대차관계가 종료되는 경우에 그 임대차보증금 중에서 목적물을 반환받을 때까지 생긴 연체차임 등 임차인의 모든 채무를 공제한 나머지 금액에 관하여서만 비로소 이행기에 도달하는 것이므로, 그 임대차보증금 반환 채권을 양도함에 있어서 임대인이 아무런 이의를 보류하지 아니한 채 채권양도를 승낙하였어도 임차 목적물을 개축하는 등 하여 임차인이 부담할 원상복구비용 상당의 손해배상액은 반환할 임대차보증금에서 당연히 공제할 수 있다 할 것이나, 임대인과 임차인 사이에서 장래 임대목적물 반환시 위 원상복구비용의 보증금 명목으로 지급하기로 약정한 금액은, 임대차관계에서 당연히 발생하는 임차인의 채무가 아니라 임대인과 임차인 사이의 약정에 기하여 비로소 발생하는 채무에 불과하므로, 반환할 임대차보증금에서 당연히 공제할 수 있는 것은 아니라 할 것이어서, 임대차보증금 반환 채권을 양도하기 전에 임차인과 사이에 이와 같은 약정을 한 임대인이 이와 같은 약정에 기한 원상복구비용의 보증금 청구 채권이 존재한다는 이의를 보류하지 아니한 채 채권양도를 승낙하였다면 민법 제451조 제1항이 적용되어 그 원상복구비용의 보증금 청구 채권으로 채권양수인에게 대항할 수 없다.\n[2] 임대차계약서에 임차인의 원상복구의무를 규정하고 원상복구비용을 임대차보증금에서 공제할 수 있는 것으로 약정하였다 하더라도 임대인이 원상복구할 의사 없이 임차인이 설치한 시설을 그대로 이용하여 타에 다시 임대하려 하는 경우에는 원상복구비용을 임대차보증금에서 공제할 수 없다고 보아야 한다.\n[3] 피상고인은 상고권이 소멸된 후에도 부대상고를 할 수 있지만 상고이유서 제출기간 내에 부대상고를 제기하고 부대상고이유서를 제출하여야 한다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2002다52657",
+        "case_name": "건물명도",
+        "court": "대법원",
+        "decided_at": "2002-12-10",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "housing",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [],
+    "sources": [
+      {
+        "source_id": "1167",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%9D%98%EC%A0%95%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EA%B3%A0%EC%96%91%EC%A7%80%EC%9B%90/2026%EA%B0%80%EB%8B%A852364"
+      },
+      {
+        "source_id": "727",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=193797"
+      },
+      {
+        "source_id": "728",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=194367"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "일반 법률 정보만 제공하며 개별 상황에 따른 결과는 달라질 수 있습니다.",
+      "제공된 판례 위주로 설명하였으나 구체적인 상황에 따라 법적 판단이 달라질 수 있으니 추가 법률 상담을 권합니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "step_id": "validation-8b64a0ae-2ff8-40fc-a203-a09d38890857",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "step_id": "validation-8b64a0ae-2ff8-40fc-a203-a09d38890857",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "step_id": "search_cases-0d32387a-0536-4b35-843b-abe96966873c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "step_id": "search_cases-0d32387a-0536-4b35-843b-abe96966873c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "step_id": "search_legal_documents-0152f9e7-653e-4e10-bce0-e9a6a88ce1d8",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "step_id": "search_legal_documents-0152f9e7-653e-4e10-bce0-e9a6a88ce1d8",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-2f223a1f-d197-4a3d-af0d-48ba1e473f29",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_cases",
+    "search_legal_documents"
+  ],
+  "counts": {
+    "related_laws": 0,
+    "similar_cases": 3,
+    "consultations": 0
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 21.86
+}

@@ -1,0 +1,54 @@
+{
+  "id": "T083",
+  "group": "API 타임아웃",
+  "category": "consumer",
+  "question": "온라인 쇼핑몰에서 주문한 상품을 받지 못했습니다. 대금 환급 관련 조문을 알려주세요.",
+  "mode": "isolated",
+  "expected": "검색 호출에 TimeoutError 주입; 실행 failed로 안전 종료",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-90bd3bd9-bb32-4d5f-822a-fc9c7650696e",
+    "status": "failed",
+    "result": null,
+    "error": {
+      "code": "ANALYSIS_FAILED",
+      "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-90bd3bd9-bb32-4d5f-822a-fc9c7650696e",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-90bd3bd9-bb32-4d5f-822a-fc9c7650696e",
+        "step_id": "search_laws-f2730ca0-65e9-4d52-93ca-5dc8665986f8",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "run.failed",
+      "data": {
+        "run_id": "run-90bd3bd9-bb32-4d5f-822a-fc9c7650696e",
+        "status": "failed",
+        "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."
+      }
+    }
+  ],
+  "injected_search_calls": 1,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.0
+}

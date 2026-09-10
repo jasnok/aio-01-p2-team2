@@ -1,0 +1,137 @@
+{
+  "id": "T076",
+  "group": "검색 결과 없음",
+  "category": "consumer",
+  "question": "중고거래 판매자가 돈을 받은 뒤 물건을 보내지 않습니다. 관련 법률 정보를 알려주세요.",
+  "mode": "isolated",
+  "expected": "전체 검색 도구에 빈 결과 주입; 근거 배열이 비어 있고 제한 안내",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+    "status": "completed",
+    "result": {
+      "request_id": "req-e83e0f8d-b5cd-4603-8068-caabc4dc2a08",
+      "agent_id": "consumer",
+      "status": "completed",
+      "termination_reason": "no_results",
+      "question_summary": "검색 결과가 없습니다.",
+      "key_issues": [],
+      "answer": "현재 입력한 내용과 관련된 공식 근거를 찾지 못했습니다.",
+      "related_laws": [],
+      "similar_cases": [],
+      "consultations": [],
+      "sources": [],
+      "follow_up_questions": [],
+      "cautions": [
+        "검색 결과가 없을 때는 추측으로 답변하지 않습니다.",
+        "사실관계나 검색어를 보완해 다시 확인해 주세요."
+      ],
+      "input_assessment": {
+        "status": "sufficient",
+        "message": "격리시험 입력 판단 대체"
+      },
+      "is_mock": false
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "step_id": "search_laws-20d4e424-5527-430c-a364-07d847827abd",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "step_id": "search_laws-20d4e424-5527-430c-a364-07d847827abd",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "step_id": "search_consultations-f4577476-820c-4d61-8f87-ec918efa9b90",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "step_id": "search_consultations-f4577476-820c-4d61-8f87-ec918efa9b90",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "step_id": "search_cases-7c8263e0-646f-49a8-85d6-6f690a5f59de",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "step_id": "search_cases-7c8263e0-646f-49a8-85d6-6f690a5f59de",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-884e4b72-5527-41d3-86aa-aaf027d3b68f",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "injected_search_calls": 3,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.0
+}

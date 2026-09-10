@@ -1,0 +1,20 @@
+{
+  "id": "T095",
+  "group": "인증 실패",
+  "category": "consumer",
+  "question": "판매자가 상품 하자를 이유로 한 환불을 거절합니다. 관련 상담사례를 찾아주세요.",
+  "mode": "isolated",
+  "expected": "유효하지 않은 Bearer 토큰으로 실행 생성; 401 또는 403, 실행 미생성",
+  "verdict": "PASS",
+  "http_status": 401,
+  "response": {
+    "detail": {
+      "code": "AUTH_REQUIRED",
+      "message": "로그인이 필요하거나 세션이 만료되었습니다.",
+      "request_id": "req-e1ebdcaf-311e-4c83-9dea-82ff816ef2a2",
+      "field_errors": []
+    }
+  },
+  "scope": "local authorization route",
+  "elapsed_seconds": 0.0
+}
