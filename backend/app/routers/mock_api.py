@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from math import ceil
 from typing import Literal
 from uuid import uuid4
@@ -14,10 +14,19 @@ from pydantic import BaseModel, Field, field_validator
 
 from backend.app.services.mock_store import SessionExpiredError, hash_password, iso, now, store, verify_password
 from backend.app.services.agent_run_service import create_run, public_run, start_run
+from backend.app.core.config import get_settings
+from backend.app.repositories.user_repository import DuplicateEmailError
+from backend.app.services.auth_service import AuthService, InactiveUserError, InvalidCredentialsError
+from backend.app.services.session_service import SessionStoreUnavailableError, sessions
+from backend.app.repositories.saved_conversation_repository import SavedConversationNotFoundError
+from backend.app.services.saved_conversation_service import SavedConversationService
+from backend.app.services.guest_session_service import guest_sessions
 from backend.app.mock_data.catalog import CATALOG
 
 router = APIRouter(prefix="/api", tags=["mock-api"])
 Category = Literal["housing", "labor", "consumer"]
+auth_service = AuthService()
+saved_conversation_service = SavedConversationService()
 bearer_scheme = HTTPBearer(auto_error=False, description="로그인 응답의 session_token을 붙여 넣습니다. Swagger에는 토큰값만 입력하세요.")
 
 
@@ -33,6 +42,32 @@ def actor(credentials: HTTPAuthorizationCredentials | None = Security(bearer_sch
         fail(401, "AUTH_SESSION_EXPIRED", "로그인 세션이 만료되었습니다. 다시 로그인해 주세요.")
     except PermissionError:
         fail(401, "AUTH_REQUIRED", "로그인이 필요하거나 세션이 만료되었습니다.")
+
+
+async def database_or_mock_actor(
+    credentials: HTTPAuthorizationCredentials | None = Security(bearer_scheme),
+    x_guest_id: str | None = Header(default=None),
+) -> dict:
+    """Use DB-backed tokens in real mode without changing the Mock API contract."""
+    if get_settings().backend_mock_mode:
+        return legacy_actor(credentials, x_guest_id)
+
+    token = credentials.credentials if credentials else None
+    if not token:
+        return {"id": x_guest_id or "guest-anonymous", "role": "GUEST", "display_name": "비회원"}
+    try:
+        session = await sessions.read(token)
+        value = await auth_service.actor(session.user_id) if session else None
+    except SessionStoreUnavailableError:
+        fail(503, "SESSION_UNAVAILABLE", "로그인 세션을 확인할 수 없습니다.")
+    if value is None:
+        fail(401, "AUTH_REQUIRED", "로그인이 필요하거나 세션이 만료되었습니다.")
+    return value
+
+
+# Existing routes below resolve this name at declaration time.
+legacy_actor = actor
+actor = database_or_mock_actor
 
 
 def require_user(value: dict = Depends(actor)) -> dict:
@@ -107,7 +142,16 @@ def catalog_detail(category: Category) -> dict:
 
 
 @router.post("/auth/register", status_code=201, summary="회원가입", description="새 회원을 만들고 바로 사용할 수 있는 Session Token을 발급합니다.")
-def register(body: Register) -> dict:
+async def register(body: Register) -> dict:
+    if not get_settings().backend_mock_mode:
+        try:
+            user = await auth_service.register(body.email, body.password, body.display_name)
+            token, expires_in = await sessions.issue(user.id)
+        except DuplicateEmailError:
+            fail(409, "CONFLICT", "이미 사용 중인 이메일입니다.")
+        except SessionStoreUnavailableError:
+            fail(503, "SESSION_UNAVAILABLE", "회원가입은 완료됐지만 로그인 세션을 만들 수 없습니다. 다시 로그인해 주세요.")
+        return {"session_token": token, "expires_in": expires_in, "user": user.public()}
     if any(item["email"] == body.email for item in store.users.values()):
         fail(409, "CONFLICT", "이미 사용 중인 이메일입니다.")
     user_id = f"user-{uuid4()}"
@@ -119,7 +163,16 @@ def register(body: Register) -> dict:
 
 
 @router.post("/auth/login", summary="로그인", description="이메일과 비밀번호를 확인하고 8시간짜리 Opaque Session Token을 발급합니다.")
-def login(body: Credentials) -> dict:
+async def login(body: Credentials) -> dict:
+    if not get_settings().backend_mock_mode:
+        try:
+            user = await auth_service.login(body.email, body.password)
+            token, expires_in = await sessions.issue(user.id)
+        except (InvalidCredentialsError, InactiveUserError):
+            fail(401, "AUTH_REQUIRED", "이메일 또는 비밀번호가 올바르지 않습니다.")
+        except SessionStoreUnavailableError:
+            fail(503, "SESSION_UNAVAILABLE", "로그인 세션을 만들 수 없습니다. 잠시 후 다시 시도해 주세요.")
+        return {"session_token": token, "expires_in": expires_in, "user": user.public()}
     user = next((item for item in store.users.values() if item["email"] == body.email), None)
     if not user or not verify_password(body.password, user["password_hash"]):
         fail(401, "AUTH_REQUIRED", "이메일 또는 비밀번호가 올바르지 않습니다.")
@@ -129,8 +182,16 @@ def login(body: Credentials) -> dict:
 
 
 @router.post("/auth/logout", status_code=204, summary="로그아웃", description="현재 Bearer Session Token을 즉시 폐기합니다. Swagger 오른쪽 위 Authorize에서 로그인 토큰을 설정한 뒤 실행하세요.")
-def logout(credentials: HTTPAuthorizationCredentials | None = Security(bearer_scheme)) -> None:
+async def logout(credentials: HTTPAuthorizationCredentials | None = Security(bearer_scheme)) -> None:
     token = credentials.credentials if credentials else None
+    if not get_settings().backend_mock_mode:
+        try:
+            revoked = await sessions.revoke(token)
+        except SessionStoreUnavailableError:
+            fail(503, "SESSION_UNAVAILABLE", "로그인 세션을 처리할 수 없습니다.")
+        if not revoked:
+            fail(401, "AUTH_REQUIRED", "로그인이 필요합니다.")
+        return
     session = store.sessions.pop(token, None) if token else None
     if not session:
         fail(401, "AUTH_REQUIRED", "로그인이 필요합니다.")
@@ -377,10 +438,21 @@ def get_run(run_id: str, value: dict) -> dict:
     return run
 
 
+def get_run_for_save(run_id: str, value: dict) -> dict:
+    run = store.agent_runs.get(run_id)
+    if not run:
+        fail(404, "NOT_FOUND", "저장할 분석 결과를 찾을 수 없습니다.")
+    if run["owner_id"] != value["id"]:
+        fail(403, "FORBIDDEN", "다른 회원의 분석 결과는 저장할 수 없습니다.")
+    return run
+
+
 @router.post("/agent-runs", status_code=202, summary="비동기 Agent 분석 시작", description="즉시 run_id를 돌려주고 실제 분석은 백그라운드에서 진행합니다. 같은 소유자와 Idempotency-Key로 같은 본문을 다시 보내면 기존 작업을 반환합니다.")
 async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"), value: dict = Depends(actor)) -> dict:
     if not idempotency_key or not idempotency_key.strip():
         fail(400, "INVALID_REQUEST", "Idempotency-Key Header가 필요합니다.")
+    if body.save_selected and not get_settings().backend_mock_mode and value["role"] == "GUEST":
+        fail(401, "AUTH_REQUIRED", "분석 결과를 저장하려면 회원가입 또는 로그인이 필요합니다.")
     try:
         run, created = create_run(
             value,
@@ -400,6 +472,20 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
 @router.get("/agent-runs/{run_id}", summary="Agent 실행 상태 조회", description="SSE가 끊겼을 때에도 이 API로 최종 결과를 복구할 수 있습니다.")
 def get_agent_run(run_id: str, value: dict = Depends(actor)) -> dict:
     return public_run(get_run(run_id, value))
+
+
+@router.post("/agent-runs/{run_id}/save", summary="완료된 Agent 분석 결과 저장")
+async def save_agent_run(run_id: str, value: dict = Depends(require_user)) -> dict:
+    run = get_run_for_save(run_id, value)
+    try:
+        conversation_id = await saved_conversation_service.save_run(value, run)
+    except ValueError:
+        fail(409, "RUN_NOT_FINISHED", "완료되거나 보완 질문 상태인 분석 결과만 저장할 수 있습니다.")
+    except SavedConversationNotFoundError:
+        fail(404, "NOT_FOUND", "저장할 분석 결과를 찾을 수 없습니다.")
+    except Exception:
+        fail(503, "SAVED_CONVERSATION_UNAVAILABLE", "분석 결과를 저장할 수 없습니다.")
+    return {"conversation_id": conversation_id, "saved": True}
 
 
 def sse_event(item: dict) -> str:
@@ -456,6 +542,91 @@ def delete_history(history_id: str, value: dict = Depends(actor)) -> None:
     items = store.history.get(value["id"], [])
     if not any(row["id"] == history_id for row in items): fail(404, "NOT_FOUND", "이력을 찾을 수 없습니다.")
     store.history[value["id"]] = [row for row in items if row["id"] != history_id]
+
+
+@router.get("/saved-conversations", summary="회원 저장 분석 목록")
+async def saved_conversations(
+    value: dict = Depends(require_user),
+    page_number: int = Query(1, alias="page", ge=1),
+    page_size: int = Query(20, alias="page_size", ge=1, le=50),
+) -> dict:
+    try:
+        items, total = await saved_conversation_service.list_history_for_actor(
+            actor=value, page=page_number, page_size=page_size,
+        )
+        return {"items": items, "page": page_number, "page_size": page_size, "total": total}
+    except Exception as error:
+        if isinstance(error, PermissionError):
+            fail(401, "AUTH_REQUIRED", "저장 분석은 로그인 후 사용할 수 있습니다.")
+        fail(503, "SAVED_CONVERSATION_UNAVAILABLE", "저장 분석을 불러올 수 없습니다.")
+
+
+@router.get("/saved-conversations/{conversation_id}", summary="회원 저장 분석 복원")
+async def saved_conversation_detail(conversation_id: int, value: dict = Depends(require_user)) -> dict:
+    try:
+        return await saved_conversation_service.restore_history_for_actor(value, conversation_id)
+    except SavedConversationNotFoundError:
+        fail(404, "NOT_FOUND", "저장 분석을 찾을 수 없습니다.")
+    except Exception:
+        fail(503, "SAVED_CONVERSATION_UNAVAILABLE", "저장 분석을 불러올 수 없습니다.")
+
+
+@router.delete("/saved-conversations/{conversation_id}", status_code=204, summary="회원 저장 분석 삭제")
+async def delete_saved_conversation(conversation_id: int, value: dict = Depends(require_user)) -> None:
+    try:
+        await saved_conversation_service.delete_for_actor(value, conversation_id)
+    except SavedConversationNotFoundError:
+        fail(404, "NOT_FOUND", "저장 분석을 찾을 수 없습니다.")
+    except Exception:
+        fail(503, "SAVED_CONVERSATION_UNAVAILABLE", "저장 분석을 삭제할 수 없습니다.")
+
+
+def guest_history_item(record: dict) -> dict:
+    item_type = "legal_terms" if record.get("kind") == "legal_term_chat" else "analysis"
+    result = record.get("result") or {}
+    item = {
+        "id": record["run_id"],
+        "type": item_type,
+        "title": record.get("question", "")[:100],
+        "question": record.get("question", ""),
+        "summary": "용어 설명" if item_type == "legal_terms" else result.get("question_summary", result.get("answer", ""))[:300],
+        "created_at": record.get("updated_at") or datetime.now(timezone.utc).isoformat(),
+    }
+    if item_type == "legal_terms":
+        item["messages"] = [
+            {"role": "user", "content": record.get("question", "")},
+            {"role": "assistant", "content": result.get("answer", "")},
+        ]
+    else:
+        item["result"] = result
+    return item
+
+
+@router.get("/guest/temporary-history", summary="비회원 임시 분석 이력")
+async def guest_temporary_history(value: dict = Depends(actor)) -> dict:
+    if value["role"] != "GUEST":
+        fail(409, "MEMBER_SESSION", "회원 저장 분석은 /saved-conversations를 사용하세요.")
+    try:
+        items, expires_in = await guest_sessions.list_analyses(str(value["id"]))
+    except SessionStoreUnavailableError:
+        fail(503, "GUEST_SESSION_UNAVAILABLE", "비회원 임시 이력을 불러올 수 없습니다.")
+    expires_at = (datetime.now(timezone.utc) + timedelta(seconds=expires_in)).isoformat()
+    return {
+        "items": [guest_history_item(item) for item in items],
+        "expires_at": expires_at,
+        "expires_in": expires_in,
+        "notice": "비회원 분석 이력은 임시 보관되며, 시간이 지나거나 서버가 재시작되면 삭제될 수 있습니다.",
+    }
+
+
+@router.delete("/guest/temporary-history", status_code=204, summary="비회원 임시 분석 이력 삭제")
+async def clear_guest_temporary_history(value: dict = Depends(actor)) -> None:
+    if value["role"] != "GUEST":
+        fail(409, "MEMBER_SESSION", "회원 저장 분석은 /saved-conversations를 사용하세요.")
+    try:
+        await guest_sessions.clear(str(value["id"]))
+    except SessionStoreUnavailableError:
+        fail(503, "GUEST_SESSION_UNAVAILABLE", "비회원 임시 이력을 삭제할 수 없습니다.")
 
 
 @router.get("/notifications", summary="내 알림 목록", description="미읽음 알림이 먼저 나오고, 같은 상태에서는 최신 알림이 먼저 나옵니다.")
