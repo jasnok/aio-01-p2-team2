@@ -34,6 +34,8 @@ python -m pip install -r requirements.txt
 | `ingest_cases.py` | API XML·PDF 판례 정규화·적재·임베딩 |
 | `ingest_consumer.py` | 소비자 피해구제 사례 적재 |
 | `ingest_labor_decisions.py` | 노동위원회 판정자료 처리 |
+| `ingest_legal_home_doctor.py` | 법률홈닥터 PDF를 사례별 `GUIDELINE`으로 추출·적재·임베딩 |
+| `verify_legal_home_doctor.sql` | 법률홈닥터 문서·청크·임베딩·예상 건수 검증 |
 | `audit_case_texts.py` | 판례 본문 품질 검사 |
 | `search_laws.py` | 법령 Hybrid 검색 |
 | `search_consumer.py` | 소비자 피해구제 검색 |
@@ -162,7 +164,67 @@ python scripts/ingest_consumer.py --load-db --with-embeddings
 
 노동위원회 CSV는 상세 판정문이 없는 색인 자료입니다. `ingest_labor_decisions.py` 사용 시 본문 보유 여부와 근거 사용 제한 정책을 먼저 확인합니다.
 
-## 7. 검색 검증
+## 7. 법률홈닥터 법률지원 사례 적재
+
+실행 파일은 [ingest_legal_home_doctor.py](ingest_legal_home_doctor.py)입니다. [Manifest](../sources/legal_home_doctor_2014.json)의 `enabled: true` 사례를 대상으로 책 페이지 범위와 카테고리를 적용합니다. PDF 한 장의 좌우 페이지를 나누어 추출하고 본문 정리·청킹·품질검사 후 `GUIDELINE`으로 저장합니다. 원본 PDF 파일 자체는 분할하지 않습니다.
+
+```text
+원본: raw/files/guidelines/legal_home_doctor/법률홈닥터_우수사례집(2014)527.pdf
+설정: sources/legal_home_doctor_2014.json
+대상: housing 10건 / labor 1건 / consumer 3건
+저장: legal_documents + legal_chunks.embedding
+```
+
+현재 수치는 Manifest의 활성 대상 수이며 DB 실측 수가 아닙니다. 페이지 범위를 변경하거나 사례를 추가하면 원본과 추출 본문의 시작·끝을 확인합니다. 출처 URL은 현재 발행기관 홈페이지이며 사례집 직접 링크로 보완할 수 있습니다.
+
+아래 명령은 `database/`에서 실행합니다.
+
+```powershell
+# 대상 확인: DB 비교는 수행하지만 DB 저장·임베딩 API 호출은 하지 않습니다.
+python scripts/ingest_legal_home_doctor.py --only-new
+
+# 대상 적재: OpenAI 임베딩을 생성하고 본문·청크와 함께 저장합니다.
+python scripts/ingest_legal_home_doctor.py --only-new --load-db --with-embeddings
+
+# 완료 후 신규·변경·임베딩 미완료 대상이 남았는지 확인합니다.
+python scripts/ingest_legal_home_doctor.py --only-new
+```
+
+분야별 실행은 다음과 같습니다. `--limit 1`을 추가하면 선택한 사례 중 첫 1건으로 범위를 제한합니다.
+
+```powershell
+python scripts/ingest_legal_home_doctor.py --category housing --only-new --load-db --with-embeddings
+python scripts/ingest_legal_home_doctor.py --category labor --only-new --load-db --with-embeddings
+python scripts/ingest_legal_home_doctor.py --category consumer --only-new --load-db --with-embeddings
+```
+
+`--only-new`는 신규·문서 본문 해시 변경·임베딩 미완료 사례를 선별하며 DB 연결이 필요합니다. 모델·청크 정책 변경까지 모두 감지하지 않습니다. `--with-embeddings`는 `--load-db`와 함께 사용합니다. 전체 처리가 완료되었다면 대상 재확인 결과는 0건입니다.
+
+### 적재 검증
+
+[verify_legal_home_doctor.sql](verify_legal_home_doctor.sql)을 실행 중인 `legal-pgvector` 컨테이너에 전달합니다. 컨테이너의 `POSTGRES_USER`, `POSTGRES_DB`를 사용하며 SQL 파일의 볼륨 연결은 필요하지 않습니다.
+
+```powershell
+# database/에서 실행합니다. 한글 SQL을 UTF-8로 전달합니다.
+$OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+Get-Content .\scripts\verify_legal_home_doctor.sql -Raw -Encoding UTF8 |
+    docker exec -i legal-pgvector sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1 -P pager=off -f -'
+```
+
+- 문서 수: 현재 Manifest 기준 housing 10건, labor 1건, consumer 3건.
+- 각 문서에 빈 값이 아닌 본문과 최소 1개 청크 존재.
+- 청크 수와 임베딩 수 일치, 임베딩 누락 0건.
+- 모델 `text-embedding-3-small`, 임베딩 차원 1536.
+- 중복 검사 결과 0건, 예상 문서 수 비교 모두 `PASS`.
+- 추출 본문이 해당 사례의 페이지 범위와 일치하고 다른 사례가 섞이지 않음.
+
+문서 수 비교의 `PASS`만으로 본문 품질이나 검색 정확도까지 보장하지 않습니다. Manifest의 활성 사례를 바꾸면 검증 SQL의 예상 건수도 함께 갱신합니다.
+
+### 서비스 연동 범위
+
+이 스크립트의 범위는 DB 적재·임베딩이며 MCP·Backend·Frontend 연결은 미적용입니다. 후속 연동안은 기존 “소비자원 상담사례” 영역을 “상담·법률지원 사례”로 확장하는 것입니다. `CONSULTATION`과 `GUIDELINE`을 함께 검색하되 출처 유형과 카드 표시를 구분하고, 응답 계약·화면·내보내기까지 함께 반영해야 합니다. DB 저장만으로 화면에 자동 노출되지는 않습니다.
+
+## 8. 검색 검증
 
 법령 Hybrid 검색:
 
@@ -194,11 +256,11 @@ python scripts/search_all.py `
 확인 항목은 질문 관련성, category·document_type, 출처 URL, 문서 중복입니다.
 
 - 검색은 질문 임베딩을 위해 OpenAI API를 호출합니다.
-- `search_all.py`는 유형별 최대 3개이며 전체 Top 3와 다릅니다. 현재 `ADMIN_DECISION`은 제외합니다.
+- `search_all.py`는 유형별 최대 3개이며 전체 Top 3와 다릅니다. 현재 `ADMIN_DECISION`, `GUIDELINE`은 제외합니다.
 - `search_laws.py` Threshold는 결합 점수, `search_all.py` Threshold는 벡터 유사도 기준입니다.
 - Legal MCP의 실제 서비스 검색은 별도 경로로 검증합니다.
 
-## 8. 실행 시 주의사항
+## 9. 실행 시 주의사항
 
 - PowerShell 백틱 줄바꿈 뒤에 공백을 넣지 않습니다.
 - `--only-new`는 공백 없이 입력합니다.
@@ -208,12 +270,13 @@ python scripts/search_all.py `
 - 적재 오류 시 실패 지점·DB 상태를 확인한 뒤 재실행합니다.
 - 판례에서 `--load-db` 없이 실행하면 DB는 변경하지 않습니다. 이를 모든 스크립트의 외부 API 호출 여부까지 동일하다고 해석하지 않습니다.
 
-## 9. 후속 작업
+## 10. 후속 작업
 
 - Migration 실행기·적용 이력 관리 및 DB 통합 검증.
 - `ingestion_runs` 실행 기록 연결.
 - 판례 수집 대상 목록 보완.
 - 노동 판정자료 근거 사용 제한.
 - 최종 청크까지 포함하는 품질 감사 및 15문항 검색 평가.
+- 법률홈닥터 `GUIDELINE` 로컬 검색·MCP·Backend·Frontend 연동 및 실제 질문 검증.
 
 현재 `migrate.py`, `verify_database.py`, `seed.py`는 구현된 명령으로 안내하지 않습니다. 구현 후 사용법을 추가합니다.
