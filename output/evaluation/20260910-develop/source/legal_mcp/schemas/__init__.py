@@ -1,2 +1,0 @@
-"""MCP Tool contracts."""
-

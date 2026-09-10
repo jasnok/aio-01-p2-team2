@@ -1,4 +1,0 @@
-{
-  "url": "http://192.100.200.195:8000/health",
-  "error": "The request was canceled due to the configured HttpClient.Timeout of 8 seconds elapsing."
-}

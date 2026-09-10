@@ -1,2 +1,0 @@
-"""Legal MCP server package."""
-
