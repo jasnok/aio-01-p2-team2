@@ -1,6 +1,5 @@
 import streamlit as st
 import re
-from uuid import uuid4
 
 from frontend.components.case_card import render_case_card
 from frontend.components.law_card import render_law_card
@@ -31,10 +30,8 @@ div[class*="st-key-lawpath-answer-"] [data-testid="stMarkdownContainer"] p {
 }
 </style>
 """, unsafe_allow_html=True)
-    # Unique container keys also support several open saved-history answers.
-    with st.container(key=f"lawpath-answer-{uuid4().hex}"):
-        st.markdown("**AI 답변**")
-        st.markdown(text, unsafe_allow_html=False)
+    st.markdown("**AI 답변**")
+    st.markdown(text, unsafe_allow_html=False)
 
 
 def render_analysis_result(result: dict) -> None:
@@ -48,10 +45,11 @@ def render_analysis_result(result: dict) -> None:
         st.warning(message or "검색을 진행하려면 추가 정보가 필요합니다.")
         if result["answer"] != message:
             _render_readable_answer(result["answer"])
-        with st.expander("추가로 확인할 내용", expanded=True):
-            for index, question in enumerate(dict.fromkeys(result.get("follow_up_questions", [])), 1):
-                st.text(f"{index}. {question}")
+        for question in dict.fromkeys(result.get("follow_up_questions", [])):
+            st.text(question)
         return
+    if assessment:
+        st.info(message)
     if state == "no_evidence":
         st.warning("공식 근거가 부족합니다. 아래 안내는 법률 판단이 아닙니다.")
     elif state == "no_results":

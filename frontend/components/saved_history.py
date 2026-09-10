@@ -48,7 +48,10 @@ def render_items(items, token):
                     st.warning("이 저장 항목을 삭제할까요?")
                     if st.button("삭제 확인", key=key + "-yes"):
                         try:
-                            api.delete_saved_conversation(token, item["id"])
+                            if item["type"] == "analysis":
+                                api.delete_saved_conversation(token, item["id"])
+                            else:
+                                api.delete_legal_term_conversation(token, item["id"])
                             for suffix in ("-detail", "-confirm"):
                                 st.session_state.pop(key + suffix, None)
                             st.rerun()
@@ -95,15 +98,25 @@ def render_saved_history():
             st.error(error.user_message)
         return
     page_number = int(st.number_input("페이지", min_value=1, step=1, key="history-page-unified"))
+    items = []
     try:
         raw = api.list_saved_conversations(token, page=page_number)
-        page = parse_page(raw)
+        page = parse_page(raw, kind="analysis")
         if "page" not in raw:
             page["items"] = page["items"][(page_number - 1) * 20:page_number * 20]
-        items = [item for item in page["items"] if selected in ("all", item["type"])]
-        st.caption("이력 유형은 현재 페이지의 항목에 적용됩니다.")
-        if not items:
-            st.info("이 페이지에 표시할 저장 이력이 없습니다.")
-        render_items(items, token)
+        items.extend(page["items"])
     except api.BackendClientError as error:
         st.error(error.user_message)
+    try:
+        raw = api.list_legal_term_conversations(token, page=page_number)
+        page = parse_page(raw, kind="legal_terms")
+        if "page" not in raw:
+            page["items"] = page["items"][(page_number - 1) * 20:page_number * 20]
+        items.extend(page["items"])
+    except api.BackendClientError as error:
+        st.error(error.user_message)
+    items = [item for item in items if selected in ("all", item["type"])]
+    st.caption("이력 유형은 현재 페이지의 항목에 적용됩니다.")
+    if not items:
+        st.info("이 페이지에 표시할 저장 이력이 없습니다.")
+    render_items(items, token)
