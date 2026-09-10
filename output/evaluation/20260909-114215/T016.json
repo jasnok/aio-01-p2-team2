@@ -1,0 +1,112 @@
+{
+  "id": "T016",
+  "group": "정상 요청",
+  "category": "housing",
+  "question": "보증금 반환을 요구하는 내용증명은 어떤 의미가 있나요? 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "step_id": "validation-21711c42-0954-48de-a85a-662efa91caea",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "step_id": "validation-21711c42-0954-48de-a85a-662efa91caea",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "step_id": "search_cases-226fa2af-a1fa-4bc1-98b9-88939a1d74be",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "step_id": "search_cases-226fa2af-a1fa-4bc1-98b9-88939a1d74be",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "step_id": "search_legal_documents-8b8c8cd3-4c5a-4c7c-a4fd-6b9c70351c9c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "step_id": "search_legal_documents-8b8c8cd3-4c5a-4c7c-a4fd-6b9c70351c9c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 1
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-bc48aac6-475f-4cc9-a672-72356a4642be",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 34.828
+}

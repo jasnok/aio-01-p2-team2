@@ -1,0 +1,289 @@
+{
+  "id": "T031",
+  "group": "정상 요청",
+  "category": "labor",
+  "question": "회사가 임금을 상품권으로 지급합니다. 임금 지급 원칙 관련 조문을 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+  "response": {
+    "request_id": "req-e6e7a924-8582-44e3-bed2-1a63f19f6543",
+    "agent_id": "labor",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "회사가 임금을 상품권으로 지급하는 경우, 임금 지급 원칙과 관련된 법 조문을 알고자 함.",
+    "key_issues": [
+      "임금 지급 원칙",
+      "근로기준법 제43조 제1항",
+      "임금은 통화로 직접 지급해야 함",
+      "상품권 지급의 법적 문제 가능성"
+    ],
+    "answer": "제공된 증거들 중에 임금을 상품권으로 지급하는 행위에 대해 구체적으로 명시한 법 조문은 없습니다. 다만, 2024나118416 판결 사례에서 근로기준법 제43조 제1항 본문에 따라 임금은 통화로 직접 근로자에게 전액 지급하여야 한다는 판시가 있습니다. 이 판결 내용으로 보면, 임금을 상품권으로 지급하는 것은 임금 지급 원칙에 위배될 가능성이 있음을 유추할 수 있습니다. 따라서 임금 지급은 원칙적으로 현금으로 해야 하며, 상품권 지급은 법적 문제가 발생할 수 있음을 참고하시기 바랍니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "임금 지급 원칙과 관련된 조문을 안내할 수 있습니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "not_required",
+        "relationship": "met",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-701",
+        "document_id": "701",
+        "title": "근로기준법",
+        "content": "법령명: 근로기준법\n조문: 제38조\n조문 제목: 임금채권의 우선변제\n내용: 제38조(임금채권의 우선변제) ① 임금, 재해보상금, 그 밖에 근로 관계로 인한 채권은 사용자의 총재산에 대하여 질권(質權)ㆍ저당권 또는 「동산ㆍ채권 등의 담보에 관한 법률」에 따른 담보권에 따라 담보된 채권 외에는 조세ㆍ공과금 및 다른 채권에 우선하여 변제되어야 한다. 다만, 질권ㆍ저당권 또는 「동산ㆍ채권 등의 담보에 관한 법률」에 따른 담보권에 우선하는 조세ㆍ공과금에 대하여는 그러하지 아니하다. <개정 2010.6.10> ② 제1항에도 불구하고 다음 각 호의 어느 하나에 해당하는 채권은 사용자의 총재산에 대하여 질권ㆍ저당권 또는 「동산ㆍ채권 등의 담보에 관한 법률」에 따른 담보권에 따라 담보된 채권, 조세ㆍ공과금 및 다른 채권에 우선하여 변제되어야 한다. <개정 2010.6.10> 1. 최종 3개월분의 임금 2. 재해보상금",
+        "source": {
+          "source_id": "701",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EA%B8%B0%EC%A4%80%EB%B2%95"
+        },
+        "score": 0.353,
+        "summary": null,
+        "law_name": "근로기준법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "document_type": "LAW",
+          "category": "labor"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-750",
+        "document_id": "750",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2024가단89347\n법원: 수원지방법원 안산지원\n선고일: 2026-08-14\n구분: 주문\n내용: 1. 원 고 들의 주위 적 피 고 주 식 회 사 N 에 대한 청 구를 모 두 기 각 한 다 .\n2. 예 비 적 피 고 주 식 회 사 O 는 원 고 A, B, C, D, E, F, G, H, I, J 에게 , 예 비 적 피 고 P 주 식 회 사 는 원 고 K, L, M\n \n에게 , 별 지 퇴 직금 산 정 표 의 ' 법 정 퇴 직금 ' 란 기 재 각 돈 및 위 각 돈 에 대 하 여 같 은 표 의 ' 지 연 손 해 금 기 산 일 ' 란 \n기 재 각 해 당 일부터 다 갚 는 날 까 지 연 20% 의 비 율 로 계산 한 돈 을 각 지 급 하 라 .\n3. 소 송 비용 중 원 고 들과 주위 적 피 고 주 식 회 사 N 사이 에 생 긴 부 분 은 원 고 들 이 부 담 하고 , 원 고 들과 예 비 적 \n피 고 주 식 회 사 O, P 주 식 회 사 사이 에 생 긴 부 분 은 위 피 고 들 이 부 담 한 다 .\n4. 제 2 항 은 가 집행할 수 있 다 .",
+        "source": {
+          "source_id": "750",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EC%95%88%EC%82%B0%EC%A7%80%EC%9B%90/2024%EA%B0%80%EB%8B%A889347"
+        },
+        "score": 0.3887,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2024가단89347",
+        "case_name": "임금",
+        "court": "수원지방법원 안산지원",
+        "decided_at": "2026-08-14",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-736",
+        "document_id": "736",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2025다213167\n법원: 대법원\n선고일: 2025-09-04\n구분: 참조판례\n내용: [1] 대법원 2022. 7. 28. 선고 2019다202146 판결(공2022하, 1737) / [2] 대법원 2002. 6. 11. 선고 2001다16722 판결(공2002하, 1610), 대법원 2005. 9. 9. 선고 2004다41217 판결(공2005하, 1588) / [3] 대법원 2020. 12. 10. 선고 2017다281817 판결 / [5] 대법원 2014. 10. 27. 선고 2012다70388 판결(공2014하, 2229)",
+        "source": {
+          "source_id": "736",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=615691"
+        },
+        "score": 0.3649,
+        "summary": "[1] 민사재판에서 관련 형사사건의 판결에서 인정된 사실을 배척할 수 있는지 여부(적극)\n[2] 평균임금 산정의 기초가 되는 임금 총액에 포함되는 금품의 범위 및 퇴직금 산정의 기초가 되는 평균임금에 산입될 수 있는지는 퇴직 당시를 기준으로 판단하여야 하는지 여부(원칙적 적극)\n[3] 근로자의 퇴직을 즈음한 일정 기간 특수하고 우연한 사정으로 인한 임금액의 변동으로 근로기준법 등이 정한 원칙에 따라 산정한 평균임금이 통상의 경우보다 현저하게 적거나 많은 경우, 통상적인 생활임금을 반영할 수 있는 합리적이고 타당한 다른 방법으로 평균임금을 따로 산정하여야 하는지 여부(적극)\n[4] 甲은 乙이 운영하는 미용실에서 근무하면서 기본급이나 고정급 없이 미용시술에 관한 선불권 등 매출에 따른 수수료만을 지급받았고, 甲이 퇴직한 후 乙은 甲이 지급받은 수수료에서 ‘선불권 매출 중 甲이 시술하지 않아 乙에게 반환하여야 하는 금원’을 공제한 차액을 기준으로 산정한 평균임금을 기초로 산출된 퇴직금을 지급하지 아니하였다는 범죄사실로 유죄판결을 선고받았는데, 甲이 乙을 상대로 퇴직 전 3개월간 乙로부터 지급받은 수수료 총액을 기준으로 계산된 평균임금으로 산정한 퇴직금의 지급을 구한 사안에서, 위 형사사건의 판결에서 甲이 퇴직 전 3개월 동안 지급받은 수수료 중 미시술분 수수료를 공제한 나머지 금액만을 기준으로 평균임금을 산정한 것은 부당한데도, 위 형사사건의 판결에서 인정한 甲의 퇴직금 액수를 그대로 인용한 원심판단에 법리오해 등의 잘못이 있다고 한 사례\n[5] 퇴직한 근로자가 최저임금에 미달하는 임금을 받아 온 경우, 퇴직금을 산정하는 방법",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025다213167",
+        "case_name": "임금",
+        "court": "대법원",
+        "decided_at": "2025-09-04",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-752",
+        "document_id": "752",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2024나118416\n법원: 창원지방법원\n선고일: 2026-08-21\n구분: 판결이유\n내용: 이 유\n1. 인 정 사 실\n가 . 원 고 는 2024. 1. 15. 부터 피 고 에게 근 로 를 제공 하다가 2024. 5. 31. 퇴 사하 였 다 .\n나 . 피 고 는 원 고 에게 2024. 4. 분 임금 2,800,000 원 및 2024. 5. 분 임금 2,800,000 원 합 계 5,600,000 원을 지 급\n하지 않 았 다 .\n【 인 정 근 거 】 다 툼 없 는 사 실 , 갑 제 1 내 지 7 호 증 의 각 기 재 , 변 론 전체의 취 지\n2. 판단\n피 고가 원 고 에게 2024. 4. 분 및 2024. 5. 분 임금 을 지 급 하지 아니한 사 실 은 앞 서 살 펴 본 바 와 같 으 므 로 , 피 고\n는 원 고 에게 5,600,000 원 (= 2,800,000 원 × 2 개 월 ) 및 이 에 대 하 여 위 미 지 급 임금 의 최 종 지 급 기 일 이 후 로\n서 원 고가 구 하 는 2024. 6. 15. 부터 다 갚 는 날 까 지 근 로기 준법에서 정한 연 20% 의 비 율 로 계산 한 지 연 손 해\n금 을 지 급 할 의무 가 있 다 .\n이 에 대해 피 고 는 , 원 고가 피 고 의 명 예 를 훼 손 함 에 따 라 피 고가 고 객 들에게 환불 을 해주는 등 의 손 해 가 발생\n하 였 으 므 로 그 와 같 은 불법 행 위를 원 인 으 로 하 는 손 해 배 상 채 권 을 자동 채 권 으 로 하 여 원 고 의 임금 채 권 과 상\n계 를 한 다 는 취 지로 항변 하 나 , 근 로기 준법 제 43 조 제 1 항 본 문에 의 하 면 임금 은 통 화 로 직 접 근 로 자에게 그 \n전 액 을 지 급 하 여 야 하 는바 사 용자는 근 로 자에 대 하 여 가지 는 채 권 으 로 써 근 로 자의 임금 채 권 과 상 계 를 하지 \n못 하 는 것 이 원 칙 이 므 로 피 고 의 항변 은 이 유 없 다 .\n3. 결 론\n그 렇 다 면 원 고 의 이 사 건 청 구는 이 유 있어 인 용 하 여 야 한 다 . 제 1 심판 결 은 이 와 결 론 을 같 이하 여 정 당 하 므 로 \n피 고 의 항 소는 이 유 없 어 기 각 하기로 하 여 주문과 같 이 판 결 한 다 .\n판 사 강 병 훈 ( 재판 장 ) 김 수 현 제아 윤 강 병 훈",
+        "source": {
+          "source_id": "752",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%B0%BD%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2024%EB%82%98118416"
+        },
+        "score": 0.3439,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2024나118416",
+        "case_name": "임금",
+        "court": "창원지방법원",
+        "decided_at": "2026-08-21",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [],
+    "sources": [
+      {
+        "source_id": "750",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EC%95%88%EC%82%B0%EC%A7%80%EC%9B%90/2024%EA%B0%80%EB%8B%A889347"
+      },
+      {
+        "source_id": "736",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=615691"
+      },
+      {
+        "source_id": "752",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%B0%BD%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2024%EB%82%98118416"
+      },
+      {
+        "source_id": "701",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EA%B8%B0%EC%A4%80%EB%B2%95"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "제공된 정보만으로 구체적인 사례 판단은 어렵습니다.",
+      "근로기준법 제43조 조문 원문은 증거에 포함되어 있지 않음",
+      "상품권 지급 관련 명확한 법령 조항은 제공된 증거에 없음",
+      "추가 법률 자문이 필요할 수 있음"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "step_id": "validation-869362fa-412b-43da-94e7-70ca3bd0873a",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "step_id": "validation-869362fa-412b-43da-94e7-70ca3bd0873a",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "step_id": "search_cases-0f3dac0a-d7b3-46c1-b94f-e30cc6c4c25e",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "step_id": "search_cases-0f3dac0a-d7b3-46c1-b94f-e30cc6c4c25e",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "step_id": "search_legal_documents-aee855c0-1cf2-4b9d-9bf7-bc675f99a2fb",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "step_id": "search_legal_documents-aee855c0-1cf2-4b9d-9bf7-bc675f99a2fb",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 1
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-2d1ab2df-a018-4994-91f0-b99fc1deec26",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_cases",
+    "search_legal_documents"
+  ],
+  "counts": {
+    "related_laws": 1,
+    "similar_cases": 3,
+    "consultations": 0
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 11.781
+}

@@ -1,0 +1,448 @@
+{
+  "id": "T038",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "인터넷으로 산 물건을 받은 뒤 반품하고 싶습니다. 청약철회 기간 관련 조문을 찾아주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+  "response": {
+    "request_id": "req-d54bf18e-b0bc-45fa-b097-a0d41335c294",
+    "agent_id": "consumer",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "인터넷으로 산 물건의 청약철회(반품) 기간에 관한 법령 조문을 찾는 질문입니다.",
+    "key_issues": [
+      "청약철회는 계약 체결일부터 7일 이내 가능하다.",
+      "포장을 단순 개봉한 경우에도 청약철회가 가능하다.",
+      "소비자 책임으로 물건이 훼손되면 청약철회가 제한될 수 있다.",
+      "청약철회 시 대금 환급은 3영업일 이내에 이루어져야 한다."
+    ],
+    "answer": "전자상거래 등에서의 소비자보호에 관한 법률 제17조에 따르면, 통신판매(인터넷 구매 포함)에서 소비자는 계약 체결일부터 7일 이내에 청약철회(계약 해제)를 할 수 있습니다. 다만, 재화 등의 내용 확인을 위해 포장을 훼손한 경우는 청약철회가 가능하며, 소비자의 고의 또는 과실로 재화 등이 훼손된 경우에는 제한될 수 있습니다. 구체적으로는 전자상거래 법 제17조가 청약철회 기간과 방법, 제한 사유 등을 규정하고 있으니 해당 조문을 참고하시면 됩니다. 또한, 청약철회 시에는 반품 후 3영업일 이내에 대금을 환급받을 수 있습니다(전자상거래 등에서의 소비자보호에 관한 법률 제18조).",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "사용자의 질문은 인터넷에서 구입한 물건의 반품과 청약철회 기간에 관한 법령 조문을 명확히 요청하고 있어, 법령 검색이 가능합니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "missing",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-703",
+        "document_id": "703",
+        "title": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "content": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제13조\n조문 제목: 신원 및 거래조건에 대한 정보의 제공\n내용: 제13조(신원 및 거래조건에 대한 정보의 제공) ① 통신판매업자가 재화등의 거래에 관한 청약을 받을 목적으로 표시ㆍ광고를 할 때에는 그 표시ㆍ광고에 다음 각 호의 사항을 포함하여야 한다. <개정 2016.3.29> 1. 상호 및 대표자 성명 2. 주소ㆍ전화번호ㆍ전자우편주소 3. 제12조에 따라 공정거래위원회 또는 특별자치시장ㆍ특별자치도지사ㆍ시장ㆍ군수ㆍ구청장에게 한 신고의 신고번호와 그 신고를 받은 기관의 이름 등 신고를 확인할 수 있는 사항 ② 통신판매업자는 소비자가 계약체결 전에 재화등에 대한 거래조건을 정확하게 이해하고 실수나 착오 없이 거래할 수 있도록 다음 각 호의 사항을 적절한 방법으로 표시ㆍ광고하거나 고지하여야 하며, 계약이 체결되면 계약자에게 다음 각 호의 사항이 기재된 계약내용에 관한 서면을 재화등을 공급할 때까지 교부하여야 한다. 다만, 계약자의 권리를 침해하지 아니하는 범위에서 대통령령으로 정하는 사유가 있는 경우에는 계약자를 갈음하여 재화등을 공급받는 자에게 계약내용에 관한 서면을 교부할 수 있다. 1. 재화등의 공급자 및 판매자의 상호, 대표자의 성명ㆍ주소 및 전화번호 등 2. 재화등의 명칭ㆍ종류 및 내용 2의2. 재화등의 정보에 관한 사항. 이 경우 제품에 표시된 기재로 계약내용에 관한 서면에의 기재를 갈음할 수 있다. 3. 재화등의 가격(가격이 결정되어 있지 아니한 경우에는 가격을 결정하는 구체적인 방법)과 그 지급방법 및 지급시기 4. 재화등의 공급방법 및 공급시기 5. 청약의 철회 및 계약의 해제(이하 \"청약철회등\"이라 한다)의 기한ㆍ행사방법 및 효과에 관한 사항(청약철회등의 권리를 행사하는 데에 필요한 서식을 포함한다) 6. 재화등의 교환ㆍ반품ㆍ보증과 그 대금 환불 및 환불의 지연에 따른 배상금 지급의 조건ㆍ절차 7. 전자매체로 공급할 수 있는 재화등의 전송ㆍ설치 등을 할 때 필요한 기술적 사항 8. 소비자피해보상의 처리, 재화등에 대한 불만 처리 및 소비자와 사업자 사이의 분쟁 처리에 관한 사항 9. 거래에 관한 약관(그 약관의 내용을 확인할 수 있는 방법을 포함한다) 10. 소비자가 구매의 안전을 위하여 원하는 경우에는 재화등을 공급받을 때까지 대통령령으로 정하는 제3자에게 그 재화등의 결제대금을 예치하는 것(이하 \"결제대금예치\"라 한다)의 이용을 선택할 수 있다는 사항 또는 통신판매업자의 제24조제1항에 따른 소비자피해보상보험계약등의 체결을 선택할 수 있다는 사항(제15조제1항에 따른 선지급식 통신판매의 경우에만 해당하며, 제24조제3항에 각 호의 어느 하나에 해당하는 거래를 하는 경우는 제외한다) 11. 그 밖에 소비자의 구매 여부 판단에 영향을 주는 거래조건 또는 소비자피해의 구제에 필요한 사항으로서 대통령령으로 정하는 사항 ③ 통신판매업자는 미성년자와 재화등의 거래에 관한 계약을 체결할 때에는 법정대리인이 그 계약에 동의하지 아니하면 미성년자 본인 또는 법정대리인이 그 계약을 취소할 수 있다는 내용을 미성년자에게 고지하여야 한다. ④ 공정거래위원회는 제1항 및 제2항에 따른 통신판매업자의 상호 등에 관한 사항, 재화등의 정보에 관한 사항과 거래조건에 대한 표시ㆍ광고 및 고지의 내용과 방법을 정하여 고시할 수 있다. 이 경우 거래방법이나 재화등의 특성을 고려하여 그 표시ㆍ광고 및 고지의 내용과 방법을 다르게 정할 수 있다. ⑤ 통신판매업자는 제2항에 따라 소비자에게 표시ㆍ광고하거나 고지한 거래조건을 신의를 지켜 성실하게 이행하여야 한다. ⑥ 통신판매업자는 재화등의 정기결제 대금이 증액되거나 재화등이 무상으로 공급된 후 유료 정기결제로 전환되는 경우에는 그 증액 또는 전환이 이루어지기 전 대통령령으로 정하는 기간 내에 그 증액 또는 전환의 일시, 변동 전후의 가격 및 결제방법에 대하여 소비자의 동의를 받고, 증액 또는 전환을 취소하거나 해지하기 위한 조건ㆍ방법과 그 효과를 소비자에게 고지하여야 한다. <신설 2024.2.13>",
+        "source": {
+          "source_id": "703",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+        },
+        "score": 0.2445,
+        "summary": null,
+        "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-07-21"
+        }
+      },
+      {
+        "evidence_id": "law-704",
+        "document_id": "704",
+        "title": "소비자기본법",
+        "content": "법령명: 소비자기본법\n조문: 제47조\n조문 제목: 결함정보의 보고의무\n내용: 제47조(결함정보의 보고의무) ①사업자는 다음 각 호의 어느 하나에 해당하는 경우에는 제조ㆍ수입ㆍ판매 또는 제공한 물품등의 결함을 소관 중앙행정기관의 장에게 보고(전자적 보고를 포함한다. 이하 같다)하여야 한다. 다만, 제2호에 해당하는 경우로서 사업자가 제48조에 따라 해당 물품등의 수거ㆍ파기ㆍ수리ㆍ교환ㆍ환급 또는 제조ㆍ수입ㆍ판매ㆍ제공의 금지 및 그 밖의 필요한 조치(이하 이 조에서 \"수거ㆍ파기등\"이라 한다)를 한 경우에는 그러하지 아니하다. <개정 2017.10.31> 1. 제조ㆍ수입ㆍ판매 또는 제공한 물품등에 소비자의 생명ㆍ신체 또는 재산에 위해를 끼치거나 끼칠 우려가 있는 제조ㆍ설계 또는 표시 등의 중대한 결함이 있다는 사실을 알게 된 경우 2. 제조ㆍ수입ㆍ판매 또는 제공한 물품등과 동일한 물품등에 대하여 외국에서 결함이 발견되어 사업자가 다음 각 목의 어느 하나에 해당하는 조치를 한 경우 또는 외국의 다른 사업자가 해당 조치를 한 사실을 알게 된 경우 가. 외국 정부로부터 수거ㆍ파기등의 권고 또는 명령을 받고 한 수거ㆍ파기등 나. 자발적으로 한 수거ㆍ파기등 ②제1항의 규정에 따른 보고를 받은 중앙행정기관의 장은 사업자가 보고한 결함의 내용에 관하여 제17조의 규정에 따른 시험ㆍ검사기관 또는 한국소비자원 등에 시험ㆍ검사를 의뢰하고, 시험ㆍ검사의 결과 그 물품등이 제49조 또는 제50조의 요건에 해당하는 경우에는 사업자에게 각각에 해당하는 규정에 따른 필요한 조치를 취하여야 한다. ③제1항의 규정에 따라 결함의 내용을 보고하여야 할 사업자는 다음 각 호와 같다. 1. 물품등을 제조ㆍ수입 또는 제공하는 자 2. 물품에 성명ㆍ상호 그 밖에 식별 가능한 기호 등을 부착함으로써 자신을 제조자로 표시한 자 3. 「유통산업발전법」 제2조제3호의 규정에 따른 대규모점포 중 대통령령이 정하는 대규모점포를 설치하여 운영하는 자 4. 그 밖에 소비자의 생명ㆍ신체 및 재산에 위해를 끼치거나 끼칠 우려가 있는 물품등을 제조ㆍ수입ㆍ판매 또는 제공하는 자로서 대통령령이 정하는 자 ④제1항의 규정에 따라 사업자가 보고하여야 할 중대한 결함의 범위, 보고기한 및 보고절차 등에 관하여 필요한 사항은 대통령령으로 정한다.",
+        "source": {
+          "source_id": "704",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+        },
+        "score": 0.2435,
+        "summary": null,
+        "law_name": "소비자기본법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-01-02"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1177",
+        "document_id": "1177",
+        "title": "채무부존재확인",
+        "content": "사건명: 채무부존재확인\n사건번호: 2018가단509570\n법원: 수원지방법원\n선고일: 2018-09-04\n구분: 주문\n내용: 1. 이 사 건 소 중 채 무부 존 재 확 인 청 구 부 분 을 각 하 한 다 .\n2. 원 고 의 나 머 지 청 구를 모 두 기 각 한 다 .\n3. 소 송 비용은 원 고가 부 담 한 다 .",
+        "source": {
+          "source_id": "1177",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2018%EA%B0%80%EB%8B%A8509570"
+        },
+        "score": 0.2456,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2018가단509570",
+        "case_name": "채무부존재확인",
+        "court": "수원지방법원",
+        "decided_at": "2018-09-04",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1174",
+        "document_id": "1174",
+        "title": "할부거래에관한법률위반",
+        "content": "사건명: 할부거래에관한법률위반\n사건번호: 2017도17611\n법원: 대법원\n선고일: 2018-01-24\n구분: 주문\n내용: 상 고 를 모 두 기 각 한 다 .",
+        "source": {
+          "source_id": "1174",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+        },
+        "score": 0.2405,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2017도17611",
+        "case_name": "할부거래에관한법률위반",
+        "court": "대법원",
+        "decided_at": "2018-01-24",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1159",
+        "document_id": "1159",
+        "title": "대금반환",
+        "content": "사건명: 대금반환\n사건번호: 2025가합11696\n법원: 서울중앙지방법원\n선고일: 2026-07-16\n구분: 판결이유\n내용: , CM, CN, CO, CP 의 주장 은 더 나아 가 살 펴 볼 필 요 없 이 모 두 이 유 없 다 . 4. 원 고 들 의 피 고 판매 사 들에 대한 각 청 구에 관한 판단 가 . 청약 철 회에 기 한 대 금반 환 청 구에 관한 판단 1) 관 련 법 리 가 ) 전자상거 래 법 제 17 조 제 1 항은 ' 통 신 판매업 자 와 재 화 등 에 관한 구 매 에 관한 계약 을 체 결 한 소비자는 해 당 계약 에 관한 청약 철 회 등 을 할 수 있 다 ' 고 정 하고 있 고 , 그 구체 적 인 행 사기 간을 같 은 항 각 호에서 정 하고 있 다 . 그러나 청약 철 회 권 이 행 사기 간 내에 있 더 라도 전자상거 래 법 제 17 조 제 2 항 각 호의 사 유 가 있는 경우 소비자의 청약 철 회 권 행 사가 제한 되 어 소비자는 사 업 자의 의 사 에 반 하 여 청약 철 회 권 을 행 사 할 수 없 다 . 나 ) 위 와 같 이 전자상거 래 법은 소비자 가 계약 을 체 결 한 후 라도 일정한 기 간 내에는 그 의 사 를 재 고하 여 아무 런 불 이 익 없 이 계약 을 처 음부터 없 었던 것 으 로 할 수 있도록 청약 철 회 권 규 정을 두 어 소비자를 보호 하고 있 다 . 소비자는 청약 철 회 권 을 행 사 함 으 로 써 그 계약 에서 정한 위 약금 등 을 부 담 하지 않 고 도 체 결 된 계약 을 일 방 적 으 로 해소 할 수 있 고 , 이 러한 점 에서 청약 철 회 권 의 행 사 는 일 반적 인 계약 의 해 지 와 는 구 별 된 다 . 소비자 에게 청약 철 회 권 행 사 의 자유는 최 대한 보장 되 어 야 하고 그 제한은 예 외 적 으 로 만 허 용 되 어 야 한 다 (대 법 원 [8] 2023. 6. 15. 선 고 2018 다 287034 판 결 참 조 ) 다 ) 전자상거 래 법 제 17 조 제 5 항은 ' 재 화 등 의 훼 손 에 대 하 여 소비자의 책 임 이 있는 지 여부 , 재 화 등 의 구 매 에 관한 계약 이 체 결 된 사 실 및 그 시기 , 재 화 등 의 공 급 사 실 및 그 시기 등 에 관 하 여 다 툼 이 있는 경우에는 통 신 판매업 자 가 이 를 증 명 하 여 야 한 다 ' 고 정 하고 있 다 . 위 전자상거 래 법 제 17 조 제 5 항의 규 정 체 계 , 소비자에게 청약 철 회 권 행 사 의 자유는 최 대한 보장 되 어 야 하고 그 제한은 예 외 적 으 로 만 허 용 되 어 야 한 다 는 앞 서 본 법 리 등 에 비 추 어 보면 , 통 신 판매업 자 등 은 청약 철 회의 행 사기 간 이 도과 하 였 는 지 에 관 하 여 전자상거 래 법 제 17 조 제 1 항 각 호에 해 당 하 는 사 실 이 발생 하 였 음을 증 명 할 책 임 이 있 다 . 2) 청 구원 인 에 관한 판단 원 고 들 이 피 고 판매 사 들과 이 사 건 각 구 매계약 을 체 결 한 사 실 은 앞 서 본 바 와 같 고 , 원 고 들 이 위 각 구 매계 약 에 관 하 여 청약 철 회 권 을 행 사 한 다 는 의 사가 표 시 된 이 사 건 소장 부 분 이 2025. 6. 27. 이 법 원에 제 출 및 발 송 되 어 위 소장 부 분 이 2025. 7. 24. 및 2025. 7. 25. 피 고 판매 사 들에게 도 달 한 사 실 은 기 록상 명 백 하다 . 청약 철 회 권 을 서면으 로 행 사하 는 경우에는 그 의 사 표 시가 적 힌 서면을 발 송 한 날 에 그 효 력 이 발생 한 다 (전자 상거 래 법 제 17 조 제 4 항). 이 사 건 각 구 매계약 은 원 고 들의 청약 철 회 권 행 사로 인 해 2025. 6. 27. 자 로 실 효 되 었 다고 할 것 이 므 로 특별 한 사 정 이 없 는 한 피 고 판매 사 들은 전자상거 래 법 제 18 조 제 2 항에 따 라 청약 철 회에 따 른 환급 으 로 원 고 들에게 이 사 건 각 구 매계약 에 따 른 대 금 상 당 액 을 반 환 할 의무 가 있 다 . 3) 피 고 A 의 주장에 관한 판단 가 ) 책 임 없 는 사 유 로 재 화 등 공 급 이 완 료되 지 않 아 청약 철 회 권 을 행 사 할 수 없 다 는 주장 (1) 주장의 요 지 전자상거 래 법 제 17 조 제 1 항 제 1 호 단 서에 기 한 소비자의 청약 철 회 권 은 재 화 등 의 공 급 이 정상 적 으 로 완 료 될 수 있는 경우를 전제 로 하 는 규 정 이다 . 그 런 데 피 고 A 은 이 사 건 사 태 라는 피 고 A 의 책 임 없 는 사 유 로 인 해 결 제대 금 을 전 혀 정 산 받 지 못 해 재 화 등 의 공 급 을 완 료할 수 없 었 으 므 로 , 원 고 들 이 위 조 항 에 기하 여 청약 철 회 권 을 행 사 할 수 없 다 . (2) 판단 전자상거 래 법 제 17 조 제 1 항 제 1 호는 청약 철 회 권 행 사기 간에 관 하 여 ' 제 13 조 제 2 항 에 따 른 계약 내용에 관한 서면을 받 은 날 부터 7 일 . 다",
+        "source": {
+          "source_id": "1159",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A911696"
+        },
+        "score": 0.2297,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025가합11696",
+        "case_name": "대금반환",
+        "court": "서울중앙지방법원",
+        "decided_at": "2026-07-16",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [
+      {
+        "evidence_id": "consultation-114",
+        "document_id": "114",
+        "title": "온라인쇼핑몰에서 구입한 화장품 청약철회 요구",
+        "content": "제목: 온라인쇼핑몰에서 구입한 화장품 청약철회 요구\n\n품목: 보건/의료\n\n질문: 온라인쇼핑몰을 통해 CC크림을 구입했습니다. 배송된 제품의 상자를 열어 확인했으나 마음에 들지 않아 청약철회를 요구했으나 판매자는 제품 개봉 흔적이 있다며 청약철회를 거부했습니다. 이 경우 청약철회가 가능할까요?\n\n답변: 「전자상거래 등에서의 소비자보호에 관한 법률」제17조 제2항에 따르면 소비자에게 책임 있는 사유로 재화등이 멸실되거나 훼손된 경우 청약철회를 할 수 없으나, 재화등의 내용을 확인하기 위하여 포장 등을 훼손한 경우는 제외됩니다. 이에 제품 포장을 단순 개봉한 경우 청약철회 불가 사유에 해당하지 않아 청약철회가 가능합니다.",
+        "source": {
+          "source_id": "114",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.397,
+        "summary": "온라인쇼핑몰을 통해 CC크림을 구입했습니다. 배송된 제품의 상자를 열어 확인했으나 마음에 들지 않아 청약철회를 요구했으나 판매자는 제품 개봉 흔적이 있다며 청약철회를 거부했습니다. 이 경우 청약철회가 가능할까요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-470",
+        "document_id": "470",
+        "title": "건강기능식품 청약철회 방법",
+        "content": "제목: 건강기능식품 청약철회 방법\n\n품목: 식품\n\n질문: 보건소에서 나왔다고 하여 방문판매원에게 문을 열어주고 설문조사에 응하였습니다. 응답내용을 살펴본 방문판매원은 소비자가 건강이 좋지 않은 상태라며 건강식품을 권유하면서 특별할인을 받을 수 있으며, 복용한 후 효과가 없을 경우 반품이 가능함을 설명하였습니다. 이에 형식적으로 계약서를 작성한다는 판매원의 말만 믿고 계약서 내용을 제대로 읽어보지 않은 채 계약서에 서명한 후 건강식품을 받았으나 마음이 바뀌어 반품하고자 연락하니 거절당했습니다. 이후 약 2백만원 상당의 대금을 청구하는 지로용지가 배송되었습니다. 반품할 수 있는 방법은 없나요?\n\n답변: 청약철회기간인 14일이내에 내용증명우편을 발송해야 합니다. \r\n\r\n최근 건강에 관한 관심이 높아지면서 건강기능식품의 수요가 증가했습니다. 그러나 건강기능식품은 말 그대로 건강에 기능적인 역할을 하는 식품으로 치료제가 아니므로 질병이 있는 사람은 건강식품에 의존하기 보다는 병원을 방문하여 치료를 받는 것이 올바른 방법입니다.\r\n최근 인터넷이나 케이블TV 등을 통해 특정식품을 마치 만병통치약인양 선전하여 이를 과신한 소비자가 구입 후 피해를 입는 경우가 다수 발생하고 있으니 주의가 필요합니다. \r\n방문판매등에관한법률에 의하면 소비자는 계약일로부터 14일 이내 청약철회를 요청할 수 있습니다. 방법은 내용증명우편을 이용해야 나중에 입증관계가 쉬우므로 동 우편방법을 이용하는 것이 좋습니다.\r\n대금을 신용카드로 결제한 경우라면 신용카드사에도 동일 내용을 보내 청약철회 절차에 따른 대금처리를 요청해야 합니다.",
+        "source": {
+          "source_id": "470",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3946,
+        "summary": "보건소에서 나왔다고 하여 방문판매원에게 문을 열어주고 설문조사에 응하였습니다. 응답내용을 살펴본 방문판매원은 소비자가 건강이 좋지 않은 상태라며 건강식품을 권유하면서 특별할인을 받을 수 있으며, 복용한 후 효과가 없을 경우 반품이 가능함을 설명하였습니다. 이에 형식적으로 계약서를 작성한다는 판매원의 말만 믿고 계약서 내용을 제대로 읽어보지 않은 채 계약서에 서명한 후 건강식품을 받았으나 마음이 바뀌어 반품하고자 연락하니 거절당했습니다. 이후 약 2백만원 상당의 대금을 청구하는 지로용지가 배송되었습니다. 반품할 수 있는 방법은 없나요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-136",
+        "document_id": "136",
+        "title": "전자상거래로 구입한 물품 반환시 현금으로 환급 요청 관련",
+        "content": "제목: 전자상거래로 구입한 물품 반환시 현금으로 환급 요청 관련\n\n품목: 기타\n\n질문: 전자상거래로 통신기기를 구입한 후 7일 이내 청약철회를 요구하여 물품을 반품하였는데, 사업자가 물품 대금을 현금으로 환급해 주지 않고 적립금으로 처리하고 나중에 다른 물건을 구입하라고 합니다.\r\n현금 환급이 가능한지요?\n\n답변: 현금으로 환급받을 수 있습니다.\r\n\r\n전자상거래 등에서의 소비자보호에 관한 법률 제18조(청약철회등의 효과)는 청약철회시 소비자는 이미 공급받은 제품을 사업자에게 반환해야 하며, 사업자는 물품을 반환 받은 날로부터 3영업일 이내에 이미 지급받은 대금을 환급해야 한다고 명시하고 있습니다.\r\n사업자가 대금의 환급을 지연할 경우에는 가산이자를 지급하도록 하고 있습니다.",
+        "source": {
+          "source_id": "136",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.385,
+        "summary": "전자상거래로 통신기기를 구입한 후 7일 이내 청약철회를 요구하여 물품을 반품하였는데, 사업자가 물품 대금을 현금으로 환급해 주지 않고 적립금으로 처리하고 나중에 다른 물건을 구입하라고 합니다.\r\n현금 환급이 가능한지요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "703",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+      },
+      {
+        "source_id": "704",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+      },
+      {
+        "source_id": "114",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "470",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "136",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "1177",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2018%EA%B0%80%EB%8B%A8509570"
+      },
+      {
+        "source_id": "1174",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+      },
+      {
+        "source_id": "1159",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A911696"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "제공된 증거 내에 청약철회 기간에 관한 전자상거래법 제17조가 직접 기재되어 있지 않으므로 정확한 조문 확인이 필요할 수 있습니다.",
+      "구체적인 예외 사유나 상황별 적용은 별도 확인이 필요합니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "validation-ee734d00-6baf-4b70-9993-12523c579367",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "validation-ee734d00-6baf-4b70-9993-12523c579367",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "search_laws-d088229a-93d8-4930-9165-64cc4fb2bdb2",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "search_laws-d088229a-93d8-4930-9165-64cc4fb2bdb2",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "search_consultations-82250eae-d20e-4398-b094-a24fccf1deeb",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "search_consultations-82250eae-d20e-4398-b094-a24fccf1deeb",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "search_cases-e77d4614-32a4-4676-9e14-2202140e077b",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "step_id": "search_cases-e77d4614-32a4-4676-9e14-2202140e077b",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-1f101574-5429-449c-8c9c-a913f4fb6b2d",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_laws",
+    "search_consultations",
+    "search_cases"
+  ],
+  "counts": {
+    "related_laws": 2,
+    "similar_cases": 3,
+    "consultations": 3
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 21.453
+}

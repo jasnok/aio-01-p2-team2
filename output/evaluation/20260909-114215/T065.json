@@ -1,0 +1,100 @@
+{
+  "id": "T065",
+  "group": "정보 부족",
+  "category": "consumer",
+  "question": "어떤 법이 적용되는지 궁금합니다. 도와주세요.",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "PASS",
+  "run_id": "run-09bbeaa2-8fa6-442b-8f64-d5afcfb8454e",
+  "response": {
+    "request_id": "req-18a129fb-67f1-4dea-984f-586ec50ae7e0",
+    "agent_id": "consumer",
+    "status": "stopped",
+    "termination_reason": "needs_clarification",
+    "question_summary": "정확한 검색을 위해 추가 정보가 필요합니다.",
+    "key_issues": [],
+    "answer": "아래 질문에 답해 주시면 관련 법령과 사례를 더 정확하게 검색할 수 있습니다.",
+    "input_assessment": {
+      "status": "needs_clarification",
+      "message": "적용되는 법률을 안내하기 위해 구체적인 상황이나 문제의 성격이 필요합니다.",
+      "checks": {
+        "situation": "missing",
+        "timing": "missing",
+        "relationship": "missing",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [],
+    "similar_cases": [],
+    "consultations": [],
+    "sources": [],
+    "follow_up_questions": [
+      "어떤 상황에서 적용 법률을 궁금해 하시는지 구체적으로 설명해 주실 수 있나요?",
+      "관련된 사건이나 문제가 발생한 시점이나 기간이 있나요?",
+      "상대방이나 관련된 관계자에 대한 정보를 제공해 주실 수 있나요?"
+    ],
+    "cautions": [
+      "추가 정보는 검색 정확도를 높이기 위한 것이며 법률 판단이 아닙니다.",
+      "질문이 너무 일반적이어서 구체적인 법률 안내가 어렵습니다."
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-09bbeaa2-8fa6-442b-8f64-d5afcfb8454e",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-09bbeaa2-8fa6-442b-8f64-d5afcfb8454e",
+        "step_id": "validation-e83c0f9f-0a3f-4fc5-89f5-52b448c2f7fa",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-09bbeaa2-8fa6-442b-8f64-d5afcfb8454e",
+        "step_id": "validation-e83c0f9f-0a3f-4fc5-89f5-52b448c2f7fa",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "input.required",
+      "data": {
+        "run_id": "run-09bbeaa2-8fa6-442b-8f64-d5afcfb8454e",
+        "status": "stopped",
+        "message": "정확한 분석을 위해 추가 정보가 필요합니다."
+      }
+    }
+  ],
+  "tools": [],
+  "counts": {
+    "related_laws": 0,
+    "similar_cases": 0,
+    "consultations": 0
+  },
+  "frontend_state": "needs_clarification",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 11.875
+}

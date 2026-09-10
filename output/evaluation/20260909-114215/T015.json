@@ -1,0 +1,112 @@
+{
+  "id": "T015",
+  "group": "정상 요청",
+  "category": "housing",
+  "question": "계약 기간 도중 임대인이 퇴거를 요구합니다. 임대차 존속 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "step_id": "validation-aaa2a97d-8c85-45c7-9072-b101dce4af90",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "step_id": "validation-aaa2a97d-8c85-45c7-9072-b101dce4af90",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "step_id": "search_cases-8f9c74c2-59f3-47f4-8053-cdaabf8802b3",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "step_id": "search_cases-8f9c74c2-59f3-47f4-8053-cdaabf8802b3",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "step_id": "search_legal_documents-0ff93506-ef59-4acc-9dd3-c2091f91b93c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "step_id": "search_legal_documents-0ff93506-ef59-4acc-9dd3-c2091f91b93c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-f9fdab37-fe64-4ec5-8be6-3f344684122e",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 24.141
+}

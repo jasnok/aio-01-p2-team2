@@ -1,0 +1,318 @@
+{
+  "id": "T026",
+  "group": "정상 요청",
+  "category": "labor",
+  "question": "회사가 해고를 문자로 통보했습니다. 해고 서면통지 관련 조문을 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+  "response": {
+    "request_id": "req-8ffeaa3d-b1cb-4075-bca3-641ec92d4295",
+    "agent_id": "labor",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "회사가 해고를 문자로 통보한 경우, 해고 서면통지 관련 법 조문 문의",
+    "key_issues": [
+      "해고 통보는 서면으로 이루어져야 한다는 점",
+      "서면 통지 없이 해고 통보 시 부당해고가 될 수 있음",
+      "구체적인 해고 서면통지 관련 법 조문 미제시"
+    ],
+    "answer": "제공된 증거에는 해고를 서면으로 통지해야 한다는 법령이나 조문의 구체적인 내용이 포함되어 있지 않습니다. 다만 'case-751' 판결에서는 사용자가 근로자에게 해고의 사유와 시기를 적은 서면으로 해고를 통지하지 않은 경우 해고가 부당해고로 무효라고 판단한 사실이 나타나 있습니다. 이는 해고 시 서면 통지가 중요하다는 점을 시사하지만, 정확한 법 조문이나 관련 법령은 명시되어 있지 않습니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "해고 서면통지와 관련된 법조항을 안내할 수 있습니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "not_required",
+        "relationship": "met",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-702",
+        "document_id": "702",
+        "title": "근로자퇴직급여 보장법",
+        "content": "법령명: 근로자퇴직급여 보장법\n조문: 제37조\n조문 제목: 금융거래정보의 제공 요청 등\n내용: 제37조(금융거래정보의 제공 요청 등) ① 고용노동부장관은 사용자가 제16조에 따른 급여 지급능력을 확보하였는지 등 퇴직연금제도 운영을 감독하기 위하여 필요한 경우 「금융실명거래 및 비밀보장에 관한 법률」 제4조 및 「신용정보의 이용 및 보호에 관한 법률」 제33조에도 불구하고 자산관리업무 및 운용관리업무 계약을 체결한 사업에 관한 다음 각 호의 금융거래에 관한 정보 또는 자료(이하 \"금융거래정보\"라 한다)의 제공을 퇴직연금사업자에게 요청할 수 있다. 1. 가입자 현황 2. 급여 지급 현황 3. 부담금 납입 현황 4. 적립금 운용현황에 관한 정보 ② 고용노동부장관이 제1항에 따라 금융거래정보를 요청할 때에는 다음 각 호의 사항을 적은 문서로 요청하여야 한다. 1. 요청대상 거래기간 2. 요청의 법적 근거 3. 사용목적 4. 요청하는 금융거래정보의 내용 ③ 제1항에 따른 금융거래정보의 요청은 퇴직연금제도 운영의 건전성 감독을 위하여 필요한 최소한도에 그쳐야 한다. ④ 제2항에 따라 퇴직연금사업자가 고용노동부장관에게 금융거래정보를 제공하는 경우에는 그 퇴직연금사업자는 금융거래정보를 제공한 날부터 10일 이내에 제공한 금융거래정보의 주요 내용, 사용목적, 제공받은 자 및 제공일자 등을 해당 사용자 또는 가입자에게 서면으로 알려야 한다. 이 경우 통지에 드는 비용에 관하여는 「금융실명거래 및 비밀보장에 관한 법률」 제4조의2제4항을 준용한다. ⑤ 고용노동부장관은 제1항에 따라 퇴직연금사업자에게 금융거래정보를 요구하는 경우에는 그 사실을 기록하여야 하며, 금융거래정보를 요구한 날부터 5년간 그 기록을 보관하여야 한다. ⑥ 제1항에 따라 금융거래정보를 제공받아 알게 된 자는 그 알게 된 금융거래정보를 타인에게 제공 또는 누설하거나 그 목적 외의 용도로 이용하여서는 아니 된다.",
+        "source": {
+          "source_id": "702",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EC%9E%90%ED%87%B4%EC%A7%81%EA%B8%89%EC%97%AC%20%EB%B3%B4%EC%9E%A5%EB%B2%95"
+        },
+        "score": 0.2571,
+        "summary": null,
+        "law_name": "근로자퇴직급여 보장법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "document_type": "LAW",
+          "category": "labor"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-751",
+        "document_id": "751",
+        "title": "해고무효확인및임금",
+        "content": "사건명: 해고무효확인및임금\n사건번호: 2025가합893\n법원: 제주지방법원\n선고일: 2026-08-13\n구분: 판결이유\n내용: 1. 기 초 사 실 가 . 원 고 는 2025. 3. 14. 경 피 고 의 제 초 작 업 구 인 광 고 를 보 고 피 고 에게 연 락 하 여 2025. 3. 17. 부터 제 초 작 업 에 관한 근 로 를 제공 하기로 약 정 하 였 다 . 원 고 는 2025. 3. 17. 부터 2025. 3. 31. 까 지 의 기 간 중 11 일 , 2025. 4. 18. 부터 2025. 4. 30. 까 지 의 기 간 중 8 일 , 2025. 5. 2. 부터 5. 8. 까 지 의 기 간 중 5 일간 각 근 무 하 였 다 . 나 . 피 고 는 원 고 의 임금 으 로 출근 한 날 마 다 매 일 115,000 원으 로 계산 하 여 , 원 고 에게 2025. 3. 9. 1,265,000 원 , 2025. 5. 2. 920,000 원 , 2025. 5. 12. 575,000 원을 각 지 급 하 였 다 . [ 인 정 근 거 ] 갑 제 1, 2 호 증 , 을 제 1, 3, 4 호 증 의 각 기 재 , 변 론 전체의 취 지 2. 원 고 의 주장 요 지 원 고 는 C 로 부터 업 무를 배 우 던 중 일을 못 한 다 는 이 유 로 폭 언 , 폭 행 등 부 당 한 대우를 받 았 고 , C 는 현 장소장 D 에게 이 를 보 고 해 왔 다 . D 는 현 장소장 이 므 로 경 험 칙 상 해 고 에 관한 권 한 이 사 전에 위 임된 자 이고 , 2025. 5. 8. 원 고 에게 더 이 상 출근 하지 말 라는 내용으 로 해 고 를 통 보 하 였 다 . 피 고 는 근 로기 준법 제 27 조에 따 라 원 고 에게 해 고 의 사 유 , 해 고 의 시기 를 적 은 서면으 로 해 고 를 통 지 한 사 실 이 없 으 므 로 위 해 고 는 부 당 해 고로 서 무 효 이다 . 설 령 , 피 고가 현 장소장 D 에게 해 고 권 한을 사 전에 위 임 한 사 실 이 없 다고 하 더 라도 피 고 는 D 로 부터 원 고 를 해 고 한 사 실 을 전 달받 고 도 원 고 에 대한 복직 조치를 취 하지 않 았 으 므 로 D 의 해 고 를 사 후 에 추 인 한 것 이다 . 따 라서 원 고 에 대한 해 고 는 무 효 이 므 로 , 피 고 는 해 고 다 음 날 부터 원 고가 복직 하 는 날 까 지 원 고 에게 매월 임금 및 이 에 대한 지 연 손 해 금 을 지 급 할 의무 가 있 다 . 3. 판단 가 . 관 련 법 리 근 로 계약 의 종 료 사 유는 근 로 자의 의 사 나 동의에 의 하 여 이 루 어 지 는 퇴 직 , 근 로 자의 의 사 에 반 하 여 사 용자의 일방 적 의 사 에 의 하 여 이 루 어 지 는 해 고 , 근 로 자나 사 용자의 의 사 와 는 관 계없 이 이 루 어 지 는 자동소 멸 등 으 로 나 눌 수 있 고 , 그중 해 고 란 실 제 사 업 장에서 불 리 는 명 칭 이 나 절 차 에 관 계없 이 근 로 자의 의 사 에 반 하 여 사 용 자의 일방 적 의 사 에 의 하 여 이 루 어 지 는 모 든 근 로 계약 관 계 의 종 료 를 의미한 다 (대 법 원 1993. 10. 26. 선 고 92 다 54210 판 결, 대 법 원 2011. 3. 24. 선 고 2010 다 92148 판 결 등 참 조 ). 근 로 계약 관 계 가 이 와 같 은 해 고 때 문 에 종 료 하 였 다 는 점 에 관한 증 명 책 임 은 이 를 주장 하 는 자에게 있 다 . 해 고 는 명 시 적 또 는 묵 시 적 의 사 표 시 에 의해서도 이 루 어 질 수 있으 므 로 , 묵 시 적 의 사 표 시 에 의한 해 고가 있 는 지 여부는 사 용자의 노 무 수 령 거부 경위 와 방 법 , 노 무 수 령 거부에 대 하 여 근 로 자 가 보 인 태 도 등 제 반 사 정을 종 합 적 으 로 고 려 하 여 사 용자 가 근 로 관 계 를 일방 적 으 로 종 료할 확 정 적 의 사 를 표 시 한 것 으 로 볼 수 있는 지 여부에 따 라 판단 하 여 야 한 다 (대 법 원 2023. 2. 2. 선 고 2022 두 57695 판 결 등 참 조 ). 나 . 2025. 5. 8. 자 해 고 의 사 표 시 의 유무 앞 서 든 증 거 , 을 제 2 호 증 의 각 기 재 및 변 론 전체의 취 지 에 의 하 면 , 원 고 는 원 고 에게 업 무를 가 르 치 던 C 와 다 툼 이 있어 왔 고 , C 는 근 무 장소에서 업 무 지시 등 을 담 당 하 는 D 에게 이 를 보 고하기 도 하 였 으 며 , D 는 2025. 5. 8. 원 고 에게 그만 나오라는 취 지 의 발 언 을 한 것 으 로 보 이기 는 한 다 . 그러나 , 원 고가 해 고 라 고 주장 하 는 D 의 위 와 같 은 발 언 은 원 고 와 C 의 다 툼 이 반복 됨 을 이 유 로 원 고 와 면 담 을 하 던 중 이 루 어진 것 에 불 과 하고 , C 이 해 고 의 효 력 을 갖 는 명 시 적 이고 확 정 적 인 근 로 계약 종 료 의 의 사 표 시 를 한 것 으 로 보 기 는 어 렵 다",
+        "source": {
+          "source_id": "751",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%A0%9C%EC%A3%BC%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A9893"
+        },
+        "score": 0.252,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025가합893",
+        "case_name": "해고무효확인및임금",
+        "court": "제주지방법원",
+        "decided_at": "2026-08-13",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1171",
+        "document_id": "1171",
+        "title": "근로에관한소송",
+        "content": "사건명: 근로에관한소송\n사건번호: 2025나208119\n법원: 서울고등법원\n선고일: 2026-08-19\n구분: 주문\n내용: 1. 피 고 의 항 소를 기 각 한 다 .\n2. 항 소비용은 피 고가 부 담 한 다 .",
+        "source": {
+          "source_id": "1171",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EA%B3%A0%EB%93%B1%EB%B2%95%EC%9B%90/2025%EB%82%98208119"
+        },
+        "score": 0.2508,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025나208119",
+        "case_name": "근로에관한소송",
+        "court": "서울고등법원",
+        "decided_at": "2026-08-19",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-750",
+        "document_id": "750",
+        "title": "임금",
+        "content": "사건명: 임금\n사건번호: 2024가단89347\n법원: 수원지방법원 안산지원\n선고일: 2026-08-14\n구분: 주문\n내용: 1. 원 고 들의 주위 적 피 고 주 식 회 사 N 에 대한 청 구를 모 두 기 각 한 다 .\n2. 예 비 적 피 고 주 식 회 사 O 는 원 고 A, B, C, D, E, F, G, H, I, J 에게 , 예 비 적 피 고 P 주 식 회 사 는 원 고 K, L, M\n \n에게 , 별 지 퇴 직금 산 정 표 의 ' 법 정 퇴 직금 ' 란 기 재 각 돈 및 위 각 돈 에 대 하 여 같 은 표 의 ' 지 연 손 해 금 기 산 일 ' 란 \n기 재 각 해 당 일부터 다 갚 는 날 까 지 연 20% 의 비 율 로 계산 한 돈 을 각 지 급 하 라 .\n3. 소 송 비용 중 원 고 들과 주위 적 피 고 주 식 회 사 N 사이 에 생 긴 부 분 은 원 고 들 이 부 담 하고 , 원 고 들과 예 비 적 \n피 고 주 식 회 사 O, P 주 식 회 사 사이 에 생 긴 부 분 은 위 피 고 들 이 부 담 한 다 .\n4. 제 2 항 은 가 집행할 수 있 다 .",
+        "source": {
+          "source_id": "750",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EC%95%88%EC%82%B0%EC%A7%80%EC%9B%90/2024%EA%B0%80%EB%8B%A889347"
+        },
+        "score": 0.2459,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2024가단89347",
+        "case_name": "임금",
+        "court": "수원지방법원 안산지원",
+        "decided_at": "2026-08-14",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "labor",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1172",
+        "document_id": "1172",
+        "title": "손해배상(기)",
+        "content": "사건명: 손해배상(기)\n사건번호: 2025가단107537\n법원: 서울북부지방법원\n선고일: 2026-08-20\n구분: 주문\n내용: 1. 원 고 주 식 회 사 A 의 소를 각 하 한 다 .\n2. 원 고 B 의 청 구를 기 각 한 다 .\n3. 소 송 비용은 원 고 들 이 부 담 한 다 .",
+        "source": {
+          "source_id": "1172",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EB%B6%81%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%EB%8B%A8107537"
+        },
+        "score": 0.2734,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025가단107537",
+        "case_name": "손해배상(기)",
+        "court": "서울북부지방법원",
+        "decided_at": "2026-08-20",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "document_type": "CASE",
+          "category": "labor"
+        }
+      }
+    ],
+    "consultations": [],
+    "sources": [
+      {
+        "source_id": "751",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%A0%9C%EC%A3%BC%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A9893"
+      },
+      {
+        "source_id": "1171",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EA%B3%A0%EB%93%B1%EB%B2%95%EC%9B%90/2025%EB%82%98208119"
+      },
+      {
+        "source_id": "750",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%88%98%EC%9B%90%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EC%95%88%EC%82%B0%EC%A7%80%EC%9B%90/2024%EA%B0%80%EB%8B%A889347"
+      },
+      {
+        "source_id": "1172",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EB%B6%81%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%EB%8B%A8107537"
+      },
+      {
+        "source_id": "702",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EA%B7%BC%EB%A1%9C%EC%9E%90%ED%87%B4%EC%A7%81%EA%B8%89%EC%97%AC%20%EB%B3%B4%EC%9E%A5%EB%B2%95"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "제공된 자료에 구체적인 해고 서면통지 법령 조문이 없어 추가 확인 필요",
+      "해고 문자 통보가 서면 통지 요건을 충족하는지 법적 판단은 상황에 따라 다를 수 있음"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "step_id": "validation-9fa3393f-8ad2-4107-ad1f-3c99bedd7500",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "step_id": "validation-9fa3393f-8ad2-4107-ad1f-3c99bedd7500",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "step_id": "search_cases-f76ca4cc-6b05-4c94-8548-4dfe6bebd425",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "step_id": "search_cases-f76ca4cc-6b05-4c94-8548-4dfe6bebd425",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "step_id": "search_legal_documents-7bdd49f3-8415-4456-a4e4-b625145e18f2",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "step_id": "search_legal_documents-7bdd49f3-8415-4456-a4e4-b625145e18f2",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-69c2baa7-ca29-4cfa-a8fa-c573da3f6cb4",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_cases",
+    "search_legal_documents"
+  ],
+  "counts": {
+    "related_laws": 1,
+    "similar_cases": 4,
+    "consultations": 0
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 11.719
+}

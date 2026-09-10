@@ -1,0 +1,15 @@
+ffconcat version 1.0
+file 'C:/Users/Playdata/Videos/Captures/회원가입.mp4'
+duration 56.266
+file 'C:/Users/Playdata/Videos/Captures/로그인_소비자 사례 분석.mp4'
+duration 108.6
+file 'C:/Users/Playdata/Videos/Captures/로그인_faq작성.mp4'
+duration 150.95
+file 'C:/Users/Playdata/Videos/Captures/로그인_질의이력.mp4'
+duration 47.266
+file 'C:/Users/Playdata/Videos/Captures/비회원_임대차 질문.mp4'
+duration 160.95
+file 'C:/Users/Playdata/Videos/Captures/비회원_faq작성.mp4'
+duration 99.717
+file 'C:/Users/Playdata/Videos/Captures/비회원_질의이력.mp4'
+duration 15.116

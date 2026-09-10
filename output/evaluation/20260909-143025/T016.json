@@ -1,0 +1,287 @@
+{
+  "id": "T016",
+  "group": "정상 요청",
+  "category": "housing",
+  "question": "보증금 반환을 요구하는 내용증명은 어떤 의미가 있나요? 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+  "response": {
+    "request_id": "req-806796ba-11fb-46e7-9e13-72ac9a7f7f69",
+    "agent_id": "housing",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "보증금 반환 요구를 내용증명으로 하는 의미와 관련 법률 정보 문의",
+    "key_issues": [
+      "보증금 반환 요청의 법적 의미",
+      "내용증명의 증거적 효력",
+      "민법 관련 조문(제105조, 제543조)",
+      "법원 판결에서 보증금 반환 명령 사례"
+    ],
+    "answer": "보증금 반환을 요구하는 내용증명은 임대차 계약 종료 또는 기타 상황에서 임차인이 임대인에게 보증금 반환을 공식적으로 요청하는 문서입니다. 이는 임대인이 나중에 보증금을 반환하지 않을 경우 법적 증거 자료로 활용될 수 있습니다. 관련 법률로는 민법 제105조(법률행위의 방식) 및 제543조(임대차 계약 관련) 등이 있으며, 실제 보증금 반환을 명령한 법원의 판결례(예: 2026가단52364, 2026가단806)도 존재합니다. 내용증명은 보증금 반환을 촉구하고, 추후 법적 분쟁 시 중요한 증빙 자료로 사용됩니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "질문의 법적 주제인 보증금 반환과 관련된 내용증명에 대한 의미와 관련 법률 정보를 명확히 요청하고 있어 법률 검색이 가능합니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "not_required",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-699",
+        "document_id": "699",
+        "title": "민법",
+        "content": "법령명: 민법\n조문: 제444조\n조문 제목: 부탁없는 보증인의 구상권\n내용: 제444조(부탁없는 보증인의 구상권) ①주채무자의 부탁없이 보증인이 된 자가 변제 기타 자기의 출재로 주채무를 소멸하게 한 때에는 주채무자는 그 당시에 이익을 받은 한도에서 배상하여야 한다. ②주채무자의 의사에 반하여 보증인이 된 자가 변제 기타 자기의 출재로 주채무를 소멸하게 한 때에는 주채무자는 현존이익의 한도에서 배상하여야 한다. ③전항의 경우에 주채무자가 구상한 날 이전에 상계원인이 있음을 주장한 때에는 그 상계로 소멸할 채권은 보증인에게 이전된다.",
+        "source": {
+          "source_id": "699",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EB%AF%BC%EB%B2%95"
+        },
+        "score": 0.3522,
+        "summary": null,
+        "law_name": "민법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "document_type": "LAW",
+          "category": "housing"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-730",
+        "document_id": "730",
+        "title": "임차보증금반환·차임연체료및손해배상금",
+        "content": "사건명: 임차보증금반환·차임연체료및손해배상금\n사건번호: 2023다236566, 236573\n법원: 대법원\n선고일: 2023-09-14\n구분: 참조조문\n내용: [1] 민법 제105조, 제543조 / [2] 민법 제105조, 제543조, 제618조",
+        "source": {
+          "source_id": "730",
+          "title": "국가법령정보센터",
+          "source_type": "case",
+          "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=239521"
+        },
+        "score": 0.3548,
+        "summary": "[1] 계약의 합의해지의 의의 및 요건 / 계약의 합의해지가 묵시적으로 이루어질 수 있는지 여부(적극) 및 이를 인정하기 위한 요건\n[2] 계약당사자 일방이 계약해지에 관한 조건을 제시한 경우, 조건에 관한 합의까지 이루어져야 합의해지가 성립하는지 여부(적극) / 당사자 사이에 계약을 종료시킬 의사가 일치되었으나 계약 종료에 따른 법률관계가 당사자들에게 중요한 관심사이고 그러한 법률관계에 관하여 아무런 약정이 없는 경우, 합의해지가 성립하였다고 볼 수 있는지 여부(원칙적 소극) / 이러한 법리는 임대인과 임차인 사이에 임대차계약 자체를 종료시킬 의사가 일치되었으나 그 종료에 따른 임차보증금 반환 분쟁이 해결되지 않은 경우에도 적용되는지 여부(적극)",
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2023다236566, 236573",
+        "case_name": "임차보증금반환·차임연체료및손해배상금",
+        "court": "대법원",
+        "decided_at": "2023-09-14",
+        "judgment_result": "선고",
+        "similar_points": [],
+        "metadata": {
+          "category": "housing",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1167",
+        "document_id": "1167",
+        "title": "보증금반환",
+        "content": "사건명: 보증금반환\n사건번호: 2026가단52364\n법원: 의정부지방법원 고양지원\n선고일: 2026-08-20\n구분: 주문\n내용: 1. 피 고 는 원 고 에게 91,000,000 원을 지 급 하 라 .\n2. 원 고 의 나 머 지 청 구를 기 각 한 다 .\n3. 소 송 비용은 피 고가 부 담 한 다 .\n4. 제 1 항 은 가 집행할 수 있 다 .",
+        "source": {
+          "source_id": "1167",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%9D%98%EC%A0%95%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EA%B3%A0%EC%96%91%EC%A7%80%EC%9B%90/2026%EA%B0%80%EB%8B%A852364"
+        },
+        "score": 0.3488,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2026가단52364",
+        "case_name": "보증금반환",
+        "court": "의정부지방법원 고양지원",
+        "decided_at": "2026-08-20",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "housing",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-744",
+        "document_id": "744",
+        "title": "보증금반환",
+        "content": "사건명: 보증금반환\n사건번호: 2026가단806\n법원: 서울중앙지방법원\n선고일: 2026-08-20\n구분: 주문\n내용: 1. 피 고 는 원 고 에게 200,000,000 원을 지 급 하 십 시 오 .\n2. 소 송 비용은 피 고가 부 담 합니 다 .\n3. 제 1 항 은 가 집행할 수 있습니 다 .",
+        "source": {
+          "source_id": "744",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2026%EA%B0%80%EB%8B%A8806"
+        },
+        "score": 0.3448,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2026가단806",
+        "case_name": "보증금반환",
+        "court": "서울중앙지방법원",
+        "decided_at": "2026-08-20",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "housing",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [],
+    "sources": [
+      {
+        "source_id": "730",
+        "title": "국가법령정보센터",
+        "source_type": "case",
+        "url": "https://www.law.go.kr/LSW/precInfoP.do?precSeq=239521"
+      },
+      {
+        "source_id": "1167",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%9D%98%EC%A0%95%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90%20%EA%B3%A0%EC%96%91%EC%A7%80%EC%9B%90/2026%EA%B0%80%EB%8B%A852364"
+      },
+      {
+        "source_id": "744",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2026%EA%B0%80%EB%8B%A8806"
+      },
+      {
+        "source_id": "699",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EB%AF%BC%EB%B2%95"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "내용증명만으로 자동 반환되는 것은 아니며, 법적 절차가 필요할 수 있음",
+      "법적 구체적 상황에 따라 다를 수 있어 추가 법률 상담 권장"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "step_id": "validation-932906fd-32ef-4ad4-9635-36dc93e34b62",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "step_id": "validation-932906fd-32ef-4ad4-9635-36dc93e34b62",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "step_id": "search_cases-5a4baf72-1302-4cf5-9a17-2fd34a38af8e",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "step_id": "search_cases-5a4baf72-1302-4cf5-9a17-2fd34a38af8e",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "step_id": "search_legal_documents-6a2f5d3d-2310-47a4-ba07-bfa2fbb3c51a",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "step_id": "search_legal_documents-6a2f5d3d-2310-47a4-ba07-bfa2fbb3c51a",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 1
+      }
+    },
+    {
+      "id": 8,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-a76a6765-f494-47de-96fd-50a393270887",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_cases",
+    "search_legal_documents"
+  ],
+  "counts": {
+    "related_laws": 1,
+    "similar_cases": 3,
+    "consultations": 0
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 32.391
+}

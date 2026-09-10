@@ -1,0 +1,138 @@
+{
+  "id": "T044",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "일시불 결제를 카드사에서 분할 납부로 바꾸면 최초 할부 구매와 같은가요? 관련 자료를 찾아주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "ERROR",
+  "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "validation-dadb78d3-b688-4e80-8d92-bb9230f39ab8",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "validation-dadb78d3-b688-4e80-8d92-bb9230f39ab8",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "search_laws-4cc0b5b3-947c-4d34-b7a8-92a2b20a137f",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "search_laws-4cc0b5b3-947c-4d34-b7a8-92a2b20a137f",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "search_consultations-533e8d92-5a62-477a-810e-d0b819fe721b",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "search_consultations-533e8d92-5a62-477a-810e-d0b819fe721b",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "search_cases-01462c11-f3b7-4a01-91cd-2c1f47598a02",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "step_id": "search_cases-01462c11-f3b7-4a01-91cd-2c1f47598a02",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-832ff4f2-e9f1-43f5-8545-e136ff0c7643",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 26.531
+}

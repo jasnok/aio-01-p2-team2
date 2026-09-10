@@ -1,0 +1,111 @@
+{
+  "id": "T078",
+  "group": "검색 결과 없음",
+  "category": "labor",
+  "question": "사용하지 않은 연차휴가의 수당에 관한 법률 정보를 알려주세요.",
+  "mode": "isolated",
+  "expected": "전체 검색 도구에 빈 결과 주입; 근거 배열이 비어 있고 제한 안내",
+  "verdict": "PASS",
+  "response": {
+    "run_id": "run-bebdcce7-e2ae-4a0e-94e2-4f8e778f1217",
+    "status": "completed",
+    "result": {
+      "request_id": "req-383614ea-7efa-4de0-a5ff-6c52d25b796b",
+      "agent_id": "labor",
+      "status": "completed",
+      "termination_reason": "no_results",
+      "question_summary": "검색 결과가 없습니다.",
+      "key_issues": [],
+      "answer": "현재 입력한 내용과 관련된 공식 근거를 찾지 못했습니다.",
+      "related_laws": [],
+      "similar_cases": [],
+      "consultations": [],
+      "sources": [],
+      "follow_up_questions": [],
+      "cautions": [
+        "검색 결과가 없을 때는 추측으로 답변하지 않습니다.",
+        "사실관계나 검색어를 보완해 다시 확인해 주세요."
+      ],
+      "input_assessment": {
+        "status": "sufficient",
+        "message": "격리시험 입력 판단 대체"
+      },
+      "is_mock": false
+    }
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-bebdcce7-e2ae-4a0e-94e2-4f8e778f1217",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-bebdcce7-e2ae-4a0e-94e2-4f8e778f1217",
+        "step_id": "search_cases-dfe8461a-d377-4137-ab91-f184a16d4960",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-bebdcce7-e2ae-4a0e-94e2-4f8e778f1217",
+        "step_id": "search_cases-dfe8461a-d377-4137-ab91-f184a16d4960",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-bebdcce7-e2ae-4a0e-94e2-4f8e778f1217",
+        "step_id": "search_legal_documents-8e188ba7-e044-4fb1-8060-7f91018bb85c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_legal_documents",
+        "message": "관련 법률 자료를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-bebdcce7-e2ae-4a0e-94e2-4f8e778f1217",
+        "step_id": "search_legal_documents-8e188ba7-e044-4fb1-8060-7f91018bb85c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_legal_documents",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 0
+      }
+    },
+    {
+      "id": 6,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-bebdcce7-e2ae-4a0e-94e2-4f8e778f1217",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "injected_search_calls": 2,
+  "scope": "local runtime; intake stubbed; no real DB/LLM",
+  "elapsed_seconds": 0.0
+}

@@ -1,0 +1,482 @@
+{
+  "id": "T040",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "중고거래 판매자가 돈을 받은 뒤 물건을 보내지 않습니다. 관련 법률 정보를 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+  "response": {
+    "request_id": "req-09e6a392-a3d2-4037-a19c-f274c6e14ec4",
+    "agent_id": "consumer",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "중고거래 판매자가 대금을 받은 뒤 물건을 보내지 않는 경우 관련 법률 정보를 질문함",
+    "key_issues": [
+      "판매자가 대금을 받고 물건을 미배송하는 행위",
+      "계약 불이행 및 사기죄 관련 법률 적용 가능성",
+      "전자상거래법의 청약철회 및 대금환급 규정",
+      "민사적 대금반환 청구 권리"
+    ],
+    "answer": "중고거래에서 판매자가 대금을 받은 후 물건을 보내지 않는 경우, 이는 계약 불이행 또는 사기에 해당할 수 있습니다. 전자상거래 등에서의 소비자보호에 관한 법률은 통신판매업자에 적용되며, 대금 환급 및 청약철회 등의 소비자 권리를 다루고 있습니다(예: 전자상거래법 제22조). 중고거래가 개인 간 거래라면 이 법 적용이 다를 수 있으나, 판매자가 물건을 보내지 않을 경우 민사상 계약 불이행으로 대금 반환 청구가 가능하며, 고의로 물건을 보내지 않았다면 형법상 사기죄가 적용될 수도 있습니다. 또한 법원 사례에 따르면 계약 이행 거부로 인한 대금 반환 의무 등이 인정됩니다(예: 대금반환 판례 2025가합11696). 따라서 우선 판매자에게 물건 배송 및 대금 환급을 요청하고, 해결이 안 되면 소비자상담기관에 신고하거나 법적 조치를 검토할 수 있습니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "중고거래에서 판매자가 대금을 받고 물건을 보내지 않는 상황에 대한 관련 법률 정보를 제공할 수 있습니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "met",
+        "relationship": "met",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-704",
+        "document_id": "704",
+        "title": "소비자기본법",
+        "content": "법령명: 소비자기본법\n조문: 제48조\n조문 제목: 물품등의 자진수거 등\n내용: 제48조(물품등의 자진수거 등) 사업자는 소비자에게 제공한 물품등의 결함으로 인하여 소비자의 생명ㆍ신체 또는 재산에 위해를 끼치거나 끼칠 우려가 있는 경우에는 대통령령이 정하는 바에 따라 당해 물품등의 수거ㆍ파기ㆍ수리ㆍ교환ㆍ환급 또는 제조ㆍ수입ㆍ판매ㆍ제공의 금지 그 밖의 필요한 조치를 취하여야 한다.",
+        "source": {
+          "source_id": "704",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+        },
+        "score": 0.3031,
+        "summary": null,
+        "law_name": "소비자기본법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-01-02"
+        }
+      },
+      {
+        "evidence_id": "law-703",
+        "document_id": "703",
+        "title": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "content": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제22조\n조문 제목: 휴업기간 등에서의 청약철회등의 업무처리 등\n내용: 제22조(휴업기간 등에서의 청약철회등의 업무처리 등) ① 통신판매업자는 휴업기간이나 영업정지기간에도 제17조제1항 및 제3항에 따른 청약철회등의 업무와 제18조제1항부터 제5항까지의 규정에 따른 청약철회등에 따른 대금 환급과 관련된 업무를 계속하여야 한다. ② 통신판매업자가 폐업신고를 하지 아니한 상태에서 파산선고를 받는 등 실질적으로 영업을 할 수 없는 것으로 판단되는 경우에는 제12조제1항에 따른 신고를 받은 공정거래위원회 또는 특별자치시장ㆍ특별자치도지사ㆍ시장ㆍ군수ㆍ구청장은 직권으로 신고사항을 말소할 수 있다. <개정 2016.3.29>",
+        "source": {
+          "source_id": "703",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+        },
+        "score": 0.2989,
+        "summary": null,
+        "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-07-21"
+        }
+      },
+      {
+        "evidence_id": "law-724",
+        "document_id": "724",
+        "title": "형법",
+        "content": "법령명: 형법\n조문: 제68조\n조문 제목: 금고와 구류\n내용: 제68조(금고와 구류) 금고와 구류는 교정시설에 수용하여 집행한다.",
+        "source": {
+          "source_id": "724",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%ED%98%95%EB%B2%95"
+        },
+        "score": 0.2969,
+        "summary": null,
+        "law_name": "형법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-09-13"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1173",
+        "document_id": "1173",
+        "title": "청구이의",
+        "content": "사건명: 청구이의\n사건번호: 2000다8397\n법원: 대법원\n선고일: 2001-08-21\n구분: 판결이유\n내용: 원 심판 결 및 원 심 이 일부 인 용한 제 1 심판 결 이 유에 의 하 면 원 심 은 , 원 고가 광 고 물 제작 업 을 운영 하기 위 하 여 \n소 외 인 으 로 부터 이 사 건 전 사기 를 매 수 하 면서 , 그 매매 대 금 의 지 급 을 위 하 여 피 고 와 이 사 건 할 부 금 융 약 정을 \n체 결 하 였 고 , 할 부 금 융 여신거 래 기 본약 관 제 22 조 제 3 항 ( 이하 ' 이 사 건 약 관조 항 ' 이 라 고 한 다 ) 이 , 매 수 인이 상\n행 위를 목적 으 로 할 부 금 융 약 정을 체 결 한 경우에는 매 도 인 과의 할 부 판매계약 이 매 도 인 의 귀 책 사 유 로 무 효 , \n취 소 또 는 해제 된 경우에 매 수 인 에게 인 정 되 는 같 은 조 제 1 항 의 소정의 할 부 금 지 급 거 절권 을 행 사 할 수 없\n는 것 으 로 규 정 하고 있는 사 실 을 인 정한 다 음 , 매 도 인 의 귀 책 사 유 로 이 사 건 전 사기 의 매매계약 이 해제 된 경\n우라도 원 고가 위 와 같 이 상 행 위를 목적 으 로 신용제공자 인 피 고 와 이 사 건 할 부 금 융 약 정을 체 결 한 것 인 이\n상 , 이 사 건 약 관조 항 에 따 라 피 고 에 대 하 여 위 거 절권 을 행 사 할 수 없 다고 판단 하 였 으 며 ( 이 사 건 약 관조 항 이 \n약 관의 규 제에관한 법 률에 위 반 하 여 무 효 라는 원 고 의 주장도 배 척 하 였 다 .), 이 사 건 매매계약 이 취 소 또 는 해\n제 되 는 것 을 해제조 건 으 로 하 여 이 사 건 할 부 금 융 약 정 이 체 결 되 었 다 는 원 고 의 주장도 이 를 인 정 할 아무 런 증\n거 가 없 다고 하 여 배 척 하 였 다 .\n할 부거 래 에관한 법 률 제 2 조 제 2 항 소정의 ' 매 수 인이 상 행 위를 목적 으 로 할 부 계약 을 체 결 하 는 경우 ' 라 함 은 , \n \n매 수 인이 신용제공자의 여신으 로 매 수한 물건 을 다 른 소비자에게 판매할 목적 으 로 물건 을 할 부 로 구입한 경\n우만을 의미 하 는 것 이 아니라 , 자신의 소비만을 목적 으 로 한 경우 가 아 닌 영 리 를 목적 으 로 할 부 계약 을 체 결\n하 는 경우를 의미한 다고 해 석 함 이 타 당 하 며 , 약 관의 규 제에관한 법 률 제 30 조 제 3 항이 ' 특 정한 거 래분야 의 약\n관에 관 하 여 다 른 법 률 에 특별 한 규 정 이 있는 경우에는 이 법 의 규 정에 우선한 다 .' 라 고 규 정 하고 있 고 , 이 사\n건 할 부 금 융 약 정을 규 율 하 는 위 할 부거 래 에관한 법 률 제 2 조 제 2 항이 이 사 건 약 관조 항 의 내용과 동일 하 게 규\n정 되 어 있는 점 에 비 추 어 , 이 사 건 약 관조 항 이 약 관의 규 제에관한 법 률에 위 반되 거나 , 사 회 질 서 또 는 신의 칙 에 \n반 하 여 무 효 라 고 는 할 수 없 다 .\n위 법 리 및 기 록에 비 추 어 살 펴 보면 , 원 심 의 위 사 실 인 정 및 판단 은 모 두 정 당 하고 , 거 기 에 상 고이 유 로 서 주\n장 하 는 바 와 같 은 사 실 오 인이 나 법 리 오해의 위 법 이 있 다고 할 수 없 다 .\n그러 므 로 상 고 를 기 각 하고 , 상 고 비용은 패 소자의 부 담 으 로 하기로 하 여 관여 법 관의 일치 된 의 견 으 로 주문과 \n같 이 판 결 한 다 .\n대 법 관 손 지 열 ( 재판 장 ) 송 진 훈 윤 재식 ( 주 심 ) 이 규홍",
+        "source": {
+          "source_id": "1173",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+        },
+        "score": 0.3032,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2000다8397",
+        "case_name": "청구이의",
+        "court": "대법원",
+        "decided_at": "2001-08-21",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1174",
+        "document_id": "1174",
+        "title": "할부거래에관한법률위반",
+        "content": "사건명: 할부거래에관한법률위반\n사건번호: 2017도17611\n법원: 대법원\n선고일: 2018-01-24\n구분: 주문\n내용: 상 고 를 모 두 기 각 한 다 .",
+        "source": {
+          "source_id": "1174",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+        },
+        "score": 0.3024,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2017도17611",
+        "case_name": "할부거래에관한법률위반",
+        "court": "대법원",
+        "decided_at": "2018-01-24",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1159",
+        "document_id": "1159",
+        "title": "대금반환",
+        "content": "사건명: 대금반환\n사건번호: 2025가합11696\n법원: 서울중앙지방법원\n선고일: 2026-07-16\n구분: 판결이유\n내용: 권 을 행 사 할 수 없 다 . (2) 판단 전자상거 래 법 제 17 조 제 2 항 제 3 호는 ' 시 간 이 지 나 다시 판매 하기 곤 란 할 정도 로 재 화 등 의 가 치 가 현저히 감 소한 경우에는 통 신 판매업 자의 의 사 에 반 하 여 청약 철 회 등 을 할 수 없 다 ' 고 정 하고 있 다 . 살 피건 대 , 피 고 A 이 제 출 한 증 거들만으 로 는 피 고 A 이 이 사 건 각 구 매계약 을 통 하 여 그 상대방 인 원 고 들에 게 제공 할 여 행 등 상 품 의 가 치 가 판매 하기 곤 란 할 정도 로 현저히 감 소 하 였 음을 인 정 하기 부 족 하고 , 달 리 이 를 인 정 할 증 거 가 없 다 . 나아 가 설 령 피 고 A 의 주장과 같 이 위 원 고 들에게 제공 할 여 행 등 상 품 의 가 치 가 현 저히 감 소 하 였 다고 보 더 라도 , 이 는 피 고 A 이 그 상대방 인 원 고 들에게 여 행 등 상 품 의 제공을 거부 하고 이 를 이 행 하지 않 은 것 이 그 원 인인 이 상 , 피 고 A 이 그 와 같 은 사 유만을 들어 위 원 고 들의 청약 철 회 권 행 사 를 제한 하 는 것 은 신의성 실 의 원 칙 에 반 한 다 . 라 ) 기 타 대 금반 환 의무를 부 담 하지 않 는 다 는 주장 (1) 주장의 요 지 ( 가 ) 소비자 가 지 급 한 대 금 이 결 제대 행업 체에게 지 급 된 단계 에서는 통 신 판매업 자는 전자상거 래 법 제 18 조 제 3 항 본 문, 같 은 법 시 행 령 제 28 조의 3 제 4 호에 의 하 여 결 제대 행업 체에게 결 제대 금 청 구를 정 지하 거나 취 소 하 도록 할 의무만을 부 담 하고 소비자에게 청약 철 회에 따 른 대 금반 환 의무를 별 도 로 부 담 하지 않 으 므 로 , 피 고 A 은 원 고 들에게 대 금 을 반 환 할 의무 가 없 다 . (나 ) 전자상거 래 법 제 18 조 제 11 항이 정한 청약 철 회에 따 른 대 금 환급 의무에 관한 통 신 판매업 자 등 의 연대 책 임 규 정은 연대 책 임 을 부 담 하 는 주체들 이 수 령 한 대 금 범 위에 한 하 여 각 연대 책 임 을 부 담 하 여 야 하 는 것 으 로 보아 야 한 다 . 피 고 A 은 피 고 PG 사 및 CQ, CR 로 부터 이 사 건 각 구 매계약 에 따 른 대 금 을 수 령 한 사 실 이 없 는 이 상 , 청약 철 회에 따 른 대 금반 환 의무를 별 도 로 부 담 하지 않 는 다 . (2) 판단 ( 가 ) 첫 번 째 주장에 관 하 여 본 다 . 전자상거 래 법 제 18 조 제 3 항 본 문은 ' 청약 철 회 로 인하 여 재 화 등 의 대 금 을 환급 할 때 소비자 가 「 여신전문 금 융 업 법 」 제 2 조제 3 호에 따 른 신용카드나 그 밖 에 대 통 령령 으 로 정 하 는 결 제수 단 으 로 재 화 등 의 대 금 을 지 급 한 경우에는 지 체 없 이 해 당 결 제수 단 을 제공한 사 업 자 ( 이하 ' 결 제 업 자 ' 라 한 다 ) 에게 재 화 등 의 대 금 청 구를 정 지하 거나 취 소 하 도록 요 청 하 여 야 한 다 ' 고 정 하고 있 다 . 위 규 정의 취 지 는 통 신 판매업 자 가 전자상거 래 법 제 18 조 제 2 항에 의 하 여 청약 철 회에 따 른 대 금 환급 의무 가 있음을 전제 로 통 신 판매업 자 가 결 제 업 자 로 부터 대 금 을 아 직 지 급받 지 않 은 상 황 인 경우 결 제 업 자에게 대 금 청 구를 정 지하 거나 취 소 하 도록 요 청 하 여 결 제 업 자 가 소비자 등 으 로 부터 받 은 대 금 을 그대 로 반 환 하 게 함 으 로 써 소비자의 청약 철 회 권 의 실 효 성을 확 보 하기 위 함 에 있는 것 일 뿐 , 통 신 판매업 자의 대 금반 환 의무를 면제 하 는 규 정으 로 볼 수 없 다 . 한 편 전자상거 래 법 시 행 령 제 28 조의 3 제 4 호 는 같 은 법 제 13 조 제 2 항 제 10 호 및 시 행 령 제 19 조의 3 제 1 항 에서 정한 제 3 자의 결 제대 금예 치제도 와 관 련 하 여 결 제대 금 을 예 치 받 은 제 3 자 가 통 신 판매업 자에게 결 제대 금 을 지 급 하기 전에 소비자에게 대한 환급 사 유 가 발생 한 경우 그 예 치대 금 을 소비자에게 환급 하 여 야 한 다 는 취 지 의 규 정 이다 . 그러나 피 고 A 이 제 출 한 증 거들만으 로 는 피 고 PG 사 들 이 전자상거 래 법 제 19 조의 3 제 1 항에서 정한 제 3 자에 해 당함 을 인 정 하기 부 족 하고 , 달 리 이 를 인 정 할 증 거 가 없 다 . (나 ) 두 번 째 주장에 관 하 여 본 다 . 전자상거 래 법 제 18 조 제 11 항은 ' 통 신 판매업 자 , 재 화 등 의 대 금 을 받 은 자 또 는 소비자 와 통 신 판매 에 관한 계",
+        "source": {
+          "source_id": "1159",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A911696"
+        },
+        "score": 0.2973,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025가합11696",
+        "case_name": "대금반환",
+        "court": "서울중앙지방법원",
+        "decided_at": "2026-07-16",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [
+      {
+        "evidence_id": "consultation-290",
+        "document_id": "290",
+        "title": "전자상거래로 구입한 가구 반품 문의",
+        "content": "제목: 전자상거래로 구입한 가구 반품 문의\n\n품목: 가전/생활용품\n\n질문: 인터넷쇼핑몰에서 장롱을 주문(750,000원 상당)하여 제품이 배송되었으나 가구 표면에 흠집이 발생하고 도장 상태가 불량하여 판매자에게 제품 반품을 요구하였습니다. 제품 판매자는 교환은 가능하지만 반품을 할 경우에는 왕복 배송비용과 위약금을 소비자가 배상하여야 한다고 합니다. 주문한 장롱은 맞춤으로 제작을 하지도 않았는데도 위약금을 지급하여야 합니까?\n\n답변: 인터넷에서 가구를 주문한 후 제품이 배송되었더라도 품질에 하자가 있을 경우에는 전자상거래등에서의 소비자보호에 관한 법률 및 소비자분쟁해결기준에 따라 반품이 가능하며 배송비용이나 위약금을 소비자가 배상할 필요가 없습니다. 단 가구의 품질에 하자가 없고, 단순 변심에 의한 반품인 경우에는 배송 비용을 소비자가 배상하여야 합니다. 또한 맞춤으로 주문한 가구일 경우, 단순변심으로는 반품이 불가합니다.",
+        "source": {
+          "source_id": "290",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3415,
+        "summary": "인터넷쇼핑몰에서 장롱을 주문(750,000원 상당)하여 제품이 배송되었으나 가구 표면에 흠집이 발생하고 도장 상태가 불량하여 판매자에게 제품 반품을 요구하였습니다. 제품 판매자는 교환은 가능하지만 반품을 할 경우에는 왕복 배송비용과 위약금을 소비자가 배상하여야 한다고 합니다. 주문한 장롱은 맞춤으로 제작을 하지도 않았는데도 위약금을 지급하여야 합니까?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-176",
+        "document_id": "176",
+        "title": "침수차량을 속여 중고차를 판매한 경우",
+        "content": "제목: 침수차량을 속여 중고차를 판매한 경우\n\n품목: 자동차/기계류\n\n질문: 중고차 매매업자로부터 성능 등 점검을 받고 차량을 구입하여 한달 후 경고등 관련 정비를 받으며 침수 이력이 발견되었습니다. 매매업자는 침수 사실을 이전 차주로부터 듣지 못하였다는 이유로 책임을 회피하는데  어떻게 해야하는지요?\n\n답변: 중고자동차 매매사업자는 중고자동차를 판매하기 전 자동차관리법에 나와 있는 중고자동차 성능점검기록부 양식에 의거 자동차의 상태를 표시한 내용을 고지 및 서면 교부하도록 되어 있습니다. 중고차매매업자가 침수 사실을 고지하지 않은 경우 소비자분쟁해결기준(중고자동차매매업)에 따라 구입가 환급 또는 손해배상의 책임이 있습니다.(*단, 사고, 침수사실 미고지시 보상기간은 자동차관리법상 성능검검기록부 보관기간인 1년으로 함)",
+        "source": {
+          "source_id": "176",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3365,
+        "summary": "중고차 매매업자로부터 성능 등 점검을 받고 차량을 구입하여 한달 후 경고등 관련 정비를 받으며 침수 이력이 발견되었습니다. 매매업자는 침수 사실을 이전 차주로부터 듣지 못하였다는 이유로 책임을 회피하는데  어떻게 해야하는지요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-339",
+        "document_id": "339",
+        "title": "사고이력이 있는 중고차량을 무사고로 설명하여 판매한 경우 손해배상 등을 요구할 수 있는지 여부",
+        "content": "제목: 사고이력이 있는 중고차량을 무사고로 설명하여 판매한 경우 손해배상 등을 요구할 수 있는지 여부\n\n품목: 자동차/기계류\n\n질문: 소비자가 중고자동차중개업체로부터 본닛 부분만 단순교체한 무사고 차량이라는 설명을 듣고, 2019년식 그랜져 차량을 구입하였는데, 1주일 정도 경과된 시점에 변속기에 하자로 정비업체에서 점검을 받은 결과 이전에 발생한 사고로 엔진룸까지 수리한 사실을 확인함. 그러나 중고자동차중고업체 딜러는 자신도 사고 사실을 몰랐다며 책임을 회피하는데 소비자는 적절한 수준의 손해배상을 요구할 수 있을까요?\n\n답변: 중고자동차중개업자는 중개하는 자동차의 사고 유무에 대해 고객에게 명확하게 고지하여야 할 책임이 있습니다. 중고자동차중개업자는 차량 판매 전 자동차관리법에 나와 있는 중고자동차 성능점검기록부 양식에 의거 차량 상태를 표시한 내용을 고객에게 고지하고 서면을 교부하도록 되어 있습니다. 따라서 소비자가 중고자동차를 구입할 때 딜러가 무사고 차량이라고 고지한 사정이 인정될 경우 업체에서 사고사실을 몰랐다고 하더라도 적절한 수준의 손해배상을 요구할 수 있습니다. 다만 손해배상의 범위는 소비자가 구매한 금액과 엔진룸까지 수리한 이력이 있는 동종 차량의 매매시세의 차액 수준이 될 것으로 보입니다.\r\n\r\n※ 참고로 사고이력에 대한 정확한 정보 조회를 위해서는 보험개발원의 사고이력정보조회서비스(www.carhistory.co.kr)를 이용하면 보험사고이력을 확인할 수 있습니다.",
+        "source": {
+          "source_id": "339",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3355,
+        "summary": "소비자가 중고자동차중개업체로부터 본닛 부분만 단순교체한 무사고 차량이라는 설명을 듣고, 2019년식 그랜져 차량을 구입하였는데, 1주일 정도 경과된 시점에 변속기에 하자로 정비업체에서 점검을 받은 결과 이전에 발생한 사고로 엔진룸까지 수리한 사실을 확인함. 그러나 중고자동차중고업체 딜러는 자신도 사고 사실을 몰랐다며 책임을 회피하는데 소비자는 적절한 수준의 손해배상을 요구할 수 있을까요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "704",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+      },
+      {
+        "source_id": "703",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+      },
+      {
+        "source_id": "724",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%ED%98%95%EB%B2%95"
+      },
+      {
+        "source_id": "290",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "176",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "339",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "1173",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+      },
+      {
+        "source_id": "1174",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+      },
+      {
+        "source_id": "1159",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A911696"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "개인 사안에 따라 결과가 다를 수 있으며, 구체적인 법률 상담이 필요할 수 있습니다.",
+      "중고개인 간 거래 상황에 따라 전자상거래법 적용 여부가 다를 수 있음",
+      "정확한 법적 조치 및 해결을 위해 법률 전문가 상담 필요"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "validation-0c3339f9-8e43-4ceb-8447-54b6b5071135",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "validation-0c3339f9-8e43-4ceb-8447-54b6b5071135",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "search_laws-1994457d-1316-45cd-9a10-1db8d4af6ff4",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "search_laws-1994457d-1316-45cd-9a10-1db8d4af6ff4",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "search_consultations-3feaa5fe-72cb-4331-92b3-a982ccf97a6f",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "search_consultations-3feaa5fe-72cb-4331-92b3-a982ccf97a6f",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "search_cases-47ffe33c-f077-46c7-8696-f0205ad54905",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "step_id": "search_cases-47ffe33c-f077-46c7-8696-f0205ad54905",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-4e39710d-a73c-4c1a-a194-446fbf28861d",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_laws",
+    "search_consultations",
+    "search_cases"
+  ],
+  "counts": {
+    "related_laws": 3,
+    "similar_cases": 3,
+    "consultations": 3
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 21.734
+}

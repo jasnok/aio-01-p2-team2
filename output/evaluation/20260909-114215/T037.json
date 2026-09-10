@@ -1,0 +1,450 @@
+{
+  "id": "T037",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "온라인 쇼핑몰에서 주문한 상품을 받지 못했습니다. 대금 환급 관련 조문을 알려주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+  "response": {
+    "request_id": "req-a72c7694-9859-435d-b42f-47345309b7bf",
+    "agent_id": "consumer",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "온라인 쇼핑몰에서 주문한 상품을 받지 못한 경우 대금 환급 관련 법령 조문 문의",
+    "key_issues": [
+      "주문 상품 미수령 시 구매자의 청약철회권",
+      "전자상거래 등에서의 소비자보호에 관한 법률의 환급 관련 조문",
+      "소비자에게 불리한 약관 무효",
+      "온라인쇼핑몰 사업자의 부당 행위 시 신고 절차"
+    ],
+    "answer": "온라인 쇼핑몰에서 주문한 상품을 받지 못한 경우, 전자상거래 등에서의 소비자보호에 관한 법률에 따라 소비자는 청약철회(구매 취소) 및 환급을 요구할 수 있습니다. 구체적으로는 물품을 배송받지 못한 경우, 언제든지 청약철회를 할 수 있고 사업자는 그에 따른 환급을 해야 합니다. 예컨대, 동법 제35조에 따라 소비자에게 불리한 약정(예: 환불 거부 조항)은 무효로 봅니다. 또한, 만약 사업자가 연락이 안 되는 등 고의로 물품을 발송하지 않는 경우에는 경찰청에 신고하여 도움을 받을 수 있습니다. 다만, 소비자기본법 제46조는 위해 발생 우려 시 조치를 요청하는 규정으로 환급과 직접적 관련은 적습니다. 주문 물품을 받지 못했을 때는 \"전자상거래 등에서의 소비자보호에 관한 법률\" 관련 조문과 소비자의 청약철회 권리를 우선 참고하시기 바랍니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "온라인 쇼핑몰에서 주문한 상품 미수령과 대금 환급 관련 법령 조문 검색이 가능합니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "not_required",
+        "relationship": "not_required",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-704",
+        "document_id": "704",
+        "title": "소비자기본법",
+        "content": "법령명: 소비자기본법\n조문: 제46조\n조문 제목: 시정요청 등\n내용: 제46조(시정요청 등) ① 공정거래위원회 또는 시ㆍ도지사는 사업자가 제공한 물품등으로 인하여 소비자에게 위해발생이 우려되는 경우에는 관계중앙행정기관의 장에게 다음 각 호의 조치를 요청할 수 있다. <개정 2008.2.29, 2016.3.29, 2018.3.13> 1. 사업자가 다른 법령에서 정한 안전조치를 취하지 아니하는 경우에는 그 법령의 규정에 따른 조치 2. 다른 법령에서 안전기준이나 규격을 정하고 있지 아니하는 경우에는 다음 각 목의 조치 가. 제49조의 규정에 따른 수거ㆍ파기 등의 권고 나. 제50조의 규정에 따른 수거ㆍ파기 등의 명령 다. 제86조제1항제1호의 규정에 따른 과태료 처분 3. 그 밖에 물품등에 대한 위해방지대책의 강구 ② 제1항에 따라 공정거래위원회 또는 시ㆍ도지사의 요청을 받은 관계 중앙행정기관의 장은 조치 여부 및 그 내용을 신속히 공정거래위원회 또는 시ㆍ도지사에게 통보하여야 한다. <신설 2018.3.13>",
+        "source": {
+          "source_id": "704",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+        },
+        "score": 0.2061,
+        "summary": null,
+        "law_name": "소비자기본법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-01-02"
+        }
+      },
+      {
+        "evidence_id": "law-703",
+        "document_id": "703",
+        "title": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "content": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제24조의2\n조문 제목: 구매권유광고 시 준수사항 등\n내용: 제24조의2(구매권유광고 시 준수사항 등) ① 전자상거래를 하는 사업자 또는 통신판매업자가 전화, 팩스, 컴퓨터통신 또는 전자우편 등을 이용하여 재화를 구매하거나 용역을 제공받도록 권유하는 행위(이하 \"구매권유광고\"라 한다)를 할 때에는 이 법과 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 등 관계 법률의 규정을 준수하여야 한다. ② 공정거래위원회는 제1항을 위반하여 구매권유광고를 한 전자상거래를 하는 사업자 또는 통신판매업자에 대한 시정조치를 하기 위하여 방송미디어통신위원회 등 관련 기관에 위반자의 신원정보를 요청할 수 있다. 이 경우 신원정보의 요청은 공정거래위원회가 위반자의 신원정보를 확보하기 곤란한 경우로 한정하며, 방송미디어통신위원회 등 관련 기관은 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 제64조의2제1항에도 불구하고 공정거래위원회에 위반자의 신원정보를 제공할 수 있다. <개정 2025.10.1>",
+        "source": {
+          "source_id": "703",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+        },
+        "score": 0.196,
+        "summary": null,
+        "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-07-21"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1173",
+        "document_id": "1173",
+        "title": "청구이의",
+        "content": "사건명: 청구이의\n사건번호: 2000다8397\n법원: 대법원\n선고일: 2001-08-21\n구분: 주문\n내용: 상 고 를 기 각 한 다 . 상 고 비용은 원 고 의 부 담 으 로 한 다 .",
+        "source": {
+          "source_id": "1173",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+        },
+        "score": 0.2441,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2000다8397",
+        "case_name": "청구이의",
+        "court": "대법원",
+        "decided_at": "2001-08-21",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1174",
+        "document_id": "1174",
+        "title": "할부거래에관한법률위반",
+        "content": "사건명: 할부거래에관한법률위반\n사건번호: 2017도17611\n법원: 대법원\n선고일: 2018-01-24\n구분: 주문\n내용: 상 고 를 모 두 기 각 한 다 .",
+        "source": {
+          "source_id": "1174",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+        },
+        "score": 0.2411,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2017도17611",
+        "case_name": "할부거래에관한법률위반",
+        "court": "대법원",
+        "decided_at": "2018-01-24",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1176",
+        "document_id": "1176",
+        "title": "채무부존재확인",
+        "content": "사건명: 채무부존재확인\n사건번호: 2002가합75662\n법원: 서울지방법원\n선고일: 2003-07-14\n구분: 주문\n내용: 1. 원 고 들의 청 구를 모 두 기 각 한 다 .\n2. 소 송 비용은 원 고 들의 부 담 으 로 한 다 .",
+        "source": {
+          "source_id": "1176",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2002%EA%B0%80%ED%95%A975662"
+        },
+        "score": 0.2385,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2002가합75662",
+        "case_name": "채무부존재확인",
+        "court": "서울지방법원",
+        "decided_at": "2003-07-14",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [
+      {
+        "evidence_id": "consultation-326",
+        "document_id": "326",
+        "title": "현금 입금 유도 후 카메라 배송하지 않는 인터넷 쇼핑몰",
+        "content": "제목: 현금 입금 유도 후 카메라 배송하지 않는 인터넷 쇼핑몰\n\n품목: 가전/생활용품\n\n질문: 인터넷쇼핑몰을 통해 카메라를 현금 주문한 후 열흘이 지나도록 제품이 배송되지 않고 있습니다. 홈페이지에 나와 있는 연락처는 연결이 되지 않아 오프라인 매장으로 찾아가니 문이 닫혀 있습니다. 어떻게 해야 하나요?\n\n답변: 사업자가 의도적으로 현금을 입금받고 물품을 배송하지 않는 인터넷쇼핑몰은 연락 및 추적이 쉽지 않아 사이버경찰청에 신고하여 도움을 받으셔야 합니다. \r\n이 사례와 같이 종종 인터넷쇼핑몰에 물품을 주문하고 대금을 지불하였으나 물품 배송을 받지 못하거나 사업자와 연락이 제대로 되지 않는다는 소비자피해가 발생하고 있는데, 이러한 인터넷쇼핑몰은 주문 시 먼저 재고 확인 등의 이유를 들어 전화를 걸도록 유도해 소비자가 전화를 걸면 현금결제(무통장입금)하면 제품가격을 할인해 주겠다고 하거나, 신용카드 결제를 선택할 경우 ‘현금 결제만 가능한 상품입니다’, ‘신용카드결제는 제한된다’ 등의 창을 띄워 소비자로 하여금 현금 입금을 하도록 유도하는 바, 소비자의 각별한 주의가 요망됩니다.",
+        "source": {
+          "source_id": "326",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4112,
+        "summary": "인터넷쇼핑몰을 통해 카메라를 현금 주문한 후 열흘이 지나도록 제품이 배송되지 않고 있습니다. 홈페이지에 나와 있는 연락처는 연결이 되지 않아 오프라인 매장으로 찾아가니 문이 닫혀 있습니다. 어떻게 해야 하나요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-463",
+        "document_id": "463",
+        "title": "반품, 교환이 불가하다고 사전 고지한 인터넷쇼핑몰에서 구입한 의류의 환급 거절",
+        "content": "제목: 반품, 교환이 불가하다고 사전 고지한 인터넷쇼핑몰에서 구입한 의류의 환급 거절\n\n품목: 의류/세탁\n\n질문: 쇼핑몰에서 의류를 주문하여 다음 날 받았습니다. 쇼핑몰상에 반품, 교환, 환불이 절대 안 된다는 문구를 써 놓은 상태입니다. 현재 받은 물건은 사용하지 않았으며 물품 받은 상태로 다시 포장해 두었습니다. 사이즈 부정확 및 제품을 만족하지 못하여 즉시 환불을 요청하였으나, 규정상 환불은 못해주고 적립금을 줄 테니 나중에 이용하라고 합니다. 맘에 안 드는 물건을 사용하고 싶지 않아 환불을 원하며, 사업자에게서 환불을 받을 수 있는 강제 규정은 없는지 알고 싶습니다.\n\n답변: 인터넷쇼핑몰에서 의류를 구입한 경우라면 전자상거래 등에서의 소비자보호에 관한 법률에 의거 배송받은 날로부터 7일 내에는 청약철회가 가능합니다. 다만, 색상, 디자인 혹은 사이즈 불만 등의 사유로 청약철회를 요청한 경우 반품비(왕복기준)는 구매자가 부담해야 합니다.\r\n\r\n홈페이지에 반품, 교환 등이 불가하다고 쓰여 있거나, 굳이 반품을 원할 경우에는 적립금으로 환불 처리된다고 고지되어 있더라도 동법 제35조에 의거 청약철회와 관련하여 소비자에게 불리한 약정은 효력이 없기 때문에 재판매가 곤란할 정도의 제품훼손이 없다면 구입가 환불을 요구할 수 있습니다.\r\n\r\n통신판매업자에 대한 청약철회 의사표시 방법은 법률상 특별한 제한이 없으므로 전화, 서면, 전자문서 모두 가능합니다. 다만, 전화로 의사표시를 한 경우 간혹 판매자가 청약철회 요구를 받은 사실이 없다고 주장하는 경우가 있으므로, 쇼핑몰 게시판에 청약철회 의사를 표시하고 그 화면을 캡처하여 보관하거나 서면으로 발송하는 것이 좋습니다. 서면으로 발송한 경우에는 발송한 날에 그 효력이 발생합니다.\r\n \r\n판매자에게 청약철회를 요청하였는데도 특별한 사유없이 이를 거부할 경우, 신용카드로 대금을 결제하였다면 동법 제18조에 의거 신용카드사에 처리를 요구할 수 있으니 참고하시기 바랍니다.",
+        "source": {
+          "source_id": "463",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3709,
+        "summary": "쇼핑몰에서 의류를 주문하여 다음 날 받았습니다. 쇼핑몰상에 반품, 교환, 환불이 절대 안 된다는 문구를 써 놓은 상태입니다. 현재 받은 물건은 사용하지 않았으며 물품 받은 상태로 다시 포장해 두었습니다. 사이즈 부정확 및 제품을 만족하지 못하여 즉시 환불을 요청하였으나, 규정상 환불은 못해주고 적립금을 줄 테니 나중에 이용하라고 합니다. 맘에 안 드는 물건을 사용하고 싶지 않아 환불을 원하며, 사업자에게서 환불을 받을 수 있는 강제 규정은 없는지 알고 싶습니다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-262",
+        "document_id": "262",
+        "title": "인터넷으로 구입한 가구의 배송비 조정 가능 여부",
+        "content": "제목: 인터넷으로 구입한 가구의 배송비 조정 가능 여부\n\n품목: 가전/생활용품\n\n질문: 인터넷쇼핑몰에서 124,000원을 결제하고 서랍장을 주문하여 배송받았으나, 배송기사가 배송비로 90,000원을 요구합니다. 배송비가 90,000원이라는 것을 사전에 제대로 고지받지 못했습니다 이 경우 배송비 조정이 가능할까요? 인터넷 사이트에는 단순히 ‘주문 금액에 따라 배송비가 다르게 책정되고, 수량？지역별로 배송비가 다릅니다’라고만 적혀 있습니다.\n\n답변: 판매자가 인터넷 사이트에 ‘주문 금액에 따라 배송비가 다르게 책정됩니다.’, ‘배송비는 착불이고 수량？지역별로 다릅니다’라고 배송비 관련 사항을 고지했을 경우, 실제 배송비는 운송거리, 물건의 크기 및 무게 그리고 운반에 사용되는 자동차의 종류 등에 의하여 영향을 받을 수 있으므로 배송 시 발생한 배송비용에 대한 책임은 묻기 어렵습니다.",
+        "source": {
+          "source_id": "262",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3401,
+        "summary": "인터넷쇼핑몰에서 124,000원을 결제하고 서랍장을 주문하여 배송받았으나, 배송기사가 배송비로 90,000원을 요구합니다. 배송비가 90,000원이라는 것을 사전에 제대로 고지받지 못했습니다 이 경우 배송비 조정이 가능할까요? 인터넷 사이트에는 단순히 ‘주문 금액에 따라 배송비가 다르게 책정되고, 수량？지역별로 배송비가 다릅니다’라고만 적혀 있습니다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "704",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+      },
+      {
+        "source_id": "703",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+      },
+      {
+        "source_id": "326",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "463",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "262",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "1173",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2000%EB%8B%A48397"
+      },
+      {
+        "source_id": "1174",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EB%8C%80%EB%B2%95%EC%9B%90/2017%EB%8F%8417611"
+      },
+      {
+        "source_id": "1176",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2002%EA%B0%80%ED%95%A975662"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "법적 조문은 일반적인 규정을 안내하며, 구체적인 분쟁 해결을 위해서는 추가적인 사실 확인이 필요할 수 있습니다.",
+      "구체적인 환급 절차 및 기간 등은 해당 법률 전문을 확인해야 함",
+      "운영 중인 쇼핑몰의 규정이나 상황에 따라 달라질 수 있으므로 추가 확인 필요",
+      "법령 전문이나 판례 등 보다 상세 정보 확인 권장"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "validation-9284d982-cb7e-4195-9213-55962c037c02",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "validation-9284d982-cb7e-4195-9213-55962c037c02",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "search_laws-358b86aa-cf91-4d3d-a466-15efcfb942d0",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "search_laws-358b86aa-cf91-4d3d-a466-15efcfb942d0",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "search_consultations-7942931c-5103-4f84-b368-770cdf34a73e",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "search_consultations-7942931c-5103-4f84-b368-770cdf34a73e",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "search_cases-3ec7d126-e6de-4808-843a-1a54e684ff8d",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "step_id": "search_cases-3ec7d126-e6de-4808-843a-1a54e684ff8d",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-fc14fa3a-0c0f-47e1-8a0f-dea611097d48",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_laws",
+    "search_consultations",
+    "search_cases"
+  ],
+  "counts": {
+    "related_laws": 2,
+    "similar_cases": 3,
+    "consultations": 3
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 21.61
+}

@@ -1,0 +1,60 @@
+{
+  "id": "T069",
+  "group": "정보 부족",
+  "category": "housing",
+  "question": "이 일로 신고할 수 있나요? 설명이 필요합니다.",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "ERROR",
+  "run_id": "run-4548adba-a743-4d7b-8edd-fbc9304c2cda",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-4548adba-a743-4d7b-8edd-fbc9304c2cda",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-4548adba-a743-4d7b-8edd-fbc9304c2cda",
+        "step_id": "validation-bc6a8f3f-dcf1-4824-b753-1bcb740a310a",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-4548adba-a743-4d7b-8edd-fbc9304c2cda",
+        "step_id": "validation-bc6a8f3f-dcf1-4824-b753-1bcb740a310a",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "input.required",
+      "data": {
+        "run_id": "run-4548adba-a743-4d7b-8edd-fbc9304c2cda",
+        "status": "stopped",
+        "message": "정확한 분석을 위해 추가 정보가 필요합니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 13.14
+}

@@ -1,0 +1,60 @@
+{
+  "id": "T056",
+  "group": "정보 부족",
+  "category": "consumer",
+  "question": "법적으로 대응하고 싶은데 도와주세요.",
+  "mode": "live",
+  "expected": "needs_clarification 및 보완 질문; 검색 도구 호출 0회",
+  "verdict": "ERROR",
+  "run_id": "run-b1c9948e-8600-451b-8237-09f129a82f2e",
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-b1c9948e-8600-451b-8237-09f129a82f2e",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-b1c9948e-8600-451b-8237-09f129a82f2e",
+        "step_id": "validation-48023827-85ef-4090-a5f2-2122990d7108",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-b1c9948e-8600-451b-8237-09f129a82f2e",
+        "step_id": "validation-48023827-85ef-4090-a5f2-2122990d7108",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "input.required",
+      "data": {
+        "run_id": "run-b1c9948e-8600-451b-8237-09f129a82f2e",
+        "status": "stopped",
+        "message": "정확한 분석을 위해 추가 정보가 필요합니다."
+      }
+    }
+  ],
+  "error_type": "BackendClientError",
+  "error_code": "NOT_FOUND",
+  "scope": "live frontend client",
+  "elapsed_seconds": 13.109
+}

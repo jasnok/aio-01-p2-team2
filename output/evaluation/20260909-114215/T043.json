@@ -1,0 +1,451 @@
+{
+  "id": "T043",
+  "group": "정상 요청",
+  "category": "consumer",
+  "question": "헬스장이 폐업했는데 카드 할부금이 남았습니다. 관련 상담사례를 찾아주세요.",
+  "mode": "live",
+  "expected": "completed, is_mock=false, 근거 1건 이상; 법률 관련성은 수동 검토",
+  "verdict": "PASS",
+  "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+  "response": {
+    "request_id": "req-5ba6a7e8-227c-4af6-96d4-a93fa72f108e",
+    "agent_id": "consumer",
+    "status": "completed",
+    "termination_reason": "model_finished",
+    "question_summary": "헬스장이 폐업했는데 카드 할부금이 남은 상황에서 관련 상담사례를 요청함.",
+    "key_issues": [
+      "헬스장 폐업으로 인한 서비스 미제공",
+      "신용카드 할부금 관련 소비자의 권리",
+      "할부거래에 관한 법률상 항변권",
+      "불공정 약관과 카드 결제 수수료 부과 문제",
+      "카드사에 청구 중지 및 피해배상 청구 가능성"
+    ],
+    "answer": "헬스장과 신용카드 할부로 계약한 후 헬스장이 폐업하여 더 이상 서비스를 받지 못하는 경우, 「할부거래에 관한 법률」에 따라 소비자는 할부거래업자의 채무불이행으로 할부계약 목적을 달성할 수 없으므로 신용카드사에 할부금 청구를 중지(항변권)할 수 있습니다. 이는 성형외과 폐업 사례에서 신용카드 할부 항변권이 인정된 상담사례(consultation-360)와 유사한 상황입니다. 또한, 헬스장 계약 해지 시 위약금 외에 신용카드 결제수수료를 소비자에게 부담시키는 약관은 불공정약관으로 무효이며(consultation-93), 카드할부 대금을 일시불로 청구하는 은행의 착오 등에 대해서는 카드사에 피해배상을 청구할 수도 있습니다(consultation-612). 따라서, 헬스장 폐업으로 남은 카드 할부금 관련하여 카드사에 항변권을 행사하고, 부당하게 부과된 수수료 등에 대해서는 소비자 상담기관에 상담을 요청하는 것이 권장됩니다.",
+    "input_assessment": {
+      "status": "sufficient",
+      "message": "사용자의 질문은 헬스장 폐업 상황과 카드 할부금 관련으로 명확하므로 법률 상담 사례 검색이 가능합니다.",
+      "checks": {
+        "situation": "met",
+        "timing": "met",
+        "relationship": "met",
+        "request_evidence": "not_required"
+      }
+    },
+    "related_laws": [
+      {
+        "evidence_id": "law-703",
+        "document_id": "703",
+        "title": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "content": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제9조\n조문 제목: 배송사업자 등의 협력\n내용: 제9조(배송사업자 등의 협력) ① 전자상거래나 통신판매에 따라 재화등을 배송[「정보통신망 이용촉진 및 정보보호 등에 관한 법률」 제2조제1항제1호의 정보통신망(이하 \"정보통신망\"이라 한다)을 통한 전송을 포함한다]하는 사업자는 배송 사고나 배송 장애 등으로 분쟁이 발생하는 경우에는 대통령령으로 정하는 바에 따라 그 분쟁의 해결에 협조하여야 한다. ② 호스팅서비스(사업자가 전자상거래를 할 수 있도록 사이버몰 구축 및 서버 관리 등을 하여주는 서비스를 말한다. 이하 이 조에서 같다)를 제공하는 자는 사업자와 호스팅서비스에 관한 이용계약을 체결하는 경우 사업자의 신원을 확인하기 위한 조치를 취하여야 한다. ③ 사업자와 소비자 사이에 분쟁이 발생하는 경우 호스팅서비스를 제공하는 자는 다음 각 호의 어느 하나에 해당하는 자의 요청에 따라 사업자의 신원정보 등 대통령령으로 정하는 자료를 제공함으로써 그 분쟁의 해결에 협조하여야 한다. <개정 2016.3.29> 1. 분쟁의 당사자인 소비자(소비자가 소송을 제기하는 경우에 한정한다) 2. 공정거래위원회 3. 특별시장ㆍ광역시장ㆍ특별자치시장ㆍ도지사ㆍ특별자치도지사(이하 \"시ㆍ도지사\"라 한다) 또는 시장ㆍ군수ㆍ구청장(자치구의 구청장을 말한다. 이하 같다) 4. 수사기관 5. 그 밖에 분쟁해결을 위하여 필요하다고 인정되어 대통령령으로 정한 자",
+        "source": {
+          "source_id": "703",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+        },
+        "score": 0.1887,
+        "summary": null,
+        "law_name": "전자상거래 등에서의 소비자보호에 관한 법률",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-07-21"
+        }
+      },
+      {
+        "evidence_id": "law-724",
+        "document_id": "724",
+        "title": "형법",
+        "content": "법령명: 형법\n조문: 제117조\n조문 제목: 전시공수계약불이행\n내용: 제117조(전시공수계약불이행) ①전쟁, 천재 기타 사변에 있어서 국가 또는 공공단체와 체결한 식량 기타 생활필수품의 공급계약을 정당한 이유없이 이행하지 아니한 자는 3년 이하의 징역 또는 500만원 이하의 벌금에 처한다. <개정 1995.12.29> ②전항의 계약이행을 방해한 자도 전항의 형과 같다. ③전 2항의 경우에는 그 소정의 벌금을 병과할 수 있다.",
+        "source": {
+          "source_id": "724",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%ED%98%95%EB%B2%95"
+        },
+        "score": 0.1885,
+        "summary": null,
+        "law_name": "형법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-09-13"
+        }
+      },
+      {
+        "evidence_id": "law-704",
+        "document_id": "704",
+        "title": "소비자기본법",
+        "content": "법령명: 소비자기본법\n조문: 제73조\n조문 제목: 소송허가신청\n내용: 제73조(소송허가신청) ①단체소송을 제기하는 단체는 소장과 함께 다음 각 호의 사항을 기재한 소송허가신청서를 법원에 제출하여야 한다. 1. 원고 및 그 소송대리인 2. 피고 3. 금지ㆍ중지를 구하는 사업자의 소비자권익 침해행위의 범위 ②제1항의 규정에 따른 소송허가신청서에는 다음 각 호의 자료를 첨부하여야 한다. 1. 소제기단체가 제70조 각 호의 어느 하나에 해당하는 요건을 갖추고 있음을 소명하는 자료 2. 소제기단체가 제74조제1항제3호의 규정에 따라 요청한 서면 및 이에 대한 사업자의 의견서. 다만, 동호에서 정하는 기간 내에 사업자의 응답이 없을 경우에는 사업자의 의견서를 생략할 수 있다.",
+        "source": {
+          "source_id": "704",
+          "title": "국가법령정보센터",
+          "source_type": "law",
+          "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+        },
+        "score": 0.1884,
+        "summary": null,
+        "law_name": "소비자기본법",
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid",
+          "effective_date": "2026-01-02"
+        }
+      }
+    ],
+    "similar_cases": [
+      {
+        "evidence_id": "case-1159",
+        "document_id": "1159",
+        "title": "대금반환",
+        "content": "사건명: 대금반환\n사건번호: 2025가합11696\n법원: 서울중앙지방법원\n선고일: 2026-07-16\n구분: 판결이유\n내용: , 달 리 이 를 인 정 할 증 거 가 없 다 . 따 라서 원 고 CZ, DA, DB, DC, DD 의 피 고 CF 에 대한 각 주장은 나아 가 살 펴 볼 필 요 없 이 모 두 이 유 없 다 . 나 . 원 고 들 의 피 고 PG 사 들에 대한 전자상거 래 법 제 18 조 제 11 항에 기 한 대 금반 환 청 구에 관한 판단 1) 전자상거 래 법 제 18 조 제 11 항의 ' 소비자 로 부터 재 화 등 의 대 금 을 받 은 자 ' 에 관한 해 석 전자상거 래 법 제 18 조 제 2 항은 통 신 판매업 자 ( 소비자 로 부터 재 화 등 의 대 금 을 받 은 자 또 는 소비자 와 통 신 판 매 에 관한 계약 을 체 결 한 자를 포 함 한 다 ) 는 소비자 가 청약 철 회를 하고 재 화 등 을 반 환 한 경우 그 로 부터 3 영 업 일 이 내에 지 급받 은 재 화 등 의 대 금 을 환급 하 여 야 한 다고 규 정 하고 있 고 , 같 은 조 제 11 항 은 통 신 판매업 자 , 재 화 등 의 대 금 을 받 은 자 또 는 소비자 와 통 신 판매 에 관한 계약 을 체 결 한 자 가 동일 인이 아 닌 경우에 이 들은 청약 철 회 등 에 의한 재 화 등 의 대 금 환급 과 관 련 된 의무의 이 행 에 대 하 여 연대 하 여 책 임 을 진 다고 규 정 하고 있 다 . 위 와 같 이 전자상거 래 법 제 18 조 제 2 항, 제 11 항에서 ' 소비자 로 부터 재 화 등 의 대 금 을 받 은 자 ' 를 통 신 판매업 [12] [13] 자에 포 함 시 켜 대 금 환급 책 임 을 지 우는 것 은 통 신 판매업 자 가 통 신 판매업 자 로 신 고 · 표 시 되 지 는 아니 하 였 으 나 자신과 동일한 경제 적 이 익 을 향 유 하 는 자를 통 해 대 금 을 수 령 하 여 그 이 익 을 취 득 하고 도 청약 철 회에 따 른 대 금 의 환급 의무는 면 하 는 부 당 한 상 황 을 규 제 함 으 로 써 소비자의 청약 철 회 및 대 금 환급 에 대한 권 리 를 더 욱 확 실히 보장 하 려 는 데 그 취 지가 있 다 . 따 라서 위 각 조 항 에서 정 하 는 ' 소비자 로 부터 재 화 등 의 대 금 을 받 은 자 ' 란 , 대 금 을 받 은 사 실 이 있는 모 든 자를 의미 하 는 것 이 아니라 소비자의 입장에서 볼 때 통 신 판매업 자 와 동일 시 할 수 있거나 그 와 하 나의 거 래단 위를 구성 하 는 자 로 서 대 금 을 최 종 적 으 로 수 령 하 여 이 를 관 리하 는 자를 의미한 다고 봄 이 상 당 하다 . 2) 구체 적 판단 위 와 같 은 해 석 을 전제 로 살 피건 대 , 원 고 들 이 결 제대 행업 체 인 피 고 PG 사 들 이 제공 하 는 결 제서비 스 를 이 용 하 여 그 대 금 을 결 제한 사 실 , 피 고 PG 사 들은 위 결 제대 금 을 수 령 하 여 수수 료 를 공제한 나 머 지 돈 을 재차 CQ, CR 에게 지 급 한 사 실 은 앞 서 본 바 와 같 다 . 위 인 정 사 실 에 의 하 면 , 피 고 PG 사 는 결 제대 행업 체 로 서 CQ, CR 에게 결 제대 금 을 지 급 하 는 대 금 의 전 달 역할 만을 수 행 하 였 을 뿐 이 므 로 , 통 신 판매업 자 와 동일 시 할 수 있거나 그 와 하 나의 거 래단 위를 구성 하 는 자 로 서 대 금 을 최 종 적 으 로 수 령 하 여 관 리하 는 자에 해 당 한 다고 할 수 없 다 . 따 라서 원 고 들의 피 고 PG 사 들에 대한 주장은 이 유 없 다 . 다 . 원 고 들의 피 고 PG 사 에 대한 여신전문 금 융 업 법 제 19 조 제 7 항 제 3 호에 기 한 대 금반 환 청 구에 관한 판단 원 고 들은 이 사 건 각 구 매계약 이 청약 철 회 또 는 해제 로 실 효 되 었 으 므 로 , 피 고 PG 사 들 이 여신전문 금 융 업 법 제 19 조 제 7 항 제 3 호에 따 라 위 각 구 매계약 의 당 사 자 인 피 고 판매 사 들과 연대 하 여 원 고 들에게 결 제대 금 을 반 환 할 책 임 이 있 다고 주장한 다 . 여신전문 금 융 업 법 제 19 조 제 7 항 제 3 호는 결 제대 행업 체 가 신용카드회원 등 으 로 부터 거 래 의 취 소 또 는 환불 등 을 요구 받 은 경우 이 에 따 라 야 한 다고 규 정 하고 있 고 , 같 은 법 제 72 조 제 1 항 제 5 호는 결 제대 행업 체 가 위 규 정을 위 반 한 경우 과 태료 를 부과 하 도록 정 하고 있 다 . 그러나 위 각 규 정은 그 문 언 에 비 추 어보 더 라도 결 제 대 행업 체 가 거 래취 소 또 는 환불 요구를 적 정 하 게 처 리하 도록 하 는 업 무상 준 수의무 와 그 위 반 에 대한 행 정상 제 재 를 정한 것 일 뿐 , 결 제대 행업 체 가 신용카드회원 등 에 대 하 여 독 자 적 인 결 제대 금 반 환 채 무를 부 담 한 다 거",
+        "source": {
+          "source_id": "1159",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A911696"
+        },
+        "score": 0.2899,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2025가합11696",
+        "case_name": "대금반환",
+        "court": "서울중앙지방법원",
+        "decided_at": "2026-07-16",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "case-1157",
+        "document_id": "1157",
+        "title": "손해배상(기)",
+        "content": "사건명: 손해배상(기)\n사건번호: 2022가합107799\n법원: 서울동부지방법원\n선고일: 2026-01-22\n구분: 판결이유\n내용: 의 1) 를 원 고 에게 교 부 하 였 다 . 3. 판단 가 . 피 고 회 사 에 대한 청 구에 관한 판단 1) 살 피건 대 , 앞 서 든 증 거들 및 변 론 전체의 취 지 에 의 하 면 , ① 이 사 건 결 제대 행 계약 은 ' 피 고 회 사 는 원 고 에 게 이 사 건 결 제대 행 서비 스 이 용의 대 가 명 목 으 로 신용카드 판매 대 금 의 3.5% 에 해 당 하 는 서비 스 수수 료 를 3 영 업 일 이 내에 지 급 하 여 야 한 다 .' 라 고 규 정 하고 있 고 ( 이 사 건 결 제대 행 계약 제 8 조 제 1 항 및 [ 부 칙 1] 참 조 ), '피 고 회 사 는 취 소 되 는 거 래 건 의 기지 급 정 산 대 금 을 거 래 취 소요 청 과 동 시 에 원 고 에게 반 환 하 여 야 하고 , 원 고 는 정 산 대 금 의 반 환 이 이 루 어 지지 않 은 피 고 회 사 의 거 래 취 소요 청 을 거 절 할 수 있으 며 , 거 래 취 소 건 으 로 인하 여 피 고 회 사로 부터 받 아 야 할 정 산 대 금 을 차 기 정 산 대 금 에서 공제 할 수 있 다 .' 라 고 규 정 하고 있는 사 실 ( 이 사 건 결 제대 행 계약 제 17 조 제 2, 4 항 참 조 ), ② 원 고 와 피 고 회 사 사이 에 이 사 건 결 제대 행 서비 스 를 통 해 이 루 어진 신용카드 거 래 판매 대 금 은 합 계 34,922,949,278 원 인 데 , 그중 소비자들의 요 청 에 따 라 승 인 취 소 된 신용카드 거 래 판매 대 금 은 합 계 3,754,063,393 원 인 사 실 , ③ 한 편 , 피 고 회 사 는 2021. 4. 26. 경부터 2022. 7. 13. 경 까 지 신용카드 거 래 승 인 취 소에 따 른 환불 금 명 목 등 으 로 합 계 1,901,283,153 원을 원 고 에게 지 급 한 사 실 을 각 인 정 할 수 있 다 . 2) 위 인 정 사 실 들에 의 하 면 , 피 고 회 사 는 이 사 건 결 제대 행 계약 에 따 른 수수 료 및 환불 금 으 로 원 고 에게 , ① 승 인 완 료된 신용카드 거 래 에 대한 수수 료 1,090,911,005 원 [= ( 신용카드 거 래 판매 대 금 합 계 액 34,922,949,278 원 - 승 인 취 소 된 신용카드 거 래 판매 대 금 합 계 액 3,754,063,393 원 ) × 3.5%, 원 미만 버 림 ] 과 ② 승 인 취 소 된 신용카드 거 래 에 관 하 여 원 고 에게 반 환 하 여 야 할 환불 금 3,754,063,393 원에서 ③ 피 고 회 사가 원 고 에게 환불 금 명 목 등 으 로 기지 급 한 1,901,283,153 원을 공제한 나 머 지 2,943,691,245 원 (= ① 1,090,911,005 원 + ② 3,754,063,393 원 - ③ 1,901,283,153 원 ) 중 원 고가 구 하 는 바에 따 라 1,992,992,666 원 및 이 에 대한 지 연 손 해 금 을 지 급 할 의무 가 있 다 [ 한 편 , 을 제 5, 6 호 증 의 각 기 재 및 변 론 전체의 취 지 에 의 하 면 , 피 고 회 사 는 2021. 12. 24. 경 N 주 식 회 사 와 사이 에 피 보 험 자를 ' 원 고 ' 로 , 보 험 가 입 금 액 을 '150,000,000 원 ' 으 로 , 보 증 내용을 ' 이 사 건 결 제대 행 계약 에 따 른 손 해 배 상 지 급 보 증 ' 으 로 하 는 이 행 ( 지 급 ) 보 증 보 험 계약 을 체 결 하 였 고 ( 이하 ' 이 사 건 보 증 보 험 계약 ' 이 라 한 다 ), 원 고 는 2022. 12. 1. 경 N 주 식 회 사로 부터 이 사 건 보 증 보 험 계약 에 따 른 보 험 금 명 목 으 로 150,000,000 원을 지 급받 은 사 실 은 인 정 되 나 , 피 고 회 사가 원 고 에게 미 지 급 한 수수 료 및 환불 금 합 계 액 인 위 2,943,691,245 원에서 위 150,000,000 원을 공제한 2,793,691,245 원 (= 2,943,691,245 원 - 150,000,000 원 ) 이 원 고 의 피 고 회 사 에 대한 청 구 금 액 인 1,992,992,666 원을 초 과 함 은 계 산 상 명 백 하 므 로 , 이 러한 사 정은 위 결 론 에 영 향 을 미치 지 않 는 다 . 그 리고 위 와 같 이 원 고 의 피 고 회 사 에 대 한 정 산금 청 구를 전부 인 용 하 는 이 상 그 와 선 택 적 관 계 에 있는 채 무 불 이 행 에 따 른 손 해 배 상 청 구 와 불법 행 위 에 따 른 손 해 배 상 청 구에 대 하 여는 별 도 로 판단 하지 않 는 다 ]. 나 . 피 고 C 등 에 대한 청 구에 관한 판단 1) 채 무 불 이 행 에 따 른 손 해 배 상 청 구에 관 하 여",
+        "source": {
+          "source_id": "1157",
+          "title": "빅케이스",
+          "source_type": "case",
+          "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EB%8F%99%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2022%EA%B0%80%ED%95%A9107799"
+        },
+        "score": 0.272,
+        "summary": null,
+        "law_name": null,
+        "article_number": null,
+        "case_number": "2022가합107799",
+        "case_name": "손해배상(기)",
+        "court": "서울동부지방법원",
+        "decided_at": "2026-01-22",
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "consultations": [
+      {
+        "evidence_id": "consultation-93",
+        "document_id": "93",
+        "title": "헬스장 계약해지 시 위약금 외 신용카드 결제 수수료 공제 여부",
+        "content": "제목: 헬스장 계약해지 시 위약금 외 신용카드 결제 수수료 공제 여부\n\n품목: 레져/스포츠\n\n질문: 헬스장을 이용 중 중도에 계약을 해지하려고 보니 계약서 상 약관에 위약금 외에 신용카드 결제수수료 3.3%를 공제하도록 되어 있습니다.\r\n계약해지 시 소비자가 신용카드 결제수수료를 부담하는 것이 정당한가요?\n\n답변: 헬스장 이용 고객은 계약해지시점에서 정산하여 남은 금액을 환급받을 권리가 있는데, 해당 약관은 이러한 권리를 부당하게 포기하도록 하는 내용은 불공정약관입니다.\r\n\r\n따라서 위약금 외에 가입비 또는 신용카드 결제수수료 등을 부담시키는 것은 「약관규제에 관한 법률」 상 위배되는 무효 조항입니다.\r\n\r\n또한, 고객에게 신용카드 결제수수료를 부담하는 규정은 현금결제 회원에 비해 카드결제 회원을 불리하게 대우하는 것으로 「여신전문금융업법」에도 위반됩니다.",
+        "source": {
+          "source_id": "93",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4243,
+        "summary": "헬스장을 이용 중 중도에 계약을 해지하려고 보니 계약서 상 약관에 위약금 외에 신용카드 결제수수료 3.3%를 공제하도록 되어 있습니다.\r\n계약해지 시 소비자가 신용카드 결제수수료를 부담하는 것이 정당한가요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-612",
+        "document_id": "612",
+        "title": "할부결제금액을 일시불로 청구한 경우의 피해배상",
+        "content": "제목: 할부결제금액을 일시불로 청구한 경우의 피해배상\n\n품목: 금융/보험\n\n질문: 헬스기기를 150만원에 구입하고 신용카드로 100만원은 12개월 할부로, 50만원은 일시불로 결제하였습니다. 그러나 은행의 업무착오로 모두 일시불로 청구하여 월말에 통장에 입금시켜 놓았던 각종 공과금 납부용 대금이 모두 인출되어 연체가 되는 피해가 발생하였습니다.\r\n은행과 판매처에 이의를 제기하고 계약을 지속할 의사가 없음을 통보한 후 헬스기기를 반송하였습니다. 그러나 가맹점에서는 헬스기기를 수취거절 하여 되돌려 보냈고 은행에서는 계속 대금을 청구하고 있는데 어떻게 해야 하는지 알고 싶습니다.\n\n답변: 청구상의 착오와 관련 없는 판매점과의 구매계약은 취소할 수 없으며, 청구상의 착오로 인한 피해는 카드회사에 배상청구가 가능합니다.\r\n\r\n청약철회기간이 경과한 상태에서 판매자의 과실 없이 해약을 하는 경우 적정한 위약금을 부담하여야 하며, 청구상의 착오라면 카드회사측의 과실에 해당하기 때문에 카드회사를 상대로 청구상의 착오로 인한 피해배상 요구와 함께 착오의 시정을 요구하실 수 있을 것입니다.",
+        "source": {
+          "source_id": "612",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.4107,
+        "summary": "헬스기기를 150만원에 구입하고 신용카드로 100만원은 12개월 할부로, 50만원은 일시불로 결제하였습니다. 그러나 은행의 업무착오로 모두 일시불로 청구하여 월말에 통장에 입금시켜 놓았던 각종 공과금 납부용 대금이 모두 인출되어 연체가 되는 피해가 발생하였습니다.\r\n은행과 판매처에 이의를 제기하고 계약을 지속할 의사가 없음을 통보한 후 헬스기기를 반송하였습니다. 그러나 가맹점에서는 헬스기기를 수취거절 하여 되돌려 보냈고 은행에서는 계속 대금을 청구하고 있는데 어떻게 해야 하는지 알고 싶습니다.",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      },
+      {
+        "evidence_id": "consultation-360",
+        "document_id": "360",
+        "title": "[신용카드] 성형외과 폐업에 따른 항변권 행사 가능 여부",
+        "content": "제목: [신용카드] 성형외과 폐업에 따른 항변권 행사 가능 여부\n\n품목: 금융/보험\n\n질문: 저는 **성형외과에서 얼굴 성형수술 및 관리비용으로 3,400,000원을   신용카드 18개월 할부로 결제하였습니다. 수술 후 정기적인 흉터관리와 주사시술로 총 4회 진료를 받았고 이후 예약을 위해 성형외과에 연락을 해보니 성형외과가 폐업한 사실을 알게 되었습니다. 진료 서비스가 남아있어 카드사에 할부 항변을 신청하였으나 카드사는 항변대상이 아니라며 이를 거절하였습니다. 저는 항변권을 행사할 수 없는 것인지요?\n\n답변: 귀하는 **성형외과와 할부거래계약을 체결하고 서비스를 받는 중 **성형외과가 폐업함으로써 더 이상 서비스를 제공받을 수 없는 경우에 해당하는 것으로  보입니다.\r\n 이는 할부거래에 관한 법률 제16조1항(소비자의 항변권)에서 ‘할부거래업자의 채무불이행으로 인하여 할부계약의 목적을 달성할 수 없는 경우’에 해당합니다.\r\n 따라서 신용카드사는 귀하의 정당한 항변권 행사를 수용하고, 항변권 행사 이후 납부해야할 나머지 할부금에 대해서는 청구하지 말아야 할 것입니다.",
+        "source": {
+          "source_id": "360",
+          "title": "한국소비자원 품목별 피해구제 사례",
+          "source_type": "consultation",
+          "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+        },
+        "score": 0.3735,
+        "summary": "저는 **성형외과에서 얼굴 성형수술 및 관리비용으로 3,400,000원을   신용카드 18개월 할부로 결제하였습니다. 수술 후 정기적인 흉터관리와 주사시술로 총 4회 진료를 받았고 이후 예약을 위해 성형외과에 연락을 해보니 성형외과가 폐업한 사실을 알게 되었습니다. 진료 서비스가 남아있어 카드사에 할부 항변을 신청하였으나 카드사는 항변대상이 아니라며 이를 거절하였습니다. 저는 항변권을 행사할 수 없는 것인지요?",
+        "law_name": null,
+        "article_number": null,
+        "case_number": null,
+        "case_name": null,
+        "court": null,
+        "decided_at": null,
+        "judgment_result": null,
+        "similar_points": [],
+        "metadata": {
+          "category": "consumer",
+          "document_type": "CONSULTATION",
+          "retrieval_method": "hybrid"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "source_id": "703",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%A0%84%EC%9E%90%EC%83%81%EA%B1%B0%EB%9E%98%20%EB%93%B1%EC%97%90%EC%84%9C%EC%9D%98%20%EC%86%8C%EB%B9%84%EC%9E%90%EB%B3%B4%ED%98%B8%EC%97%90%20%EA%B4%80%ED%95%9C%20%EB%B2%95%EB%A5%A0"
+      },
+      {
+        "source_id": "724",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%ED%98%95%EB%B2%95"
+      },
+      {
+        "source_id": "704",
+        "title": "국가법령정보센터",
+        "source_type": "law",
+        "url": "https://www.law.go.kr/법령/%EC%86%8C%EB%B9%84%EC%9E%90%EA%B8%B0%EB%B3%B8%EB%B2%95"
+      },
+      {
+        "source_id": "93",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "612",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "360",
+        "title": "한국소비자원 품목별 피해구제 사례",
+        "source_type": "consultation",
+        "url": "https://www.data.go.kr/data/15090382/fileData.do?recommendDataYn=Y"
+      },
+      {
+        "source_id": "1159",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EC%A4%91%EC%95%99%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2025%EA%B0%80%ED%95%A911696"
+      },
+      {
+        "source_id": "1157",
+        "title": "빅케이스",
+        "source_type": "case",
+        "url": "https://bigcase.ai/cases/%EC%84%9C%EC%9A%B8%EB%8F%99%EB%B6%80%EC%A7%80%EB%B0%A9%EB%B2%95%EC%9B%90/2022%EA%B0%80%ED%95%A9107799"
+      }
+    ],
+    "follow_up_questions": [],
+    "cautions": [
+      "개인 사안별 구체적 법률 적용은 상담 필요",
+      "각 사례는 구체적 상황에 따라 다를 수 있으므로, 실제 사안에 맞는 전문 상담이 필요함",
+      "법령 및 판례 해석은 변동될 수 있어 최신 정보 확인이 요구됨"
+    ],
+    "is_mock": false
+  },
+  "events": [
+    {
+      "id": 1,
+      "event": "run.started",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "status": "running",
+        "message": "법률 분석을 시작했습니다."
+      }
+    },
+    {
+      "id": 2,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "validation-9f3f6b8a-cfd1-4dce-9289-e911a8568dec",
+        "stage": "validation",
+        "status": "started",
+        "tool": null,
+        "message": "질문 내용을 확인하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 3,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "validation-9f3f6b8a-cfd1-4dce-9289-e911a8568dec",
+        "stage": "validation",
+        "status": "completed",
+        "tool": null,
+        "message": "질문 내용을 확인했습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 4,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "search_laws-e56272d8-2b1b-40ba-91ea-3d0a262995df",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_laws",
+        "message": "관련 법령을 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 5,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "search_laws-e56272d8-2b1b-40ba-91ea-3d0a262995df",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_laws",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 6,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "search_consultations-74cefcb8-9585-4597-8bd7-04d7c4feb026",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_consultations",
+        "message": "상담사례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 7,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "search_consultations-74cefcb8-9585-4597-8bd7-04d7c4feb026",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_consultations",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 3
+      }
+    },
+    {
+      "id": 8,
+      "event": "step.started",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "search_cases-71351ec8-2606-4dd3-b2b9-9835e8071a5c",
+        "stage": "retrieval",
+        "status": "started",
+        "tool": "search_cases",
+        "message": "유사 판례를 검색하고 있습니다.",
+        "result_count": null
+      }
+    },
+    {
+      "id": 9,
+      "event": "step.completed",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "step_id": "search_cases-71351ec8-2606-4dd3-b2b9-9835e8071a5c",
+        "stage": "retrieval",
+        "status": "completed",
+        "tool": "search_cases",
+        "message": "관련 자료 검색을 완료했습니다.",
+        "result_count": 2
+      }
+    },
+    {
+      "id": 10,
+      "event": "run.completed",
+      "data": {
+        "run_id": "run-2d591805-3039-4c92-9ead-f42a427ae1e0",
+        "status": "completed",
+        "message": "법률 분석이 완료되었습니다."
+      }
+    }
+  ],
+  "tools": [
+    "search_laws",
+    "search_consultations",
+    "search_cases"
+  ],
+  "counts": {
+    "related_laws": 3,
+    "similar_cases": 2,
+    "consultations": 3
+  },
+  "frontend_state": "completed",
+  "scope": "live frontend client → backend SSE; no browser",
+  "target": "http://192.100.200.195:8000",
+  "nine_results": null,
+  "elapsed_seconds": 22.047
+}
