@@ -48,7 +48,10 @@ def is_expired(item):
 
 def load_detail(token, item):
     kind = item["type"]
-    payload = api.get_saved_conversation(token, item["id"])
+    if kind == "analysis":
+        payload = api.get_saved_conversation(token, item["id"])
+    else:
+        payload = api.get_legal_term_conversation(token, item["id"])
     try:
         detail = normalize_item({**item, **payload}, kind)
         if str(detail["id"]) != str(item["id"]):
