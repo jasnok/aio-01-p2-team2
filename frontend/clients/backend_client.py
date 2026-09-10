@@ -1,5 +1,6 @@
 import httpx
 import hashlib
+from urllib.parse import quote
 from pydantic import ValidationError
 
 from frontend.core.config import get_frontend_settings
@@ -17,10 +18,11 @@ ERROR_MESSAGES = {
 
 
 class BackendClientError(RuntimeError):
-    def __init__(self, user_message: str, code: str | None = None):
+    def __init__(self, user_message: str, code: str | None = None, status_code: int | None = None):
         super().__init__(user_message)
         self.user_message = user_message
         self.code = code
+        self.status_code = status_code
 
 
 def _request(method: str, path: str, **kwargs) -> dict:
@@ -42,12 +44,23 @@ def _request(method: str, path: str, **kwargs) -> dict:
         raise BackendClientError("Backend에 연결할 수 없습니다. 서버 주소와 실행 상태를 확인해 주세요.", "BACKEND_UNAVAILABLE") from error
     except httpx.HTTPStatusError as error:
         code, message = _extract_api_error(error.response)
-        raise BackendClientError(ERROR_MESSAGES.get(code, message), code) from error
+        if error.response.status_code == 401 and kwargs.get("headers", {}).get("Authorization"):
+            import streamlit as st
+            st.session_state.auth_invalid = True
+        if error.response.status_code == 401:
+            message = "로그인이 필요하거나 만료되었습니다. 다시 로그인해 주세요."
+        elif error.response.status_code == 403:
+            message = "이 항목에 접근할 권한이 없습니다."
+        elif error.response.status_code == 404:
+            message = "항목이 없거나 해당 기능이 아직 준비되지 않았습니다."
+        raise BackendClientError(ERROR_MESSAGES.get(code, message), code, error.response.status_code) from error
     except (ValueError, TypeError) as error:
         raise BackendClientError("Backend가 올바른 JSON 응답을 반환하지 않았습니다.", "INVALID_RESPONSE") from error
 
 
 def _extract_api_error(response: httpx.Response) -> tuple[str, str]:
+    if not response.is_stream_consumed:
+        response.read()
     try:
         payload = response.json()
     except ValueError:
@@ -89,18 +102,18 @@ def search_food_mock(
     )
 
 
-def ask_legal_question(category: str, question: str, session_id: str, *, scenario: str = "success") -> dict:
-    idempotency_source = f"{session_id}:{category}:{question}".encode("utf-8")
+def ask_legal_question(category: str, question: str, session_id: str, *, scenario: str = "success", save_selected: bool = False, token: str | None = None) -> dict:
+    idempotency_source = f"{session_id}:{category}:{question}:{save_selected}".encode("utf-8")
     headers = {
         "Idempotency-Key": hashlib.sha256(idempotency_source).hexdigest(),
-        "X-Guest-Id": session_id,
+        **auth_headers(token, session_id),
     }
     if scenario != "success":
         headers["X-Mock-Scenario"] = scenario
     payload = _request(
         "POST",
         "/api/legal/questions",
-        json={"session_id": session_id, "category": category, "question": question},
+        json={"session_id": session_id, "category": category, "question": question, "save_selected": bool(token and save_selected)},
         headers=headers,
     )
     try:
@@ -170,6 +183,67 @@ def request_password_reset(email: str) -> dict:
 
 def get_current_user(token: str | None, guest_id: str) -> dict:
     return _request("GET", "/api/auth/me", headers=auth_headers(token, guest_id))
+
+
+def list_saved_conversations(token: str, page: int = 1) -> dict:
+    return _request("GET", "/api/saved-conversations", params={"page": page, "page_size": 20}, headers=auth_headers(token, ""))
+
+
+def get_saved_conversation(token: str, conversation_id: str) -> dict:
+    return _request("GET", f"/api/saved-conversations/{quote(str(conversation_id), safe='')}", headers=auth_headers(token, ""))
+
+
+def delete_saved_conversation(token: str, conversation_id: str) -> None:
+    _request("DELETE", f"/api/saved-conversations/{quote(str(conversation_id), safe='')}", headers=auth_headers(token, ""))
+
+
+def list_guest_temporary_history(guest_id: str) -> dict:
+    return _request("GET", "/api/guest/temporary-history", headers=auth_headers(None, guest_id))
+
+
+def delete_guest_temporary_history(guest_id: str) -> None:
+    _request("DELETE", "/api/guest/temporary-history", headers=auth_headers(None, guest_id))
+
+
+def save_completed_result(token: str, result_id: str, *, kind: str) -> dict:
+    from frontend.core.storage_models import SaveResultView
+    if not token or not result_id or kind not in ("analysis", "legal_terms"):
+        raise BackendClientError("저장할 결과와 로그인 상태를 확인해 주세요.")
+    route = "agent-runs" if kind == "analysis" else "legal-term-runs"
+    payload = _request("POST", f"/api/{route}/{quote(str(result_id), safe='')}/save", headers=auth_headers(token, ""))
+    try:
+        result = SaveResultView.model_validate(payload)
+        if not result.saved:
+            raise BackendClientError("저장 완료를 확인하지 못했습니다. 다시 시도해 주세요.")
+        return result.model_dump()
+    except ValidationError as error:
+        raise BackendClientError("저장 응답 형식이 계약과 다릅니다.", "CONTRACT_MISMATCH") from error
+
+
+def chat_legal_terms(token: str | None, guest_id: str, message: str, *, save_selected: bool = False, conversation_id: str | int | None = None) -> dict:
+    if not 2 <= len(message) <= 1000:
+        raise BackendClientError("대화 요청은 2~1000자여야 합니다.", "VALIDATION_ERROR")
+    body = {"message": message, "save_selected": bool(token and save_selected)}
+    if conversation_id:
+        body["conversation_id"] = conversation_id
+    from frontend.core.storage_models import TermReplyView
+    payload = _request("POST", "/api/legal-terms/chat", json=body, headers=auth_headers(token, guest_id))
+    try:
+        return TermReplyView.model_validate(payload).model_dump(mode="json")
+    except ValidationError as error:
+        raise BackendClientError("용어 대화 응답 형식이 계약과 다릅니다.", "CONTRACT_MISMATCH") from error
+
+
+def list_legal_term_conversations(token: str, page: int = 1) -> dict:
+    return _request("GET", "/api/legal-terms/conversations", params={"page": page, "page_size": 20}, headers=auth_headers(token, ""))
+
+
+def get_legal_term_conversation(token: str, conversation_id: str) -> dict:
+    return _request("GET", f"/api/legal-terms/conversations/{quote(str(conversation_id), safe='')}", headers=auth_headers(token, ""))
+
+
+def delete_legal_term_conversation(token: str, conversation_id: str) -> None:
+    _request("DELETE", f"/api/legal-terms/conversations/{quote(str(conversation_id), safe='')}", headers=auth_headers(token, ""))
 
 
 def list_faqs(category: str | None = None) -> dict:
@@ -275,11 +349,11 @@ def delete_read_notifications_api(token: str | None, guest_id: str) -> None:
 
 # Agent 진행 상태 API 계약 준비. Backend 구현 후 polling부터 연결하고,
 # 안정화 뒤 /events SSE로 전환한다.
-def create_agent_run(token: str | None, guest_id: str, category: str, question: str, idempotency_key: str) -> dict:
+def create_agent_run(token: str | None, guest_id: str, category: str, question: str, idempotency_key: str, *, save_selected: bool = False) -> dict:
     return _request(
         "POST",
         "/api/agent-runs",
-        json={"category": category, "question": question},
+        json={"category": category, "question": question, "save_selected": bool(token and save_selected)},
         headers={**auth_headers(token, guest_id), "Idempotency-Key": idempotency_key},
     )
 

@@ -37,6 +37,7 @@ def test_backend_checks_display(status):
     assert '2/3' in text and '해당 없음 1' in text
     assert '✓ 상대방·관계' in text and '○ 요청·증거' in text
     assert '<script>' not in text
+    assert not app.caption
 
 
 @pytest.mark.parametrize('result,message,category', [

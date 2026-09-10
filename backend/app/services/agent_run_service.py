@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections.abc import Awaitable, Callable
 from datetime import timedelta
 from time import monotonic
@@ -13,10 +14,19 @@ from uuid import uuid4
 
 from backend.app.schemas.legal import Category, LegalQuestionRequest
 from backend.app.services.legal_question_service import answer_question_from_mcp
+from backend.app.services.conversation_service import ConversationService
+from backend.app.services.saved_conversation_service import SavedConversationService
+from backend.app.services.guest_session_service import guest_sessions
+from backend.app.core.config import get_settings
 from backend.app.services.mock_store import iso, now, store
 
 
+logger = logging.getLogger(__name__)
+
+
 TERMINAL_STATUSES = {"completed", "stopped", "failed"}
+conversation_service = ConversationService()
+saved_conversation_service = SavedConversationService()
 
 
 def append_event(run: dict, event: str, data: dict) -> None:
@@ -36,11 +46,19 @@ def public_run(run: dict) -> dict:
     return result
 
 
-def create_run(owner: dict, category: Category, question: str, idempotency_key: str) -> tuple[dict, bool]:
+def create_run(
+    owner: dict,
+    category: Category,
+    question: str,
+    idempotency_key: str,
+    *,
+    save_selected: bool = False,
+    conversation_id: int | None = None,
+) -> tuple[dict, bool]:
     normalized_question = question.strip()
     key = (owner["id"], idempotency_key)
     cached = store.agent_run_idempotency.get(key)
-    fingerprint = (category, normalized_question)
+    fingerprint = (category, normalized_question, save_selected, conversation_id)
     if cached and cached["expires_at"] > now():
         if cached["fingerprint"] != fingerprint:
             raise ValueError("IDEMPOTENCY_CONFLICT")
@@ -50,8 +68,11 @@ def create_run(owner: dict, category: Category, question: str, idempotency_key: 
     run = {
         "run_id": run_id,
         "owner_id": owner["id"],
+        "actor": {"id": owner["id"], "role": owner["role"]},
         "category": category,
         "question": normalized_question,
+        "save_selected": save_selected,
+        "conversation_id": conversation_id,
         "status": "queued",
         "result": None,
         "error": None,
@@ -126,25 +147,83 @@ async def execute_run(run_id: str) -> None:
             })
 
     try:
+        context: list[dict] | None = None
+        if run["conversation_id"] is not None:
+            context = (
+                await conversation_service.build_context_for_actor(
+                    conversation_id=run["conversation_id"],
+                    actor_key=run["owner_id"],
+                )
+                if get_settings().backend_mock_mode
+                else await saved_conversation_service.build_context_for_actor(
+                    actor=run["actor"],
+                    conversation_id=run["conversation_id"],
+                )
+            )
+            if not context:
+                raise PermissionError("conversation is not owned by actor")
         request = LegalQuestionRequest(
-            session_id=run["owner_id"], category=run["category"], question=run["question"],
+            session_id=str(run["owner_id"]), category=run["category"], question=run["question"],
         )
-        result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+        if context is None:
+            result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
+        else:
+            result = await answer_question_from_mcp(
+                request,
+                event_callback=on_runtime_event,
+                conversation_context=context,
+            )
+        if run["save_selected"]:
+            if get_settings().backend_mock_mode:
+                saved = await conversation_service.save_if_selected(
+                    save_selected=True,
+                    actor_key=run["owner_id"],
+                    question=run["question"],
+                    response=result,
+                    conversation_id=run["conversation_id"],
+                )
+                result.conversation_id = saved["conversation_id"] if saved else None
+            elif run["actor"]["role"] != "GUEST":
+                result.conversation_id = await saved_conversation_service.save_response(
+                    actor=run["actor"],
+                    category=run["category"],
+                    question=run["question"],
+                    response=result,
+                )
         # 반드시 결과를 먼저 저장한 뒤 terminal 이벤트를 발행한다.
         run["result"] = result.model_dump(mode="json")
         if result.termination_reason == "needs_clarification":
             run["status"] = "stopped"
+            if run["actor"]["role"] == "GUEST":
+                try:
+                    await guest_sessions.save_analysis(str(run["owner_id"]), run)
+                except Exception:
+                    logger.warning("guest_temporary_save_failed run_id=%s", run_id)
+                    append_event(run, "guest.storage_failed", {
+                        "run_id": run_id,
+                        "message": "임시 이력을 저장하지 못했습니다. 분석 결과는 현재 화면에서 확인할 수 있습니다.",
+                    })
             append_event(run, "input.required", {
                 "run_id": run_id, "status": "stopped",
                 "message": "정확한 분석을 위해 추가 정보가 필요합니다.",
             })
         else:
             run["status"] = "completed"
+            if run["actor"]["role"] == "GUEST":
+                try:
+                    await guest_sessions.save_analysis(str(run["owner_id"]), run)
+                except Exception:
+                    logger.warning("guest_temporary_save_failed run_id=%s", run_id)
+                    append_event(run, "guest.storage_failed", {
+                        "run_id": run_id,
+                        "message": "임시 이력을 저장하지 못했습니다. 분석 결과는 현재 화면에서 확인할 수 있습니다.",
+                    })
             append_event(run, "run.completed", {
                 "run_id": run_id, "status": "completed",
                 "message": "법률 분석이 완료되었습니다.",
             })
     except Exception:
+        logger.exception("agent_run_failed run_id=%s", run_id)
         # 내부 예외와 민감한 연결 정보는 SSE/HTTP 응답에 노출하지 않는다.
         run["status"] = "failed"
         run["error"] = {"code": "ANALYSIS_FAILED", "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."}

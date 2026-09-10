@@ -47,4 +47,3 @@ def render_input_checklist(category: str, message: str, result: dict | None) -> 
         f'<div class="input-quality {tone}"><strong>{title} ({count})</strong><br><span>{items}</span></div>',
         unsafe_allow_html=True,
     )
-    st.caption("Agent의 제출 질문 기준 판단입니다. ○는 추가 확인이 필요한 정보이며, 모든 항목이 검색 필수조건은 아닙니다.")

@@ -12,7 +12,6 @@ from backend.app.agents.tool_selector import select_tools
 from backend.app.mcp_clients.legal_mcp import (
     search_cases,
     search_consultations,
-    search_laws,
     search_legal_documents,
     search_laws,
 )
@@ -45,6 +44,7 @@ class LegalAgentRuntime:
             raise ValueError("지원하지 않는 Agent Profile입니다.")
 
         selected_tools = select_tools(profile, state.question)
+
         if not selected_tools:
             raise ValueError("실행할 수 있는 MCP Tool이 없습니다.")
 
@@ -71,14 +71,7 @@ class LegalAgentRuntime:
             if event_callback:
                 await event_callback(state.trace[-1])
 
-            if tool_name == "search_laws":
-                payload = await search_laws(
-                    state.question,
-                    profile.agent_id,
-                    top_k=3,
-                )
-
-            elif tool_name == "search_cases":
+            if tool_name == "search_cases":
                 payload = await search_cases(
                     state.question,
                     profile.agent_id,

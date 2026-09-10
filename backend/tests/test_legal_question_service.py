@@ -1,6 +1,6 @@
 import asyncio
 
-from backend.app.agents.models import AgentState, IntakeResult
+from backend.app.agents.models import AgentState, InputChecks, IntakeResult
 from backend.app.schemas.legal import LegalQuestionRequest
 from backend.app.services import legal_question_service
 
@@ -9,6 +9,10 @@ def test_consumer_response_places_consultations_in_separate_list(monkeypatch) ->
     async def fake_assess(self, category, question, event_callback=None):
         return IntakeResult(
             is_ready_for_search=True, status="sufficient", message="검색을 진행할 수 있습니다.",
+            checks=InputChecks(
+                situation="met", timing="not_required", relationship="met",
+                request_evidence="not_required",
+            ),
         )
 
     async def fake_run(self, profile, state, event_callback=None):
@@ -59,6 +63,8 @@ def test_consumer_response_places_consultations_in_separate_list(monkeypatch) ->
     assert response.consultations[0].source.source_type == "consultation"
     assert response.sources[0].source_type == "consultation"
     assert response.input_assessment.status == "sufficient"
+    assert response.input_assessment.checks is not None
+    assert response.input_assessment.checks.relationship == "met"
 
 
 def test_incomplete_question_skips_mcp_search(monkeypatch) -> None:

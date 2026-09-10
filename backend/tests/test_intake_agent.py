@@ -78,6 +78,42 @@ def test_invalid_output_retries_only_once(monkeypatch) -> None:
     assert provider.calls == 2
 
 
+def test_general_law_question_returns_complete_optional_checks(monkeypatch) -> None:
+    configure_provider(monkeypatch, {
+        "status": "sufficient",
+        "message": "일반 법령 검색을 진행할 수 있습니다.",
+        "checks": {
+            "situation": "met",
+            "timing": "not_required",
+            "relationship": "not_required",
+            "request_evidence": "not_required",
+        },
+    })
+
+    result = asyncio.run(IntakeAgent().assess("labor", "근로기준법을 알려주세요."))
+
+    assert result.status == "sufficient"
+    assert result.checks is not None
+    assert result.checks.timing == "not_required"
+    assert result.checks.request_evidence == "not_required"
+
+
+def test_partial_checks_are_retried_as_invalid_structured_output(monkeypatch) -> None:
+    provider = configure_provider(monkeypatch, [
+        {
+            "status": "sufficient",
+            "message": "검색할 수 있습니다.",
+            "checks": {"situation": "met"},
+        },
+        {"status": "sufficient", "message": "검색할 수 있습니다."},
+    ])
+
+    result = asyncio.run(IntakeAgent().assess("labor", "근로기준법을 알려주세요."))
+
+    assert result.checks is None
+    assert provider.calls == 2
+
+
 def test_follow_up_request_is_assessed_again_without_repeating_the_original_question(monkeypatch) -> None:
     original = "임대인이 보증금을 돌려주지 않습니다."
     follow_up = f"{original} 계약 종료일은 2026년 8월 1일이고 내용증명을 보냈습니다."

@@ -2,9 +2,10 @@ from fastapi.testclient import TestClient
 import asyncio
 
 from backend.app.main import app
-from backend.app.schemas.legal import InputAssessment, LegalQuestionResponse
+from backend.app.schemas.legal import InputAssessment, InputAssessmentChecks, LegalQuestionResponse
 from backend.app.services import agent_run_service
 from backend.app.services.mock_store import now, store
+from backend.app.routers import legal as legal_router
 
 
 client = TestClient(app)
@@ -67,6 +68,35 @@ def test_legal_idempotency_returns_first_result(monkeypatch) -> None:
     assert first.json()["request_id"] == second.json()["request_id"]
 
 
+def test_legal_analysis_saves_only_when_user_selects_it(monkeypatch) -> None:
+    captured: dict = {}
+
+    async def fake_save_if_selected(**kwargs) -> dict | None:
+        captured.update(kwargs)
+        return {"conversation_id": 100}
+
+    monkeypatch.setattr(
+        legal_router.conversation_service,
+        "save_if_selected",
+        fake_save_if_selected,
+    )
+    response = client.post(
+        "/api/legal/questions",
+        headers={"X-Guest-Id": "guest-save-choice"},
+        json={
+            "session_id": "legacy-session-id",
+            "category": "housing",
+            "question": "보증금을 돌려받지 못했습니다.",
+            "save_selected": True,
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()["conversation_id"] == 100
+    assert captured["actor_key"] == "guest-save-choice"
+    assert captured["question"] == "보증금을 돌려받지 못했습니다."
+
+
 def test_validation_envelope_has_request_id() -> None:
     response = client.post("/api/questions", json={})
     assert response.status_code == 422
@@ -98,7 +128,11 @@ def test_notification_read_items_and_agent_run_sse_contract(monkeypatch) -> None
             termination_reason="model_finished", question_summary="테스트 요약",
             answer="테스트 답변", is_mock=False,
             input_assessment=InputAssessment(
-                status="sufficient", message="질문 내용을 확인해 검색을 진행했습니다."
+                status="sufficient", message="질문 내용을 확인해 검색을 진행했습니다.",
+                checks=InputAssessmentChecks(
+                    situation="met", timing="not_required", relationship="met",
+                    request_evidence="missing",
+                ),
             ),
         )
 
@@ -122,6 +156,7 @@ def test_notification_read_items_and_agent_run_sse_contract(monkeypatch) -> None
     assert status["status"] == "completed"
     assert status["result"]["is_mock"] is False
     assert status["result"]["input_assessment"]["status"] == "sufficient"
+    assert status["result"]["input_assessment"]["checks"]["timing"] == "not_required"
     validation_events = [
         event for event in store.agent_runs[run_id]["events"]
         if event["data"].get("stage") == "validation"

@@ -35,18 +35,23 @@ used_evidence_ids에는 실제로 답변에 사용한 Evidence ID만 넣으세�
 
 
 def _input_assessment(result) -> InputAssessment:
-    return InputAssessment(status=result.status, message=result.message)
+    return InputAssessment(
+        status=result.status,
+        message=result.message,
+        checks=result.checks.model_dump() if result.checks else None,
+    )
 
 
 async def create_clarification_response(
     request: LegalQuestionRequest,
     is_mock: bool,
     event_callback: Callable[[dict], Awaitable[None]] | None = None,
+    assessment_question: str | None = None,
 ) -> tuple[IntakeResult, LegalQuestionResponse | None]:
     """입력 판단을 한 번만 수행하고 검색 전 분기와 최종 응답에서 함께 사용한다."""
     intake_result = await IntakeAgent().assess(
         request.category,
-        request.question,
+        assessment_question or request.question,
         event_callback=event_callback,
     )
     if intake_result.is_ready_for_search:
@@ -91,9 +96,14 @@ def answer_question(request: LegalQuestionRequest) -> LegalQuestionResponse:
 def _llm_input(
     question: str,
     evidence: list[Evidence],
+    conversation_context: list[dict] | None = None,
 ) -> str:
     payload = {
         "question": question,
+        "conversation_context": [
+            {"role": item.get("role"), "content": str(item.get("content", ""))[:1000]}
+            for item in (conversation_context or [])
+        ],
         "evidence": [
             {
                 "evidence_id": item.evidence_id,
@@ -116,6 +126,7 @@ async def answer_with_llm(
     category: str,
     question: str,
     evidence: list[Evidence],
+    conversation_context: list[dict] | None = None,
 ) -> tuple[AnswerDraft, bool]:
     """LLM을 사용할 수 없거나 검증에 실패하면 템플릿 답변으로 복귀한다."""
     fallback = AnswerAgent().create_draft(category, question, evidence)
@@ -128,7 +139,7 @@ async def answer_with_llm(
         result = await asyncio.to_thread(
             provider.generate_structured,
             LLM_SYSTEM_PROMPT,
-            _llm_input(question, evidence),
+            _llm_input(question, evidence, conversation_context),
             AnswerDraft,
         )
         draft = AnswerDraft.model_validate(result.output)
@@ -144,11 +155,20 @@ async def answer_with_llm(
 async def answer_question_from_mcp(
     request: LegalQuestionRequest,
     event_callback: Callable[[dict], Awaitable[None]] | None = None,
+    conversation_context: list[dict] | None = None,
 ) -> LegalQuestionResponse:
+    assessment_question = request.question
+    if conversation_context:
+        previous = "\n".join(
+            f"{item.get('role', 'user')}: {item.get('content', '')}"
+            for item in conversation_context
+        )
+        assessment_question = f"이전 대화:\n{previous}\n\n현재 질문:\n{request.question}"
     intake_result, clarification_response = await create_clarification_response(
         request,
         is_mock=False,
         event_callback=event_callback,
+        assessment_question=assessment_question,
     )
     if clarification_response is not None:
         return clarification_response
@@ -180,6 +200,7 @@ async def answer_question_from_mcp(
         category=request.category,
         question=request.question,
         evidence=documents,
+        conversation_context=conversation_context,
     )
     state.llm_calls = int(llm_used)
 

@@ -11,5 +11,5 @@ def get_legal_service() -> LegalService:
     if mode == "mock":
         return MockLegalService()
     if mode == "api":
-        return ApiLegalService(st.session_state.current_user["id"])
+        return ApiLegalService(str(st.session_state.current_user["id"]), st.session_state.auth_token)
     raise ValueError("FRONTEND_DATA_MODE는 mock 또는 api만 사용할 수 있습니다.")

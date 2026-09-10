@@ -16,6 +16,7 @@ DEMO_QUESTIONS = {
 class QuestionSubmission:
     category: str
     message: str
+    save_selected: bool = False
 
 
 def _apply_demo_question(category: str) -> None:
@@ -35,6 +36,11 @@ def render_question_form(category: str) -> QuestionSubmission | None:
         placeholder="언제, 누구와, 어떤 일이 있었는지 구체적으로 작성하면 검색 정확도가 높아집니다.",
     )
     render_input_checklist(category, message, st.session_state.get("last_result"))
+    from frontend.core.config import get_frontend_settings
+    if get_frontend_settings().frontend_data_mode.lower() == "api":
+        pending = st.session_state.get("sse_pending")
+        if pending and not pending.get("finished") and pending.get("identity", (None, None, None))[1:] == (category, message.strip()):
+            st.caption("다시 시도하면 기존 분석과 처음 선택한 저장 여부를 유지합니다.")
     submitted = st.button(
         "처리 중입니다..." if st.session_state.analysis_in_progress else "✦ 사례 분석하기",
         type="primary",
@@ -47,5 +53,7 @@ def render_question_form(category: str) -> QuestionSubmission | None:
     if len(message.strip()) < 5:
         st.warning("질문을 5자 이상 입력해 주세요.")
         return None
-    return QuestionSubmission(category=category, message=message.strip())
+    # New analyses do not inherit a storage selection from an older screen.
+    # Saving an existing result requires a backend post-analysis save endpoint.
+    return QuestionSubmission(category=category, message=message.strip(), save_selected=False)
 
