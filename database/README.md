@@ -52,6 +52,7 @@ pdfplumber는 PDF 본문 추출 도구이며 벡터 생성은 OpenAI 임베딩 �
 | `LAW` | 국가법령정보센터 법령 본문 | 조문 검색·답변 근거 |
 | `CASE` | 공식 API 판례·확보한 판결문 PDF | 유사 판례·판단 근거 |
 | `CONSULTATION` | 한국소비자원 피해구제 사례 | 상담·분쟁 사례 참고 |
+| `GUIDELINE` | 법무부 법률홈닥터 우수사례집(2014) | 법률지원 사례 참고·현행 법령과 함께 확인 |
 | `ADMIN_DECISION` | 노동위원회 판정자료 | 본문 보유 여부에 따라 사용 |
 | 보조 자료 | 일상용어·법령 색인 | 용어 설명·수집 대상 식별 |
 
@@ -82,6 +83,22 @@ pdfplumber는 PDF 본문 추출 도구이며 벡터 생성은 OpenAI 임베딩 �
 
 점검 당시 PDF 26건은 현재 추출 결과의 본문·청크 해시와 DB 값이 일치했습니다. 저장 상태와 검색 정확도·표 추출 품질은 별도 검증 대상입니다.
 
+### 추가 작업: 법률홈닥터 법률지원 사례
+
+2026-09-09 추가 작업으로 사례집 PDF의 좌우 페이지를 pdfplumber로 추출하고, Manifest에 지정한 사례별로 정규화·청킹·임베딩·DB 적재하는 기능을 구현했습니다. 사용자 적재 보고 기준으로 DB 작업을 진행했으며, 이번 README 갱신에서는 실제 DB를 재조회하지 않았습니다. 위 스냅샷 수치에는 이 추가분을 합산하지 않았습니다.
+
+| 항목 | 내용 |
+|---|---|
+| 자료 유형·출처 | `GUIDELINE` · 법무부 법률홈닥터 |
+| 원본 | `raw/files/guidelines/legal_home_doctor/법률홈닥터_우수사례집(2014)527.pdf` |
+| 사례 범위·분류 | [Manifest](sources/legal_home_doctor_2014.json): housing 10건, labor 1건, consumer 3건 활성화 |
+| 저장 위치 | `legal_documents` 본문·출처·발행 연도·책 페이지, `legal_chunks` 청크·임베딩 |
+| 실행·검증 | [스크립트 안내](scripts/README.md#7-법률홈닥터-법률지원-사례-적재) · [검증 SQL](scripts/verify_legal_home_doctor.sql) |
+
+14건은 Manifest의 처리 대상 수입니다. 실제 완료 여부는 문서 수, 빈 본문·청크 누락, 임베딩 누락 0건, 모델·1536차원 및 추출 본문을 검증하여 판단합니다. 이 자료는 법원 판결이 아닌 2014년 법률지원 사례이며 현행 법령의 단독 근거로 사용하지 않습니다. 현재 출처 URL은 법무부 홈페이지이므로 사례집 직접 링크 확보는 후속 보완 사항입니다.
+
+현재 작업 범위는 DB 데이터 준비입니다. `GUIDELINE`의 MCP 검색·Backend 응답·Frontend 표시는 아직 연동되지 않았습니다. 후속 제안은 기존 영역을 “상담·법률지원 사례”로 확장하여 `CONSULTATION`과 `GUIDELINE`을 함께 표시하는 것입니다. DB 유형은 유지하고 응답 출처는 각각 `consultation`, `guideline`으로 구분하며, 기존 `consultations` 목록을 함께 사용하는 계약은 연동 담당자와 확정 후 적용합니다.
+
 ## 5. 디렉터리 구조
 
 ```text
@@ -101,9 +118,10 @@ database/
 │  ├─ api/laws/              # 법령 XML
 │  ├─ api/cases/             # 카테고리별 판례 XML
 │  └─ files/                 # 분야별 PDF·CSV·소비자 XML·보조 자료
+│     └─ guidelines/legal_home_doctor/ # 법률홈닥터 사례집 PDF
 ├─ scripts/                  # 실행 파일·검증 SQL
 ├─ seeds/                    # 초기·고정 검증 데이터 안내
-├─ sources/                  # 출처 관리용
+├─ sources/                  # 출처·사례별 페이지와 카테고리 Manifest
 ├─ normalized/               # 중간 산출물 보관용
 ├─ repositories/             # DB 접근 공통화용
 └─ tests/                    # DB 관련 테스트
@@ -211,6 +229,9 @@ ORDER BY d.category, d.document_type;
 |---|---|
 | 핵심 법령·API/PDF 판례·소비자 사례 적재 | 확인 완료 |
 | 점검 PDF 26건 해시·전체 임베딩 모델·차원 | 확인 완료 |
+| 법률홈닥터 PDF 추출·정규화·청킹·적재·검증 도구 | 구현 완료 |
+| 법률홈닥터 실제 적재 결과 | 사용자 적재 보고 있음 · 최신 DB 결과는 검증 SQL로 확인 |
+| 법률홈닥터 MCP·Backend·Frontend 연동 | 미적용 · 후속 작업 |
 | 일반 웹 테이블·주요 제약·인덱스 | 확인 완료 |
 | Migration 이력·실행기·통합 DB 검사 | 보완 필요 |
 | `ingestion_runs` 기록·노동 자료 근거 사용 제한 | 보완 필요 |
