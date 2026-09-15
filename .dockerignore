@@ -1,0 +1,35 @@
+# Secrets and local developer state must never enter an application image.
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+.git
+.github
+.venv
+.venv/
+**/.venv/
+venv
+venv/
+**/venv/
+node_modules/
+**/node_modules/
+**/__pycache__
+**/*.py[cod]
+.pytest_cache
+.mypy_cache
+htmlcov
+.coverage
+
+# Build artifacts and recordings are not required by runtime services.
+output
+tmp
+docs/agent_architecture_render
+docs/agent_test_report_render
+
+# Raw legal data is mounted into the one-off ingestion container when needed.
+database/raw
+database/normalized
+database/.venv

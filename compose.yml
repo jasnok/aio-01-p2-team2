@@ -1,0 +1,119 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: database/postgres.Dockerfile
+    image: ${DOCKERHUB_NAMESPACE:-lawpath}/lawpath-postgres:${IMAGE_TAG:-local}
+    restart: unless-stopped
+    env_file:
+      - ./database/.env
+    ports:
+      - "127.0.0.1:5434:5432"
+    volumes:
+      - lawpath-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    env_file:
+      - ./database/.env
+    ports:
+      - "127.0.0.1:6380:6379"
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - lawpath-redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=$$REDIS_PASSWORD redis-cli ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mcp-server:
+    build:
+      context: .
+      dockerfile: legal_mcp/Dockerfile
+    image: ${DOCKERHUB_NAMESPACE:-lawpath}/lawpath-mcp:${IMAGE_TAG:-local}
+    restart: unless-stopped
+    ports: ["8013:8013"]
+    env_file:
+      - ./legal_mcp/.env
+    environment:
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "8013"
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.create_connection(('127.0.0.1', 8013), 2); s.close()"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: ${DOCKERHUB_NAMESPACE:-lawpath}/lawpath-backend:${IMAGE_TAG:-local}
+    restart: unless-stopped
+    ports: ["8000:8000"]
+    env_file:
+      - ./backend/.env
+    environment:
+      LEGAL_MCP_URL: http://mcp-server:8013/mcp
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      mcp-server: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; assert urlopen('http://127.0.0.1:8000/health', timeout=3).status == 200"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    image: ${DOCKERHUB_NAMESPACE:-lawpath}/lawpath-frontend:${IMAGE_TAG:-local}
+    restart: unless-stopped
+    ports: ["8501:8501"]
+    env_file:
+      - ./frontend/.env
+    environment:
+      BACKEND_API_URL: http://backend:8000
+      FRONTEND_DATA_MODE: api
+      FRONTEND_CONNECTION_CHECK_ENABLED: "false"
+      TEAM_FRONTEND_URL: http://frontend:8501
+      TEAM_BACKEND_URL: http://backend:8000
+      TEAM_MCP_URL: http://mcp-server:8013
+      TEAM_DATABASE_HOST: postgres
+      TEAM_DATABASE_PORT: "5432"
+    depends_on:
+      backend: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; assert urlopen('http://127.0.0.1:8501/_stcore/health', timeout=3).status == 200"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  database-tools:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    profiles: ["tools"]
+    env_file:
+      - ./database/.env
+    volumes:
+      - ./database/raw:/app/database/raw:ro
+      - ./database/normalized:/app/database/normalized
+      - ./database/sources:/app/database/sources:ro
+    depends_on:
+      postgres: {condition: service_healthy}
+
+volumes:
+  lawpath-postgres-data:
+  lawpath-redis-data:
