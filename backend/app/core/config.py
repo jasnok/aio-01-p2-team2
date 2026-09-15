@@ -5,8 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     backend_mock_mode: bool = True
-    frontend_origin: str = "http://192.100.200.232:8501"
-    legal_mcp_url: str = "http://192.100.200.72:8013/mcp"
+    frontend_origin: str = "http://127.0.0.1:8501"
+    legal_mcp_url: str = "http://127.0.0.1:8013/mcp"
     mcp_request_timeout_seconds: float = 15
     request_timeout_seconds: float = 15
     input_assessment_timeout_seconds: float = 8
@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     llm_provider: str = "mock"
     openai_api_key: str | None = None
     openai_model: str = "gpt-5-mini"
-    database_url:str = "postgresql://legal_user:change-me@192.100.200.99:5434/legal_ai"
+    database_url: str = "postgresql://legal_user:legal_password@127.0.0.1:5434/legal_ai"
     redis_enabled: bool = False
     redis_url: str = "redis://127.0.0.1:6380/0"
     auth_session_ttl_seconds: int = 28800

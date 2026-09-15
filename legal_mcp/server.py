@@ -21,8 +21,10 @@ from legal_mcp.tools.search_consultations import (
     search_consultations as search_consultations_tool,
 )
 
-MCP_HOST = os.getenv("MCP_HOST", "192.100.200.72")
-MCP_PORT = int(os.getenv("MCP_PORT", "8012"))
+# Docker Compose passes `0.0.0.0:8013`; local execution can override either
+# value through the existing MCP_HOST and MCP_PORT environment variables.
+MCP_HOST = os.getenv("MCP_HOST", "0.0.0.0")
+MCP_PORT = int(os.getenv("MCP_PORT", "8013"))
 
 mcp = FastMCP(
     "legal-research-mcp",

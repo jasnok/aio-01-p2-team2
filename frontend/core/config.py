@@ -11,10 +11,10 @@ class FrontendSettings(BaseSettings):
     frontend_presentation_mode: bool = False
     frontend_sse_enabled: bool = False
     frontend_sse_total_timeout_seconds: float = 180
-    team_frontend_url: str = "http://192.100.200.232:8501"
-    team_backend_url: str = "http://192.100.200.195:8000"
-    team_mcp_url: str = "http://192.100.200.72:8013"
-    team_database_host: str = "192.100.200.99"
+    team_frontend_url: str = "http://127.0.0.1:8501"
+    team_backend_url: str = "http://127.0.0.1:8000"
+    team_mcp_url: str = "http://127.0.0.1:8013"
+    team_database_host: str = "127.0.0.1"
     team_database_port: int = 5434
     team_database_user: str = "legal_user"
     team_database_name: str = "legal_ai"

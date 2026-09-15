@@ -5,6 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.app.core.config import get_settings
 from backend.app.routers.health import router as health_router
 from backend.app.routers.integration_router import router as integration_router
 from backend.app.routers.legal import router as legal_router
@@ -37,9 +38,10 @@ Frontend는 이 API만 호출합니다. 현재는 **Mock 모드**이므로 외�
         {"name": "integration-smoke-test", "description": "개발용 MCP 연결 확인 기능입니다. 기본적으로 비활성화됩니다."},
     ],
 )
+settings = get_settings()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8501", "http://127.0.0.1:8501", "http://192.100.200.232:8501"],
+    allow_origins=list({"http://localhost:8501", "http://127.0.0.1:8501", settings.frontend_origin.rstrip("/")}),
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "Last-Event-ID", "X-Guest-Id", "X-Mock-Scenario"],

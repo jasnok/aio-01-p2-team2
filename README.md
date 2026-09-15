@@ -101,6 +101,8 @@ scripts/               실행·테스트 명령
 
 ## 개발 환경과 실행
 
+개인 PC에서 Frontend·Backend·MCP·PostgreSQL·Redis를 함께 실행하려면 [개인 포트폴리오용 Docker 실행 안내](./docs/DOCKER_LOCAL_SETUP.md)를 먼저 확인하세요. Docker Hub 이미지로 실제 검색 데이터까지 같은 결과를 재현하는 방법은 [Docker Hub 릴리스 안내](./docs/DOCKER_RELEASE.md)를 참고하세요.
+
 요구사항: Python `>=3.12,<3.13`, Docker Desktop 또는 PostgreSQL 16 + pgvector. 아래 예시는 PowerShell 기준입니다.
 
 ```powershell
@@ -109,53 +111,30 @@ cd aio-01-p2-team2
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements-dev.txt
-Copy-Item .env.example .env
+Copy-Item frontend/.env.example frontend/.env
+Copy-Item backend/.env.example backend/.env
+Copy-Item legal_mcp/.env.example legal_mcp/.env
+Copy-Item database/.env.example database/.env
 ```
 
 서비스별 가상환경은 [서비스별 실행 가이드](./docs/개발환경%20구성.md)를 참고하세요. 기존 DB 볼륨은 [데이터베이스 명세서](./docs/architecture/데이터베이스%20명세서.md)를 확인하고, 초기화를 위해 임의 삭제하지 않습니다.
 
-### 팀 서버 연결 설정
+### 개인 Docker 실행 설정
 
-Frontend는 루트 `.env` 다음 `frontend/.env`를 읽습니다. 서비스 전용 파일이 같은 값을 덮어쓸 수 있으므로 두 파일의 설정을 확인합니다.
+개인 포트폴리오 환경에서는 팀 서버 IP를 사용하지 않습니다. `frontend`·`backend`·`legal_mcp`·`database`의 서비스별 `.env.example`을 각각 `.env`로 복사한 뒤, 개인 PostgreSQL·Redis 비밀번호와 OpenAI API Key를 입력하고 Docker Compose를 실행합니다.
 
-```env
-FRONTEND_DATA_MODE=api
-BACKEND_API_URL=http://192.100.200.195:8000
-FRONTEND_REQUEST_TIMEOUT_SECONDS=60
-FRONTEND_CONNECTION_CHECK_ENABLED=false
-FRONTEND_PRESENTATION_MODE=false
+```powershell
+Copy-Item frontend/.env.example frontend/.env
+Copy-Item backend/.env.example backend/.env
+Copy-Item legal_mcp/.env.example legal_mcp/.env
+Copy-Item database/.env.example database/.env
+docker compose up --build -d
+docker compose ps
 ```
 
-Backend 실연동 설정 예시:
+컨테이너 내부 연결은 `frontend → backend → mcp-server → postgres` 및 `backend → redis`라는 Compose 서비스명으로 처리합니다. 사용자 브라우저에서는 본인 PC의 IP와 공개 포트로 접근합니다. 현재 PC의 IP가 `192.100.200.232`이면 Frontend는 `http://192.100.200.232:8501`입니다.
 
-```env
-BACKEND_MOCK_MODE=false
-LEGAL_MCP_URL=http://192.100.200.72:8013/mcp
-MCP_REQUEST_TIMEOUT_SECONDS=60
-REQUEST_TIMEOUT_SECONDS=60
-```
-
-DB 접속 정보와 API Key는 각 서비스 담당자의 로컬 환경으로 설정합니다. 비밀번호·Key는 문서나 Git에 기록하지 않습니다. 동일한 60초 설정이 전체 요청 성공을 보장하지는 않으므로, Tool 실행 및 응답 처리 시간을 포함한 제한시간 예산을 조정해야 합니다.
-
-팀 서버 주소는 환경에 따라 변경될 수 있습니다.
-
-| 서비스 | 팀 연결 주소 |
-|---|---|
-| Frontend | `http://192.100.200.232:8501` |
-| Backend | `http://192.100.200.195:8000` |
-| MCP | `http://192.100.200.72:8013/mcp` |
-| PostgreSQL | `192.100.200.99:5434` / `legal_ai` |
-
-### 실행 순서
-
-1. DB 담당: PostgreSQL과 pgvector 및 실제 데이터 준비. 로컬 Docker 구성은 `docker compose up -d postgres`.
-2. MCP 담당: 실제 FastMCP 서비스를 시작하고 위 MCP 주소에서 Tool 목록과 각 Tool 호출을 확인.
-3. Backend 담당: `.\scripts\run_backend.ps1` 실행 후 `/health`, 질문 API 확인.
-4. Frontend 담당: `.\scripts\run_frontend.ps1` 실행 후 브라우저에서 화면 확인.
-
-주의: 현재 저장소의 `scripts/run_mcp.ps1`는 `legal_mcp.server:app`을 대상으로 하지만, `legal_mcp/server.py`는 FastMCP 객체와 직접 실행 경로를 정의합니다. 스크립트와 실제 실행 방식·host·port를 병훈 담당자가 일치시켜야 합니다. HTTP 주소가 열리는 것뿐 아니라 MCP Tool 호출 성공까지 확인하세요.
-
-`.env.example`와 코드의 일부 기본값은 아직 Mock입니다. API 설정을 명시하고 서비스를 재시작해야 합니다. Frontend의 API 모드만으로 Backend 내부 메모리 저장소가 실제 DB로 바뀌지는 않습니다.
+PostgreSQL과 Redis 포트는 로컬 PC에만 열고, Frontend·Backend·MCP만 LAN에서 접근할 수 있게 구성했습니다. 법률 데이터 적재는 비용이 발생하는 별도 작업이며 회원·대화 이력은 개인 DB로 이전하지 않습니다. 전체 절차와 데이터 적재 명령은 [개인 포트폴리오용 Docker 실행 안내](./docs/DOCKER_LOCAL_SETUP.md)를 확인하세요.
 
 ## 화면 개편 — Sidebar 제거
 
