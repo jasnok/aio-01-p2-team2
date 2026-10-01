@@ -56,9 +56,9 @@ class MemoryStore:
         self.notifications: dict[str, list[dict]] = {}
         self.history: dict[str, list[dict]] = {}
         self.unlocks: dict[tuple[str, str], datetime] = {}
-        self.idempotency: dict[tuple[str, str, str], tuple[datetime, dict]] = {}
+        self.idempotency: dict[tuple[tuple[str, str], str, str], tuple[datetime, dict, tuple]] = {}
         self.agent_runs: dict[str, dict] = {}
-        self.agent_run_idempotency: dict[tuple[str, str], dict] = {}
+        self.agent_run_idempotency: dict[tuple[tuple[str, str], str], dict] = {}
         self.audit_logs: list[dict] = []
         self._seed()
 

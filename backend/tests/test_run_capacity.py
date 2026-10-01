@@ -7,6 +7,7 @@ from fastapi import HTTPException
 from backend.app.services import agent_run_service, run_capacity as capacity_module
 from backend.app.routers import mock_api
 from backend.app.services.mock_store import store
+from backend.app.services.actor_identity import actor_key
 from backend.app.services.session_service import SessionStoreUnavailableError
 
 
@@ -80,14 +81,14 @@ def test_capacity_response_and_mock_duplicate_at_capacity(monkeypatch):
         assert error.value.status_code == 503
         assert error.value.headers == {"Retry-After": "2"}
         assert capacity.used == 2
-        assert (owner["id"], "third") not in store.agent_run_idempotency
+        assert (actor_key(owner), "third") not in store.agent_run_idempotency
     try:
         asyncio.run(verify())
     finally:
         for slot in slots:
             slot.release()
         for key in list(store.agent_run_idempotency):
-            if key[0] == owner["id"]:
+            if key[0] == actor_key(owner):
                 store.agent_runs.pop(store.agent_run_idempotency.pop(key)["run_id"], None)
     assert capacity.used == 0
 

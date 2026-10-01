@@ -23,6 +23,7 @@ from backend.app.services.agent_run_store import (
     SnapshotConflictError, save_snapshot, enabled as persistent_runs_enabled,
 )
 from backend.app.services.run_metrics import log_result
+from backend.app.services.actor_identity import actor_key
 from backend.app.services.run_capacity import RunSlot, run_capacity
 
 
@@ -63,7 +64,7 @@ def create_run(
     cache_enabled: bool = True,
 ) -> tuple[dict, bool]:
     normalized_question = question.strip()
-    key = (owner["id"], idempotency_key)
+    key = (actor_key(owner), idempotency_key)
     cached = store.agent_run_idempotency.get(key)
     fingerprint = (category, normalized_question, save_selected, conversation_id)
     if cache_enabled and cached and cached["expires_at"] > now():

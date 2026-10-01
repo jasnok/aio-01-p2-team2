@@ -22,6 +22,7 @@ from backend.app.services.guest_session_service import guest_sessions
 from backend.app.services.mock_store import iso, now, store
 from backend.app.core.config import get_settings
 from backend.app.routers.mock_api import actor
+from backend.app.services.actor_identity import actor_key
 
 
 router = APIRouter(prefix="/api/legal", tags=["legal"])
@@ -34,9 +35,15 @@ saved_conversation_service = SavedConversationService()
 async def create_question(request: LegalQuestionRequest, idempotency_key: str | None = Header(default=None), x_guest_id: str | None = Header(default=None), x_mock_scenario: str | None = Header(default=None), value: dict = Depends(actor)) -> LegalQuestionResponse:
     # session_id는 기존 계약 호환용이고, 저장 대화의 소유자는 검증된 actor를 사용한다.
     owner = value["id"]
+    fingerprint = (request.category, request.question.strip(), request.save_selected,
+                   request.conversation_id, x_mock_scenario)
+    cache_key = (actor_key(value), "/api/legal/questions", idempotency_key)
     if idempotency_key:
-        cached = store.idempotency.get((owner, "/api/legal/questions", idempotency_key))
+        cached = store.idempotency.get(cache_key)
         if cached and cached[0] > now():
+            if cached[2] != fingerprint:
+                raise HTTPException(status_code=409, detail={"code": "IDEMPOTENCY_CONFLICT",
+                    "message": "같은 Idempotency-Key에는 동일한 요청 본문만 사용할 수 있습니다."})
             return LegalQuestionResponse.model_validate(cached[1])
 
     if request.conversation_id is not None:
@@ -115,7 +122,7 @@ async def create_question(request: LegalQuestionRequest, idempotency_key: str | 
                 detail={"code": "CONVERSATION_SAVE_FAILED", "message": "대화 저장에 실패했습니다. 분석 결과는 저장되지 않았습니다."},
             ) from error
     if idempotency_key:
-        store.idempotency[(owner, "/api/legal/questions", idempotency_key)] = (now() + timedelta(hours=24), response.model_dump(mode="json"))
+        store.idempotency[cache_key] = (now() + timedelta(hours=24), response.model_dump(mode="json"), fingerprint)
     if value["role"] == "GUEST":
         try:
             await guest_sessions.save_analysis(str(owner), {

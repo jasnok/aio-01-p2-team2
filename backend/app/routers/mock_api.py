@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from backend.app.services.actor_identity import actor_key, owns_run
+
 import asyncio
 import json
 from datetime import datetime, timedelta, timezone
@@ -435,7 +437,7 @@ async def get_run(run_id: str, value: dict) -> dict:
     run = (await agent_run_store.read_snapshot(run_id)) if agent_run_store.enabled() else store.agent_runs.get(run_id)
     if not run:
         fail(404, "NOT_FOUND", "Agent 실행 정보를 찾을 수 없습니다.")
-    if run["owner_id"] != value["id"]:
+    if not owns_run(value, run):
         # 존재 여부도 노출하지 않아 ID 추측으로 다른 사용자의 분석을 볼 수 없다.
         fail(404, "NOT_FOUND", "Agent 실행 정보를 찾을 수 없습니다.")
     return run
@@ -445,7 +447,7 @@ async def get_run_for_save(run_id: str, value: dict) -> dict:
     run = (await agent_run_store.read_snapshot(run_id)) if agent_run_store.enabled() else store.agent_runs.get(run_id)
     if not run:
         fail(404, "NOT_FOUND", "저장할 분석 결과를 찾을 수 없습니다.")
-    if run["owner_id"] != value["id"]:
+    if not owns_run(value, run):
         fail(403, "FORBIDDEN", "다른 회원의 분석 결과는 저장할 수 없습니다.")
     return run
 
@@ -461,7 +463,7 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
     try:
         if agent_run_store.enabled():
             existing = await agent_run_store.find_reserved_run(
-                value["id"], [body.category, body.question.strip(), body.save_selected, body.conversation_id],
+                value, [body.category, body.question.strip(), body.save_selected, body.conversation_id],
                 idempotency_key.strip())
             if existing:
                 return {"run_id": existing["run_id"], "status": existing["status"]}
@@ -498,7 +500,7 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
     except RunCapacityError:
         if provisional_id:
             store.agent_runs.pop(provisional_id, None)
-            store.agent_run_idempotency.pop((value["id"], idempotency_key.strip()), None)
+            store.agent_run_idempotency.pop((actor_key(value), idempotency_key.strip()), None)
         raise HTTPException(status_code=503, detail={"code": "ANALYSIS_CAPACITY_EXCEEDED",
                             "message": "분석 요청이 많습니다. 잠시 후 다시 시도해 주세요."},
                             headers={"Retry-After": "2"})
