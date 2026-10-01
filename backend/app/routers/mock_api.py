@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field, field_validator
 from backend.app.services.mock_store import SessionExpiredError, hash_password, iso, now, store, verify_password
 from backend.app.services.agent_run_service import create_run, public_run, start_run
 from backend.app.services import agent_run_store
+from backend.app.services.run_capacity import RunCapacityError, run_capacity
 from backend.app.core.config import get_settings
 from backend.app.repositories.user_repository import DuplicateEmailError
 from backend.app.services.auth_service import AuthService, InactiveUserError, InvalidCredentialsError
@@ -455,7 +456,16 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
         fail(400, "INVALID_REQUEST", "Idempotency-Key Header가 필요합니다.")
     if body.save_selected and not get_settings().backend_mock_mode and value["role"] == "GUEST":
         fail(401, "AUTH_REQUIRED", "분석 결과를 저장하려면 회원가입 또는 로그인이 필요합니다.")
+    slot = None
+    provisional_id = None
     try:
+        if agent_run_store.enabled():
+            existing = await agent_run_store.find_reserved_run(
+                value["id"], [body.category, body.question.strip(), body.save_selected, body.conversation_id],
+                idempotency_key.strip())
+            if existing:
+                return {"run_id": existing["run_id"], "status": existing["status"]}
+            slot = run_capacity.acquire()
         run, created = create_run(
             value,
             body.category,
@@ -465,6 +475,9 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
             conversation_id=body.conversation_id,
             cache_enabled=not agent_run_store.enabled(),
         )
+        provisional_id = run["run_id"] if created else None
+        if created and slot is None:
+            slot = run_capacity.acquire()
         if agent_run_store.enabled():
             provisional_id = run["run_id"]
             try:
@@ -472,19 +485,30 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
                     run, [body.category, body.question.strip(), body.save_selected, body.conversation_id],
                     idempotency_key.strip(),
                 )
-            except Exception:
+            except BaseException:
                 store.agent_runs.pop(provisional_id, None)
                 raise
             if run["run_id"] != provisional_id:
                 store.agent_runs.pop(provisional_id, None)
             if created:
                 store.agent_runs[run["run_id"]] = run
+        if created:
+            start_run(run["run_id"], slot)
+            slot = None  # Task owns release from here, including cancellation.
+    except RunCapacityError:
+        if provisional_id:
+            store.agent_runs.pop(provisional_id, None)
+            store.agent_run_idempotency.pop((value["id"], idempotency_key.strip()), None)
+        raise HTTPException(status_code=503, detail={"code": "ANALYSIS_CAPACITY_EXCEEDED",
+                            "message": "분석 요청이 많습니다. 잠시 후 다시 시도해 주세요."},
+                            headers={"Retry-After": "2"})
     except SessionStoreUnavailableError:
         fail(503, "RUN_STORE_UNAVAILABLE", "분석 실행 상태를 저장할 수 없습니다.")
     except ValueError:
         fail(409, "IDEMPOTENCY_CONFLICT", "같은 Idempotency-Key에는 동일한 요청 본문만 사용할 수 있습니다.")
-    if created:
-        start_run(run["run_id"])
+    finally:
+        if slot is not None:
+            slot.release()
     return {"run_id": run["run_id"], "status": run["status"]}
 
 

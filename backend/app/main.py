@@ -14,6 +14,7 @@ from backend.app.routers.legal_terms import router as legal_terms_router, term_r
 from backend.app.routers.mock_api import router as mock_api_router
 from backend.app.services.session_service import SessionStoreUnavailableError
 from backend.app.providers.openai import close_async_clients
+from backend.app.services.agent_run_service import close_active_runs
 
 
 @asynccontextmanager
@@ -21,6 +22,7 @@ async def lifespan(app):
     try:
         yield
     finally:
+        await close_active_runs()
         await close_async_clients()
 
 

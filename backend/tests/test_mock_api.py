@@ -138,7 +138,7 @@ def test_notification_read_items_and_agent_run_sse_contract(monkeypatch) -> None
 
     monkeypatch.setattr(agent_run_service, "answer_question_from_mcp", fake_answer)
     # TestClient의 요청 루프와 별개로 작업 본문을 명시 실행해 저장 순서를 검사한다.
-    monkeypatch.setattr("backend.app.routers.mock_api.start_run", lambda _run_id: None)
+    monkeypatch.setattr("backend.app.routers.mock_api.start_run", lambda _run_id, slot: slot.release())
     guest = {"X-Guest-Id": "guest-run"}
     client.post("/api/questions", headers=guest, json=question_body())
     assert client.delete("/api/notifications/read-items", headers=guest).status_code == 204
@@ -185,7 +185,7 @@ def test_agent_run_stops_for_clarification_and_hides_internal_failure(monkeypatc
         )
 
     monkeypatch.setattr(agent_run_service, "answer_question_from_mcp", clarification)
-    monkeypatch.setattr("backend.app.routers.mock_api.start_run", lambda _run_id: None)
+    monkeypatch.setattr("backend.app.routers.mock_api.start_run", lambda _run_id, slot: slot.release())
     headers = {"X-Guest-Id": "guest-clarification", "Idempotency-Key": "clarification-key"}
     run_id = client.post("/api/agent-runs", headers=headers, json={"category": "housing", "question": "보증금이 걱정됩니다."}).json()["run_id"]
     asyncio.run(agent_run_service.execute_run(run_id))

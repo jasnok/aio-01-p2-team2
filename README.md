@@ -97,6 +97,7 @@ docker compose -f compose.yml up --build -d
 - [문맥 전용 DB 조회와 합성 PostgreSQL 측정](docs/BOUNDED_CONTEXT_QUERY.md)
 - [이력 목록 요약 필드 조회와 합성 PostgreSQL 측정](docs/HISTORY_SUMMARY_PROJECTION.md)
 - [추가 정보 요청의 유효한 보완 질문 계약](docs/INTAKE_CLARIFICATION_CONTRACT.md)
+- [분석 접수 제한과 종료 자원 정리](docs/RUN_ADMISSION_CONTROL.md)
 - [2차 최적화 구현·평가 기록](docs/PORTFOLIO_OPTIMIZATION_REPORT.md) — 검색 병렬화, 구절 번호 인용, 중간 자료 표시, 반복 검색 캐시. 실제 일반 질문 3건 생성 성공은 단일 검증 결과이며 자연어 관련성 평가는 대기 중입니다.
 - [개인 리팩토링 구현·검증 결과](docs/PORTFOLIO_REFACTOR_REPORT.md)
 - [에이전트 아키텍처 설계서](docs/에이전트%20아키텍처%20설계서.md)
