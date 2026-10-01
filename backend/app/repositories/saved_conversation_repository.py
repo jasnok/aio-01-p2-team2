@@ -193,7 +193,10 @@ class SavedConversationRepository:
                 SELECT c.id, c.title, c.category, c.created_at, c.updated_at,
                        first_user.content AS question,
                        last_answer.content AS answer,
-                       last_answer.snapshot AS assistant_snapshot
+                       jsonb_build_object('payload', jsonb_build_object(
+                           'question_summary', last_answer.snapshot #> '{payload,question_summary}',
+                           'answer', last_answer.snapshot #> '{payload,answer}'
+                       )) AS assistant_snapshot
                 FROM saved_conversations c
                 LEFT JOIN LATERAL (
                     SELECT content FROM saved_messages

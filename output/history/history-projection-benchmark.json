@@ -1,0 +1,133 @@
+{
+  "scope": "synthetic local PostgreSQL; warm alternating page reads; excludes LLM/API/serialization",
+  "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+  "repeats": 20,
+  "page_size": 20,
+  "unused_payload_bytes": 65536,
+  "repository_sha256": "d52ecfb6a92051887de91f4af61664e44da9a811d9370f75db35e433f5c2bca2",
+  "baseline_query_sha256": "1ebbf8491b33b9edb5f9d45ba5c4ab2cf1c11945188205bb7d20aeb39d9e3404",
+  "results": [
+    {
+      "conversation_count": 10,
+      "public_equal": true,
+      "public_serialized_bytes": 1754,
+      "variants": {
+        "full": {
+          "returned_rows": 10,
+          "serialized_bytes": 659296,
+          "median_ms": 10.75265,
+          "samples_ms": [
+            12.6183,
+            11.1007,
+            16.4345,
+            7.5655,
+            18.2543,
+            7.0118,
+            30.2973,
+            10.4046,
+            19.1,
+            9.4461,
+            7.5494,
+            17.7882,
+            7.3316,
+            22.1071,
+            10.2073,
+            22.6575,
+            9.1061,
+            26.5405,
+            8.8439,
+            9.2526
+          ]
+        },
+        "projected": {
+          "returned_rows": 10,
+          "serialized_bytes": 3506,
+          "median_ms": 3.1234,
+          "samples_ms": [
+            3.6107,
+            3.3475,
+            3.3433,
+            3.1769,
+            4.8993,
+            2.776,
+            3.2745,
+            3.0699,
+            5.6624,
+            3.4253,
+            2.4631,
+            2.503,
+            3.3089,
+            2.5484,
+            2.3879,
+            2.2015,
+            2.4142,
+            2.1321,
+            2.4101,
+            3.9698
+          ]
+        }
+      }
+    },
+    {
+      "conversation_count": 1000,
+      "public_equal": true,
+      "public_serialized_bytes": 3664,
+      "variants": {
+        "full": {
+          "returned_rows": 20,
+          "serialized_bytes": 1318826,
+          "median_ms": 20.6079,
+          "samples_ms": [
+            36.2986,
+            23.6994,
+            16.7362,
+            16.4841,
+            21.0647,
+            20.4326,
+            18.9586,
+            39.4998,
+            26.7574,
+            16.4957,
+            12.7191,
+            20.7832,
+            39.1401,
+            22.6866,
+            47.6167,
+            18.561,
+            22.9092,
+            13.7217,
+            13.282,
+            17.4451
+          ]
+        },
+        "projected": {
+          "returned_rows": 20,
+          "serialized_bytes": 7246,
+          "median_ms": 4.6781500000000005,
+          "samples_ms": [
+            5.361,
+            4.0728,
+            6.3472,
+            5.7147,
+            6.8969,
+            5.4278,
+            5.2463,
+            3.5168,
+            3.0962,
+            18.0577,
+            3.0042,
+            3.9742,
+            4.2194,
+            3.9069,
+            5.5014,
+            4.7054,
+            4.5738,
+            3.2702,
+            5.9563,
+            4.6509
+          ]
+        }
+      }
+    }
+  ]
+}
