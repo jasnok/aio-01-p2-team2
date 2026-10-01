@@ -52,9 +52,20 @@ class IntakeResult(BaseModel):
     cautions: list[str] = Field(default_factory=list)
     checks: InputChecks | None = None
 
+class ClaimCitation(BaseModel):
+    evidence_id: str
+    quote: str = Field(min_length=1, max_length=300)
+
+
+class CitedClaim(BaseModel):
+    text: str = Field(min_length=1)
+    citations: list[ClaimCitation] = Field(min_length=1)
+
+
 class AnswerDraft(BaseModel):
     question_summary: str
     answer: str
     key_issues: list[str] = Field(default_factory=list)
     cautions: list[str] = Field(default_factory=list)
     used_evidence_ids: list[str] = Field(default_factory=list)
+    claims: list[CitedClaim] = Field(default_factory=list)

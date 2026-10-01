@@ -37,6 +37,8 @@ div[class*="st-key-lawpath-answer-"] [data-testid="stMarkdownContainer"] p {
 def render_analysis_result(result: dict) -> None:
     if result.get("is_mock", True):
         render_demo_banner()
+    if result.get("generation_status") == "fallback":
+        st.warning("AI 답변 생성이 완료되지 않아 검색된 자료 목록을 대신 보여드립니다.")
     st.markdown("### 분석 안내")
     state = result.get("result_state", "completed")
     assessment = result.get("input_assessment")
@@ -55,6 +57,14 @@ def render_analysis_result(result: dict) -> None:
     elif state == "no_results":
         st.info("검색 결과가 없습니다. 질문에 날짜, 상대방과 요청 내용을 추가해 보세요.")
     _render_readable_answer(result["answer"])
+    claims = result.get("cited_claims", [])
+    if claims:
+        with st.expander("답변에 사용한 근거 확인", expanded=False):
+            for claim in claims:
+                st.markdown(claim["text"])
+                for citation in claim["citations"]:
+                    st.caption(f"근거 {citation['evidence_id']}")
+                    st.text(citation["quote"])
     follow_ups = result.get("follow_up_questions", [])
     if follow_ups:
         with st.expander("추가로 확인할 내용"):

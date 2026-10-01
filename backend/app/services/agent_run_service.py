@@ -1,7 +1,7 @@
 """실제 분석 작업의 상태와 SSE 이벤트를 관리한다.
 
-현재 MVP는 단일 프로세스 메모리를 사용한다. Redis를 붙일 때 이 모듈의
-저장 부분만 교체하면 HTTP/SSE 계약은 유지된다.
+실제 모드는 Redis에 상태와 이벤트를 보관하며 Mock 모드는 메모리를 사용한다.
+실행 작업 자체는 API 프로세스의 asyncio task이며 자동 재개 작업 큐는 아니다.
 """
 from __future__ import annotations
 
@@ -19,9 +19,12 @@ from backend.app.services.saved_conversation_service import SavedConversationSer
 from backend.app.services.guest_session_service import guest_sessions
 from backend.app.core.config import get_settings
 from backend.app.services.mock_store import iso, now, store
+from backend.app.services.agent_run_store import save_snapshot, enabled as persistent_runs_enabled
+from backend.app.services.run_metrics import log_result
 
 
 logger = logging.getLogger(__name__)
+_active_tasks: set[asyncio.Task] = set()
 
 
 TERMINAL_STATUSES = {"completed", "stopped", "failed"}
@@ -54,12 +57,13 @@ def create_run(
     *,
     save_selected: bool = False,
     conversation_id: int | None = None,
+    cache_enabled: bool = True,
 ) -> tuple[dict, bool]:
     normalized_question = question.strip()
     key = (owner["id"], idempotency_key)
     cached = store.agent_run_idempotency.get(key)
     fingerprint = (category, normalized_question, save_selected, conversation_id)
-    if cached and cached["expires_at"] > now():
+    if cache_enabled and cached and cached["expires_at"] > now():
         if cached["fingerprint"] != fingerprint:
             raise ValueError("IDEMPOTENCY_CONFLICT")
         return store.agent_runs[cached["run_id"]], False
@@ -81,15 +85,16 @@ def create_run(
         "updated_at": iso(),
     }
     store.agent_runs[run_id] = run
-    store.agent_run_idempotency[key] = {
-        "run_id": run_id,
-        "fingerprint": fingerprint,
-        "expires_at": now() + timedelta(hours=24),
-    }
+    if cache_enabled:
+        store.agent_run_idempotency[key] = {
+            "run_id": run_id,
+            "fingerprint": fingerprint,
+            "expires_at": now() + timedelta(hours=24),
+        }
     return run, True
 
 
-async def execute_run(run_id: str) -> None:
+async def _execute_run(run_id: str) -> None:
     """MCP 완료를 기다리되, HTTP 생성 요청은 기다리지 않는 실제 작업 본문이다."""
     run = store.agent_runs.get(run_id)
     if not run or run["status"] != "queued":
@@ -101,8 +106,10 @@ async def execute_run(run_id: str) -> None:
         "status": "running",
         "message": "법률 분석을 시작했습니다.",
     })
+    await save_snapshot(run)
     step_ids: dict[str, list[str]] = {}
     validation_step_id: str | None = None
+    generation_step_id: str | None = None
     tool_messages = {
         "search_laws": "관련 법령을 검색하고 있습니다.",
         "search_cases": "유사 판례를 검색하고 있습니다.",
@@ -111,7 +118,7 @@ async def execute_run(run_id: str) -> None:
     }
 
     async def on_runtime_event(trace: dict) -> None:
-        nonlocal validation_step_id
+        nonlocal validation_step_id, generation_step_id
         tool = trace.get("tool")
         stage = trace.get("stage")
         if stage == "validation_started":
@@ -120,6 +127,20 @@ async def execute_run(run_id: str) -> None:
                 "run_id": run_id, "step_id": validation_step_id, "stage": "validation",
                 "status": "started", "tool": None,
                 "message": "질문 내용을 확인하고 있습니다.", "result_count": None,
+            })
+        elif stage == "generation_started":
+            generation_step_id = f"generation-{uuid4()}"
+            append_event(run, "step.started", {
+                "run_id": run_id, "step_id": generation_step_id, "stage": "generation",
+                "status": "started", "tool": None, "message": "검색 근거로 답변을 작성하고 인용을 확인하고 있습니다.",
+                "result_count": None,
+            })
+        elif stage == "generation_completed":
+            append_event(run, "step.completed", {
+                "run_id": run_id, "step_id": generation_step_id, "stage": "generation",
+                "status": "completed", "tool": None,
+                "message": "답변과 인용 확인을 마쳤습니다." if trace.get("llm_used") else "검색 자료 안내를 준비했습니다.",
+                "result_count": None,
             })
         elif stage == "validation_completed":
             append_event(run, "step.completed", {
@@ -145,6 +166,7 @@ async def execute_run(run_id: str) -> None:
                 "message": "관련 자료 검색을 완료했습니다.",
                 "result_count": trace.get("result_count"),
             })
+        await save_snapshot(run)
 
     try:
         context: list[dict] | None = None
@@ -192,6 +214,7 @@ async def execute_run(run_id: str) -> None:
                 )
         # 반드시 결과를 먼저 저장한 뒤 terminal 이벤트를 발행한다.
         run["result"] = result.model_dump(mode="json")
+        log_result(run_id, result)
         if result.termination_reason == "needs_clarification":
             run["status"] = "stopped"
             if run["actor"]["role"] == "GUEST":
@@ -230,7 +253,37 @@ async def execute_run(run_id: str) -> None:
         append_event(run, "run.failed", {
             "run_id": run_id, "status": "failed", "message": run["error"]["message"],
         })
+    finally:
+        try:
+            await save_snapshot(run)
+        except Exception:
+            logger.error("agent_run_snapshot_failed run_id=%s", run_id)
+
+
+async def execute_run(run_id: str) -> None:
+    try:
+        async with asyncio.timeout(get_settings().agent_run_timeout_seconds):
+            await _execute_run(run_id)
+    except Exception as error:
+        run = store.agent_runs.get(run_id)
+        if run is None:
+            return
+        run["status"] = "failed"
+        run["error"] = {"code": "ANALYSIS_TIMEOUT" if isinstance(error, TimeoutError) else "RUN_STORE_UNAVAILABLE",
+                        "message": "분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요."}
+        append_event(run, "run.failed", {"run_id": run_id, "status": "failed", "message": run["error"]["message"]})
+        try:
+            await save_snapshot(run)
+        except Exception:
+            logger.error("agent_run_snapshot_failed run_id=%s", run_id)
+    finally:
+        run = store.agent_runs.get(run_id)
+        if persistent_runs_enabled() and run and run["status"] in TERMINAL_STATUSES:
+            store.agent_runs.pop(run_id, None)
 
 
 def start_run(run_id: str) -> asyncio.Task[None]:
-    return asyncio.create_task(execute_run(run_id))
+    task = asyncio.create_task(execute_run(run_id))
+    _active_tasks.add(task)
+    task.add_done_callback(_active_tasks.discard)
+    return task

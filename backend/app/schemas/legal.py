@@ -82,3 +82,7 @@ class LegalQuestionResponse(BaseModel):
     input_assessment: InputAssessment | None = None
     conversation_id: int | None = None
     is_mock: bool = True
+    generation_status: Literal["llm", "fallback", "no_evidence", "clarification", "mock"] = "mock"
+    used_evidence_ids: list[str] = Field(default_factory=list)
+    cited_claims: list[dict[str, Any]] = Field(default_factory=list)
+    diagnostics: dict[str, Any] = Field(default_factory=dict)

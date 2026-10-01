@@ -37,7 +37,10 @@ def test_completed_agent_run_save_uses_verified_server_run(monkeypatch) -> None:
         called["run"] = saved_run
         return 55
 
-    monkeypatch.setattr(mock_api, "get_run_for_save", lambda run_id, actor: run)
+    async def get_run_for_save(run_id, actor):
+        return run
+
+    monkeypatch.setattr(mock_api, "get_run_for_save", get_run_for_save)
     monkeypatch.setattr(mock_api.saved_conversation_service, "save_run", save_run)
 
     result = asyncio.run(mock_api.save_agent_run("run-1", {"id": 42, "role": "USER"}))

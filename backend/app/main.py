@@ -11,6 +11,7 @@ from backend.app.routers.integration_router import router as integration_router
 from backend.app.routers.legal import router as legal_router
 from backend.app.routers.legal_terms import router as legal_terms_router, term_run_router
 from backend.app.routers.mock_api import router as mock_api_router
+from backend.app.services.session_service import SessionStoreUnavailableError
 
 
 app = FastAPI(
@@ -19,13 +20,14 @@ app = FastAPI(
     description="""
 ## LawPath 생활 법률 안내 Backend
 
-Frontend는 이 API만 호출합니다. 현재는 **Mock 모드**이므로 외부 MCP, PostgreSQL, Redis 없이
-메모리 데이터로 동작하며, 서버를 다시 시작하면 생성한 데이터가 사라집니다.
+Frontend는 이 API만 호출합니다. Mock 모드는 외부 연결 없이 계약을 확인하며,
+실제 모드는 MCP 검색, PostgreSQL, Redis와 연결합니다. 실제 실행 상태와 SSE 이벤트는
+Redis에 TTL 동안 보관하며, 중단된 작업 자체를 자동 재개하는 작업 큐는 포함하지 않습니다.
 
 ### 처음 시험하는 순서
 
 1. `GET /health`로 서버 상태를 확인합니다.
-2. `POST /api/auth/login`으로 Demo 계정에 로그인합니다.
+2. 실제 모드는 회원가입 후 로그인하며, Demo 계정은 Mock 모드에서만 사용합니다.
 3. 응답의 `session_token`을 이후 요청 Header의 `Authorization: Bearer 토큰`에 넣습니다.
 4. 비회원 요청에는 `X-Guest-Id`를 넣습니다.
 
@@ -70,6 +72,11 @@ async def add_request_id(request: Request, call_next):
 async def validation_error(request: Request, exc: RequestValidationError):
     fields = [{"field": ".".join(str(part) for part in item["loc"] if part != "body"), "reason": item["msg"]} for item in exc.errors()]
     return error_response(422, "VALIDATION_ERROR", "입력 내용을 확인해 주세요.", request, fields)
+
+
+@app.exception_handler(SessionStoreUnavailableError)
+async def run_store_error(request: Request, exc: SessionStoreUnavailableError):
+    return error_response(503, "RUN_STORE_UNAVAILABLE", "실행 상태 저장소에 연결할 수 없습니다.", request)
 
 
 @app.exception_handler(__import__('fastapi').HTTPException)

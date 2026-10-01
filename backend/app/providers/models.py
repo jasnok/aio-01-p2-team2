@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 
@@ -8,3 +8,4 @@ class ProviderResult:
     model: str
     output: Any
     elapsed_ms: int
+    usage: dict[str, int] = field(default_factory=dict)

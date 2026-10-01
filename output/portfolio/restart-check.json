@@ -1,0 +1,18 @@
+[
+  {
+    "category": "housing",
+    "same_result_after_rebuild": true
+  },
+  {
+    "category": "labor",
+    "same_result_after_rebuild": true
+  },
+  {
+    "category": "consumer",
+    "same_result_after_rebuild": true
+  },
+  {
+    "category": "housing",
+    "same_result_after_rebuild": true
+  }
+]

@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from math import ceil
 from typing import Literal
 from uuid import uuid4
+from time import monotonic
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, Security
 from fastapi.responses import StreamingResponse
@@ -14,6 +15,7 @@ from pydantic import BaseModel, Field, field_validator
 
 from backend.app.services.mock_store import SessionExpiredError, hash_password, iso, now, store, verify_password
 from backend.app.services.agent_run_service import create_run, public_run, start_run
+from backend.app.services import agent_run_store
 from backend.app.core.config import get_settings
 from backend.app.repositories.user_repository import DuplicateEmailError
 from backend.app.services.auth_service import AuthService, InactiveUserError, InvalidCredentialsError
@@ -428,8 +430,8 @@ class AgentRunCreate(BaseModel):
         return value.strip() if isinstance(value, str) else value
 
 
-def get_run(run_id: str, value: dict) -> dict:
-    run = store.agent_runs.get(run_id)
+async def get_run(run_id: str, value: dict) -> dict:
+    run = (await agent_run_store.read_snapshot(run_id)) if agent_run_store.enabled() else store.agent_runs.get(run_id)
     if not run:
         fail(404, "NOT_FOUND", "Agent 실행 정보를 찾을 수 없습니다.")
     if run["owner_id"] != value["id"]:
@@ -438,8 +440,8 @@ def get_run(run_id: str, value: dict) -> dict:
     return run
 
 
-def get_run_for_save(run_id: str, value: dict) -> dict:
-    run = store.agent_runs.get(run_id)
+async def get_run_for_save(run_id: str, value: dict) -> dict:
+    run = (await agent_run_store.read_snapshot(run_id)) if agent_run_store.enabled() else store.agent_runs.get(run_id)
     if not run:
         fail(404, "NOT_FOUND", "저장할 분석 결과를 찾을 수 없습니다.")
     if run["owner_id"] != value["id"]:
@@ -461,7 +463,24 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
             idempotency_key.strip(),
             save_selected=body.save_selected,
             conversation_id=body.conversation_id,
+            cache_enabled=not agent_run_store.enabled(),
         )
+        if agent_run_store.enabled():
+            provisional_id = run["run_id"]
+            try:
+                run, created = await agent_run_store.reserve_run(
+                    run, [body.category, body.question.strip(), body.save_selected, body.conversation_id],
+                    idempotency_key.strip(),
+                )
+            except Exception:
+                store.agent_runs.pop(provisional_id, None)
+                raise
+            if run["run_id"] != provisional_id:
+                store.agent_runs.pop(provisional_id, None)
+            if created:
+                store.agent_runs[run["run_id"]] = run
+    except SessionStoreUnavailableError:
+        fail(503, "RUN_STORE_UNAVAILABLE", "분석 실행 상태를 저장할 수 없습니다.")
     except ValueError:
         fail(409, "IDEMPOTENCY_CONFLICT", "같은 Idempotency-Key에는 동일한 요청 본문만 사용할 수 있습니다.")
     if created:
@@ -470,13 +489,13 @@ async def create_agent_run(body: AgentRunCreate, idempotency_key: str | None = H
 
 
 @router.get("/agent-runs/{run_id}", summary="Agent 실행 상태 조회", description="SSE가 끊겼을 때에도 이 API로 최종 결과를 복구할 수 있습니다.")
-def get_agent_run(run_id: str, value: dict = Depends(actor)) -> dict:
-    return public_run(get_run(run_id, value))
+async def get_agent_run(run_id: str, value: dict = Depends(actor)) -> dict:
+    return public_run(await get_run(run_id, value))
 
 
 @router.post("/agent-runs/{run_id}/save", summary="완료된 Agent 분석 결과 저장")
 async def save_agent_run(run_id: str, value: dict = Depends(require_user)) -> dict:
-    run = get_run_for_save(run_id, value)
+    run = await get_run_for_save(run_id, value)
     try:
         conversation_id = await saved_conversation_service.save_run(value, run)
     except ValueError:
@@ -494,7 +513,7 @@ def sse_event(item: dict) -> str:
 
 @router.get("/agent-runs/{run_id}/events", summary="Agent 분석 진행 SSE", description="Last-Event-ID 이후의 실제 Tool 실행 이벤트를 text/event-stream으로 재전송합니다.")
 async def get_agent_run_events(run_id: str, last_event_id: str | None = Header(default=None, alias="Last-Event-ID"), value: dict = Depends(actor)) -> StreamingResponse:
-    run = get_run(run_id, value)
+    run = await get_run(run_id, value)
     try:
         last_id = int(last_event_id or 0)
         if last_id < 0:
@@ -504,18 +523,22 @@ async def get_agent_run_events(run_id: str, last_event_id: str | None = Header(d
 
     async def event_stream():
         sent_id = last_id
+        heartbeat_at = monotonic()
         while True:
-            pending = [item for item in run["events"] if item["id"] > sent_id]
+            current = await get_run(run_id, value) if agent_run_store.enabled() else run
+            pending = [item for item in current["events"] if item["id"] > sent_id]
             for item in pending:
                 sent_id = item["id"]
                 yield sse_event(item)
-            if run["status"] in {"completed", "stopped", "failed"}:
+            if current["status"] in {"completed", "stopped", "failed"}:
                 return
             try:
-                await asyncio.sleep(10)
+                await asyncio.sleep(0.5)
             except asyncio.CancelledError:
                 return
-            yield ": heartbeat\n\n"
+            if monotonic() - heartbeat_at >= 10:
+                yield ": heartbeat\n\n"
+                heartbeat_at = monotonic()
 
     return StreamingResponse(
         event_stream(),

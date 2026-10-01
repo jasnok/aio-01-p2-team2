@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     retrieval_score_threshold: float = Field(default=0.5, ge=0, le=1)
     vector_weight: float = Field(default=0.7, ge=0, le=1)
     keyword_weight: float = Field(default=0.3, ge=0, le=1)
+    retrieval_fusion: str = Field(default="weighted", pattern="^(weighted|rrf)$")
+    rrf_k: int = Field(default=60, ge=1)
+    retrieval_filter_enabled: bool = False
 
     @model_validator(mode="after")
     def validate_search_weights(self) -> "Settings":
