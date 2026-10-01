@@ -9,6 +9,15 @@ from backend.app.core.config import get_settings
 from backend.app.services.session_service import SessionStoreUnavailableError, sessions
 
 
+_MAX_SAVE_ATTEMPTS = 8
+_SAVE_RECORDS = """
+    local current = redis.call('GET', KEYS[1]) or ''
+    if current ~= ARGV[1] then return 0 end
+    redis.call('SET', KEYS[1], ARGV[2], 'EX', ARGV[3])
+    return 1
+"""
+
+
 class GuestSessionService:
     """TTL-bound guest analysis history. It never creates a DB user row."""
 
@@ -40,14 +49,20 @@ class GuestSessionService:
         if get_settings().redis_enabled:
             try:
                 client = await sessions._redis_client()
-                raw = await client.get(self._key(guest_id))
-                records = json.loads(raw) if raw else []
-                records = [item for item in records if item["run_id"] != record["run_id"]]
-                records.insert(0, record)
-                await client.set(self._key(guest_id), json.dumps(records, ensure_ascii=False), ex=ttl)
+                key = self._key(guest_id)
+                for attempt in range(_MAX_SAVE_ATTEMPTS):
+                    raw = await client.get(key)
+                    records = json.loads(raw) if raw else []
+                    records = [item for item in records if item["run_id"] != record["run_id"]]
+                    records.insert(0, record)
+                    if await client.eval(_SAVE_RECORDS, 1, key, raw or "",
+                                         json.dumps(records, ensure_ascii=False), ttl):
+                        return ttl
+                    if attempt + 1 < _MAX_SAVE_ATTEMPTS:
+                        await asyncio.sleep(0.001 * (attempt + 1))
+                raise SessionStoreUnavailableError("Guest history save contention")
             except Exception as error:
                 raise SessionStoreUnavailableError() from error
-            return ttl
 
         # Local development fallback: process-bound and explicitly non-durable.
         async with self._lock:
