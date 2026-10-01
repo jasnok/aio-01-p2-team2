@@ -105,8 +105,8 @@ async def create_question(request: LegalQuestionRequest, idempotency_key: str | 
                     response=response,
                 )
         except Exception as error:
-            logger.exception(
-                "conversation_save_failed request_id=%s reason=%s",
+            logger.error(
+                "conversation_save_failed stage=storage request_id=%s error_type=%s",
                 response.request_id,
                 type(error).__name__,
             )
@@ -183,7 +183,7 @@ async def _search_by_tool(
     except HTTPException:
         raise
     except Exception as error:
-        logger.exception("legal_search_failed request_id=%s tool=%s category=%s reason=%s", request_id, tool_name, category, type(error).__name__)
+        logger.error("legal_search_failed stage=retrieval request_id=%s tool=%s category=%s error_type=%s", request_id, tool_name, category, type(error).__name__)
         raise HTTPException(status_code=502, detail={"code": "MCP_UNAVAILABLE", "message": "Legal MCP 검색 서비스에 연결할 수 없습니다."}) from error
 
 

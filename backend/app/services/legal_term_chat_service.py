@@ -41,8 +41,8 @@ class LegalTermChatService:
             result = await structured_call(provider, "term", TERM_PERSONA, payload, LegalTermLLMOutput,
                                            getattr(settings, "request_timeout_seconds", None))
             output = LegalTermLLMOutput.model_validate(result.output)
-        except Exception:
-            logger.exception("legal_term_chat_failed")
+        except Exception as error:
+            logger.error("legal_term_chat_failed stage=generation request_id=%s error_type=%s", request_id, type(error).__name__)
             raise RuntimeError("LLM_UNAVAILABLE")
         if not output.is_legal_term_question:
             output = LegalTermLLMOutput(
