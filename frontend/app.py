@@ -35,7 +35,10 @@ def render_home() -> None:
     st.markdown('<div class="page-title">어떤 법률 문제를 확인하고 싶으신가요?</div>', unsafe_allow_html=True)
     st.markdown('<div class="page-description">생활 속 법률 분야를 선택하면 사례 분석을 시작할 수 있습니다.</div>', unsafe_allow_html=True)
     render_category_cards()
-    st.info("이 서비스는 법률 자문이나 판결 예측을 제공하지 않습니다. 현재 화면은 DEMO 데이터로 동작합니다.")
+    notice = "이 서비스는 법률 자문이나 판결 예측을 제공하지 않습니다."
+    if get_frontend_settings().frontend_data_mode.lower() != "api":
+        notice += " 현재 화면은 DEMO 데이터로 동작합니다."
+    st.info(notice)
 
 
 def render_workspace() -> None:

@@ -1,0 +1,375 @@
+[
+  {
+    "id": "housing-natural-1",
+    "question": "월세 계약이 끝나 집을 인도했는데 집주인이 보증금을 돌려주지 않습니다.",
+    "category": "housing",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        13,
+        11,
+        14
+      ],
+      "weighted": [
+        11,
+        13,
+        14
+      ],
+      "rrf": [
+        11,
+        13,
+        14
+      ]
+    }
+  },
+  {
+    "id": "housing-natural-2",
+    "question": "전입신고를 하고 거주하다가 이사했습니다. 임차권등기 전에 점유를 잃으면 대항력에 어떤 영향이 있나요?",
+    "category": "housing",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        2,
+        14,
+        13
+      ],
+      "weighted": [
+        2,
+        13,
+        14
+      ],
+      "rrf": [
+        2,
+        13,
+        14
+      ]
+    }
+  },
+  {
+    "id": "housing-natural-3",
+    "question": "계약 갱신을 요청했는데 집주인이 직접 살겠다며 거절했습니다. 관련 자료를 찾고 싶습니다.",
+    "category": "housing",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        3,
+        2,
+        13
+      ],
+      "weighted": [
+        2,
+        3,
+        13
+      ],
+      "rrf": [
+        2,
+        3,
+        13
+      ]
+    }
+  },
+  {
+    "id": "housing-natural-4",
+    "question": "보증금을 돌려받지 못해 내용증명을 보내려고 합니다. 어떤 근거를 확인해야 하나요?",
+    "category": "housing",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        12,
+        10,
+        1
+      ],
+      "weighted": [
+        12,
+        13,
+        1
+      ],
+      "rrf": [
+        12,
+        1,
+        13
+      ]
+    }
+  },
+  {
+    "id": "housing-natural-5",
+    "question": "주택이 경매에 넘어갔습니다. 임차인의 우선변제권 관련 자료를 찾고 싶습니다.",
+    "category": "housing",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        13,
+        3,
+        10
+      ],
+      "weighted": [
+        13,
+        3,
+        10
+      ],
+      "rrf": [
+        13,
+        3,
+        10
+      ]
+    }
+  },
+  {
+    "id": "labor-natural-1",
+    "question": "주 40시간씩 2년 일하고 퇴사했는데 퇴직금을 못 받았습니다. 지급 요건을 확인하고 싶습니다.",
+    "category": "labor",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        15,
+        5,
+        19
+      ],
+      "weighted": [
+        15,
+        19,
+        5
+      ],
+      "rrf": [
+        15,
+        19,
+        5
+      ]
+    }
+  },
+  {
+    "id": "labor-natural-2",
+    "question": "퇴사한 지 한 달이 지났는데 마지막 달 임금을 받지 못했습니다. 관련 근거를 확인하고 싶습니다.",
+    "category": "labor",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        19,
+        18,
+        4
+      ],
+      "weighted": [
+        18,
+        19,
+        4
+      ],
+      "rrf": [
+        18,
+        19,
+        15
+      ]
+    }
+  },
+  {
+    "id": "labor-natural-3",
+    "question": "재직 중 중간정산한 퇴직금의 지급이 지연됐습니다. 지연이자 관련 판례를 찾고 싶습니다.",
+    "category": "labor",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        19,
+        15,
+        5
+      ],
+      "weighted": [
+        19,
+        15,
+        5
+      ],
+      "rrf": [
+        19,
+        15,
+        5
+      ]
+    }
+  },
+  {
+    "id": "labor-natural-4",
+    "question": "근로계약서를 쓰지 않고 일했습니다. 근로자 지위와 임금 지급 관련 자료를 찾고 싶습니다.",
+    "category": "labor",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        15,
+        5,
+        19
+      ],
+      "weighted": [
+        19,
+        4,
+        15
+      ],
+      "rrf": [
+        19,
+        4,
+        15
+      ]
+    }
+  },
+  {
+    "id": "labor-natural-5",
+    "question": "회사에서 해고 통보를 받았습니다. 해고 절차와 근로기준법을 확인하고 싶습니다.",
+    "category": "labor",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        4
+      ],
+      "weighted": [
+        4,
+        15,
+        16
+      ],
+      "rrf": [
+        4,
+        15,
+        16
+      ]
+    }
+  },
+  {
+    "id": "consumer-natural-1",
+    "question": "온라인 쇼핑몰에서 운동화를 샀는데 하자가 있어 수령 다음 날 환불을 요청했지만 거절당했습니다.",
+    "category": "consumer",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        467,
+        471,
+        415
+      ],
+      "weighted": [
+        467,
+        471,
+        415
+      ],
+      "rrf": [
+        467,
+        111,
+        471
+      ]
+    }
+  },
+  {
+    "id": "consumer-natural-2",
+    "question": "인터넷 쇼핑몰에 대금을 지급했는데 상품이 배송되지 않았습니다. 취소와 환불 근거를 찾고 싶습니다.",
+    "category": "consumer",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        330,
+        467,
+        266
+      ],
+      "weighted": [
+        260,
+        330,
+        467
+      ],
+      "rrf": [
+        260,
+        330,
+        125
+      ]
+    }
+  },
+  {
+    "id": "consumer-natural-3",
+    "question": "중고거래에서 정상 제품이라고 안내받았는데 고장 난 물건이 왔습니다. 손해배상 자료를 찾고 싶습니다.",
+    "category": "consumer",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        341,
+        215,
+        256
+      ],
+      "weighted": [
+        341,
+        256,
+        215
+      ],
+      "rrf": [
+        341,
+        256,
+        183
+      ]
+    }
+  },
+  {
+    "id": "consumer-natural-4",
+    "question": "온라인 구매 후 3일 만에 반품을 요청했습니다. 청약철회 관련 법령을 확인하고 싶습니다.",
+    "category": "consumer",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        42,
+        118,
+        467
+      ],
+      "weighted": [
+        42,
+        118,
+        40
+      ],
+      "rrf": [
+        118,
+        42,
+        40
+      ]
+    }
+  },
+  {
+    "id": "consumer-natural-5",
+    "question": "수리를 맡긴 제품이 다시 고장 났는데 업체가 추가 비용을 요구합니다. 소비자 상담사례를 찾고 싶습니다.",
+    "category": "consumer",
+    "label_status": "pending_human_review",
+    "relevant_document_ids": [],
+    "relevance_notes": "",
+    "variants": {
+      "baseline": [
+        324,
+        406,
+        316
+      ],
+      "weighted": [
+        179,
+        178,
+        119
+      ],
+      "rrf": [
+        179,
+        119,
+        178
+      ]
+    }
+  }
+]

@@ -18,7 +18,7 @@ class OpenAIProvider:
             raise ValueError("OPENAI_API_KEY가 설정되지 않았습니다.")
         from openai import OpenAI
 
-        return OpenAI(api_key=settings.openai_api_key)
+        return OpenAI(api_key=settings.openai_api_key, timeout=settings.request_timeout_seconds, max_retries=1)
 
     def generate(self, system_prompt: str, message: str) -> ProviderResult:
         settings = get_settings()
@@ -32,7 +32,12 @@ class OpenAIProvider:
         response = self._client().responses.parse(model=settings.openai_model, instructions=system_prompt, input=message, text_format=response_schema)
         if response.output_parsed is None:
             raise RuntimeError("OpenAI가 구조화된 결과를 반환하지 않았습니다.")
-        return ProviderResult(self.name, settings.openai_model, response.output_parsed.model_dump(), round((perf_counter() - started) * 1000))
+        usage = response.usage
+        return ProviderResult(self.name, settings.openai_model, response.output_parsed.model_dump(), round((perf_counter() - started) * 1000), {
+            "input_tokens": usage.input_tokens,
+            "output_tokens": usage.output_tokens,
+            "total_tokens": usage.total_tokens,
+        } if usage else {})
 
     def status(self) -> dict[str, Any]:
         settings = get_settings()

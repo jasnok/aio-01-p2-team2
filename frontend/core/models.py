@@ -72,4 +72,8 @@ class LegalQuestionView(BaseModel):
     conversation_id: str | int | None = None
     storage: Literal["member", "guest_temporary", "none"] | None = None
     expires_at: str | None = None
+    generation_status: Literal["llm", "fallback", "no_evidence", "clarification", "mock"] = "mock"
+    used_evidence_ids: list[str] = Field(default_factory=list)
+    cited_claims: list[dict[str, Any]] = Field(default_factory=list)
+    diagnostics: dict[str, Any] = Field(default_factory=dict)
 

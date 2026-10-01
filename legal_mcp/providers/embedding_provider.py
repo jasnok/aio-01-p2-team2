@@ -1,6 +1,10 @@
 """검색 질의를 임베딩 벡터로 변환하는 Provider."""
 
 import os
+import hashlib
+from collections import OrderedDict
+from threading import Lock
+from time import monotonic
 from typing import Protocol
 
 from openai import OpenAI
@@ -33,7 +37,7 @@ class OpenAIEmbeddingProvider:
         self.dimension = dimension or int(
             os.getenv("EMBEDDING_DIMENSION", "1536")
         )
-        self.client = OpenAI(api_key=api_key)
+        self.client = OpenAI(api_key=api_key, timeout=20, max_retries=1)
 
     def embed(self, texts: list[str]) -> list[list[float]]:
         if not texts:
@@ -59,11 +63,28 @@ class OpenAIEmbeddingProvider:
         return embeddings
 
 
+_query_cache: OrderedDict[tuple, tuple[float, list[float]]] = OrderedDict()
+_cache_lock = Lock()
+
+
 def create_embedding(text: str) -> list[float]:
     """단일 검색 질의를 1,536차원 벡터로 변환한다."""
 
     if not text.strip():
         raise ValueError("임베딩할 텍스트는 비어 있을 수 없습니다.")
 
-    provider = OpenAIEmbeddingProvider()
-    return provider.embed([text])[0]
+    key = (text, os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"),
+           os.getenv("EMBEDDING_DIMENSION", "1536"),
+           hashlib.sha256(os.getenv("OPENAI_API_KEY", "").encode()).digest())
+    with _cache_lock:
+        entry = _query_cache.get(key)
+        if entry and entry[0] > monotonic():
+            _query_cache.move_to_end(key)
+            return entry[1].copy()
+    vector = OpenAIEmbeddingProvider().embed([text])[0]
+    with _cache_lock:
+        _query_cache[key] = (monotonic() + 300, vector.copy())
+        _query_cache.move_to_end(key)
+        while len(_query_cache) > 128:
+            _query_cache.popitem(last=False)
+    return vector

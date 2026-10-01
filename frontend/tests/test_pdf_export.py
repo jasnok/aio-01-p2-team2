@@ -19,3 +19,13 @@ def test_pdf_full_korean_content():
 
 def test_pdf_empty_result():
     assert build_analysis_pdf({}).startswith(b'%PDF')
+
+
+def test_pdf_preserves_generation_state_and_claim_citations():
+    result = {'is_mock': False, 'generation_status': 'fallback', 'answer': '자료 안내',
+              'cited_claims': [{'text': '확인할 주장', 'citations': [
+                  {'evidence_id': 'law-1', 'quote': '검증된 원문 인용'}]}]}
+    text = ''.join(page.extract_text() for page in PdfReader(BytesIO(build_analysis_pdf(result))).pages)
+    assert '검색된 자료 목록을 대신 제공합니다' in text
+    assert '확인할 주장' in text
+    assert '검증된 원문 인용' in text

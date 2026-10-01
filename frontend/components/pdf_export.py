@@ -30,6 +30,8 @@ def build_analysis_pdf(result: dict) -> bytes:
     add('생성 시각: ' + datetime.now(timezone(timedelta(hours=9))).strftime('%Y-%m-%d %H:%M KST'))
     add('분야: ' + {'housing': '임대차·주거', 'labor': '근로·임금', 'consumer': '소비자·중고거래'}.get(result.get('agent_id'), '기타'))
     add(('DEMO 자료입니다. ' if result.get('is_mock', True) else '') + '이 문서는 참고 자료이며 법률 자문이나 판결 예측이 아닙니다.')
+    if result.get('generation_status') == 'fallback':
+        add('AI 답변 생성 또는 인용 검증이 완료되지 않아 검색된 자료 목록을 대신 제공합니다.')
     for title, value in [('입력한 상황', result.get('question')), ('상황 요약', result.get('question_summary')),
                          ('핵심 쟁점', '\n\n'.join(result.get('key_issues', []))),
                          ('분석 안내', result.get('answer'))]:
@@ -39,6 +41,12 @@ def build_analysis_pdf(result: dict) -> bytes:
     if assessment:
         add('입력 판단 안내', heading)
         add(assessment.get('message'))
+    if result.get('cited_claims'):
+        add('답변에 사용한 근거', heading)
+        for claim in result['cited_claims']:
+            add(claim['text'])
+            for citation in claim['citations']:
+                add(f"근거 {citation['evidence_id']}: {citation['quote']}")
     for field, title in [('related_laws', '관련 법령'), ('similar_cases', '유사 판례'), ('consultations', '소비자원 상담사례')]:
         add(title, heading)
         items = result.get(field, [])

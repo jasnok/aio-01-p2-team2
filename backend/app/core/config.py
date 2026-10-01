@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     auth_session_ttl_seconds: int = 28800
     guest_session_ttl_seconds: int = 3600
     term_run_ttl_seconds: int = 3600
+    agent_run_ttl_seconds: int = 86400
+    agent_run_timeout_seconds: int = 150
     # 통합 실행용 루트 .env를 먼저 읽고, 서비스 전용 파일이 있으면 덮어씁니다.
     model_config = SettingsConfigDict(env_file=(".env", "backend/.env"), extra="ignore")
 

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import streamlit as st
+from frontend.core.config import get_frontend_settings
 
 
 def load_theme() -> None:
@@ -18,11 +19,13 @@ def render_header(show_home: bool = False) -> None:
             st.write("홈에서 법률 분야를 선택한 뒤 원하는 기능을 이용하세요.")
             st.markdown("**빠른 이용 순서**")
             st.markdown("1. 분야 선택\n2. 사례 입력\n3. 관련 법령·사례 확인")
-            st.warning("현재는 화면 확인용 DEMO 데이터입니다.")
+            if get_frontend_settings().frontend_data_mode.lower() == "api":
+                st.info("검색된 자료의 원문과 적용 조건을 함께 확인하세요.")
+            else:
+                st.warning("현재는 화면 확인용 DEMO 데이터입니다.")
     with notice_area:
         from frontend.components.notification_center import render_notification_center
         from frontend.services.mock_notification_service import unread_count
-        from frontend.core.config import get_frontend_settings
 
         unread = unread_count(st.session_state.get("notifications", []))
         if get_frontend_settings().frontend_data_mode.lower() == "api":

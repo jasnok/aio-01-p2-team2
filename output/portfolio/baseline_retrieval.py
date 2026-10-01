@@ -3,7 +3,6 @@
 from legal_mcp.core.config import get_settings
 from legal_mcp.providers.embedding_provider import create_embedding
 from legal_mcp.repositories.legal_repository import LegalRepository
-from legal_mcp.services.query_terms import extract_query_terms
 
 
 class LegalSearchService:
@@ -52,14 +51,12 @@ class LegalSearchService:
                 limit=candidate_limit,
             )
 
-        keyword_rows = []
-        for term in extract_query_terms(query):
-            keyword_rows.extend(self.repository.search_documents_by_keyword(
-                query=term,
-                category=category,
-                document_types=document_types,
-                limit=candidate_limit,
-            ))
+        keyword_rows = self.repository.search_documents_by_keyword(
+            query=query,
+            category=category,
+            document_types=document_types,
+            limit=candidate_limit,
+        )
 
         return self._merge_search_results(
             vector_rows=vector_rows,
@@ -88,9 +85,7 @@ class LegalSearchService:
 
             item["vector_score"] = vector_score
             item["keyword_score"] = 0.0
-            previous = merged.get(document_id)
-            if previous is None or vector_score > previous["vector_score"]:
-                merged[document_id] = item
+            merged[document_id] = item
 
         for row in keyword_rows:
             document_id = row["document_id"]
@@ -105,50 +100,22 @@ class LegalSearchService:
                 item["keyword_score"] = keyword_score
                 merged[document_id] = item
             else:
-                merged[document_id]["keyword_score"] = max(
-                    merged[document_id]["keyword_score"], keyword_score
-                )
+                merged[document_id]["keyword_score"] = keyword_score
 
         results = []
 
-        vector_ranks = {
-            item["document_id"]: rank
-            for rank, item in enumerate(sorted(
-                (item for item in merged.values() if item["vector_score"] > 0),
-                key=lambda item: (-item["vector_score"], str(item["document_id"])),
-            ), 1)
-        }
-        keyword_ranks = {
-            item["document_id"]: rank
-            for rank, item in enumerate(sorted(
-                (item for item in merged.values() if item["keyword_score"] > 0),
-                key=lambda item: (-item["keyword_score"], str(item["document_id"])),
-            ), 1)
-        }
         for item in merged.values():
             hybrid_score = (
                 item["vector_score"] * self.settings.vector_weight
                 + item["keyword_score"] * self.settings.keyword_weight
             )
 
-            # Relevance gate uses the weighted score in both modes. RRF is a
-            # ranking score, never a calibrated relevance probability.
-            if self.settings.retrieval_filter_enabled and hybrid_score < self.settings.retrieval_score_threshold:
-                continue
             item["similarity"] = round(hybrid_score, 4)
-            if self.settings.retrieval_fusion == "rrf":
-                item["ranking_score"] = sum(
-                    1 / (self.settings.rrf_k + ranks[item["document_id"]])
-                    for ranks in (vector_ranks, keyword_ranks)
-                    if item["document_id"] in ranks
-                )
-            else:
-                item["ranking_score"] = hybrid_score
             item["retrieval_method"] = "hybrid"
             results.append(item)
 
         results.sort(
-            key=lambda item: item["ranking_score"],
+            key=lambda item: item["similarity"],
             reverse=True,
         )
 

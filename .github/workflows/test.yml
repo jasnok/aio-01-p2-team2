@@ -8,6 +8,11 @@ on:
 jobs:
   python-tests:
     runs-on: ubuntu-latest
+    env:
+      BACKEND_MOCK_MODE: "true"
+      LLM_PROVIDER: mock
+      REDIS_ENABLED: "false"
+      DATABASE_URL: postgresql://test:test@127.0.0.1:5432/test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
