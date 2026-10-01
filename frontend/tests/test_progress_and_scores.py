@@ -15,6 +15,7 @@ def test_html_paragraphs_preserve_and_escape():
     assert '2026.1.20' in rendered
     assert '<script>' not in rendered and '&lt;script&gt;' in rendered
 from frontend.components.stream_analysis import update_searches
+from frontend.components.stream_analysis import update_previews, friendly_event
 
 
 def test_readability_preserves_words_and_dates():
@@ -59,3 +60,12 @@ def test_progress_monotonic_and_not_completed_by_events():
         assert value <= updated < 100
         assert stage_progress(updated, event, data) == updated
         value = updated
+
+
+def test_previews_replay_without_duplicates_and_generation_has_distinct_message():
+    previews = {}
+    data = {"evidence_previews": [{"evidence_id": "law-1", "title": "법령"}, None]}
+    update_previews(previews, data)
+    update_previews(previews, data)
+    assert len(previews) == 1
+    assert "답변 작성과 인용 확인" in friendly_event("step.started", {"stage": "generation"})

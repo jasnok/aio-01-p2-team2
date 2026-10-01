@@ -1,9 +1,14 @@
 """법률 검색 흐름을 담당하는 Service."""
 
+import hashlib
+import json
+from legal_mcp.core.cache import QueryCache
 from legal_mcp.core.config import get_settings
 from legal_mcp.providers.embedding_provider import create_embedding
 from legal_mcp.repositories.legal_repository import LegalRepository
 from legal_mcp.services.query_terms import extract_query_terms
+
+_result_cache = QueryCache()
 
 
 class LegalSearchService:
@@ -18,6 +23,17 @@ class LegalSearchService:
         document_types: list[str],
         top_k: int,
     ) -> list[dict]:
+        """Cache public retrieval only; never cache user answers or histories."""
+        config = self.settings.model_dump()
+        # Hash the entire retrieval configuration so model, credentials, DB,
+        # weights, relevance gate and dataset revision cannot share an entry.
+        key = hashlib.sha256(json.dumps([query, category, sorted(document_types), top_k, config],
+                              sort_keys=True, default=str).encode()).digest()
+        return _result_cache.get_or_load(key,
+            lambda: self._hybrid_search_uncached(query, category, document_types, top_k),
+            ttl=self.settings.retrieval_cache_ttl_seconds)
+
+    def _hybrid_search_uncached(self, query, category, document_types, top_k):
         """Vector Search와 Keyword Search를 결합한다."""
 
         if not query.strip():

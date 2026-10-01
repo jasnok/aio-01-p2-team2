@@ -160,11 +160,16 @@ async def _execute_run(run_id: str) -> None:
             })
         elif stage == "tool_completed":
             step_id = step_ids.get(str(tool), [f"{tool}-unknown"]).pop(0)
+            previews = [{"evidence_id": item.get("evidence_id"), "title": item.get("title", ""),
+                         "content_preview": str(item.get("content", ""))[:180],
+                         "source_type": (item.get("source") or {}).get("source_type", "external")}
+                        for item in trace.get("evidence", [])[:3]]
             append_event(run, "step.completed", {
                 "run_id": run_id, "step_id": step_id, "stage": "retrieval",
                 "status": "completed", "tool": tool,
                 "message": "관련 자료 검색을 완료했습니다.",
                 "result_count": trace.get("result_count"),
+                "evidence_previews": previews,
             })
         await save_snapshot(run)
 

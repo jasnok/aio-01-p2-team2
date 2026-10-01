@@ -48,3 +48,27 @@ def test_query_terms_preserve_identifiers_and_extract_spaced_terms():
     assert "제36조" in terms
     assert "2024가합12664" in terms
     assert len(terms) <= 8
+
+
+def test_result_cache_isolates_category_revision_and_ranking_settings():
+    from legal_mcp.core.config import Settings
+    from legal_mcp.services.legal_search_service import _result_cache
+    _result_cache.clear()
+    instance = LegalSearchService.__new__(LegalSearchService)
+    instance.settings = Settings(database_url="postgresql://test", openai_api_key="test", _env_file=None)
+    calls = []
+    def load(*args):
+        calls.append(args)
+        return [{"document_id": 1, "metadata": {"immutable": True}}]
+    instance._hybrid_search_uncached = load
+    first = instance._hybrid_search("질문", "housing", ["LAW"], 3)
+    first[0]["metadata"]["immutable"] = False
+    assert instance._hybrid_search("질문", "housing", ["LAW"], 3)[0]["metadata"]["immutable"]
+    assert len(calls) == 1
+    instance._hybrid_search("질문", "labor", ["LAW"], 3)
+    instance.settings = instance.settings.model_copy(update={"retrieval_dataset_revision": "v2"})
+    instance._hybrid_search("질문", "housing", ["LAW"], 3)
+    instance.settings = instance.settings.model_copy(update={"retrieval_fusion": "rrf"})
+    instance._hybrid_search("질문", "housing", ["LAW"], 3)
+    assert len(calls) == 4
+    _result_cache.clear()

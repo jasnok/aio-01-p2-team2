@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from tests.portfolio_dataset import build_dataset
+from tests.portfolio_quality_dataset import quality_dataset
 from legal_mcp.services.legal_search_service import LegalSearchService
 from legal_mcp.providers.embedding_provider import create_embedding
 from legal_mcp.services import legal_search_service
@@ -25,6 +26,9 @@ def main():
     parser.add_argument("--baseline", required=True, help="Frozen baseline service module")
     parser.add_argument("--baseline-repository", help="Frozen baseline SQL repository module")
     parser.add_argument("--output", required=True)
+    parser.add_argument("--dataset", choices=["original", "quality"], default="original")
+    parser.add_argument("--split", choices=["all", "development", "holdout"], default="all")
+    parser.add_argument("--limit", type=int)
     args = parser.parse_args()
     spec = importlib.util.spec_from_file_location("baseline_retrieval", args.baseline)
     baseline_module = importlib.util.module_from_spec(spec)
@@ -36,12 +40,20 @@ def main():
         repository_spec.loader.exec_module(repository_module)
         baseline.repository = repository_module.LegalRepository()
     current = LegalSearchService()
+    current.settings = current.settings.model_copy(update={"retrieval_cache_ttl_seconds": 0})
     rrf = LegalSearchService()
-    rrf.settings = rrf.settings.model_copy(update={"retrieval_fusion": "rrf"})
+    rrf.settings = rrf.settings.model_copy(update={"retrieval_fusion": "rrf", "retrieval_cache_ttl_seconds": 0})
     records = []
     destination = Path(args.output)
     destination.parent.mkdir(parents=True, exist_ok=True)
-    for case in build_dataset():
+    dataset = quality_dataset() if args.dataset == "quality" else build_dataset()
+    if args.split != "all":
+        dataset = [case for case in dataset if case.get("split") == args.split]
+    if args.limit is not None:
+        if args.limit < 1:
+            parser.error("--limit must be positive")
+        dataset = dataset[:args.limit]
+    for case in dataset:
         record = {**case, "variants": {}}
         # Use precisely the same embedding in all three variants. Timings below
         # are warm-cache retrieval timings, not end-to-end user latency.

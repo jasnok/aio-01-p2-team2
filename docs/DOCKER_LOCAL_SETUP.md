@@ -88,7 +88,8 @@ AWS, Docker Hub, GitHub Actions 배포는 이 문서 작성 시점에 구성·�
 
 - 검색 가중합은 기본값이며 `RETRIEVAL_FUSION=rrf`로 순위 결합을 비교할 수 있습니다.
 - `RETRIEVAL_FILTER_ENABLED=false`가 기본값입니다. 기존 임계값 0.5는 검토된 정답 근거로 보정한 값이 아니므로 바로 활성화하지 않습니다. 검색 점수는 정답 확률이 아닙니다.
-- 동일 질의 임베딩은 모델·차원·인증 설정별로 최대 128개, 5분간 메모리 캐시합니다. 동시에 시작된 최초 호출은 중복될 수 있으며 공유 Redis 캐시는 아닙니다.
+- 동일 질의 임베딩은 모델·차원·인증 설정별로 최대 128개, 5분간 메모리 캐시하며 동시 최초 요청은 호출 하나를 공유합니다. 검색 결과도 최대 128개, 기본 60초간 프로세스별로 캐시합니다. 공유 Redis 캐시는 아닙니다. 데이터 갱신 시 `RETRIEVAL_DATASET_REVISION`도 변경합니다. 비교 실험은 `RETRIEVAL_CACHE_TTL_SECONDS=0`으로 결과 캐시를 끕니다.
+- 기본 `CITATION_MODE=spans`는 모델이 구절 번호를 선택하고 서버가 원문을 붙입니다. `quotes`로 1차 방식과 비교할 수 있습니다. 검색 완료 자료는 답변 생성 중에도 화면에서 확인할 수 있습니다.
 - 답변 상태는 `generation_status`, 사용한 근거는 `used_evidence_ids`·`cited_claims`, 소요 시간과 생성 토큰은 `diagnostics`에서 확인합니다. 인용문 존재 검사는 법률적 타당성 검증과 다릅니다.
 - 실제 실행 결과와 SSE 이벤트는 Redis에 24시간 보관합니다. 같은 소유자의 동일 요청 키는 중복 실행하지 않습니다. 기본 전체 실행 제한은 150초입니다. API 재시작 후 완료 결과는 조회할 수 있지만 진행 중 작업 자체는 재개하지 않습니다. 중단 상태는 제한 시간 이후 조회 시 실패로 표시합니다.
 
@@ -122,3 +123,5 @@ docker compose cp mcp-server:/app/retrieval-comparison.json output/portfolio/ret
 ```
 
 SQL 단독 비교는 `scripts/benchmark_keyword_search.py --baseline /app/baseline_repository.py --output /app/keyword-benchmark.json`으로 같은 MCP 컨테이너에서 실행합니다. 검색 비교의 소요 시간은 임베딩을 재사용한 상태에서 측정한 검색 시간이며 사용자 체감 전체 지연 시간과 구분합니다.
+
+2차 평가 도구·성능 비교·캐시 범위와 남은 품질 과제는 [최적화 기록](PORTFOLIO_OPTIMIZATION_REPORT.md)을 참고합니다.
