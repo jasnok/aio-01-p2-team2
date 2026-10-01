@@ -95,6 +95,7 @@ docker compose -f compose.yml up --build -d
 - [저장 대화 문맥 조회 단순화와 용어 대화 오류 수정](docs/SAVED_CONTEXT_REFACTOR.md)
 - [분석 자동 저장·완료 후 저장의 동일 실행 키](docs/ANALYSIS_SAVE_IDEMPOTENCY.md)
 - [문맥 전용 DB 조회와 합성 PostgreSQL 측정](docs/BOUNDED_CONTEXT_QUERY.md)
+- [이력 목록 요약 필드 조회와 합성 PostgreSQL 측정](docs/HISTORY_SUMMARY_PROJECTION.md)
 - [2차 최적화 구현·평가 기록](docs/PORTFOLIO_OPTIMIZATION_REPORT.md) — 검색 병렬화, 구절 번호 인용, 중간 자료 표시, 반복 검색 캐시. 실제 일반 질문 3건 생성 성공은 단일 검증 결과이며 자연어 관련성 평가는 대기 중입니다.
 - [개인 리팩토링 구현·검증 결과](docs/PORTFOLIO_REFACTOR_REPORT.md)
 - [에이전트 아키텍처 설계서](docs/에이전트%20아키텍처%20설계서.md)
