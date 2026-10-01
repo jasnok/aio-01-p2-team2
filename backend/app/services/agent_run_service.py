@@ -220,6 +220,7 @@ async def _execute_run(run_id: str) -> None:
                     category=run["category"],
                     question=run["question"],
                     response=result,
+                    execution_key=run_id,
                 )
         # 반드시 결과를 먼저 저장한 뒤 terminal 이벤트를 발행한다.
         run["result"] = result.model_dump(mode="json")
