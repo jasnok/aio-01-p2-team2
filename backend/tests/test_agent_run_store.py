@@ -198,7 +198,18 @@ def test_real_redis_revision_transitions_and_reservation(monkeypatch):
             await client.set(f"lawpath:run:{run['run_id']}", json.dumps(legacy), ex=30)
             await agent_run_store.save_snapshot(legacy)
             assert legacy["revision"] == 1
-            await client.delete(f"lawpath:run:{run['run_id']}")
+            candidates = [deepcopy(legacy), deepcopy(legacy)]
+            for index, candidate in enumerate(candidates):
+                candidate["events"].append({"id": 2, "event": "step.completed", "data": {"winner": index}})
+            outcomes = await asyncio.gather(*[
+                agent_run_store.save_snapshot(candidate) for candidate in candidates], return_exceptions=True)
+            assert sum(isinstance(item, agent_run_store.SnapshotConflictError) for item in outcomes) == 1
+            assert sum(item is None for item in outcomes) == 1
+            stored = await agent_run_store.read_snapshot(run["run_id"])
+            assert stored["revision"] == 2
+            assert len(stored["events"]) == 2
+            await client.pexpire(f"lawpath:run:{run['run_id']}", 1)
+            await asyncio.sleep(0.01)
             await rejected(run, "expired")
         finally:
             await client.delete(*keys)
