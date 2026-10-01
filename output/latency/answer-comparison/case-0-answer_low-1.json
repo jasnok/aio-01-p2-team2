@@ -1,0 +1,273 @@
+{
+  "category": "housing",
+  "variant": "answer_low",
+  "scope": "answer",
+  "question": "월세 계약이 종료되어 집을 인도했고 집주인에게 보증금 반환을 요청했지만 아직 받지 못했습니다. 관련 법령과 판례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "low",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": "low",
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "answer": {
+    "question_summary": "월세(임대차) 종료 후 보증금 반환을 요청했으나 미지급된 상황에 대해 관련 대법원 판례들을 확인하고자 함.",
+    "answer": "임대보증금 반환 및 건물명도 관련 대법원 판결이 존재하며, 그 중 하나는 사건명 '임대보증금반환·건물명도'로 사건번호 2016다244224, 244231이며 선고일이 2020-07-09로 표기되어 있습니다.\n\n임차보증금 반환과 차임 연체료 및 손해배상금에 관한 대법원 판결들이 있고, 관련 사건으로 사건번호 2023다236566, 236573(선고일 2023-09-14)이 제시되어 있습니다.\n\n주택 임차인이 점유를 상실한 후 마쳐진 임차권등기의 대항력 여부를 다룬 판결이 있으며, 해당 사건명과 사건번호(2024다326398) 및 선고일(2025-04-15)이 발췌되어 있습니다.",
+    "key_issues": [
+      "임대보증금 반환 여부 및 절차",
+      "건물 명도(점유 인도)와 임차권 등기의 대항력",
+      "차임 연체, 손해배상 등 임대차 종료 이후의 금전청구"
+    ],
+    "cautions": [
+      "제시된 발췌문은 각 판결의 표제·사건번호·선고일 등 일부 정보만 포함하므로 판결의 전체 취지·법리 확인이 필요합니다.",
+      "발췌문만으로 구체적 사건 적용이나 법률적 결론을 단정해서는 안 됩니다(법률자문 아님).",
+      "최신 법령·판례 변경 여부 및 사건의 상세 사실관계에 따라 결과가 달라질 수 있습니다."
+    ],
+    "used_evidence_ids": [
+      "case-11",
+      "case-12",
+      "case-13"
+    ],
+    "claims": [
+      {
+        "text": "임대보증금 반환 및 건물명도 관련 대법원 판결이 존재하며, 그 중 하나는 사건명 '임대보증금반환·건물명도'로 사건번호 2016다244224, 244231이며 선고일이 2020-07-09로 표기되어 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "case-11",
+            "quote": "사건명: 임대보증금반환·건물명도\n사건번호: 2016다244224, 244231"
+          },
+          {
+            "evidence_id": "case-11",
+            "quote": "선고일: 2020-07-09\n구분: 참조판례\n내용: 대법원 1977."
+          }
+        ]
+      },
+      {
+        "text": "임차보증금 반환과 차임 연체료 및 손해배상금에 관한 대법원 판결들이 있고, 관련 사건으로 사건번호 2023다236566, 236573(선고일 2023-09-14)이 제시되어 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "case-12",
+            "quote": "사건명: 임차보증금반환·차임연체료및손해배상금\n사건번호: 2023다236566, 236573"
+          },
+          {
+            "evidence_id": "case-12",
+            "quote": "선고일: 2023-09-14\n구분: 참조판례\n내용: [1][2] 대법원 2018."
+          }
+        ]
+      },
+      {
+        "text": "주택 임차인이 점유를 상실한 후 마쳐진 임차권등기의 대항력 여부를 다룬 판결이 있으며, 해당 사건명과 사건번호(2024다326398) 및 선고일(2025-04-15)이 발췌되어 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "case-13",
+            "quote": "사건명: 임대차보증금반환[주택 임차인의 점유 상실 후 마쳐진 임차권등기의 대항력이 문제된 사건]\n사건번호: 2024다326398"
+          },
+          {
+            "evidence_id": "case-13",
+            "quote": "선고일: 2025-04-15\n구분: 참조판례\n내용: [1] 대법원 1998."
+          }
+        ]
+      }
+    ]
+  },
+  "llm_used": true,
+  "diagnostics": {
+    "context_ms": 1,
+    "citation_mode": "spans",
+    "context_characters": 1406,
+    "context_documents": 3,
+    "context_spans": 9,
+    "repair_attempts": 0,
+    "excluded_claims": 0,
+    "source_spans": [
+      {
+        "span_id": "case-11:230110a6932b:0:43",
+        "evidence_id": "case-11",
+        "start": 0,
+        "end": 43,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-11:230110a6932b:52:90",
+        "evidence_id": "case-11",
+        "start": 52,
+        "end": 90,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-11:230110a6932b:91:148",
+        "evidence_id": "case-11",
+        "start": 91,
+        "end": 148,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:0:50",
+        "evidence_id": "case-12",
+        "start": 0,
+        "end": 50,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:59:104",
+        "evidence_id": "case-12",
+        "start": 59,
+        "end": 104,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:105:167",
+        "evidence_id": "case-12",
+        "start": 105,
+        "end": 167,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:0:71",
+        "evidence_id": "case-13",
+        "start": 0,
+        "end": 71,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:80:122",
+        "evidence_id": "case-13",
+        "start": 80,
+        "end": 122,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:123:168",
+        "evidence_id": "case-13",
+        "start": 123,
+        "end": 168,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      }
+    ],
+    "model": "gpt-5-mini",
+    "last_generation_call_ms": 6063,
+    "usage": {
+      "input_tokens": 1118,
+      "output_tokens": 873,
+      "total_tokens": 1991
+    },
+    "citation_ids_normalized": false,
+    "citation_validation": "quotes_verified",
+    "semantic_review": {
+      "claims": [
+        {
+          "claim_index": 0,
+          "verdict": "supported",
+          "reason": "인용문에 동일한 사건명, 사건번호(2016다244224, 244231) 및 선고일(2020-07-09)이 명시되어 있음."
+        },
+        {
+          "claim_index": 1,
+          "verdict": "supported",
+          "reason": "인용문에 동일한 사건명, 사건번호(2023다236566, 236573) 및 선고일(2023-09-14)이 명시되어 있음."
+        },
+        {
+          "claim_index": 2,
+          "verdict": "supported",
+          "reason": "인용문에 동일한 사건명(설명 포함), 사건번호(2024다326398) 및 선고일(2025-04-15)이 명시되어 있음."
+        }
+      ]
+    },
+    "semantic_review_history": [
+      {
+        "attempt": 0,
+        "claims": [
+          {
+            "claim_index": 0,
+            "verdict": "supported",
+            "reason": "인용문에 동일한 사건명, 사건번호(2016다244224, 244231) 및 선고일(2020-07-09)이 명시되어 있음."
+          },
+          {
+            "claim_index": 1,
+            "verdict": "supported",
+            "reason": "인용문에 동일한 사건명, 사건번호(2023다236566, 236573) 및 선고일(2023-09-14)이 명시되어 있음."
+          },
+          {
+            "claim_index": 2,
+            "verdict": "supported",
+            "reason": "인용문에 동일한 사건명(설명 포함), 사건번호(2024다326398) 및 선고일(2025-04-15)이 명시되어 있음."
+          }
+        ]
+      }
+    ],
+    "semantic_review_scope": "model_judgment_not_legal_accuracy",
+    "retained_claim_indexes": [
+      0,
+      1,
+      2
+    ],
+    "generation_ms": 13419
+  },
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "answer",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 6063,
+      "usage": {
+        "input_tokens": 1118,
+        "output_tokens": 873,
+        "total_tokens": 1991
+      },
+      "status": "completed",
+      "usage_known": true
+    },
+    {
+      "stage": "verification",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 7355,
+      "usage": {
+        "input_tokens": 710,
+        "output_tokens": 958,
+        "total_tokens": 1668
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 13427,
+  "known_tokens": 3659
+}

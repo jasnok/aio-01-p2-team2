@@ -1,0 +1,78 @@
+{
+  "input": "output\\phase3\\benchmark\\run-1.json",
+  "input_sha256": "b159e0b47e816e474a0a254c7361f0ab79bf4aee2923a09186ba3e30be2f1d5b",
+  "scope": "intake; fixed synthetic evidence; no live retrieval/cache latency",
+  "human_quality_review": "pending",
+  "git_commit": "994187fc1b08677deda0524d31acf7208bb281da",
+  "working_tree_dirty": true,
+  "max_logical_calls": 12,
+  "network_retries_scope": "SDK allows one retry per logical call",
+  "runs": [
+    {
+      "file": "case-0-baseline-1.json",
+      "scenario": 0,
+      "variant": "baseline",
+      "elapsed_ms": 10465,
+      "known_tokens": 1713,
+      "status": "completed",
+      "llm_used": false,
+      "claims": 0,
+      "calls": 1
+    },
+    {
+      "file": "case-0-intake_low-1.json",
+      "scenario": 0,
+      "variant": "intake_low",
+      "elapsed_ms": 3115,
+      "known_tokens": 1199,
+      "status": "completed",
+      "llm_used": false,
+      "claims": 0,
+      "calls": 1
+    },
+    {
+      "file": "case-0-intake_candidate-1.json",
+      "scenario": 0,
+      "variant": "intake_candidate",
+      "elapsed_ms": 19886,
+      "known_tokens": 3624,
+      "status": "completed",
+      "llm_used": false,
+      "claims": 0,
+      "calls": 1
+    },
+    {
+      "file": "case-2-intake_candidate-1.json",
+      "scenario": 2,
+      "variant": "intake_candidate",
+      "elapsed_ms": 29053,
+      "known_tokens": 5014,
+      "status": "completed",
+      "llm_used": false,
+      "claims": 0,
+      "calls": 1
+    },
+    {
+      "file": "case-2-intake_low-1.json",
+      "scenario": 2,
+      "variant": "intake_low",
+      "elapsed_ms": 4990,
+      "known_tokens": 1405,
+      "status": "completed",
+      "llm_used": false,
+      "claims": 0,
+      "calls": 1
+    },
+    {
+      "file": "case-2-baseline-1.json",
+      "scenario": 2,
+      "variant": "baseline",
+      "elapsed_ms": 7509,
+      "known_tokens": 1962,
+      "status": "completed",
+      "llm_used": false,
+      "claims": 0,
+      "calls": 1
+    }
+  ]
+}

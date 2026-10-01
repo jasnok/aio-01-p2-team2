@@ -1,0 +1,173 @@
+{
+  "category": "housing",
+  "variant": "baseline",
+  "scope": "answer",
+  "question": "월세 계약이 종료되어 집을 인도했고 집주인에게 보증금 반환을 요청했지만 아직 받지 못했습니다. 관련 법령과 판례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "answer": {
+    "question_summary": "housing 분야의 공식 검색 근거를 확인했습니다.",
+    "answer": "검색된 공식 자료를 기준으로 확인할 사항을 정리했습니다. 법령 0건: 없음. 상담사례 0건: 없음. 판례 3건: 임대보증금반환·건물명도, 임차보증금반환·차임연체료및손해배상금, 임대차보증금반환[주택 임차인의 점유 상실 후 마쳐진 임차권등기의 대항력이 문제된 사건]. 각 출처의 원문과 구체적인 사실관계를 함께 확인해 주세요.",
+    "key_issues": [
+      "사용자가 입력한 사실관계",
+      "검색된 공식 근거",
+      "출처 원문 확인"
+    ],
+    "cautions": [
+      "검색 결과는 법률 자문이나 결과 보장이 아닙니다.",
+      "검색 근거에 없는 내용을 추가로 단정하지 않습니다."
+    ],
+    "used_evidence_ids": [
+      "case-11",
+      "case-12",
+      "case-13"
+    ],
+    "claims": []
+  },
+  "llm_used": false,
+  "diagnostics": {
+    "context_ms": 2,
+    "citation_mode": "spans",
+    "context_characters": 1406,
+    "context_documents": 3,
+    "context_spans": 9,
+    "repair_attempts": 0,
+    "excluded_claims": 0,
+    "source_spans": [
+      {
+        "span_id": "case-11:230110a6932b:0:43",
+        "evidence_id": "case-11",
+        "start": 0,
+        "end": 43,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-11:230110a6932b:52:90",
+        "evidence_id": "case-11",
+        "start": 52,
+        "end": 90,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-11:230110a6932b:91:148",
+        "evidence_id": "case-11",
+        "start": 91,
+        "end": 148,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:0:50",
+        "evidence_id": "case-12",
+        "start": 0,
+        "end": 50,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:59:104",
+        "evidence_id": "case-12",
+        "start": 59,
+        "end": 104,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:105:167",
+        "evidence_id": "case-12",
+        "start": 105,
+        "end": 167,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:0:71",
+        "evidence_id": "case-13",
+        "start": 0,
+        "end": 71,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:80:122",
+        "evidence_id": "case-13",
+        "start": 80,
+        "end": 122,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:123:168",
+        "evidence_id": "case-13",
+        "start": 123,
+        "end": 168,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      }
+    ],
+    "model": "gpt-5-mini",
+    "last_generation_call_ms": 19277,
+    "usage": {
+      "input_tokens": 1118,
+      "output_tokens": 2182,
+      "total_tokens": 3300
+    },
+    "fallback_reason": "CitationValidationError",
+    "validation_error": "invalid_citation_span",
+    "generation_ms": 19279
+  },
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "answer",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 19277,
+      "usage": {
+        "input_tokens": 1118,
+        "output_tokens": 2182,
+        "total_tokens": 3300
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 19284,
+  "known_tokens": 3300
+}

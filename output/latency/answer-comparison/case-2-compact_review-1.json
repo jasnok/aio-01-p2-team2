@@ -1,0 +1,358 @@
+{
+  "category": "consumer",
+  "variant": "compact_review",
+  "scope": "answer",
+  "question": "온라인 쇼핑몰에서 운동화를 샀는데 배송된 상품에 하자가 있습니다. 수령 다음 날 사진과 함께 환불을 요청했지만 판매자가 거절했습니다. 관련 법령과 상담사례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": true,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": true,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "answer": {
+    "question_summary": "구매한 운동화에 하자가 있어 수령 다음 날 사진과 함께 환불을 요청했으나 판매자가 거절함 — 관련 법령·상담사례 확인 요청",
+    "answer": "전자상거래로 구입한 물품은 배송받은 날로부터 7일 이내에 소비자가 청약철회를 요청할 수 있다는 상담사례 설명이 있습니다.\n\n다만 소비자가 물품을 사용하거나 훼손하여 재판매가 곤란할 정도로 가치가 현저히 감소한 경우에는 사업자가 청약철회를 거부할 수 있다는 예외 설명이 있습니다; 청약철회 방법과 증거(게시판 캡처·서면·사진 등)를 남겨 두는 것이 권장된다는 조언도 제시되어 있습니다.\n\n통신판매업자는 거래에 관한 표시·광고 시 주소·전화번호·전자우편주소 등 신원 및 거래조건을 제공하여야 한다고 규정(제13조 관련 발췌)되어 있습니다.",
+    "key_issues": [
+      "전자상거래로 산 물품은 공급받은 날로부터 7일 이내에 청약철회(환불) 요청이 가능하다는 상담사례가 있음",
+      "소비자가 물품을 사용·훼손하여 재판매가 곤란할 정도로 가치가 현저히 감소한 경우 등에는 청약철회가 제한될 수 있음",
+      "통신판매업자는 계약 전 거래조건·연락처 등을 표시해야 하므로 판매자 확인과 청약철회 의사표시 기록(사진·게시판 캡처·서면 등)을 남기는 것이 권장됨"
+    ],
+    "cautions": [
+      "제공된 발췌문들은 원문의 일부이므로 전체 맥락 및 최신 법령·판례 확인이 필요합니다.",
+      "상담사례는 일반적 설명·예시일 뿐 구체적 사건에 대한 법적 판단이나 결과를 보장하지 않습니다.",
+      "자료들에는 ‘하자가 있는 물품’의 사업자 귀책 사유에 따른 환불처리(사업자의 책임 여부·절차)에 대해 직접적으로 정리된 조문이나 판례 발췌가 포함되어 있지 않습니다; 따라서 하자(제품 불량)에 따른 구체적 권리·구제는 추가 확인이 필요합니다."
+    ],
+    "used_evidence_ids": [
+      "consultation-467",
+      "consultation-342",
+      "consultation-263",
+      "law-6"
+    ],
+    "claims": [
+      {
+        "text": "전자상거래로 구입한 물품은 배송받은 날로부터 7일 이내에 소비자가 청약철회를 요청할 수 있다는 상담사례 설명이 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "consultation-467",
+            "quote": "사이즈 부정확 및 제품을 만족하지 못하여 즉시 환불을 요청하였으나, 규정상 환불은 못해주고 적립금을 줄 테니 나중에 이용하라고 합니다. 맘에 안 드는 물건을 사용하고 싶지 않아 환불을 원하며, 사업자에게서 환불을 받을 수 있는 강제 규정은 없는지 알고 싶습니다.\n\n답변: 인터넷쇼핑몰에서 의류를 구입한 경우라면 전자상거래 등에서의 소비자보호에 관한 법률에 의거 배송받은 날로부터 7일 내에는 청약철회가 가능합니다. 다만, 색상, 디자인 혹은 사이즈 불만 등의 사유로 청약철회를 요청한 경우 반품비(왕복기준)는 구매자가 부담해야 합니다."
+          },
+          {
+            "evidence_id": "consultation-342",
+            "quote": "어떻게 해야 하나요?\n\n답변: 전자상거래 등 소비자보호에 관한 법률 제17조 제1항에 의거하면, 소비자는 전자상거래로 구입한 제품에 대하여 공급받은날로부터 7일 이내에 청약철회를 요청할 수 있습니다. 다만, 동법 같은조 제2항의 어느 하나에 해당하는 경우(시간이 지나 다시 판매하기 곤란할 정도로 재화등의 가치가 현저히 감소한 경우 등)에 해당하는 경우에는 반품 및 환급을 요구할 수 없습니다."
+          },
+          {
+            "evidence_id": "consultation-263",
+            "quote": "품목: 레져/스포츠\n\n질문: 얼마 전 인터넷 쇼핑몰을 통해 가장 큰 사이즈의 운동용 공을 주문하고, 수령 즉시 공기를 주입해 보니 생각보다 사이즈가 커 더 작은 상품으로 교환하고자 공기를 빼고 재포장하여 반품하고자 하였으나 판매자는 공기를 주입하였다며 거부합니다.\r\n\r\n판매자는 공기를 주입하면 반품이 불가능하다는 내용을 쇼핑몰에 적어 두었다고 하나, 제품을 사용할 수 없을 만큼 훼손된 것도 아니고 배송시 안내문도 없었는데도 다른 사이즈의 상품으로 교환을 받을 수 없나요?"
+          }
+        ]
+      },
+      {
+        "text": "다만 소비자가 물품을 사용하거나 훼손하여 재판매가 곤란할 정도로 가치가 현저히 감소한 경우에는 사업자가 청약철회를 거부할 수 있다는 예외 설명이 있습니다; 청약철회 방법과 증거(게시판 캡처·서면·사진 등)를 남겨 두는 것이 권장된다는 조언도 제시되어 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "consultation-263",
+            "quote": "<br>\r\n'전자상거래 등에서의 소비자보호에 관한 법률'에 따라 전자상거래로 구입한 물품에 대해 소비자는 7일 이내에 청약철회를 할 수 있으나(제17조 제1항), 소비자가 물품을 사용 또는 일부 소비하여 가치가 현저히 감소하거나, 물품을 멸실 또는 훼손한 경우에는 사업자의 의사에 반해 청약철회를 할 수 없습니다.(제17조 제2항) \r\n<br>"
+          },
+          {
+            "evidence_id": "consultation-263",
+            "quote": "<br>\r\n따라서 판매자가 제품 사용시 청약철회가 불가능하다고 쇼핑몰에 명시하고 있고, 신청인이 공에 공기를 주입하여 이에 대해 판매자가 가치 훼손을 주장한다면 청약철회가 어렵습니다."
+          },
+          {
+            "evidence_id": "consultation-467",
+            "quote": "통신판매업자에 대한 청약철회 의사표시 방법은 법률상 특별한 제한이 없으므로 전화, 서면, 전자문서 모두 가능합니다. 다만, 전화로 의사표시를 한 경우 간혹 판매자가 청약철회 요구를 받은 사실이 없다고 주장하는 경우가 있으므로, 쇼핑몰 게시판에 청약철회 의사를 표시하고 그 화면을 캡처하여 보관하거나 서면으로 발송하는 것이 좋습니다. 서면으로 발송한 경우에는 발송한 날에 그 효력이 발생합니다."
+          }
+        ]
+      },
+      {
+        "text": "통신판매업자는 거래에 관한 표시·광고 시 주소·전화번호·전자우편주소 등 신원 및 거래조건을 제공하여야 한다고 규정(제13조 관련 발췌)되어 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "law-6",
+            "quote": "법령명: 전자상거래 등에서의 소비자보호에 관한 법률\n조문: 제13조"
+          },
+          {
+            "evidence_id": "law-6",
+            "quote": "조문 제목: 신원 및 거래조건에 대한 정보의 제공\n내용: 제13조(신원 및 거래조건에 대한 정보의 제공) ① 통신판매업자가 재화등의 거래에 관한 청약을 받을 목적으로 표시ㆍ광고를 할 때에는 그 표시ㆍ광고에 다음 각 호의 사항을 포함하여야 한다. <개정 2016.3.29> 1."
+          },
+          {
+            "evidence_id": "law-6",
+            "quote": "주소ㆍ전화번호ㆍ전자우편주소 3. 제12조에 따라 공정거래위원회 또는 특별자치시장ㆍ특별자치도지사ㆍ시장ㆍ군수ㆍ구청장에게 한 신고의 신고번호와 그 신고를 받은 기관의 이름 등 신고를 확인할 수 있는 사항 ② 통신판매업자는 소비자가 계약체결 전에 재화등에 대한 거래조건을 정확하게 이해하고 실수나 착오 없이 거래할 수 있도록 다음 각 호의 사항을 적절한 방법으로 표시ㆍ광고하거나 고지하여야 하며, 계약이 체결되면 계약자에게 다음 각 호의 사항이 기재된 계약내용에 관한 서면을 재화등을 공급할 때까지 교부하여야 한다. 다만, 계약자의 권리를 침해하지 아니하는 범위에서 대통령령으로 정하는 사유가 있는 경우에는 계약자를 갈음하여 재화등을 공급받는 자에게 계약내용에 관한 서면을 교부할 수 있다."
+          }
+        ]
+      }
+    ]
+  },
+  "llm_used": true,
+  "diagnostics": {
+    "context_ms": 3,
+    "citation_mode": "spans",
+    "context_characters": 4939,
+    "context_documents": 6,
+    "context_spans": 18,
+    "repair_attempts": 0,
+    "excluded_claims": 0,
+    "source_spans": [
+      {
+        "span_id": "law-6:75eaa309ce9d:0:37",
+        "evidence_id": "law-6",
+        "start": 0,
+        "end": 37,
+        "source_sha256": "75eaa309ce9d28a0e364913a5473bfd76fca79190e96fe35fe8e2bf5d5a23b9f",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-6:75eaa309ce9d:38:192",
+        "evidence_id": "law-6",
+        "start": 38,
+        "end": 192,
+        "source_sha256": "75eaa309ce9d28a0e364913a5473bfd76fca79190e96fe35fe8e2bf5d5a23b9f",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-6:75eaa309ce9d:208:590",
+        "evidence_id": "law-6",
+        "start": 208,
+        "end": 590,
+        "source_sha256": "75eaa309ce9d28a0e364913a5473bfd76fca79190e96fe35fe8e2bf5d5a23b9f",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-20:27bf02083220:0:29",
+        "evidence_id": "case-20",
+        "start": 0,
+        "end": 29,
+        "source_sha256": "27bf020832203ef1e5b727f99fd2b06845ed31d2be22fbc9cc59917f602ac6c5",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-20:27bf02083220:63:286",
+        "evidence_id": "case-20",
+        "start": 63,
+        "end": 286,
+        "source_sha256": "27bf020832203ef1e5b727f99fd2b06845ed31d2be22fbc9cc59917f602ac6c5",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-20:27bf02083220:312:453",
+        "evidence_id": "case-20",
+        "start": 312,
+        "end": 453,
+        "source_sha256": "27bf020832203ef1e5b727f99fd2b06845ed31d2be22fbc9cc59917f602ac6c5",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-467:a91c1a7e1fbc:49:133",
+        "evidence_id": "consultation-467",
+        "start": 49,
+        "end": 133,
+        "source_sha256": "a91c1a7e1fbcdb2395e70addbd7797382315991feea7e4f73000a9b4b5c3f7cc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-467:a91c1a7e1fbc:178:477",
+        "evidence_id": "consultation-467",
+        "start": 178,
+        "end": 477,
+        "source_sha256": "a91c1a7e1fbcdb2395e70addbd7797382315991feea7e4f73000a9b4b5c3f7cc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-467:a91c1a7e1fbc:645:864",
+        "evidence_id": "consultation-467",
+        "start": 645,
+        "end": 864,
+        "source_sha256": "a91c1a7e1fbcdb2395e70addbd7797382315991feea7e4f73000a9b4b5c3f7cc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-7:d1882464f6fe:0:20",
+        "evidence_id": "law-7",
+        "start": 0,
+        "end": 20,
+        "source_sha256": "d1882464f6feb5a1a4eaab15f7808ef78ca85decbfa184d4c02fdce4757f49ce",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-7:d1882464f6fe:21:188",
+        "evidence_id": "law-7",
+        "start": 21,
+        "end": 188,
+        "source_sha256": "d1882464f6feb5a1a4eaab15f7808ef78ca85decbfa184d4c02fdce4757f49ce",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-7:d1882464f6fe:189:321",
+        "evidence_id": "law-7",
+        "start": 189,
+        "end": 321,
+        "source_sha256": "d1882464f6feb5a1a4eaab15f7808ef78ca85decbfa184d4c02fdce4757f49ce",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-342:3956715cdd5b:41:214",
+        "evidence_id": "consultation-342",
+        "start": 41,
+        "end": 214,
+        "source_sha256": "3956715cdd5bfd06e8693d19a84747ee3ab5b78eb8568b6325d74c882569ec74",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-342:3956715cdd5b:215:435",
+        "evidence_id": "consultation-342",
+        "start": 215,
+        "end": 435,
+        "source_sha256": "3956715cdd5bfd06e8693d19a84747ee3ab5b78eb8568b6325d74c882569ec74",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-342:3956715cdd5b:436:615",
+        "evidence_id": "consultation-342",
+        "start": 436,
+        "end": 615,
+        "source_sha256": "3956715cdd5bfd06e8693d19a84747ee3ab5b78eb8568b6325d74c882569ec74",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-263:f9c332c5e50d:39:304",
+        "evidence_id": "consultation-263",
+        "start": 39,
+        "end": 304,
+        "source_sha256": "f9c332c5e50d9304f88afc01032181983365162fdca34b696fbc710ecb383ddc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-263:f9c332c5e50d:415:607",
+        "evidence_id": "consultation-263",
+        "start": 415,
+        "end": 607,
+        "source_sha256": "f9c332c5e50d9304f88afc01032181983365162fdca34b696fbc710ecb383ddc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-263:f9c332c5e50d:786:888",
+        "evidence_id": "consultation-263",
+        "start": 786,
+        "end": 888,
+        "source_sha256": "f9c332c5e50d9304f88afc01032181983365162fdca34b696fbc710ecb383ddc",
+        "chunking_version": "sentence-context-v1"
+      }
+    ],
+    "model": "gpt-5-mini",
+    "last_generation_call_ms": 13145,
+    "usage": {
+      "input_tokens": 2996,
+      "output_tokens": 1925,
+      "total_tokens": 4921
+    },
+    "citation_ids_normalized": false,
+    "citation_validation": "quotes_verified",
+    "semantic_review": {
+      "claims": [
+        {
+          "claim_index": 0,
+          "verdict": "supported",
+          "reason": "quote-0·quote-1에서 배송(공급)받은 날로부터 7일 이내에 청약철회가 가능하다고 명시되어 있음."
+        },
+        {
+          "claim_index": 1,
+          "verdict": "supported",
+          "reason": "quote-3·quote-4에서 사용·훼손으로 재판매 곤란할 정도로 가치가 현저히 감소하면 청약철회가 불가하다고 하고, quote-5에서 전화·서면·전자문서 및 게시판 캡처 보관 등 방법·증거 보관을 권장함."
+        },
+        {
+          "claim_index": 2,
+          "verdict": "supported",
+          "reason": "quote-7·quote-8의 제13조 발췌에서 표시·광고 시 주소·전화번호·전자우편주소 등을 포함하여야 한다고 규정하고 있음."
+        }
+      ]
+    },
+    "semantic_review_history": [
+      {
+        "attempt": 0,
+        "claims": [
+          {
+            "claim_index": 0,
+            "verdict": "supported",
+            "reason": "quote-0·quote-1에서 배송(공급)받은 날로부터 7일 이내에 청약철회가 가능하다고 명시되어 있음."
+          },
+          {
+            "claim_index": 1,
+            "verdict": "supported",
+            "reason": "quote-3·quote-4에서 사용·훼손으로 재판매 곤란할 정도로 가치가 현저히 감소하면 청약철회가 불가하다고 하고, quote-5에서 전화·서면·전자문서 및 게시판 캡처 보관 등 방법·증거 보관을 권장함."
+          },
+          {
+            "claim_index": 2,
+            "verdict": "supported",
+            "reason": "quote-7·quote-8의 제13조 발췌에서 표시·광고 시 주소·전화번호·전자우편주소 등을 포함하여야 한다고 규정하고 있음."
+          }
+        ]
+      }
+    ],
+    "semantic_review_scope": "model_judgment_not_legal_accuracy",
+    "retained_claim_indexes": [
+      0,
+      1,
+      2
+    ],
+    "generation_ms": 25191
+  },
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "answer",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 13145,
+      "usage": {
+        "input_tokens": 2996,
+        "output_tokens": 1925,
+        "total_tokens": 4921
+      },
+      "status": "completed",
+      "usage_known": true
+    },
+    {
+      "stage": "verification",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 12043,
+      "usage": {
+        "input_tokens": 1680,
+        "output_tokens": 977,
+        "total_tokens": 2657
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 25197,
+  "known_tokens": 7578
+}

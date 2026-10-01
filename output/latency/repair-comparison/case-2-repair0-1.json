@@ -1,0 +1,63 @@
+{
+  "category": "consumer",
+  "variant": "repair0",
+  "question": "온라인 쇼핑몰에서 운동화를 샀는데 배송된 상품에 하자가 있습니다. 수령 다음 날 사진과 함께 환불을 요청했지만 판매자가 거절했습니다. 관련 법령과 상담사례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 0,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "intake": {
+    "is_ready_for_search": false,
+    "status": "needs_clarification",
+    "message": "온라인 구매 후 하자 있는 상품에 대해 관련 법령·상담사례를 찾아드릴 수 있습니다. 다만 적용되는 법률(국가·관할)이 명시되어 있지 않아 검색 대상(예: 대한민국 소비자보호법·전자상거래법 등)을 확인해야 정확한 자료를 제공합니다.",
+    "missing_fields": [],
+    "follow_up_questions": [
+      "적용받는 국가(예: 대한민국, 미국의 어느 주 등)를 알려주실 수 있나요?",
+      "구매처 유형을 알려주세요(자사몰·오픈마켓·소셜커머스·개인 간 거래 등).",
+      "판매자와의 교신(환불 거절 내용) 또는 사진 등 증거를 제시하실 의향이 있나요? (법령·사례 검색에는 필수 아님)"
+    ],
+    "cautions": [
+      "구체적 법률 판단은 관할·사실관계에 따라 달라지므로 변호사 상담이 필요할 수 있습니다.",
+      "제공하신 국가·구매처 정보에 따라 적합한 법령·사례를 찾아드립니다."
+    ],
+    "checks": {
+      "situation": "met",
+      "timing": "met",
+      "relationship": "met",
+      "request_evidence": "missing"
+    }
+  },
+  "llm_used": false,
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "intake",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 7967,
+      "usage": {
+        "input_tokens": 880,
+        "output_tokens": 1311,
+        "total_tokens": 2191
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 7979,
+  "known_tokens": 2191
+}

@@ -1,0 +1,77 @@
+{
+  "category": "housing",
+  "variant": "intake_low",
+  "scope": "intake",
+  "question": "월세 계약이 종료되어 집을 인도했고 집주인에게 보증금 반환을 요청했지만 아직 받지 못했습니다. 관련 법령과 판례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "low",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "low",
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "intake": {
+    "is_ready_for_search": true,
+    "status": "sufficient",
+    "message": "법령·판례 검색을 진행할 수 있습니다. 계약종료 후 임대인에게 보증금 반환을 요청했으나 미지급된 상황에 대해 관련된 법률조항과 판례를 찾아드리겠습니다.",
+    "missing_fields": [],
+    "follow_up_questions": [],
+    "cautions": [
+      "제공하는 법령·판례는 일반적 정보이며, 구체적 법률상담이나 소송전략은 변호사 상담이 필요합니다."
+    ],
+    "checks": {
+      "situation": "met",
+      "timing": "met",
+      "relationship": "met",
+      "request_evidence": "not_required"
+    }
+  },
+  "llm_used": false,
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "intake",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 3088,
+      "usage": {
+        "input_tokens": 871,
+        "output_tokens": 328,
+        "total_tokens": 1199
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 3115,
+  "known_tokens": 1199
+}

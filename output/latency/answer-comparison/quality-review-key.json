@@ -1,0 +1,72 @@
+[
+  {
+    "review_id": "1d7d3ac54620",
+    "file": "case-0-baseline-1.json",
+    "variant": "baseline"
+  },
+  {
+    "review_id": "50b4602cf134",
+    "file": "case-0-repair0-1.json",
+    "variant": "repair0"
+  },
+  {
+    "review_id": "5f44ac3f0db1",
+    "file": "case-0-answer_low-1.json",
+    "variant": "answer_low"
+  },
+  {
+    "review_id": "ac5d3fb7d170",
+    "file": "case-0-verification_low-1.json",
+    "variant": "verification_low"
+  },
+  {
+    "review_id": "e501a58d9454",
+    "file": "case-0-verification_candidate-1.json",
+    "variant": "verification_candidate"
+  },
+  {
+    "review_id": "175a12c88957",
+    "file": "case-0-context4-1.json",
+    "variant": "context4"
+  },
+  {
+    "review_id": "b8734eecff92",
+    "file": "case-0-compact_review-1.json",
+    "variant": "compact_review"
+  },
+  {
+    "review_id": "9cf5aa3a7c10",
+    "file": "case-2-compact_review-1.json",
+    "variant": "compact_review"
+  },
+  {
+    "review_id": "4d980bc76a08",
+    "file": "case-2-context4-1.json",
+    "variant": "context4"
+  },
+  {
+    "review_id": "e89255defbc4",
+    "file": "case-2-verification_candidate-1.json",
+    "variant": "verification_candidate"
+  },
+  {
+    "review_id": "9c3659266618",
+    "file": "case-2-verification_low-1.json",
+    "variant": "verification_low"
+  },
+  {
+    "review_id": "31928d216e3d",
+    "file": "case-2-answer_low-1.json",
+    "variant": "answer_low"
+  },
+  {
+    "review_id": "778e47f40905",
+    "file": "case-2-repair0-1.json",
+    "variant": "repair0"
+  },
+  {
+    "review_id": "f5908cf30f6d",
+    "file": "case-2-baseline-1.json",
+    "variant": "baseline"
+  }
+]

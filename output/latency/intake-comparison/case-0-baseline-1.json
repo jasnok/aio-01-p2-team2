@@ -1,0 +1,78 @@
+{
+  "category": "housing",
+  "variant": "baseline",
+  "scope": "intake",
+  "question": "월세 계약이 종료되어 집을 인도했고 집주인에게 보증금 반환을 요청했지만 아직 받지 못했습니다. 관련 법령과 판례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "intake": {
+    "is_ready_for_search": true,
+    "status": "sufficient",
+    "message": "월세(임대차) 계약 종료 후 보증금 반환을 받지 못한 사안에 대해 관련 법령과 판례를 검색할 수 있습니다. 일반적인 법적 근거(주택임대차보호법, 민법 관련 조항)와 대법원 판례 등을 찾아 제공하겠습니다.",
+    "missing_fields": [],
+    "follow_up_questions": [],
+    "cautions": [
+      "일반적 법률정보 제공에 그치며, 구체적 사실관계에 따른 최종 판단은 변호사 상담이 필요합니다.",
+      "검색 결과가 최신 법령·판례 변동을 완전히 반영하지 않을 수 있습니다."
+    ],
+    "checks": {
+      "situation": "met",
+      "timing": "met",
+      "relationship": "met",
+      "request_evidence": "not_required"
+    }
+  },
+  "llm_used": false,
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "intake",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 10460,
+      "usage": {
+        "input_tokens": 871,
+        "output_tokens": 842,
+        "total_tokens": 1713
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 10465,
+  "known_tokens": 1713
+}

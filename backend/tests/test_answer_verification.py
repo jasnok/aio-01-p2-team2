@@ -81,6 +81,8 @@ def test_partial_claims_removed_and_context_built_once(monkeypatch, repairs, exp
             return SimpleNamespace(output=output, elapsed_ms=1)
     provider = Provider()
     monkeypatch.setattr(service, "build_context", build)
+    clock = iter([0, .01, .20])
+    monkeypatch.setattr(service, "perf_counter", lambda: next(clock))
     monkeypatch.setattr(service, "get_settings", lambda: SimpleNamespace(llm_provider="openai",
         citation_mode="spans", semantic_verification_enabled=True, answer_repair_attempts=repairs))
     monkeypatch.setattr(service, "get_provider", lambda name: provider)
@@ -90,6 +92,8 @@ def test_partial_claims_removed_and_context_built_once(monkeypatch, repairs, exp
     assert used and draft.answer == "지원 주장"
     assert provider.calls == expected_calls and len(built) == 1
     assert diagnostics["excluded_claims"] == 1 and diagnostics["repair_attempts"] == repairs
+    assert diagnostics["context_ms"] == 10 and diagnostics["generation_ms"] == 200
+    assert diagnostics["last_generation_call_ms"] == 1
 
 
 def test_compact_review_deduplicates_exact_quotes():

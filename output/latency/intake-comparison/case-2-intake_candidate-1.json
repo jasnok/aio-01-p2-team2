@@ -1,0 +1,77 @@
+{
+  "category": "consumer",
+  "variant": "intake_candidate",
+  "scope": "intake",
+  "question": "온라인 쇼핑몰에서 운동화를 샀는데 배송된 상품에 하자가 있습니다. 수령 다음 날 사진과 함께 환불을 요청했지만 판매자가 거절했습니다. 관련 법령과 상담사례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-nano",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-nano",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "intake": {
+    "is_ready_for_search": true,
+    "status": "sufficient",
+    "message": "요청하신 내용은 일반 법령 및 상담 사례를 확인하기에 충분합니다. 아래는 온라인 쇼핑에서 하자 상품을 수령한 후 환불을 요청하였으나 판매자가 거절된 상황에 대한 일반적인 안내와 판례 경향, 상담 사례의 요약입니다. 이는 특정 상황에 대한 법률 자문이 아니며, 실제 적용은 facts에 따라 달라질 수 있습니다.\n\n주요 포인트\n- 관련 법령: 전자상거래 등에서의 소비자보호에 관한 법률(온라인 거래의 소비자 권리와 판매자 책임), 소비자기본법(계약의 취소 및 손해배상 등 일반 원칙) 등을 기본으로 참조합니다.\n- 구제 방법: 하자 상품에",
+    "missing_fields": [],
+    "follow_up_questions": [],
+    "cautions": [
+      "본 정보는 일반 안내이며, 구체적 법적 판단은 사실관계에 따라 달라질 수 있습니다. 필요 시 전문 법률 자문을 받으시기 바랍니다."
+    ],
+    "checks": {
+      "situation": "met",
+      "timing": "met",
+      "relationship": "met",
+      "request_evidence": "met"
+    }
+  },
+  "llm_used": false,
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "intake",
+      "model": "gpt-5-nano",
+      "elapsed_ms": 29047,
+      "usage": {
+        "input_tokens": 880,
+        "output_tokens": 4134,
+        "total_tokens": 5014
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 29053,
+  "known_tokens": 5014
+}

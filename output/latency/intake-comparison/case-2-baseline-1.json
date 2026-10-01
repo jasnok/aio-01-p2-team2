@@ -1,0 +1,77 @@
+{
+  "category": "consumer",
+  "variant": "baseline",
+  "scope": "intake",
+  "question": "온라인 쇼핑몰에서 운동화를 샀는데 배송된 상품에 하자가 있습니다. 수령 다음 날 사진과 함께 환불을 요청했지만 판매자가 거절했습니다. 관련 법령과 상담사례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "intake": {
+    "is_ready_for_search": true,
+    "status": "sufficient",
+    "message": "온라인구매 후 하자 있는 상품의 환불 거부 관련 법령·상담사례를 검색하기에 입력이 충분합니다. 관련 법률(전자상거래 관련 규정, 소비자 관련 법·기준, 민법상 하자담보 등)과 유사 상담사례, 대응절차(증거제출·소비자원·지자체 신고·결제사·카드사 분쟁조정·소액재판 등)를 찾아 제시하겠습니다.",
+    "missing_fields": [],
+    "follow_up_questions": [],
+    "cautions": [
+      "제공되는 내용은 일반적 법률정보로서 구체적 법적 판단이나 확정적 결과를 대신하지 않습니다."
+    ],
+    "checks": {
+      "situation": "met",
+      "timing": "met",
+      "relationship": "met",
+      "request_evidence": "met"
+    }
+  },
+  "llm_used": false,
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "intake",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 7498,
+      "usage": {
+        "input_tokens": 880,
+        "output_tokens": 1082,
+        "total_tokens": 1962
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 7509,
+  "known_tokens": 1962
+}

@@ -183,9 +183,9 @@ async def _generate_answer(category, question, evidence, conversation_context):
         provider = stage_provider(settings, "answer", get_provider(settings.llm_provider))
         verifier = stage_provider(settings, "verification", get_provider(settings.llm_provider))
         verify = context.span_mode and getattr(settings, "semantic_verification_enabled", False)
-        attempts = getattr(settings, "answer_repair_attempts", 1) if verify else 0
+        attempts = min(1, max(0, getattr(settings, "answer_repair_attempts", 1))) if verify else 0
         feedback = []
-        for attempt in range(1 + min(1, max(0, attempts))):
+        for attempt in range(1 + attempts):
             message = context.message
             if feedback:
                 message += "\n이전 주장 검토 결과입니다. 문제가 있는 주장을 수정하거나 제외하고 근거 있는 주장만 작성하세요:\n" + json.dumps(feedback, ensure_ascii=False)

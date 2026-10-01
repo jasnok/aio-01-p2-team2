@@ -1,0 +1,166 @@
+{
+  "input": "output\\phase3\\benchmark\\run-1.json",
+  "input_sha256": "b159e0b47e816e474a0a254c7361f0ab79bf4aee2923a09186ba3e30be2f1d5b",
+  "scope": "answer; fixed synthetic evidence; no live retrieval/cache latency",
+  "human_quality_review": "pending",
+  "git_commit": "994187fc1b08677deda0524d31acf7208bb281da",
+  "working_tree_dirty": true,
+  "max_logical_calls": 56,
+  "network_retries_scope": "SDK allows one retry per logical call",
+  "runs": [
+    {
+      "file": "case-0-baseline-1.json",
+      "scenario": 0,
+      "variant": "baseline",
+      "elapsed_ms": 19284,
+      "known_tokens": 3300,
+      "status": "completed",
+      "llm_used": false,
+      "claims": 0,
+      "calls": 1
+    },
+    {
+      "file": "case-0-repair0-1.json",
+      "scenario": 0,
+      "variant": "repair0",
+      "elapsed_ms": 22210,
+      "known_tokens": 4905,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-0-answer_low-1.json",
+      "scenario": 0,
+      "variant": "answer_low",
+      "elapsed_ms": 13427,
+      "known_tokens": 3659,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-0-verification_low-1.json",
+      "scenario": 0,
+      "variant": "verification_low",
+      "elapsed_ms": 42008,
+      "known_tokens": 9387,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 4
+    },
+    {
+      "file": "case-0-verification_candidate-1.json",
+      "scenario": 0,
+      "variant": "verification_candidate",
+      "elapsed_ms": 43465,
+      "known_tokens": 7794,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-0-context4-1.json",
+      "scenario": 0,
+      "variant": "context4",
+      "elapsed_ms": 28426,
+      "known_tokens": 5556,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-0-compact_review-1.json",
+      "scenario": 0,
+      "variant": "compact_review",
+      "elapsed_ms": 53744,
+      "known_tokens": 12111,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 4
+    },
+    {
+      "file": "case-2-compact_review-1.json",
+      "scenario": 2,
+      "variant": "compact_review",
+      "elapsed_ms": 25197,
+      "known_tokens": 7578,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-2-context4-1.json",
+      "scenario": 2,
+      "variant": "context4",
+      "elapsed_ms": 23950,
+      "known_tokens": 6004,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-2-verification_candidate-1.json",
+      "scenario": 2,
+      "variant": "verification_candidate",
+      "elapsed_ms": 79518,
+      "known_tokens": 19641,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 4
+    },
+    {
+      "file": "case-2-verification_low-1.json",
+      "scenario": 2,
+      "variant": "verification_low",
+      "elapsed_ms": 26504,
+      "known_tokens": 8026,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-2-answer_low-1.json",
+      "scenario": 2,
+      "variant": "answer_low",
+      "elapsed_ms": 19920,
+      "known_tokens": 6348,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-2-repair0-1.json",
+      "scenario": 2,
+      "variant": "repair0",
+      "elapsed_ms": 20600,
+      "known_tokens": 6894,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    },
+    {
+      "file": "case-2-baseline-1.json",
+      "scenario": 2,
+      "variant": "baseline",
+      "elapsed_ms": 20766,
+      "known_tokens": 7072,
+      "status": "completed",
+      "llm_used": true,
+      "claims": 3,
+      "calls": 2
+    }
+  ]
+}
