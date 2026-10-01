@@ -82,6 +82,78 @@ def test_context_is_limited_to_first_and_recent_turns_with_character_cap() -> No
     assert sum(len(item["content"]) for item in context) <= 12
 
 
+def test_term_context_uses_one_owner_checked_restore_and_preserves_selection():
+    class Repository(FakeSavedRepository):
+        calls = 0
+        async def restore(self, user_id, conversation_id):
+            self.calls += 1
+            restored = await super().restore(user_id, conversation_id)
+            restored["conversation"]["category"] = "legal_terms"
+            return restored
+
+    repository = Repository()
+    context = asyncio.run(SavedConversationService(repository).build_term_context_for_actor(
+        actor={"id": 42, "role": "USER"}, conversation_id=71, max_characters=9))
+    assert repository.calls == 1
+    assert context == [{"role": "user", "content": "첫 질문"},
+                       {"role": "assistant", "content": "첫 답변"},
+                       {"role": "user", "content": "최"}]
+
+
+@pytest.mark.parametrize("category", ["housing", None])
+def test_term_context_rejects_other_or_missing_category(category):
+    class Repository(FakeSavedRepository):
+        async def restore(self, *args):
+            restored = await super().restore(*args)
+            restored["conversation"]["category"] = category
+            return restored
+    with pytest.raises(SavedConversationNotFoundError):
+        asyncio.run(SavedConversationService(Repository()).build_term_context_for_actor(
+            actor={"id": 42, "role": "USER"}, conversation_id=71))
+
+
+def test_term_context_rejects_guest_before_query_and_other_owner():
+    class Repository(FakeSavedRepository):
+        calls = 0
+        async def restore(self, *args):
+            self.calls += 1
+            return await super().restore(*args)
+    repository = Repository()
+    service = SavedConversationService(repository)
+    with pytest.raises(PermissionError):
+        asyncio.run(service.build_term_context_for_actor(
+            actor={"id": "guest", "role": "GUEST"}, conversation_id=71))
+    assert repository.calls == 0
+    with pytest.raises(SavedConversationNotFoundError):
+        asyncio.run(service.build_term_context_for_actor(
+            actor={"id": 99, "role": "USER"}, conversation_id=71))
+
+
+def test_term_context_wrong_category_returns_http_404_before_model_call(monkeypatch):
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    from backend.app.routers import legal_terms
+
+    class Repository(FakeSavedRepository):
+        async def restore(self, *args):
+            restored = await super().restore(*args)
+            restored["conversation"]["category"] = "housing"
+            return restored
+
+    async def unexpected_model(*args):
+        pytest.fail("invalid conversation must not reach the model")
+
+    monkeypatch.setattr(legal_terms, "saved_conversation_service", SavedConversationService(Repository()))
+    monkeypatch.setattr(legal_terms.term_chat_service, "chat", unexpected_model)
+    app = FastAPI()
+    app.include_router(legal_terms.router)
+    app.dependency_overrides[legal_terms.actor] = lambda: {"id": 42, "role": "USER"}
+    with TestClient(app) as client:
+        result = client.post("/api/legal-terms/chat", json={"message": "임금체불이 뭐예요?", "conversation_id": 71})
+    assert result.status_code == 404
+    assert result.json()["detail"]["code"] == "NOT_FOUND"
+
+
 def test_snapshot_uses_the_numeric_contract_version_required_by_db() -> None:
     import json
 

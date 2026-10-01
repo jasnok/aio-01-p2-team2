@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from backend.app.repositories.saved_conversation_repository import SavedConversationRepository
+from backend.app.repositories.saved_conversation_repository import (
+    SavedConversationNotFoundError, SavedConversationRepository,
+)
 from backend.app.schemas.legal import LegalQuestionResponse
 
 
@@ -55,8 +57,12 @@ class SavedConversationService:
         if actor.get("role") == "GUEST":
             raise PermissionError("AUTH_REQUIRED")
         restored = await self.repository.restore(int(actor["id"]), conversation_id)
+        return self._context_from_messages(restored["messages"], max_characters)
+
+    @staticmethod
+    def _context_from_messages(messages: list[dict], max_characters: int) -> list[dict[str, str]]:
+        """Select context from an already owner-checked snapshot without I/O."""
         selected: list[dict[str, str]] = []
-        messages = restored["messages"]
         first_user = next((item for item in messages if item["role"] == "user"), None)
         if first_user:
             selected.append({"role": "user", "content": first_user["content"]})
@@ -98,9 +104,7 @@ class SavedConversationService:
         restored = await self.repository.restore(int(actor["id"]), conversation_id)
         if restored["conversation"].get("category") != "legal_terms":
             raise SavedConversationNotFoundError(conversation_id)
-        return await self.build_context_for_actor(
-            actor=actor, conversation_id=conversation_id, max_characters=max_characters,
-        )
+        return self._context_from_messages(restored["messages"], max_characters)
 
     async def list_for_actor(self, actor: dict) -> list[dict[str, Any]]:
         if actor.get("role") == "GUEST":
