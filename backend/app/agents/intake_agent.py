@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, ValidationError
 from backend.app.agents.models import InputChecks, IntakeResult
 from backend.app.core.config import get_settings
 from backend.app.providers.registry import get_provider
+from backend.app.services.model_metrics import record_call, stage_provider
 
 
 class IntakeDecision(BaseModel):
@@ -63,7 +64,7 @@ class IntakeAgent:
         if event_callback:
             await event_callback({"stage": "validation_started", "step_id": step_id})
 
-        provider = get_provider(settings.llm_provider)
+        provider = stage_provider(settings, "intake", get_provider(settings.llm_provider))
         message = f"카테고리: {category}\n사용자 질문: {question}"
         timeout_seconds = settings.input_assessment_timeout_seconds
         started_at = asyncio.get_running_loop().time()
@@ -87,6 +88,7 @@ class IntakeAgent:
                     ),
                     timeout=remaining_seconds,
                 )
+                record_call("intake", result)
                 decision = IntakeDecision.model_validate(result.output)
                 assessment = self._to_result(decision, question)
                 if event_callback:

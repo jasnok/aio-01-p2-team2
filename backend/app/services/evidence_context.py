@@ -1,5 +1,5 @@
 """Bounded extractive context. Every span is copied exactly from source text."""
-import re
+from backend.app.services.text_spans import select_windows
 from backend.app.agents.models import AnswerDraft
 from backend.app.schemas.legal import Evidence
 
@@ -19,27 +19,13 @@ def build_context(question: str, evidence: list[Evidence], max_documents: int = 
             break
         if item.evidence_id not in {doc.evidence_id for doc in selected}:
             selected.append(item)
-    terms = set(re.findall(r"[가-힣A-Za-z0-9]{2,}", question))
-    # Character pairs provide a deterministic Korean lexical signal without
-    # assuming that spacing or inflected word endings match exactly.
-    pairs = {term[index:index+2] for term in terms for index in range(len(term)-1)}
     documents, spans = [], {}
     for item in selected:
-        fragments = []
-        for sentence in re.split(r"(?<=[.!?。])\s+|\n+", item.content):
-            sentence = sentence.strip()
-            for offset in range(0, len(sentence), 280):
-                fragment = sentence[offset:offset+280]
-                if fragment.strip():
-                    fragments.append(fragment)
-        scored = sorted(enumerate(fragments), key=lambda pair: (
-            -sum(token in pair[1] for token in pairs), pair[0]))
-        chosen = sorted(scored[:3], key=lambda pair: pair[0])
         excerpts = []
-        for index, quote in chosen:
-            span_id = f"{item.evidence_id}:s{index+1}"
-            spans[span_id] = {"evidence_id": item.evidence_id, "quote": quote}
-            excerpts.append({"span_id": span_id, "text": quote})
+        for window in select_windows(question, item.content):
+            span_id = f"{item.evidence_id}:{window['source_sha256'][:12]}:{window['start']}:{window['end']}"
+            spans[span_id] = {"evidence_id": item.evidence_id, **window}
+            excerpts.append({"span_id": span_id, "text": window["quote"]})
         if excerpts:
             documents.append({"evidence_id": item.evidence_id, "title": item.title,
                               "source_type": item.source.source_type, "excerpts": excerpts})
@@ -55,7 +41,7 @@ def resolve_span_draft(output: dict, spans: dict) -> AnswerDraft:
         for span_id in dict.fromkeys(claim.span_ids):
             if span_id not in spans:
                 raise ValueError("unknown_citation_span")
-            citations.append(dict(spans[span_id]))
+            citations.append({key: spans[span_id][key] for key in ("evidence_id", "quote")})
         claims.append({"text": claim.text, "citations": citations})
     # Bind the displayed answer to the same claims that carry citations.
     # The model cannot add an uncited parallel answer field.

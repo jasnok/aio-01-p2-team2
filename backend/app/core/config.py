@@ -1,6 +1,7 @@
 from functools import lru_cache
 
 from typing import Literal
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -24,6 +25,11 @@ class Settings(BaseSettings):
     agent_run_ttl_seconds: int = 86400
     agent_run_timeout_seconds: int = 150
     citation_mode: Literal["spans", "quotes"] = "spans"
+    intake_model: str | None = None
+    answer_model: str | None = None
+    verification_model: str | None = None
+    semantic_verification_enabled: bool = True
+    answer_repair_attempts: int = Field(default=1, ge=0, le=1)
     # 통합 실행용 루트 .env를 먼저 읽고, 서비스 전용 파일이 있으면 덮어씁니다.
     model_config = SettingsConfigDict(env_file=(".env", "backend/.env"), extra="ignore")
 

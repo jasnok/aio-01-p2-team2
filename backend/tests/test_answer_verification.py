@@ -1,0 +1,56 @@
+import asyncio
+import pytest
+from backend.app.agents.models import AnswerDraft
+from backend.app.services.answer_verification import review_answer
+from backend.app.services.text_spans import select_windows
+from backend.app.services import legal_question_service as service
+from backend.tests.test_evidence_context import evidence
+
+
+def test_sentence_context_keeps_exception_and_exact_offsets():
+    text = "퇴직금은 지급해야 합니다. 다만 해당 조건이 충족되지 않으면 제외합니다. 예외가 적용됩니다."
+    windows = select_windows("퇴직금 지급", text)
+    assert windows and "다만" in windows[0]["quote"]
+    assert all(text[item["start"]:item["end"]] == item["quote"] for item in windows)
+
+
+def test_oversized_indivisible_clause_is_not_truncated():
+    assert select_windows("예외", "본문" * 1500 + "다만 예외입니다.", budget=2400) == []
+
+
+def test_review_must_cover_every_claim_exactly_once():
+    draft = AnswerDraft(question_summary="요약", answer="내용", claims=[{
+        "text": "내용", "citations": [{"evidence_id": "law-1", "quote": "원문"}]}])
+    class Provider:
+        def generate_structured(self, *args):
+            return type("Result", (), {"output": {"claims": [{"claim_index": 2, "verdict": "supported", "reason": "확인"}]}})()
+    with pytest.raises(ValueError, match="coverage"):
+        asyncio.run(review_answer(draft, Provider()))
+
+
+def test_unsupported_claim_repair_is_bounded_and_falls_back(monkeypatch):
+    import json
+    from backend.app.agents.models import SpanAnswerDraft
+    class Provider:
+        calls = 0
+        def generate_structured(self, prompt, message, schema):
+            self.calls += 1
+            if schema is SpanAnswerDraft:
+                # Repair input appends feedback after the original JSON.
+                data, _ = json.JSONDecoder().raw_decode(message)
+                span = data["evidence"][0]["excerpts"][0]["span_id"]
+                output = {"question_summary": "요약", "claims": [{"text": "허위 주장", "span_ids": [span]}]}
+            else:
+                output = {"claims": [{"claim_index": 0, "verdict": "unsupported", "reason": "근거 없음"}]}
+            return type("Result", (), {"output": output})()
+    provider = Provider()
+    monkeypatch.setattr(service, "get_settings", lambda: type("Settings", (), {
+        "llm_provider": "openai", "citation_mode": "spans", "semantic_verification_enabled": True,
+        "answer_repair_attempts": 1})())
+    monkeypatch.setattr(service, "get_provider", lambda name: provider)
+    diagnostics = {}
+    draft, used = asyncio.run(service.answer_with_llm(category="labor", question="퇴직금",
+        evidence=[evidence()], diagnostics=diagnostics))
+    assert provider.calls == 4  # generation/review + one repair/review
+    assert not used and "허위 주장" not in draft.answer
+    assert diagnostics["repair_attempts"] == 1

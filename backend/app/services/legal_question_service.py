@@ -11,6 +11,8 @@ from backend.app.agents.answer_agent import AnswerAgent
 from backend.app.agents.intake_agent import IntakeAgent
 from backend.app.agents.models import AgentState, AnswerDraft, IntakeResult, SpanAnswerDraft
 from backend.app.services.evidence_context import build_context, resolve_span_draft
+from backend.app.services.model_metrics import calls, record_call, stage_provider
+from backend.app.services.answer_verification import review_answer
 from backend.app.agents.registry import get_agent_profile
 from backend.app.agents.runtime import LegalAgentRuntime
 from backend.app.core.config import get_settings
@@ -154,6 +156,8 @@ async def answer_with_llm(
     evidence: list[Evidence],
     conversation_context: list[dict] | None = None,
     diagnostics: dict | None = None,
+    repair_remaining: int | None = None,
+    repair_hint: list[dict] | None = None,
 ) -> tuple[AnswerDraft, bool]:
     """LLM을 사용할 수 없거나 검증에 실패하면 템플릿 답변으로 복귀한다."""
     fallback = AnswerAgent().create_draft(category, question, evidence)
@@ -164,7 +168,7 @@ async def answer_with_llm(
         return fallback, False
 
     try:
-        provider = get_provider(settings.llm_provider)
+        provider = stage_provider(settings, "answer", get_provider(settings.llm_provider))
         span_mode = getattr(settings, "citation_mode", "quotes") == "spans"
         documents, spans = build_context(question, evidence) if span_mode else ([], {})
         if span_mode and not spans:
@@ -173,6 +177,8 @@ async def answer_with_llm(
             "conversation_context": [{"role": item.get("role"), "content": str(item.get("content", ""))[:1000]}
                 for item in (conversation_context or [])[-6:]], "evidence": documents}, ensure_ascii=False
         ) if span_mode else _llm_input(question, evidence, conversation_context)
+        if repair_hint:
+            message += "\n이전 주장 검토 결과입니다. 문제가 있는 주장을 수정하거나 제외하고 근거 있는 주장만 작성하세요:\n" + json.dumps(repair_hint, ensure_ascii=False)
         if diagnostics is not None:
             diagnostics.update({"citation_mode": "spans" if span_mode else "quotes",
                 "context_characters": len(message),
@@ -184,6 +190,7 @@ async def answer_with_llm(
             message,
             SpanAnswerDraft if span_mode else AnswerDraft,
         )
+        record_call("answer_repair" if repair_hint else "answer", result)
         if diagnostics is not None:
             diagnostics.update({
                 "model": getattr(result, "model", None),
@@ -225,6 +232,36 @@ async def answer_with_llm(
                 "citation_validation": "quotes_verified",
                 "citation_ids_normalized": ids_normalized,
             })
+            if span_mode:
+                diagnostics["source_spans"] = [{"span_id": key,
+                    **{name: value[name] for name in ("evidence_id", "start", "end", "source_sha256", "chunking_version")}}
+                    for key, value in spans.items()]
+        if span_mode and getattr(settings, "semantic_verification_enabled", False):
+            verifier = stage_provider(settings, "verification", get_provider(settings.llm_provider))
+            review = await review_answer(draft, verifier)
+            if diagnostics is not None:
+                diagnostics["semantic_review"] = review.model_dump()
+                diagnostics.setdefault("semantic_review_history", []).append({
+                    "attempt": 1 if repair_hint else 0, **review.model_dump()})
+                diagnostics["semantic_review_scope"] = "model_judgment_not_legal_accuracy"
+            problematic = [item for item in review.claims if item.verdict != "supported"]
+            remaining = min(1, max(0, getattr(settings, "answer_repair_attempts", 1))) if repair_remaining is None else repair_remaining
+            if problematic and remaining:
+                if diagnostics is not None:
+                    diagnostics["repair_attempts"] = 1
+                return await answer_with_llm(category=category, question=question, evidence=evidence,
+                    conversation_context=conversation_context, diagnostics=diagnostics,
+                    repair_remaining=0, repair_hint=[item.model_dump() for item in problematic])
+            if problematic:
+                approved = {item.claim_index for item in review.claims if item.verdict == "supported"}
+                draft.claims = [claim for index, claim in enumerate(draft.claims) if index in approved]
+                if not draft.claims:
+                    raise CitationValidationError("no_supported_claims")
+                draft.answer = "\n\n".join(claim.text for claim in draft.claims)
+                draft.used_evidence_ids = list(dict.fromkeys(citation.evidence_id for claim in draft.claims for citation in claim.citations))
+                draft.cautions.append("일부 주장은 인용문과의 의미 검토를 통과하지 못해 제외했습니다. 이 검토는 법률 정답을 보장하지 않습니다.")
+                if diagnostics is not None:
+                    diagnostics["retained_claim_indexes"] = sorted(approved)
         return draft, True
     except Exception as error:
         if diagnostics is not None:
@@ -235,7 +272,7 @@ async def answer_with_llm(
         return fallback, False
 
 
-async def answer_question_from_mcp(
+async def _answer_question_from_mcp(
     request: LegalQuestionRequest,
     event_callback: Callable[[dict], Awaitable[None]] | None = None,
     conversation_context: list[dict] | None = None,
@@ -332,3 +369,18 @@ async def answer_question_from_mcp(
         cited_claims=[claim.model_dump() for claim in draft.claims],
         diagnostics=diagnostics,
     )
+
+
+async def answer_question_from_mcp(request, event_callback=None, conversation_context=None):
+    sink = []
+    token = calls.set(sink)
+    try:
+        result = await _answer_question_from_mcp(request, event_callback, conversation_context)
+        result.diagnostics["model_calls"] = sink
+        result.diagnostics["llm_usage_total"] = {key: sum(item["usage"].get(key, 0) for item in sink)
+            for key in ("input_tokens", "output_tokens", "total_tokens")}
+        result.diagnostics["usage_scope"] = "intake_answer_verification_known_usage; embeddings_and_timeout_calls_excluded"
+        result.diagnostics["experiment_versions"] = {"prompt": "verified-spans-v1", "context": "sentence-context-v1"}
+        return result
+    finally:
+        calls.reset(token)

@@ -54,7 +54,7 @@ class IntakeResult(BaseModel):
 
 class ClaimCitation(BaseModel):
     evidence_id: str
-    quote: str = Field(min_length=1, max_length=300)
+    quote: str = Field(min_length=1, max_length=2400)
 
 
 class CitedClaim(BaseModel):
@@ -81,3 +81,13 @@ class SpanAnswerDraft(BaseModel):
     key_issues: list[str] = Field(default_factory=list, max_length=3)
     cautions: list[str] = Field(default_factory=list, max_length=4)
     claims: list[SpanClaim] = Field(min_length=1, max_length=3)
+
+
+class ClaimReview(BaseModel):
+    claim_index: int = Field(ge=0)
+    verdict: Literal["supported", "partial", "unsupported"]
+    reason: str = Field(max_length=400)
+
+
+class AnswerReview(BaseModel):
+    claims: list[ClaimReview] = Field(min_length=1, max_length=3)

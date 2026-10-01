@@ -21,7 +21,7 @@ def test_context_bounds_exact_quotes_and_preserves_source_diversity():
     assert {doc["source_type"] for doc in docs} == {"law", "case", "consultation"}
     assert len(spans) <= 18
     originals = {row.evidence_id: row.content for row in rows}
-    assert all(len(item["quote"]) <= 280 and item["quote"] in originals[item["evidence_id"]]
+    assert all(len(item["quote"]) <= 2400 and item["quote"] in originals[item["evidence_id"]]
                for item in spans.values())
     assert any("퇴직금 지급 기한" in item["quote"] for item in spans.values())
 
