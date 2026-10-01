@@ -48,13 +48,15 @@ def result_text(result) -> str:
 
 def _result_payload(result) -> dict[str, Any]:
     if result.isError:
-        raise RuntimeError(result_text(result) or "MCP Tool 실행에 실패했습니다.")
-    if result.structuredContent:
+        raise RuntimeError("MCP Tool 실행에 실패했습니다.")
+    if result.structuredContent is not None:
+        if not isinstance(result.structuredContent, dict):
+            raise ValueError("MCP Tool 결과는 JSON 객체여야 합니다.")
         return result.structuredContent
 
     text = result_text(result)
     if not text:
-        return {}
+        raise ValueError("MCP Tool 결과가 비어 있습니다.")
     try:
         payload = json.loads(text)
     except json.JSONDecodeError as error:

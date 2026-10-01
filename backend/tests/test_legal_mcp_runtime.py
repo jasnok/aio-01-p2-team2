@@ -13,6 +13,12 @@ from backend.app.main import app
 from backend.app.routers import legal as legal_router
 
 
+def evidence_item(identifier, source_type):
+    return {"evidence_id": identifier, "document_id": identifier, "title": "synthetic",
+            "content": "synthetic content", "source": {"source_id": identifier,
+            "title": "synthetic source", "source_type": source_type, "url": ""}}
+
+
 def test_labor_runtime_retries_with_documents_when_cases_are_insufficient(monkeypatch) -> None:
     async def fake_search_cases(query: str, category: str, top_k: int) -> dict:
         assert category == "labor"
@@ -20,8 +26,8 @@ def test_labor_runtime_retries_with_documents_when_cases_are_insufficient(monkey
         return {
             "success": True,
             "data": [
-                {"evidence_id": "case-1"},
-                {"evidence_id": "case-2"},
+                evidence_item("case-1", "case"),
+                evidence_item("case-2", "case"),
             ],
         }
 
@@ -29,7 +35,7 @@ def test_labor_runtime_retries_with_documents_when_cases_are_insufficient(monkey
         assert category == "labor"
         return {
             "success": True,
-            "data": {"items": [{"evidence_id": "law-1"}]},
+            "data": {"items": [evidence_item("law-1", "law")]},
         }
 
     monkeypatch.setattr("backend.app.agents.runtime.search_cases", fake_search_cases)
@@ -71,7 +77,7 @@ def test_labor_runtime_raises_error_when_mcp_fails(monkeypatch) -> None:
         question="퇴직금을 받지 못했습니다.",
     )
 
-    with pytest.raises(RuntimeError, match="MCP 연결 실패"):
+    with pytest.raises(RuntimeError, match="MCP 검색에 실패했습니다"):
         asyncio.run(
             LegalAgentRuntime().run(
                 LABOR_AGENT,
@@ -245,8 +251,8 @@ def test_parallel_searches_start_together_and_keep_profile_result_order(monkeypa
             await asyncio.wait_for(both_started.wait(), timeout=1)
             if name == "case":
                 await asyncio.sleep(0.01)
-            return {"success": True, "data": ([{"evidence_id": name}] if name == "case"
-                else {"items": [{"evidence_id": name}, {"evidence_id": "case"}]})}
+            return {"success": True, "data": ([evidence_item(name, "case")] if name == "case"
+                else {"items": [evidence_item(name, "law"), evidence_item("case", "case")]})}
         monkeypatch.setattr("backend.app.agents.runtime.search_cases", lambda *a, **k: search("case"))
         monkeypatch.setattr("backend.app.agents.runtime.search_legal_documents", lambda *a, **k: search("law"))
         state, evidence = await LegalAgentRuntime().run(LABOR_AGENT,
