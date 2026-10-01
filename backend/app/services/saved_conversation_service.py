@@ -57,7 +57,7 @@ class SavedConversationService:
     ) -> list[dict[str, str]]:
         if actor.get("role") == "GUEST":
             raise PermissionError("AUTH_REQUIRED")
-        restored = await self.repository.restore(int(actor["id"]), conversation_id)
+        restored = await self.repository.restore_context(int(actor["id"]), conversation_id)
         return self._context_from_messages(restored["messages"], max_characters)
 
     @staticmethod
@@ -102,7 +102,7 @@ class SavedConversationService:
     ) -> list[dict[str, str]]:
         if actor.get("role") == "GUEST":
             raise PermissionError("AUTH_REQUIRED")
-        restored = await self.repository.restore(int(actor["id"]), conversation_id)
+        restored = await self.repository.restore_context(int(actor["id"]), conversation_id)
         if restored["conversation"].get("category") != "legal_terms":
             raise SavedConversationNotFoundError(conversation_id)
         return self._context_from_messages(restored["messages"], max_characters)

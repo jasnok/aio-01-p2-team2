@@ -238,6 +238,26 @@ class SavedConversationRepository:
             )
         return {"conversation": dict(conversation), "messages": [dict(row) for row in messages]}
 
+    async def restore_context(self, user_id: int, conversation_id: int) -> dict[str, Any]:
+        """Owner-checked context only; full history restoration remains separate."""
+        pool = await get_db_pool()
+        async with pool.acquire() as connection:
+            conversation = await connection.fetchrow(
+                "SELECT id, category FROM saved_conversations WHERE id=$1 AND user_id=$2",
+                conversation_id, user_id)
+            if conversation is None:
+                raise SavedConversationNotFoundError(conversation_id)
+            messages = await connection.fetch(
+                """
+                (SELECT id, role, content FROM saved_messages
+                 WHERE conversation_id=$1 AND role='user' ORDER BY id ASC LIMIT 1)
+                UNION
+                (SELECT id, role, content FROM saved_messages
+                 WHERE conversation_id=$1 ORDER BY id DESC LIMIT 3)
+                ORDER BY id ASC
+                """, conversation_id)
+        return {"conversation": dict(conversation), "messages": [dict(row) for row in messages]}
+
     async def delete(self, user_id: int, conversation_id: int) -> None:
         pool = await get_db_pool()
         async with pool.acquire() as connection:

@@ -31,6 +31,9 @@ class FakeSavedRepository:
     async def list_for_user(self, user_id: int) -> list[dict]:
         return [{"id": 71, "user_id": user_id}]
 
+    async def restore_context(self, user_id, conversation_id):
+        return await self.restore(user_id, conversation_id)
+
     async def delete(self, user_id: int, conversation_id: int) -> None:
         if (user_id, conversation_id) != (42, 71):
             raise SavedConversationNotFoundError(conversation_id)
