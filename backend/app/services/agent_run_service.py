@@ -19,7 +19,9 @@ from backend.app.services.saved_conversation_service import SavedConversationSer
 from backend.app.services.guest_session_service import guest_sessions
 from backend.app.core.config import get_settings
 from backend.app.services.mock_store import iso, now, store
-from backend.app.services.agent_run_store import save_snapshot, enabled as persistent_runs_enabled
+from backend.app.services.agent_run_store import (
+    SnapshotConflictError, save_snapshot, enabled as persistent_runs_enabled,
+)
 from backend.app.services.run_metrics import log_result
 
 
@@ -78,6 +80,7 @@ def create_run(
         "save_selected": save_selected,
         "conversation_id": conversation_id,
         "status": "queued",
+        "revision": 0,
         "result": None,
         "error": None,
         "events": [],
@@ -173,6 +176,7 @@ async def _execute_run(run_id: str) -> None:
             })
         await save_snapshot(run)
 
+    conflicted = False
     try:
         context: list[dict] | None = None
         if run["conversation_id"] is not None:
@@ -250,6 +254,9 @@ async def _execute_run(run_id: str) -> None:
                 "run_id": run_id, "status": "completed",
                 "message": "법률 분석이 완료되었습니다.",
             })
+    except SnapshotConflictError:
+        conflicted = True
+        raise
     except Exception:
         logger.exception("agent_run_failed run_id=%s", run_id)
         # 내부 예외와 민감한 연결 정보는 SSE/HTTP 응답에 노출하지 않는다.
@@ -259,26 +266,43 @@ async def _execute_run(run_id: str) -> None:
             "run_id": run_id, "status": "failed", "message": run["error"]["message"],
         })
     finally:
-        try:
-            await save_snapshot(run)
-        except Exception:
-            logger.error("agent_run_snapshot_failed run_id=%s", run_id)
+        if not conflicted:
+            try:
+                await save_snapshot(run)
+            except SnapshotConflictError:
+                raise
+            except Exception:
+                logger.error("agent_run_snapshot_failed run_id=%s", run_id)
+
+
+def _adopt_snapshot(run_id: str, conflict: SnapshotConflictError) -> None:
+    """Discard local writes after losing ownership of the snapshot revision."""
+    logger.warning("agent_run_snapshot_conflict run_id=%s reason=%s", run_id, conflict.reason)
+    run = store.agent_runs.pop(run_id, None)
+    if run is not None and conflict.current is not None:
+        run.clear()
+        run.update(conflict.current)
 
 
 async def execute_run(run_id: str) -> None:
     try:
         async with asyncio.timeout(get_settings().agent_run_timeout_seconds):
             await _execute_run(run_id)
+    except SnapshotConflictError as conflict:
+        _adopt_snapshot(run_id, conflict)
     except Exception as error:
         run = store.agent_runs.get(run_id)
         if run is None:
             return
-        run["status"] = "failed"
-        run["error"] = {"code": "ANALYSIS_TIMEOUT" if isinstance(error, TimeoutError) else "RUN_STORE_UNAVAILABLE",
-                        "message": "분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요."}
-        append_event(run, "run.failed", {"run_id": run_id, "status": "failed", "message": run["error"]["message"]})
+        if run["status"] not in TERMINAL_STATUSES:
+            run["status"] = "failed"
+            run["error"] = {"code": "ANALYSIS_TIMEOUT" if isinstance(error, TimeoutError) else "RUN_STORE_UNAVAILABLE",
+                            "message": "분석을 완료하지 못했습니다. 잠시 후 다시 시도해 주세요."}
+            append_event(run, "run.failed", {"run_id": run_id, "status": "failed", "message": run["error"]["message"]})
         try:
             await save_snapshot(run)
+        except SnapshotConflictError as conflict:
+            _adopt_snapshot(run_id, conflict)
         except Exception:
             logger.error("agent_run_snapshot_failed run_id=%s", run_id)
     finally:
