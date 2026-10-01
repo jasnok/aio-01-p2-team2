@@ -107,3 +107,20 @@ def test_transport_failure_hides_external_text():
     with pytest.raises(RuntimeError) as caught:
         _result_payload(result)
     assert "synthetic-private-marker" not in str(caught.value)
+
+
+@pytest.mark.parametrize("data, status", [({}, 502), ([], 200)])
+def test_search_api_uses_contract_in_real_runtime(monkeypatch, data, status):
+    from fastapi.testclient import TestClient
+    from backend.app.main import app
+    async def fake(*args, **kwargs):
+        return {"success": True, "data": data}
+    monkeypatch.setattr(runtime, "search_cases", fake)
+    response = TestClient(app).get("/api/legal/cases",
+        params={"category": "labor", "query": "synthetic query"})
+    assert response.status_code == status
+    if status == 502:
+        assert response.json()["detail"]["code"] == "MCP_UNAVAILABLE"
+    else:
+        assert response.json()["items"] == []
+        assert response.json()["total"] == 0
