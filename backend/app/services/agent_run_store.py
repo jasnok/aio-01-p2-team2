@@ -4,6 +4,7 @@ import json
 from datetime import datetime, timezone
 
 from backend.app.core.config import get_settings
+from backend.app.services.actor_identity import actor_key, owns_run
 from backend.app.services.session_service import sessions, SessionStoreUnavailableError
 
 
@@ -132,9 +133,10 @@ async def read_snapshot(run_id: str) -> dict | None:
 
 async def reserve_run(run: dict, fingerprint: list, idempotency_key: str) -> tuple[dict, bool]:
     """Atomically reserve the key and snapshot so a second worker cannot launch it."""
-    import hashlib
-    key_hash = hashlib.sha256(json.dumps([run["owner_id"], idempotency_key]).encode()).hexdigest()
-    key = f"lawpath:run-idempotency:{key_hash}"
+    prior = await find_reserved_run(run["actor"], fingerprint, idempotency_key)
+    if prior is not None:
+        return prior, False
+    key = reservation_key(run["actor"], idempotency_key)
     payload = json.dumps({"run_id": run["run_id"], "fingerprint": fingerprint}, ensure_ascii=False)
     initial = dict(run, revision=1)
     script = """
@@ -158,6 +160,8 @@ async def reserve_run(run: dict, fingerprint: list, idempotency_key: str) -> tup
         existing = await read_snapshot(reservation["run_id"])
         if existing is None:
             raise SessionStoreUnavailableError()
+        if not owns_run(run["actor"], existing):
+            raise SessionStoreUnavailableError()
         return existing, False
     except ValueError:
         raise
@@ -165,22 +169,37 @@ async def reserve_run(run: dict, fingerprint: list, idempotency_key: str) -> tup
         raise SessionStoreUnavailableError() from error
 
 
-async def find_reserved_run(owner_id, fingerprint: list, idempotency_key: str) -> dict | None:
-    """Allow an existing idempotent request to return even at full capacity."""
+def reservation_key(actor: dict, idempotency_key: str) -> str:
     import hashlib
-    key_hash = hashlib.sha256(json.dumps([owner_id, idempotency_key]).encode()).hexdigest()
+    key_hash = hashlib.sha256(json.dumps([actor_key(actor), idempotency_key]).encode()).hexdigest()
+    return f"lawpath:run-idempotency:v2:{key_hash}"
+
+
+async def find_reserved_run(actor: dict, fingerprint: list, idempotency_key: str) -> dict | None:
+    """Reuse owned legacy reservations without exposing another principal's run."""
+    import hashlib
+    legacy_hash = hashlib.sha256(json.dumps([actor["id"], idempotency_key]).encode()).hexdigest()
+    keys = (reservation_key(actor, idempotency_key), f"lawpath:run-idempotency:{legacy_hash}")
     try:
         client = await sessions._redis_client()
-        raw = await client.get(f"lawpath:run-idempotency:{key_hash}")
-        if not raw:
-            return None
-        reservation = json.loads(raw)
-        if reservation["fingerprint"] != fingerprint:
-            raise ValueError("IDEMPOTENCY_CONFLICT")
-        run = await read_snapshot(reservation["run_id"])
-        if run is None:
-            raise SessionStoreUnavailableError()
-        return run
+        for key in keys:
+            raw = await client.get(key)
+            if not raw:
+                continue
+            reservation = json.loads(raw)
+            run = await read_snapshot(reservation["run_id"])
+            if run is None:
+                if key == keys[0]:
+                    raise SessionStoreUnavailableError()
+                continue
+            if not owns_run(actor, run):
+                if key == keys[0]:
+                    raise SessionStoreUnavailableError()
+                continue
+            if reservation["fingerprint"] != fingerprint:
+                raise ValueError("IDEMPOTENCY_CONFLICT")
+            return run
+        return None
     except ValueError:
         raise
     except Exception as error:

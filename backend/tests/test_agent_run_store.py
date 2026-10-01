@@ -138,9 +138,8 @@ def test_real_redis_revision_transitions_and_reservation(monkeypatch):
         owner = "revision-test-" + uuid.uuid4().hex
         idempotency = uuid.uuid4().hex
         fingerprint = ["housing", "synthetic question", False, None]
-        runs = [dict(make_run("queued"), run_id=owner + str(i), owner_id=owner) for i in range(2)]
-        reservation = "lawpath:run-idempotency:" + hashlib.sha256(
-            json.dumps([owner, idempotency]).encode()).hexdigest()
+        runs = [dict(make_run("queued"), run_id=owner + str(i), owner_id=owner, actor={"id": owner, "role": "GUEST"}) for i in range(2)]
+        reservation = agent_run_store.reservation_key(runs[0]["actor"], idempotency)
         keys = [reservation] + [f"lawpath:run:{run['run_id']}" for run in runs]
         configure(monkeypatch, client)
 

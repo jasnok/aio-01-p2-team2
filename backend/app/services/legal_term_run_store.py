@@ -6,6 +6,7 @@ from time import monotonic
 from typing import Any
 
 from backend.app.core.config import get_settings
+from backend.app.services.actor_identity import actor_key
 from backend.app.services.session_service import SessionStoreUnavailableError, sessions
 
 
@@ -64,7 +65,7 @@ class LegalTermRunStore:
                     record = entry[0]
         if not record:
             raise LegalTermRunNotFoundError(request_id)
-        if record["owner_id"] != str(actor["id"]):
+        if actor_key({"id": record["owner_id"], "role": record.get("owner_role")}) != actor_key(actor):
             raise LegalTermRunForbiddenError(request_id)
         return record
 
