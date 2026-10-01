@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from backend.app.services.actor_identity import actor_key, owns_run
+from backend.app.services.actor_identity import actor_key, owns_run, owns_record, record_owner
 
 import asyncio
 import json
@@ -95,7 +95,7 @@ def page(items: list[dict], number: int, size: int) -> dict:
 
 
 def question_view(question: dict, value: dict, detail: bool = False) -> dict:
-    owner = question["owner_id"] == value["id"]
+    owner = owns_record(value, question)
     allowed = question["visibility"] == "PUBLIC" or owner or value["role"] == "ADMIN"
     result = {key: question[key] for key in ("id", "category", "title", "status", "visibility", "display_name", "created_at", "updated_at", "expires_at")}
     result.update({"content_visibility": "PUBLIC" if question["visibility"] == "PUBLIC" else "OWNER_ONLY", "is_owner": owner})
@@ -163,7 +163,7 @@ async def register(body: Register) -> dict:
     user = {"id": user_id, "email": body.email, "display_name": body.display_name.strip(), "role": "USER", "password_hash": hash_password(body.password)}
     store.users[user_id] = user
     token, public = store.issue_session(user)
-    store.notify(user_id, "REGISTERED", "회원가입 완료", "회원가입이 완료되었습니다.", severity="success")
+    store.notify(user, "REGISTERED", "회원가입 완료", "회원가입이 완료되었습니다.", severity="success")
     return {"session_token": token, "expires_in": 28800, "user": public}
 
 
@@ -182,7 +182,7 @@ async def login(body: Credentials) -> dict:
     if not user or not verify_password(body.password, user["password_hash"]):
         fail(401, "AUTH_REQUIRED", "이메일 또는 비밀번호가 올바르지 않습니다.")
     token, public = store.issue_session(user)
-    store.notify(user["id"], "LOGGED_IN", "로그인", "로그인되었습니다.", severity="success")
+    store.notify(user, "LOGGED_IN", "로그인", "로그인되었습니다.", severity="success")
     return {"session_token": token, "expires_in": 28800, "user": public}
 
 
@@ -200,7 +200,7 @@ async def logout(credentials: HTTPAuthorizationCredentials | None = Security(bea
     session = store.sessions.pop(token, None) if token else None
     if not session:
         fail(401, "AUTH_REQUIRED", "로그인이 필요합니다.")
-    store.notify(session["user_id"], "LOGGED_OUT", "로그아웃", "로그아웃되었습니다.")
+    store.notify(store.users[session["user_id"]], "LOGGED_OUT", "로그아웃", "로그아웃되었습니다.")
 
 
 @router.get("/auth/me", summary="내 로그인 상태 확인", description="현재 Token 또는 Guest ID 기준의 역할과 이력 보관 정책을 보여줍니다.")
@@ -298,10 +298,10 @@ def create_question(body: QuestionBody, value: dict = Depends(actor)) -> dict:
     if not body.privacy_confirmed:
         fail(422, "VALIDATION_ERROR", "개인정보 처리 안내에 동의해 주세요.")
     question_id = f"question-{uuid4()}"
-    question = {"id": question_id, "owner_id": value["id"], "display_name": value["display_name"], "category": body.category, "title": body.title.strip(), "content": body.content.strip(), "password_hash": hash_password(body.post_password), "visibility": body.visibility, "status": "PENDING", "answer": None, "created_at": iso(), "updated_at": iso(), "expires_at": iso(now() + timedelta(days=7)) if value["role"] == "GUEST" else None}
+    question = {"id": question_id, "owner_id": value["id"], "owner_role": value["role"], "display_name": value["display_name"], "category": body.category, "title": body.title.strip(), "content": body.content.strip(), "password_hash": hash_password(body.post_password), "visibility": body.visibility, "status": "PENDING", "answer": None, "created_at": iso(), "updated_at": iso(), "expires_at": iso(now() + timedelta(days=7)) if value["role"] == "GUEST" else None}
     store.questions[question_id] = question
-    store.history.setdefault(value["id"], []).append({"id": f"history-{uuid4()}", "type": "user_question", "target_id": question_id, "category": body.category, "title": question["title"], "created_at": question["created_at"]})
-    store.notify(value["id"], "QUESTION_CREATED", "질문 등록", "질문이 등록되었습니다.", target_type="question", target_id=question_id, category=body.category, severity="success")
+    store.history.setdefault(actor_key(value), []).append({"id": f"history-{uuid4()}", "type": "user_question", "target_id": question_id, "category": body.category, "title": question["title"], "created_at": question["created_at"]})
+    store.notify(value, "QUESTION_CREATED", "질문 등록", "질문이 등록되었습니다.", target_type="question", target_id=question_id, category=body.category, severity="success")
     return question_view(question, value, detail=True)
 
 
@@ -313,18 +313,18 @@ def question_detail(question_id: str, value: dict = Depends(actor)) -> dict:
 @router.post("/questions/{question_id}/unlock", summary="비밀글 잠금 해제", description="작성자가 게시글 비밀번호를 확인하면 현재 세션에 10분짜리 열람 권한을 기록합니다.")
 def unlock(question_id: str, body: UnlockBody, value: dict = Depends(actor)) -> dict:
     question = get_question(question_id)
-    if question["owner_id"] != value["id"]:
+    if not owns_record(value, question):
         fail(403, "FORBIDDEN", "작성자만 잠금을 해제할 수 있습니다.")
     if not verify_password(body.post_password, question["password_hash"]):
         fail(403, "FORBIDDEN", "게시글 비밀번호가 올바르지 않습니다.")
-    store.unlocks[(value["id"], question_id)] = now() + timedelta(minutes=10)
-    return {"unlocked": True, "expires_at": iso(store.unlocks[(value["id"], question_id)])}
+    store.unlocks[(actor_key(value), question_id)] = now() + timedelta(minutes=10)
+    return {"unlocked": True, "expires_at": iso(store.unlocks[(actor_key(value), question_id)])}
 
 
 @router.patch("/questions/{question_id}", summary="질문 수정", description="작성자만 수정할 수 있으며 답변 대기(PENDING) 질문만 수정됩니다.")
 def update_question(question_id: str, body: EditQuestion, value: dict = Depends(actor)) -> dict:
     question = get_question(question_id)
-    if question["owner_id"] != value["id"] or not verify_password(body.post_password, question["password_hash"]):
+    if not owns_record(value, question) or not verify_password(body.post_password, question["password_hash"]):
         fail(403, "FORBIDDEN", "작성자와 게시글 비밀번호를 확인해 주세요.")
     if question["status"] != "PENDING":
         fail(409, "CONFLICT", "답변 완료 질문은 다시 질문 기능을 사용해 주세요.")
@@ -340,7 +340,7 @@ def remove_question(question_id: str, body: QuestionDeleteBody, value: dict = De
         if not body.reason:
             fail(422, "VALIDATION_ERROR", "관리자 삭제 사유를 입력해 주세요.")
         store.audit(value, "QUESTION_DELETED_BY_ADMIN", question_id, body.reason.strip())
-    elif question["owner_id"] != value["id"] or not verify_password(body.post_password or "", question["password_hash"]):
+    elif not owns_record(value, question) or not verify_password(body.post_password or "", question["password_hash"]):
         fail(403, "FORBIDDEN", "작성자와 게시글 비밀번호를 확인해 주세요.")
     store.questions.pop(question_id)
 
@@ -348,7 +348,7 @@ def remove_question(question_id: str, body: QuestionDeleteBody, value: dict = De
 @router.post("/questions/{question_id}/resubmit", status_code=201, summary="답변 완료 질문 다시 등록", description="기존 ANSWERED 질문을 바꾸지 않고, 연결된 새 PENDING 질문을 만듭니다.")
 def resubmit(question_id: str, body: QuestionBody, value: dict = Depends(actor)) -> dict:
     original = get_question(question_id)
-    if original["owner_id"] != value["id"]:
+    if not owns_record(value, original):
         fail(403, "FORBIDDEN", "작성자만 다시 질문할 수 있습니다.")
     result = create_question(body, value)
     store.questions[result["id"]]["parent_question_id"] = question_id
@@ -359,7 +359,7 @@ def resubmit(question_id: str, body: QuestionBody, value: dict = Depends(actor))
 def answer(question_id: str, body: AnswerBody, value: dict = Depends(require_admin)) -> dict:
     question = get_question(question_id)
     question.update({"answer": body.answer.strip(), "status": "ANSWERED", "updated_at": iso()})
-    store.notify(question["owner_id"], "QUESTION_ANSWERED", "답변 등록", "등록한 질문에 답변이 작성되었습니다.", target_type="question", target_id=question_id, category=question["category"], severity="success")
+    store.notify(record_owner(question), "QUESTION_ANSWERED", "답변 등록", "등록한 질문에 답변이 작성되었습니다.", target_type="question", target_id=question_id, category=question["category"], severity="success")
     return question_view(question, value, detail=True)
 
 
@@ -373,17 +373,17 @@ class CommentDeleteBody(BaseModel):
 
 
 def can_view_comments(question: dict, value: dict) -> bool:
-    return question["visibility"] == "PUBLIC" or question["owner_id"] == value["id"] or value["role"] == "ADMIN"
+    return question["visibility"] == "PUBLIC" or owns_record(value, question) or value["role"] == "ADMIN"
 
 
 @router.get("/questions/{question_id}/comments", summary="댓글 목록 조회", description="공개글은 모두 볼 수 있고, 비밀글은 작성자·관리자만 볼 수 있습니다.")
 def list_comments(question_id: str, value: dict = Depends(actor), page_number: int = Query(1, alias="page", ge=1), page_size: int = Query(20, ge=1, le=50)) -> dict:
     question = get_question(question_id)
     if not can_view_comments(question, value): fail(403, "FORBIDDEN", "비밀글 댓글은 작성자 또는 관리자만 볼 수 있습니다.")
-    if value["role"] == "ADMIN" and question["visibility"] == "PRIVATE" and question["owner_id"] != value["id"]: store.audit(value, "PRIVATE_COMMENTS_VIEWED", question_id)
+    if value["role"] == "ADMIN" and question["visibility"] == "PRIVATE" and not owns_record(value, question): store.audit(value, "PRIVATE_COMMENTS_VIEWED", question_id)
     items = [item.copy() for item in store.comments.values() if item["question_id"] == question_id]
     items.sort(key=lambda item: (item["created_at"], item["id"]))
-    for item in items: item.pop("password_hash", None); item["is_owner"] = item["owner_id"] == value["id"]
+    for item in items: item.pop("password_hash", None); item.pop("owner_role", None); item["is_owner"] = owns_record(value, item)
     return page(items, page_number, page_size)
 
 
@@ -393,11 +393,11 @@ def add_comment(question_id: str, body: CommentBody, value: dict = Depends(actor
     if not can_view_comments(question, value): fail(403, "FORBIDDEN", "비밀글에는 작성자 또는 관리자만 댓글을 작성할 수 있습니다.")
     if value["role"] == "GUEST" and not body.comment_password: fail(422, "VALIDATION_ERROR", "비회원 댓글 비밀번호를 입력해 주세요.")
     comment_id = f"comment-{uuid4()}"
-    comment = {"id": comment_id, "question_id": question_id, "owner_id": value["id"], "display_name": value["display_name"], "content": body.content.strip(), "password_hash": hash_password(body.comment_password) if body.comment_password else None, "created_at": iso(), "updated_at": iso(), "expires_at": question["expires_at"] if value["role"] == "GUEST" else None}
+    comment = {"id": comment_id, "question_id": question_id, "owner_id": value["id"], "owner_role": value["role"], "display_name": value["display_name"], "content": body.content.strip(), "password_hash": hash_password(body.comment_password) if body.comment_password else None, "created_at": iso(), "updated_at": iso(), "expires_at": question["expires_at"] if value["role"] == "GUEST" else None}
     store.comments[comment_id] = comment
     message = "새 댓글이 등록되었습니다." if question["visibility"] == "PUBLIC" else "비밀 질문에 새 댓글이 등록되었습니다."
-    store.notify(question["owner_id"], "COMMENT_CREATED", "댓글 등록", message, target_type="question", target_id=question_id, category=question["category"])
-    result = comment.copy(); result.pop("password_hash"); result["is_owner"] = True
+    store.notify(record_owner(question), "COMMENT_CREATED", "댓글 등록", message, target_type="question", target_id=question_id, category=question["category"])
+    result = comment.copy(); result.pop("password_hash"); result.pop("owner_role", None); result["is_owner"] = True
     return result
 
 
@@ -405,9 +405,9 @@ def add_comment(question_id: str, body: CommentBody, value: dict = Depends(actor
 def update_comment(question_id: str, comment_id: str, body: CommentBody, value: dict = Depends(actor)) -> dict:
     comment = store.comments.get(comment_id)
     if not comment or comment["question_id"] != question_id: fail(404, "NOT_FOUND", "댓글을 찾을 수 없습니다.")
-    if comment["owner_id"] != value["id"] or (value["role"] == "GUEST" and not verify_password(body.comment_password or "", comment["password_hash"])): fail(403, "FORBIDDEN", "작성자만 댓글을 수정할 수 있습니다.")
+    if not owns_record(value, comment) or (value["role"] == "GUEST" and not verify_password(body.comment_password or "", comment["password_hash"])): fail(403, "FORBIDDEN", "작성자만 댓글을 수정할 수 있습니다.")
     comment.update({"content": body.content.strip(), "updated_at": iso()})
-    result = comment.copy(); result.pop("password_hash"); result["is_owner"] = True
+    result = comment.copy(); result.pop("password_hash"); result.pop("owner_role", None); result["is_owner"] = True
     return result
 
 
@@ -415,7 +415,7 @@ def update_comment(question_id: str, comment_id: str, body: CommentBody, value: 
 def remove_comment(question_id: str, comment_id: str, body: CommentDeleteBody | None = None, value: dict = Depends(actor)) -> None:
     comment = store.comments.get(comment_id)
     if not comment or comment["question_id"] != question_id: fail(404, "NOT_FOUND", "댓글을 찾을 수 없습니다.")
-    owner = comment["owner_id"] == value["id"] and (value["role"] != "GUEST" or verify_password((body.comment_password if body else "") or "", comment["password_hash"]))
+    owner = owns_record(value, comment) and (value["role"] != "GUEST" or verify_password((body.comment_password if body else "") or "", comment["password_hash"]))
     if not owner and value["role"] != "ADMIN": fail(403, "FORBIDDEN", "작성자만 댓글을 삭제할 수 있습니다.")
     if value["role"] == "ADMIN" and not owner: store.audit(value, "COMMENT_DELETED_BY_ADMIN", comment_id)
     store.comments.pop(comment_id)
@@ -575,22 +575,22 @@ async def get_agent_run_events(run_id: str, last_event_id: str | None = Header(d
 
 @router.get("/history", summary="내 질의 이력 조회", description="회원은 자신의 계정 이력, 비회원은 같은 X-Guest-Id의 이력만 볼 수 있습니다.")
 def history(value: dict = Depends(actor), page_number: int = Query(1, alias="page", ge=1), page_size: int = Query(10, ge=1, le=50), type: Literal["all", "legal_analysis", "user_question"] = "all", category: Category | None = None) -> dict:
-    items = [item for item in store.history.get(value["id"], []) if (type == "all" or item["type"] == type) and (not category or item["category"] == category)]
+    items = [item for item in store.history.get(actor_key(value), []) if (type == "all" or item["type"] == type) and (not category or item["category"] == category)]
     return page(sorted(items, key=lambda item: item["created_at"], reverse=True), page_number, page_size)
 
 
 @router.get("/history/{history_id}")
 def history_detail(history_id: str, value: dict = Depends(actor)) -> dict:
-    item = next((row for row in store.history.get(value["id"], []) if row["id"] == history_id), None)
+    item = next((row for row in store.history.get(actor_key(value), []) if row["id"] == history_id), None)
     if not item: fail(404, "NOT_FOUND", "이력을 찾을 수 없습니다.")
     return item
 
 
 @router.delete("/history/{history_id}", status_code=204)
 def delete_history(history_id: str, value: dict = Depends(actor)) -> None:
-    items = store.history.get(value["id"], [])
+    items = store.history.get(actor_key(value), [])
     if not any(row["id"] == history_id for row in items): fail(404, "NOT_FOUND", "이력을 찾을 수 없습니다.")
-    store.history[value["id"]] = [row for row in items if row["id"] != history_id]
+    store.history[actor_key(value)] = [row for row in items if row["id"] != history_id]
 
 
 @router.get("/saved-conversations", summary="회원 저장 분석 목록")
@@ -680,35 +680,35 @@ async def clear_guest_temporary_history(value: dict = Depends(actor)) -> None:
 
 @router.get("/notifications", summary="내 알림 목록", description="미읽음 알림이 먼저 나오고, 같은 상태에서는 최신 알림이 먼저 나옵니다.")
 def notifications(value: dict = Depends(actor), page_number: int = Query(1, alias="page", ge=1), page_size: int = Query(20, ge=1, le=50)) -> dict:
-    items = sorted(store.notifications.get(value["id"], []), key=lambda item: (item["is_read"], item["created_at"]), reverse=False)
+    items = sorted(store.notifications.get(actor_key(value), []), key=lambda item: (item["is_read"], item["created_at"]), reverse=False)
     return page(items, page_number, page_size)
 
 
 @router.get("/notifications/unread-count")
 def unread(value: dict = Depends(actor)) -> dict:
-    return {"count": sum(not item["is_read"] for item in store.notifications.get(value["id"], []))}
+    return {"count": sum(not item["is_read"] for item in store.notifications.get(actor_key(value), []))}
 
 
 @router.patch("/notifications/{notification_id}/read")
 def read_notification(notification_id: str, value: dict = Depends(actor)) -> dict:
-    item = next((row for row in store.notifications.get(value["id"], []) if row["id"] == notification_id), None)
+    item = next((row for row in store.notifications.get(actor_key(value), []) if row["id"] == notification_id), None)
     if not item: fail(404, "NOT_FOUND", "알림을 찾을 수 없습니다.")
     item["is_read"] = True; return item
 
 
 @router.patch("/notifications/read-all")
 def read_all(value: dict = Depends(actor)) -> dict:
-    for item in store.notifications.get(value["id"], []): item["is_read"] = True
+    for item in store.notifications.get(actor_key(value), []): item["is_read"] = True
     return {"updated": True}
 
 
 @router.delete("/notifications/read-items", status_code=204, summary="읽은 알림 일괄 삭제", description="현재 사용자에게 속한 읽은 알림만 모두 삭제합니다.")
 def delete_read_items(value: dict = Depends(actor)) -> None:
-    store.notifications[value["id"]] = [item for item in store.notifications.get(value["id"], []) if not item["is_read"]]
+    store.notifications[actor_key(value)] = [item for item in store.notifications.get(actor_key(value), []) if not item["is_read"]]
 
 
 @router.delete("/notifications/{notification_id}", status_code=204)
 def delete_notification(notification_id: str, value: dict = Depends(actor)) -> None:
-    items = store.notifications.get(value["id"], [])
+    items = store.notifications.get(actor_key(value), [])
     if not any(item["id"] == notification_id for item in items): fail(404, "NOT_FOUND", "알림을 찾을 수 없습니다.")
-    store.notifications[value["id"]] = [item for item in items if item["id"] != notification_id]
+    store.notifications[actor_key(value)] = [item for item in items if item["id"] != notification_id]

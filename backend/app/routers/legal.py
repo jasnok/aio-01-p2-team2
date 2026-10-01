@@ -135,8 +135,8 @@ async def create_question(request: LegalQuestionRequest, idempotency_key: str | 
             })
         except Exception:
             logger.warning("guest_temporary_save_failed request_id=%s", response.request_id)
-    store.history.setdefault(owner, []).append({"id": f"history-{response.request_id}", "type": "legal_analysis", "target_id": response.request_id, "category": request.category, "title": request.question[:100], "created_at": iso()})
-    store.notify(owner, "ANALYSIS_COMPLETED" if response.termination_reason == "model_finished" else "ANALYSIS_NO_RESULTS", "사례 분석 완료", "사례 분석 결과를 확인해 주세요.", target_type="legal_analysis", target_id=response.request_id, category=request.category)
+    store.history.setdefault(actor_key(value), []).append({"id": f"history-{response.request_id}", "type": "legal_analysis", "target_id": response.request_id, "category": request.category, "title": request.question[:100], "created_at": iso()})
+    store.notify(value, "ANALYSIS_COMPLETED" if response.termination_reason == "model_finished" else "ANALYSIS_NO_RESULTS", "사례 분석 완료", "사례 분석 결과를 확인해 주세요.", target_type="legal_analysis", target_id=response.request_id, category=request.category)
     return response
 
 
