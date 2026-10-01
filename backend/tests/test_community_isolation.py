@@ -32,6 +32,10 @@ def test_same_id_cannot_read_modify_or_delete_other_principal_community_data(own
         assert "owner_id" not in comment.json()
         assert "owner_role" not in comment.json()
         comment_id = comment.json()["id"]
+        own_comment = client.get(f"/api/questions/{public}/comments").json()["items"][0]
+        assert own_comment["is_owner"] is True
+        assert "owner_id" not in own_comment
+        assert "owner_role" not in own_comment
         history_id = client.get("/api/history").json()["items"][0]["id"]
         notification_id = client.get("/api/notifications").json()["items"][0]["id"]
         current[0] = other
