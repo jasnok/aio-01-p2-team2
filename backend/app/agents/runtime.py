@@ -11,6 +11,7 @@ from typing import Protocol
 
 from backend.app.agents.models import AgentProfile, AgentState
 from backend.app.agents.tool_selector import select_tools
+from backend.app.agents.search_contract import search_evidence
 from backend.app.mcp_clients.legal_mcp import (
     search_cases,
     search_consultations,
@@ -72,14 +73,7 @@ class LegalAgentRuntime:
             started = perf_counter()
             state.tool_calls += 1
             payload = await functions[tool_name](state.question, profile.agent_id, top_k=3)
-            if not payload.get("success", True):
-                error = payload.get("error") or {}
-                raise RuntimeError(payload.get("message") or error.get("message")
-                                   or payload.get("error_code") or error.get("code") or "MCP 검색에 실패했습니다.")
-            data = payload.get("data") or ([] if tool_name != "search_legal_documents" else {})
-            evidence = data.get("items", []) if tool_name == "search_legal_documents" else data
-            if not isinstance(evidence, list):
-                raise ValueError(f"MCP {tool_name} 결과 형식이 올바르지 않습니다.")
+            evidence = search_evidence(payload, tool_name)
             event = {"stage": "tool_completed", "tool": tool_name, "result_count": len(evidence),
                      "elapsed_ms": round((perf_counter() - started) * 1000), "evidence": evidence}
             # Serialize callbacks so parallel completions cannot overwrite a
@@ -144,19 +138,7 @@ class LegalAgentRuntime:
             raise ValueError(f"독립 검색에서 지원하지 않는 Tool입니다: {tool_name}")
 
         state.tool_calls += 1
-        if not payload.get("success", True):
-            error = payload.get("error") or {}
-            raise RuntimeError(
-                payload.get("message")
-                or error.get("message")
-                or payload.get("error_code")
-                or error.get("code")
-                or "MCP 검색에 실패했습니다."
-            )
-
-        evidence = payload.get("data") or []
-        if not isinstance(evidence, list):
-            raise ValueError(f"MCP {tool_name} 결과 형식이 올바르지 않습니다.")
+        evidence = search_evidence(payload, tool_name)
 
         state.evidence_count = len(evidence)
         state.status = "completed"
