@@ -14,3 +14,7 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Intermediate synthetic debug runs; final evaluation artifacts stay tracked.
+output/portfolio/initial-citation-smoke.json
+output/portfolio/strict-id-smoke.json
+

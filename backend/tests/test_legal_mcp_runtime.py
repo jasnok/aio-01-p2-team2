@@ -61,6 +61,9 @@ def test_labor_runtime_raises_error_when_mcp_fails(monkeypatch) -> None:
         "backend.app.agents.runtime.search_cases",
         fake_search_cases,
     )
+    async def unused_documents(*args, **kwargs):
+        await asyncio.sleep(10)
+    monkeypatch.setattr("backend.app.agents.runtime.search_legal_documents", unused_documents)
 
     state = AgentState(
         request_id="req-mcp-fail",
@@ -227,5 +230,48 @@ def test_runtime_reports_actual_tool_start_and_completion(monkeypatch) -> None:
             event_callback=record,
         )
     )
-    assert [event["stage"] for event in events] == ["tool_selected", "tool_completed", "tool_selected", "tool_completed"]
-    assert events[0]["tool"] == events[1]["tool"] == "search_cases"
+    assert [event["stage"] for event in events] == ["tool_selected", "tool_selected", "tool_completed", "tool_completed"]
+    assert events[0]["tool"] == events[2]["tool"] == "search_cases"
+
+
+def test_parallel_searches_start_together_and_keep_profile_result_order(monkeypatch):
+    async def scenario():
+        both_started = asyncio.Event()
+        started = []
+        async def search(name):
+            started.append(name)
+            if len(started) == 2:
+                both_started.set()
+            await asyncio.wait_for(both_started.wait(), timeout=1)
+            if name == "case":
+                await asyncio.sleep(0.01)
+            return {"success": True, "data": ([{"evidence_id": name}] if name == "case"
+                else {"items": [{"evidence_id": name}, {"evidence_id": "case"}]})}
+        monkeypatch.setattr("backend.app.agents.runtime.search_cases", lambda *a, **k: search("case"))
+        monkeypatch.setattr("backend.app.agents.runtime.search_legal_documents", lambda *a, **k: search("law"))
+        state, evidence = await LegalAgentRuntime().run(LABOR_AGENT,
+            AgentState(request_id="parallel", agent_id="labor", question="질문"))
+        assert [item["evidence_id"] for item in evidence] == ["case", "law"]
+        assert state.tool_calls == 2
+    asyncio.run(scenario())
+
+
+def test_failing_parallel_search_cancels_and_awaits_its_sibling(monkeypatch):
+    async def scenario():
+        started, cancelled = asyncio.Event(), asyncio.Event()
+        async def fail(*args, **kwargs):
+            await started.wait()
+            raise RuntimeError("검색 실패")
+        async def slow(*args, **kwargs):
+            started.set()
+            try:
+                await asyncio.Event().wait()
+            finally:
+                cancelled.set()
+        monkeypatch.setattr("backend.app.agents.runtime.search_cases", fail)
+        monkeypatch.setattr("backend.app.agents.runtime.search_legal_documents", slow)
+        with pytest.raises(RuntimeError, match="검색 실패"):
+            await LegalAgentRuntime().run(LABOR_AGENT,
+                AgentState(request_id="failed", agent_id="labor", question="질문"))
+        assert cancelled.is_set()
+    asyncio.run(scenario())

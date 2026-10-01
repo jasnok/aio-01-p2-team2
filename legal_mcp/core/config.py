@@ -40,6 +40,8 @@ class Settings(BaseSettings):
     retrieval_fusion: str = Field(default="weighted", pattern="^(weighted|rrf)$")
     rrf_k: int = Field(default=60, ge=1)
     retrieval_filter_enabled: bool = False
+    retrieval_cache_ttl_seconds: int = Field(default=60, ge=0, le=3600)
+    retrieval_dataset_revision: str = "seed-702-v1"
 
     @model_validator(mode="after")
     def validate_search_weights(self) -> "Settings":

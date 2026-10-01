@@ -69,3 +69,15 @@ class AnswerDraft(BaseModel):
     cautions: list[str] = Field(default_factory=list)
     used_evidence_ids: list[str] = Field(default_factory=list)
     claims: list[CitedClaim] = Field(default_factory=list)
+
+
+class SpanClaim(BaseModel):
+    text: str = Field(min_length=1, max_length=600)
+    span_ids: list[str] = Field(min_length=1, max_length=3)
+
+
+class SpanAnswerDraft(BaseModel):
+    question_summary: str
+    key_issues: list[str] = Field(default_factory=list, max_length=3)
+    cautions: list[str] = Field(default_factory=list, max_length=4)
+    claims: list[SpanClaim] = Field(min_length=1, max_length=3)

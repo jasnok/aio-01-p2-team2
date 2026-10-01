@@ -1,0 +1,66 @@
+{
+  "scope": "paired warm process-local retrieval cache, same MCP service; not end-to-end latency or p95",
+  "repeats": 3,
+  "records": [
+    {
+      "category": "housing",
+      "samples_ms": {
+        "sequential": [
+          52,
+          60,
+          67
+        ],
+        "parallel": [
+          138,
+          46,
+          45
+        ]
+      },
+      "median_ms": {
+        "sequential": 60,
+        "parallel": 46
+      },
+      "identical_evidence": true
+    },
+    {
+      "category": "labor",
+      "samples_ms": {
+        "sequential": [
+          67,
+          61,
+          67
+        ],
+        "parallel": [
+          41,
+          70,
+          66
+        ]
+      },
+      "median_ms": {
+        "sequential": 67,
+        "parallel": 66
+      },
+      "identical_evidence": true
+    },
+    {
+      "category": "consumer",
+      "samples_ms": {
+        "sequential": [
+          85,
+          89,
+          81
+        ],
+        "parallel": [
+          55,
+          70,
+          80
+        ]
+      },
+      "median_ms": {
+        "sequential": 85,
+        "parallel": 70
+      },
+      "identical_evidence": true
+    }
+  ]
+}

@@ -4,8 +4,6 @@ MVP 구현은 최대 4 step, 최대 3 tool call,
 Evidence-only 정책을 지켜야 합니다.
 """
 
-import asyncio
-from time import perf_counter
 from collections.abc import Awaitable, Callable
 from typing import Protocol
 
@@ -53,61 +51,117 @@ class LegalAgentRuntime:
         if len(selected_tools) > MAX_TOOL_CALLS:
             raise ValueError("MVP의 최대 Tool 호출 횟수를 초과했습니다.")
 
-        # Check every tool before launching any request. All searches use the
-        # same immutable question and do not depend on another tool's output.
+        all_evidence = []
+        evidence_keys: set[str] = set()
+
         for tool_name in selected_tools:
+            # 법령 → 판례 → 문서 검색 순서를 끝까지 실행한다.
+            # 검색 결과 수가 충분하더라도 모든 검색 근거를 확보한다.
+
             ensure_tool_allowed(profile, tool_name)
+
             state.current_step += 1
-            state.trace.append({"stage": "tool_selected", "tool": tool_name,
-                                "category": profile.agent_id})
+            state.trace.append(
+                {
+                    "stage": "tool_selected",
+                    "tool": tool_name,
+                    "category": profile.agent_id,
+                }
+            )
             if event_callback:
                 await event_callback(state.trace[-1])
 
-        functions = {"search_cases": search_cases, "search_laws": search_laws,
-                     "search_consultations": search_consultations,
-                     "search_legal_documents": search_legal_documents}
-        callback_lock = asyncio.Lock()
+            if tool_name == "search_cases":
+                payload = await search_cases(
+                    state.question,
+                    profile.agent_id,
+                    top_k=3,
+                )
 
-        async def search(tool_name):
-            started = perf_counter()
+            elif tool_name == "search_legal_documents":
+                payload = await search_legal_documents(
+                    state.question,
+                    profile.agent_id,
+                    top_k=3,
+                )
+
+            elif tool_name == "search_consultations":
+                payload = await search_consultations(
+                    state.question,
+                    profile.agent_id,
+                    top_k=3,
+                )
+
+            elif tool_name == "search_laws":
+                payload = await search_laws(
+                    state.question,
+                    profile.agent_id,
+                    top_k=3,
+                )
+
+            else:
+                raise ValueError(f"지원하지 않는 Tool입니다: {tool_name}")
+
             state.tool_calls += 1
-            payload = await functions[tool_name](state.question, profile.agent_id, top_k=3)
+
             if not payload.get("success", True):
                 error = payload.get("error") or {}
-                raise RuntimeError(payload.get("message") or error.get("message")
-                                   or payload.get("error_code") or error.get("code") or "MCP 검색에 실패했습니다.")
-            data = payload.get("data") or ([] if tool_name != "search_legal_documents" else {})
-            evidence = data.get("items", []) if tool_name == "search_legal_documents" else data
-            if not isinstance(evidence, list):
-                raise ValueError(f"MCP {tool_name} 결과 형식이 올바르지 않습니다.")
-            event = {"stage": "tool_completed", "tool": tool_name, "result_count": len(evidence),
-                     "elapsed_ms": round((perf_counter() - started) * 1000), "evidence": evidence}
-            # Serialize callbacks so parallel completions cannot overwrite a
-            # newer Redis snapshot with an older one.
-            async with callback_lock:
-                state.trace.append(event)
-                if event_callback:
-                    await event_callback(event)
-            return evidence
 
-        tasks = [asyncio.create_task(search(tool)) for tool in selected_tools]
-        try:
-            batches = await asyncio.gather(*tasks)
-        finally:
-            for task in tasks:
-                if not task.done():
-                    task.cancel()
-            await asyncio.gather(*tasks, return_exceptions=True)
-        all_evidence = []
-        evidence_keys: set[str] = set()
-        # Completion order affects progress only. Result ordering remains
-        # deterministic and respects the profile's tool order.
-        for batch in batches:
-            for item in batch:
-                key = str(item.get("evidence_id") or item.get("document_id") or repr(item))
-                if key not in evidence_keys:
-                    evidence_keys.add(key)
-                    all_evidence.append(item)
+                raise RuntimeError(
+                    payload.get("message")
+                    or error.get("message")
+                    or payload.get("error_code")
+                    or error.get("code")
+                    or "MCP 검색에 실패했습니다."
+                )
+
+            if tool_name in {
+                "search_cases",
+                "search_consultations",
+                "search_laws",
+            }:
+                evidence = payload.get("data") or []
+
+            else:
+                data = payload.get("data") or {}
+                evidence = data.get("items", [])
+
+            if not isinstance(evidence, list):
+                raise ValueError(
+                    f"MCP {tool_name} 결과 형식이 올바르지 않습니다."
+                )
+
+            new_evidence = []
+            for item in evidence:
+                evidence_key = str(
+                    item.get("evidence_id")
+                    or item.get("document_id")
+                    or repr(item)
+                )
+                if evidence_key not in evidence_keys:
+                    evidence_keys.add(evidence_key)
+                    new_evidence.append(item)
+
+            all_evidence.extend(new_evidence)
+
+            state.trace.append(
+                {
+                    "stage": "tool_completed",
+                    "tool": tool_name,
+                    "result_count": len(new_evidence),
+                }
+            )
+            if event_callback:
+                await event_callback(state.trace[-1])
+
+            if len(all_evidence) < TARGET_EVIDENCE_COUNT:
+                state.trace.append(
+                    {
+                        "stage": "evidence_insufficient",
+                        "evidence_count": len(all_evidence),
+                        "target_count": TARGET_EVIDENCE_COUNT,
+                    }
+                )
 
         state.evidence_count = len(all_evidence)
         state.status = "completed"

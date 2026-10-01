@@ -43,8 +43,9 @@ def main():
                 if result["status"] in {"completed", "stopped", "failed"}:
                     record["run"] = result
                     duplicate = request(args.base_url, "/api/agent-runs", headers, {"category": category, "question": question})
+                    final = result.get("result") or {}
                     record["checks"] = {"idempotency": duplicate["run_id"] == created["run_id"],
-                                        "real_mode": result.get("result", {}).get("is_mock") is False}
+                                        "real_mode": final.get("is_mock") is False}
                     try:
                         request(args.base_url, path, {"X-Guest-Id": str(uuid4())})
                         record["checks"]["owner_isolation"] = False
@@ -54,8 +55,19 @@ def main():
                         replay = events.read().decode()
                     ids = [int(line[4:]) for line in replay.splitlines() if line.startswith("id: ")]
                     record["checks"]["sse_replay"] = bool(ids) and ids == list(range(1, len(ids) + 1))
+                    if final.get("generation_status") == "llm":
+                        originals = {item["evidence_id"]: item["content"] for item in
+                            final.get("related_laws", []) + final.get("similar_cases", []) + final.get("consultations", [])}
+                        claims = final.get("cited_claims", [])
+                        record["checks"]["citation_integrity"] = bool(claims) and all(
+                            citation["evidence_id"] in originals and citation["quote"] in originals[citation["evidence_id"]]
+                            for claim in claims for citation in claim["citations"])
+                        if final.get("diagnostics", {}).get("citation_mode") == "spans":
+                            record["checks"]["answer_matches_cited_claims"] = final["answer"] == "\n\n".join(claim["text"] for claim in claims)
+                    if final.get("diagnostics", {}).get("tool_timings_ms"):
+                        record["checks"]["early_evidence_events"] = '"evidence_previews": [{' in replay
                     if args.require_llm and len(records) < 3:
-                        record["checks"]["llm_generated"] = result.get("result", {}).get("generation_status") == "llm"
+                        record["checks"]["llm_generated"] = final.get("generation_status") == "llm"
                     break
                 time.sleep(0.5)
             else:

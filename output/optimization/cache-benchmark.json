@@ -1,0 +1,35 @@
+{
+  "scope": "single cold retrieval + three warm retrievals, embedding prewarmed; not end-to-end latency or p95",
+  "records": [
+    {
+      "category": "housing",
+      "cold_result_cache_ms": 75.554,
+      "warm_result_cache_ms": [
+        0.15,
+        0.077,
+        0.072
+      ],
+      "identical_evidence": true
+    },
+    {
+      "category": "labor",
+      "cold_result_cache_ms": 49.202,
+      "warm_result_cache_ms": [
+        0.145,
+        0.074,
+        0.061
+      ],
+      "identical_evidence": true
+    },
+    {
+      "category": "consumer",
+      "cold_result_cache_ms": 325.185,
+      "warm_result_cache_ms": [
+        0.12,
+        0.05,
+        0.048
+      ],
+      "identical_evidence": true
+    }
+  ]
+}

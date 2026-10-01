@@ -1,0 +1,191 @@
+{
+  "scope": "one run per synthetic question; changing model outputs, warm-cache state and service load are not controlled; not legal accuracy or p95",
+  "human_relevance_status": "pending_human_review",
+  "records": [
+    {
+      "category": "housing",
+      "before_status": "llm",
+      "after_status": "llm",
+      "before_elapsed_ms": 32187,
+      "after_elapsed_ms": 24063,
+      "before_diagnostics": {
+        "intake_ms": 9715,
+        "retrieval_ms": 1366,
+        "model": "gpt-5-mini",
+        "generation_ms": 20347,
+        "usage": {
+          "input_tokens": 1406,
+          "output_tokens": 2099,
+          "total_tokens": 3505
+        },
+        "citation_validation": "quotes_verified",
+        "citation_ids_normalized": false,
+        "total_ms": 31429,
+        "tool_calls": 2,
+        "evidence_count": 3
+      },
+      "after_diagnostics": {
+        "intake_ms": 10611,
+        "retrieval_ms": 2162,
+        "tool_timings_ms": {
+          "search_legal_documents": 2150,
+          "search_cases": 2159
+        },
+        "citation_mode": "spans",
+        "context_characters": 981,
+        "context_documents": 3,
+        "context_spans": 9,
+        "model": "gpt-5-mini",
+        "generation_ms": 10764,
+        "usage": {
+          "input_tokens": 846,
+          "output_tokens": 1324,
+          "total_tokens": 2170
+        },
+        "citation_validation": "quotes_verified",
+        "citation_ids_normalized": false,
+        "total_ms": 23549,
+        "tool_calls": 2,
+        "evidence_count": 3
+      },
+      "after_checks": {
+        "idempotency": true,
+        "real_mode": true,
+        "owner_isolation": true,
+        "sse_replay": true,
+        "citation_integrity": true,
+        "answer_matches_cited_claims": true,
+        "early_evidence_events": true,
+        "llm_generated": true
+      }
+    },
+    {
+      "category": "labor",
+      "before_status": "llm",
+      "after_status": "llm",
+      "before_elapsed_ms": 38079,
+      "after_elapsed_ms": 26812,
+      "before_diagnostics": {
+        "intake_ms": 10100,
+        "retrieval_ms": 190,
+        "model": "gpt-5-mini",
+        "generation_ms": 27757,
+        "usage": {
+          "input_tokens": 2434,
+          "output_tokens": 3329,
+          "total_tokens": 5763
+        },
+        "citation_validation": "quotes_verified",
+        "citation_ids_normalized": false,
+        "total_ms": 38048,
+        "tool_calls": 2,
+        "evidence_count": 4
+      },
+      "after_diagnostics": {
+        "intake_ms": 8785,
+        "retrieval_ms": 445,
+        "tool_timings_ms": {
+          "search_legal_documents": 436,
+          "search_cases": 443
+        },
+        "citation_mode": "spans",
+        "context_characters": 1966,
+        "context_documents": 4,
+        "context_spans": 12,
+        "model": "gpt-5-mini",
+        "generation_ms": 17503,
+        "usage": {
+          "input_tokens": 1439,
+          "output_tokens": 2334,
+          "total_tokens": 3773
+        },
+        "citation_validation": "quotes_verified",
+        "citation_ids_normalized": false,
+        "total_ms": 26734,
+        "tool_calls": 2,
+        "evidence_count": 4
+      },
+      "after_checks": {
+        "idempotency": true,
+        "real_mode": true,
+        "owner_isolation": true,
+        "sse_replay": true,
+        "citation_integrity": true,
+        "answer_matches_cited_claims": true,
+        "early_evidence_events": true,
+        "llm_generated": true
+      }
+    },
+    {
+      "category": "consumer",
+      "before_status": "fallback",
+      "after_status": "llm",
+      "before_elapsed_ms": 116188,
+      "after_elapsed_ms": 19188,
+      "before_diagnostics": {
+        "intake_ms": 6099,
+        "retrieval_ms": 1026,
+        "fallback_reason": "CitationValidationError",
+        "validation_error": "quote_not_in_evidence",
+        "generation_ms": 108605,
+        "total_ms": 115730,
+        "tool_calls": 3,
+        "evidence_count": 8
+      },
+      "after_diagnostics": {
+        "intake_ms": 5929,
+        "retrieval_ms": 67,
+        "tool_timings_ms": {
+          "search_laws": 62,
+          "search_consultations": 59,
+          "search_cases": 54
+        },
+        "citation_mode": "spans",
+        "context_characters": 3354,
+        "context_documents": 6,
+        "context_spans": 18,
+        "model": "gpt-5-mini",
+        "generation_ms": 12971,
+        "usage": {
+          "input_tokens": 2059,
+          "output_tokens": 1695,
+          "total_tokens": 3754
+        },
+        "citation_validation": "quotes_verified",
+        "citation_ids_normalized": false,
+        "total_ms": 18969,
+        "tool_calls": 3,
+        "evidence_count": 8
+      },
+      "after_checks": {
+        "idempotency": true,
+        "real_mode": true,
+        "owner_isolation": true,
+        "sse_replay": true,
+        "citation_integrity": true,
+        "answer_matches_cited_claims": true,
+        "early_evidence_events": true,
+        "llm_generated": true
+      }
+    },
+    {
+      "category": "housing",
+      "before_status": "clarification",
+      "after_status": "clarification",
+      "before_elapsed_ms": 12437,
+      "after_elapsed_ms": 8328,
+      "before_diagnostics": {
+        "total_ms": 12324
+      },
+      "after_diagnostics": {
+        "total_ms": 7910
+      },
+      "after_checks": {
+        "idempotency": true,
+        "real_mode": true,
+        "owner_isolation": true,
+        "sse_replay": true
+      }
+    }
+  ]
+}

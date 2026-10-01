@@ -87,6 +87,7 @@ docker compose -f compose.yml up --build -d
 
 ## 자세한 기록
 
+- [2차 최적화 구현·평가 기록](docs/PORTFOLIO_OPTIMIZATION_REPORT.md) — 검색 병렬화, 구절 번호 인용, 중간 자료 표시, 반복 검색 캐시. 실제 일반 질문 3건 생성 성공은 단일 검증 결과이며 자연어 관련성 평가는 대기 중입니다.
 - [개인 리팩토링 구현·검증 결과](docs/PORTFOLIO_REFACTOR_REPORT.md)
 - [에이전트 아키텍처 설계서](docs/에이전트%20아키텍처%20설계서.md)
 - [에이전트 시험 결과 보고서](docs/에이전트%20시험%20결과%20보고서.md)

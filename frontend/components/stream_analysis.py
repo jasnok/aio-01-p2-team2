@@ -9,6 +9,12 @@ from frontend.services.api_legal_service import ApiLegalService
 SEARCH_LABELS = {"search_laws": "법령 검색", "search_cases": "판례 검색", "search_consultations": "상담사례 검색"}
 
 
+def update_previews(previews, data):
+    for item in data.get("evidence_previews", []):
+        if isinstance(item, dict) and isinstance(item.get("evidence_id"), str):
+            previews[item["evidence_id"]] = item
+
+
 def update_searches(searches, event, data):
     if data.get("tool") in SEARCH_LABELS and event in {"step.started", "step.completed"}:
         searches[data["tool"]] = "완료" if event == "step.completed" else "검색 중"
@@ -38,9 +44,9 @@ def friendly_event(event, data):
             return f"{subject} 검색을 마쳤습니다." + (f" {count}건을 찾았습니다." if type(count) is int and count >= 0 else "")
         return f"{subject}를 찾고 있습니다."
     phase = {"validation": "질문 내용 확인", "validate": "질문 내용 확인",
-             "routing": "질문 분야 확인", "generation": "검색 자료 정리",
-             "generate": "검색 자료 정리", "verification": "답변과 근거 확인"}.get(data.get("stage"), "분석 단계")
-    return f"{phase}을 진행하고 있습니다." if event == "step.started" else f"{phase}을 마쳤습니다."
+             "routing": "질문 분야 확인", "generation": "답변 작성과 인용 확인",
+             "generate": "답변 작성과 인용 확인", "verification": "답변과 근거 확인"}.get(data.get("stage"), "분석 단계")
+    return f"진행 중: {phase}" if event == "step.started" else f"완료: {phase}"
 
 
 def stage_progress(previous, event, data):
@@ -72,6 +78,7 @@ def analyze_with_stream(category, question, *, save_selected=False):
     pending.setdefault("progress", 0)
     pending.setdefault("message", "분석 요청을 준비하고 있습니다.")
     pending.setdefault("searches", {})
+    pending.setdefault("previews", {})
 
     def render():
         with view.container():
@@ -80,6 +87,12 @@ def analyze_with_stream(category, question, *, save_selected=False):
             for tool, label in SEARCH_LABELS.items():
                 state = pending["searches"].get(tool, "호출 확인 전")
                 st.caption(f"{label} · {state}")
+            if pending["previews"]:
+                with st.expander("먼저 확인할 검색 자료", expanded=True):
+                    st.caption("검색된 자료의 일부입니다. 답변 작성과 인용 확인은 진행 중일 수 있습니다.")
+                    for item in pending["previews"].values():
+                        st.write(item.get("title", "검색 자료"))
+                        st.caption(item.get("content_preview", ""))
             with st.expander("진행 이력"):
                 for step in pending["steps"].values():
                     st.text(step["message"])
@@ -98,6 +111,8 @@ def analyze_with_stream(category, question, *, save_selected=False):
             pending["last_id"] = number
             key = data.get("step_id") or event
             message = friendly_event(event, data)
+            if event == "step.completed":
+                update_previews(pending["previews"], data)
             if data.get("tool") in SEARCH_LABELS and event in {"step.started", "step.completed"}:
                 pending["progress"] = max(pending["progress"], update_searches(pending["searches"], event, data))
             else:

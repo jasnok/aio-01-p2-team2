@@ -22,6 +22,9 @@ node_modules/
 .mypy_cache
 htmlcov
 .coverage
+**/tests
+tests
+docs
 
 # Build artifacts and recordings are not required by runtime services.
 output

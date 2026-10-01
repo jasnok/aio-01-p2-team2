@@ -36,8 +36,9 @@ def main():
         repository_spec.loader.exec_module(repository_module)
         baseline.repository = repository_module.LegalRepository()
     current = LegalSearchService()
+    current.settings = current.settings.model_copy(update={"retrieval_cache_ttl_seconds": 0})
     rrf = LegalSearchService()
-    rrf.settings = rrf.settings.model_copy(update={"retrieval_fusion": "rrf"})
+    rrf.settings = rrf.settings.model_copy(update={"retrieval_fusion": "rrf", "retrieval_cache_ttl_seconds": 0})
     records = []
     destination = Path(args.output)
     destination.parent.mkdir(parents=True, exist_ok=True)

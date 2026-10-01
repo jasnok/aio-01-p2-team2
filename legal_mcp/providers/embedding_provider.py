@@ -2,10 +2,8 @@
 
 import os
 import hashlib
-from collections import OrderedDict
-from threading import Lock
-from time import monotonic
 from typing import Protocol
+from legal_mcp.core.cache import QueryCache
 
 from openai import OpenAI
 
@@ -63,8 +61,7 @@ class OpenAIEmbeddingProvider:
         return embeddings
 
 
-_query_cache: OrderedDict[tuple, tuple[float, list[float]]] = OrderedDict()
-_cache_lock = Lock()
+_query_cache = QueryCache()
 
 
 def create_embedding(text: str) -> list[float]:
@@ -76,15 +73,4 @@ def create_embedding(text: str) -> list[float]:
     key = (text, os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"),
            os.getenv("EMBEDDING_DIMENSION", "1536"),
            hashlib.sha256(os.getenv("OPENAI_API_KEY", "").encode()).digest())
-    with _cache_lock:
-        entry = _query_cache.get(key)
-        if entry and entry[0] > monotonic():
-            _query_cache.move_to_end(key)
-            return entry[1].copy()
-    vector = OpenAIEmbeddingProvider().embed([text])[0]
-    with _cache_lock:
-        _query_cache[key] = (monotonic() + 300, vector.copy())
-        _query_cache.move_to_end(key)
-        while len(_query_cache) > 128:
-            _query_cache.popitem(last=False)
-    return vector
+    return _query_cache.get_or_load(key, lambda: OpenAIEmbeddingProvider().embed([text])[0], ttl=300)

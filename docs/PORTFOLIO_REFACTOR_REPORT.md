@@ -1,6 +1,6 @@
 # 개인 포트폴리오 리팩토링 결과
 
-검증일: 2026-10-01. 1차 작업 브랜치: `codex/portfolio-refactor-v1`. 사용자 요청에 따라 한글 이슈·PR로 변경 사항을 기록하고 `main`에 병합합니다.
+검증일: 2026-10-01. 1차 작업 브랜치: `codex/portfolio-refactor-v1`. 한글 [이슈 #82](https://github.com/jasnok/aio-01-p2-team2/issues/82)·[PR #83](https://github.com/jasnok/aio-01-p2-team2/pull/83)로 기록했으며 CI 통과 후 `main`에 병합했습니다. 병합 커밋: `68dfe9c`.
 
 ## 구현한 개선
 
