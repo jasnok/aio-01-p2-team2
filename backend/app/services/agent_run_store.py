@@ -7,6 +7,17 @@ from backend.app.core.config import get_settings
 from backend.app.services.session_service import sessions, SessionStoreUnavailableError
 
 
+# Compare the exact snapshot read by the poller inside Redis, where a worker's
+# completion cannot interleave between the comparison and the write.
+_INTERRUPT_SNAPSHOT = """
+    local current = redis.call('GET', KEYS[1])
+    if not current then return '' end
+    if current ~= ARGV[1] then return current end
+    redis.call('SET', KEYS[1], ARGV[2], 'KEEPTTL')
+    return ARGV[2]
+"""
+
+
 def enabled() -> bool:
     settings = get_settings()
     return settings.redis_enabled and not settings.backend_mock_mode
@@ -39,7 +50,12 @@ async def read_snapshot(run_id: str) -> dict | None:
                 run["error"] = {"code": "ANALYSIS_INTERRUPTED", "message": "분석 실행이 중단됐습니다. 새로 요청해 주세요."}
                 run["events"].append({"id": len(run["events"]) + 1, "event": "run.failed", "data": {
                     "run_id": run_id, "status": "failed", "message": run["error"]["message"]}})
-                await save_snapshot(run)
+                current = await client.eval(
+                    _INTERRUPT_SNAPSHOT, 1, f"lawpath:run:{run_id}",
+                    raw, json.dumps(run, ensure_ascii=False))
+                # Return the winner, including expiration, rather than a local
+                # failure that may no longer describe the authoritative state.
+                run = json.loads(current) if current else None
         return run
     except Exception as error:
         raise SessionStoreUnavailableError() from error
