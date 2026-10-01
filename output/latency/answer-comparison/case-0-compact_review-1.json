@@ -1,0 +1,326 @@
+{
+  "category": "housing",
+  "variant": "compact_review",
+  "scope": "answer",
+  "question": "월세 계약이 종료되어 집을 인도했고 집주인에게 보증금 반환을 요청했지만 아직 받지 못했습니다. 관련 법령과 판례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": true,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": true,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "answer": {
+    "question_summary": "월세임대차 종료 후 임차인이 보증금 반환을 요청했으나 반환이 이뤄지지 않는 상황에 대해 관련 대법원 판례들을 확인하고자 함.",
+    "answer": "사건명 '임대보증금반환·건물명도'는 사건번호 2016다244224·244231로 기재되어 있고, 선고일은 2020-07-09이며 본 판결 내에 1977년 대법원 판결을 언급하고 있습니다.\n\n사건명 '임차보증금반환·차임연체료및손해배상금'은 사건번호 2023다236566·236573로 기재되어 있으며, 선고일은 2023-09-14이고 판결문에서 2018년 및 2016년 등 종전 대법원 판결들을 참조하고 있습니다.\n\n사건명 '임대차보증금반환[주택 임차인의 점유 상실 후 마쳐진 임차권등기의 대항력이 문제된 사건]'은 사건번호 2024다326398로 기재되어 있고, 선고일은 2025-04-15이며 판결문에서 97다43468(공1998상, 609) 등 1998년 판결을 인용하고 있습니다.",
+    "key_issues": [
+      "임대(임차)보증금 반환에 관한 대법원 판례 존재 여부 및 해당 사건의 사건번호·선고일",
+      "임차권등기·점유 상실과 임차보증금 반환 및 등기의 대항력 문제(사실관계와의 관련성)",
+      "각 판례가 어떤 종전 판결들을 인용·참조하는지(판례 인용관계)"
+    ],
+    "cautions": [
+      "아래 주장은 제공된 발췌문(excerpts)만을 근거로 작성했습니다; 발췌문은 원문 일부이므로 전체 판결문·현재의 적용법령을 반드시 확인해야 합니다.",
+      "판례의 적용 가능성은 귀하의 구체적 사실관계(예: 점유의 귀속·임차권등기 여부·계약 내용 등)에 따라 달라지므로 본 요약을 법률적 결론으로 보지 마십시오.",
+      "case-13은 제목에 '점유 상실 후 마쳐진 임차권등기의 대항력' 문제가 명시되어 있어 귀하 상황에서 점유 상실·등기 여부와의 관련성이 중요합니다(발췌문 범위 내에서만 해당 내용을 확인함).",
+      "이전 검토에서 일부 주장의 연도 표기 불일치가 지적되었으므로(연도·표기 관련), 본 요약은 발췌문에 기재된 연월일·표기를 그대로 따랐음을 알립니다."
+    ],
+    "used_evidence_ids": [
+      "case-11",
+      "case-12",
+      "case-13"
+    ],
+    "claims": [
+      {
+        "text": "사건명 '임대보증금반환·건물명도'는 사건번호 2016다244224·244231로 기재되어 있고, 선고일은 2020-07-09이며 본 판결 내에 1977년 대법원 판결을 언급하고 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "case-11",
+            "quote": "사건명: 임대보증금반환·건물명도\n사건번호: 2016다244224, 244231"
+          },
+          {
+            "evidence_id": "case-11",
+            "quote": "선고일: 2020-07-09\n구분: 참조판례\n내용: 대법원 1977."
+          }
+        ]
+      },
+      {
+        "text": "사건명 '임차보증금반환·차임연체료및손해배상금'은 사건번호 2023다236566·236573로 기재되어 있으며, 선고일은 2023-09-14이고 판결문에서 2018년 및 2016년 등 종전 대법원 판결들을 참조하고 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "case-12",
+            "quote": "사건명: 임차보증금반환·차임연체료및손해배상금\n사건번호: 2023다236566, 236573"
+          },
+          {
+            "evidence_id": "case-12",
+            "quote": "선고일: 2023-09-14\n구분: 참조판례\n내용: [1][2] 대법원 2018."
+          },
+          {
+            "evidence_id": "case-12",
+            "quote": "12. 27. 선고 2016다274270, 274287 판결(공2019상, 364) / [1] 대법원 2000."
+          }
+        ]
+      },
+      {
+        "text": "사건명 '임대차보증금반환[주택 임차인의 점유 상실 후 마쳐진 임차권등기의 대항력이 문제된 사건]'은 사건번호 2024다326398로 기재되어 있고, 선고일은 2025-04-15이며 판결문에서 97다43468(공1998상, 609) 등 1998년 판결을 인용하고 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "case-13",
+            "quote": "사건명: 임대차보증금반환[주택 임차인의 점유 상실 후 마쳐진 임차권등기의 대항력이 문제된 사건]\n사건번호: 2024다326398"
+          },
+          {
+            "evidence_id": "case-13",
+            "quote": "선고일: 2025-04-15\n구분: 참조판례\n내용: [1] 대법원 1998."
+          },
+          {
+            "evidence_id": "case-13",
+            "quote": "1. 23. 선고 97다43468 판결(공1998상, 609), 대법원 2002."
+          }
+        ]
+      }
+    ]
+  },
+  "llm_used": true,
+  "diagnostics": {
+    "context_ms": 1,
+    "citation_mode": "spans",
+    "context_characters": 1406,
+    "context_documents": 3,
+    "context_spans": 9,
+    "repair_attempts": 1,
+    "excluded_claims": 0,
+    "source_spans": [
+      {
+        "span_id": "case-11:230110a6932b:0:43",
+        "evidence_id": "case-11",
+        "start": 0,
+        "end": 43,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-11:230110a6932b:52:90",
+        "evidence_id": "case-11",
+        "start": 52,
+        "end": 90,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-11:230110a6932b:91:148",
+        "evidence_id": "case-11",
+        "start": 91,
+        "end": 148,
+        "source_sha256": "230110a6932b2f07fb09957945bfcd0657368db3c2bc5195452506299bef060c",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:0:50",
+        "evidence_id": "case-12",
+        "start": 0,
+        "end": 50,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:59:104",
+        "evidence_id": "case-12",
+        "start": 59,
+        "end": 104,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-12:8f96ce9437b4:105:167",
+        "evidence_id": "case-12",
+        "start": 105,
+        "end": 167,
+        "source_sha256": "8f96ce9437b42fa5d5c9530d2b9dd966a6d77d5b50349e9b59a84ab385ae441b",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:0:71",
+        "evidence_id": "case-13",
+        "start": 0,
+        "end": 71,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:80:122",
+        "evidence_id": "case-13",
+        "start": 80,
+        "end": 122,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-13:8394efd4474d:123:168",
+        "evidence_id": "case-13",
+        "start": 123,
+        "end": 168,
+        "source_sha256": "8394efd4474d2f2d328b6c5878bf6e86b5bd11acf1f52058604e81fb2d8def82",
+        "chunking_version": "sentence-context-v1"
+      }
+    ],
+    "model": "gpt-5-mini",
+    "last_generation_call_ms": 16347,
+    "usage": {
+      "input_tokens": 1223,
+      "output_tokens": 2417,
+      "total_tokens": 3640
+    },
+    "citation_ids_normalized": false,
+    "citation_validation": "quotes_verified",
+    "semantic_review": {
+      "claims": [
+        {
+          "claim_index": 0,
+          "verdict": "supported",
+          "reason": "quote-0·quote-1이 사건명·사건번호, 선고일 2020-07-09 및 '대법원 1977' 언급을 직접 기재함."
+        },
+        {
+          "claim_index": 1,
+          "verdict": "supported",
+          "reason": "quote-2·quote-3·quote-4가 사건명·사건번호, 선고일 2023-09-14 및 대법원 2018·2016 판결 참조를 각각 기재함."
+        },
+        {
+          "claim_index": 2,
+          "verdict": "supported",
+          "reason": "quote-5·quote-6·quote-7이 사건명·사건번호, 선고일 2025-04-15 및 97다43468(공1998상, 609) 등 1998년 판결 인용을 기재함."
+        }
+      ]
+    },
+    "semantic_review_history": [
+      {
+        "attempt": 0,
+        "claims": [
+          {
+            "claim_index": 0,
+            "verdict": "supported",
+            "reason": "사건명·사건번호와 선고일(2020-07-09), 및 77다1241·1242 전원합의체 판결 언급이 인용문에 모두 존재함."
+          },
+          {
+            "claim_index": 1,
+            "verdict": "supported",
+            "reason": "사건명·사건번호·선고일(2023-09-14)이 일치하고 인용문에 대법원 2018·2016·2000 판결들이 언급됨."
+          },
+          {
+            "claim_index": 2,
+            "verdict": "partial",
+            "reason": "사건명·사건번호·선고일(2025-04-15)은 인용문에 있으나, 인용문은 97다43468을 공1998상으로 표기(1998)하여 주장(1997)과 연도가 불일치함."
+          }
+        ]
+      },
+      {
+        "attempt": 1,
+        "claims": [
+          {
+            "claim_index": 0,
+            "verdict": "supported",
+            "reason": "quote-0·quote-1이 사건명·사건번호, 선고일 2020-07-09 및 '대법원 1977' 언급을 직접 기재함."
+          },
+          {
+            "claim_index": 1,
+            "verdict": "supported",
+            "reason": "quote-2·quote-3·quote-4가 사건명·사건번호, 선고일 2023-09-14 및 대법원 2018·2016 판결 참조를 각각 기재함."
+          },
+          {
+            "claim_index": 2,
+            "verdict": "supported",
+            "reason": "quote-5·quote-6·quote-7이 사건명·사건번호, 선고일 2025-04-15 및 97다43468(공1998상, 609) 등 1998년 판결 인용을 기재함."
+          }
+        ]
+      }
+    ],
+    "semantic_review_scope": "model_judgment_not_legal_accuracy",
+    "retained_claim_indexes": [
+      0,
+      1,
+      2
+    ],
+    "generation_ms": 53737
+  },
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "answer",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 15814,
+      "usage": {
+        "input_tokens": 1118,
+        "output_tokens": 2483,
+        "total_tokens": 3601
+      },
+      "status": "completed",
+      "usage_known": true
+    },
+    {
+      "stage": "verification",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 12700,
+      "usage": {
+        "input_tokens": 999,
+        "output_tokens": 1685,
+        "total_tokens": 2684
+      },
+      "status": "completed",
+      "usage_known": true
+    },
+    {
+      "stage": "answer_repair",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 16347,
+      "usage": {
+        "input_tokens": 1223,
+        "output_tokens": 2417,
+        "total_tokens": 3640
+      },
+      "status": "completed",
+      "usage_known": true
+    },
+    {
+      "stage": "verification",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 8874,
+      "usage": {
+        "input_tokens": 914,
+        "output_tokens": 1272,
+        "total_tokens": 2186
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 53744,
+  "known_tokens": 12111
+}

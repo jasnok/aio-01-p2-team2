@@ -30,8 +30,15 @@ class Settings(BaseSettings):
     verification_model: str | None = None
     semantic_verification_enabled: bool = True
     answer_repair_attempts: int = Field(default=1, ge=0, le=1)
+    intake_reasoning_effort: Literal["minimal", "low", "medium", "high"] | None = None
+    answer_reasoning_effort: Literal["minimal", "low", "medium", "high"] | None = None
+    verification_reasoning_effort: Literal["minimal", "low", "medium", "high"] | None = None
+    context_max_documents: int = Field(default=6, ge=1, le=6)
+    context_max_windows: int = Field(default=3, ge=1, le=3)
+    context_document_budget: int = Field(default=2400, ge=300, le=2400)
+    compact_verification_context: bool = False
     # 통합 실행용 루트 .env를 먼저 읽고, 서비스 전용 파일이 있으면 덮어씁니다.
-    model_config = SettingsConfigDict(env_file=(".env", "backend/.env"), extra="ignore")
+    model_config = SettingsConfigDict(env_file=(".env", "backend/.env"), extra="ignore", env_ignore_empty=True)
 
 
 @lru_cache

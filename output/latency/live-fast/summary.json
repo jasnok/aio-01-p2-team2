@@ -1,0 +1,54 @@
+{
+  "created_at": "2026-10-01T05:57:08.595194+00:00",
+  "scope": "one sequential pilot per scenario; cold MCP process caches; no quality or p95 claim",
+  "settings": {
+    "intake_reasoning_effort": "low",
+    "answer_reasoning_effort": "low",
+    "verification_reasoning_effort": "low",
+    "answer_repair_attempts": 0
+  },
+  "profile_application": "temporary local Compose override; restored after experiment",
+  "sample_files": [
+    "run-1.json"
+  ],
+  "summary": {
+    "requests": 3,
+    "successes": 3,
+    "statuses": {
+      "completed": 2,
+      "stopped": 1
+    },
+    "generation_statuses": {
+      "llm": 2,
+      "clarification": 1
+    },
+    "samples": 3,
+    "p50_ms": 18094,
+    "p95_ms": null,
+    "p95_status": "insufficient_samples_minimum_20",
+    "check_failures": 0,
+    "unchecked_requests": 0,
+    "fallbacks": 0,
+    "repairs": 0,
+    "repair_rate_all_requests": 0.0,
+    "excluded_claims": 2,
+    "model_calls": 7,
+    "first_evidence": {
+      "samples": 2,
+      "p50_ms": 4547,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20"
+    },
+    "completed_llm": {
+      "samples": 2,
+      "p50_ms": 18094,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20"
+    }
+  },
+  "provenance": {
+    "base_commit_at_run_start": "389c8aa5d821250507fa7605155fd7d053b2ad4b",
+    "working_tree_dirty": true,
+    "scope": "runtime built with uncommitted changes; existing experiment version fields preserved in raw responses"
+  }
+}

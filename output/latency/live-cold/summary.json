@@ -1,0 +1,168 @@
+{
+  "created_at": "2026-10-01T05:51:45.155343+00:00",
+  "git_commit": "994187fc1b08677deda0524d31acf7208bb281da",
+  "working_tree_dirty": true,
+  "cache_control": "cold",
+  "dataset_version": "smoke-4-v1",
+  "scope": "sequential requests; live SSE; no concurrent load claim",
+  "summary": {
+    "requests": 4,
+    "successes": 4,
+    "statuses": {
+      "completed": 2,
+      "stopped": 2
+    },
+    "generation_statuses": {
+      "llm": 2,
+      "clarification": 2
+    },
+    "samples": 4,
+    "p50_ms": 10078,
+    "p95_ms": null,
+    "p95_status": "insufficient_samples_minimum_20",
+    "check_failures": 0,
+    "unchecked_requests": 0,
+    "fallbacks": 0,
+    "repairs": 0,
+    "repair_rate_all_requests": 0.0,
+    "excluded_claims": 0,
+    "model_calls": 8,
+    "first_evidence": {
+      "samples": 2,
+      "p50_ms": 13203,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20"
+    },
+    "completed_llm": {
+      "samples": 2,
+      "p50_ms": 39282,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20"
+    }
+  },
+  "sample_files": [
+    "run-1.json"
+  ],
+  "scenarios": {
+    "0": {
+      "requests": 1,
+      "successes": 1,
+      "statuses": {
+        "completed": 1
+      },
+      "samples": 1,
+      "p50_ms": 39282,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20",
+      "check_failures": 0,
+      "unchecked_requests": 0,
+      "fallbacks": 0,
+      "repairs": 0,
+      "repair_rate_all_requests": 0.0,
+      "excluded_claims": 0,
+      "model_calls": 3,
+      "first_evidence": {
+        "samples": 1,
+        "p50_ms": 13203,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      },
+      "completed_llm": {
+        "samples": 1,
+        "p50_ms": 39282,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      }
+    },
+    "1": {
+      "requests": 1,
+      "successes": 1,
+      "statuses": {
+        "completed": 1
+      },
+      "samples": 1,
+      "p50_ms": 47203,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20",
+      "check_failures": 0,
+      "unchecked_requests": 0,
+      "fallbacks": 0,
+      "repairs": 0,
+      "repair_rate_all_requests": 0.0,
+      "excluded_claims": 0,
+      "model_calls": 3,
+      "first_evidence": {
+        "samples": 1,
+        "p50_ms": 14578,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      },
+      "completed_llm": {
+        "samples": 1,
+        "p50_ms": 47203,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      }
+    },
+    "2": {
+      "requests": 1,
+      "successes": 1,
+      "statuses": {
+        "stopped": 1
+      },
+      "samples": 1,
+      "p50_ms": 10078,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20",
+      "check_failures": 0,
+      "unchecked_requests": 0,
+      "fallbacks": 0,
+      "repairs": 0,
+      "repair_rate_all_requests": 0.0,
+      "excluded_claims": 0,
+      "model_calls": 1,
+      "first_evidence": {
+        "samples": 0,
+        "p50_ms": null,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      },
+      "completed_llm": {
+        "samples": 0,
+        "p50_ms": null,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      }
+    },
+    "3": {
+      "requests": 1,
+      "successes": 1,
+      "statuses": {
+        "stopped": 1
+      },
+      "samples": 1,
+      "p50_ms": 6531,
+      "p95_ms": null,
+      "p95_status": "insufficient_samples_minimum_20",
+      "check_failures": 0,
+      "unchecked_requests": 0,
+      "fallbacks": 0,
+      "repairs": 0,
+      "repair_rate_all_requests": 0.0,
+      "excluded_claims": 0,
+      "model_calls": 1,
+      "first_evidence": {
+        "samples": 0,
+        "p50_ms": null,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      },
+      "completed_llm": {
+        "samples": 0,
+        "p50_ms": null,
+        "p95_ms": null,
+        "p95_status": "insufficient_samples_minimum_20"
+      }
+    }
+  }
+}

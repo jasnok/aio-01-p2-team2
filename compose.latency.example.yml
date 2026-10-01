@@ -1,0 +1,10 @@
+# Experimental local demo only. Human quality review is still pending.
+# Apply: docker compose -f compose.yml -f compose.latency.example.yml up -d --no-deps backend
+# Restore: docker compose up -d --no-deps backend
+services:
+  backend:
+    environment:
+      INTAKE_REASONING_EFFORT: low
+      ANSWER_REASONING_EFFORT: low
+      VERIFICATION_REASONING_EFFORT: low
+      ANSWER_REPAIR_ATTEMPTS: "0"

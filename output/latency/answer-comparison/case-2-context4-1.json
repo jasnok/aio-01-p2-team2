@@ -1,0 +1,288 @@
+{
+  "category": "consumer",
+  "variant": "context4",
+  "scope": "answer",
+  "question": "온라인 쇼핑몰에서 운동화를 샀는데 배송된 상품에 하자가 있습니다. 수령 다음 날 사진과 함께 환불을 요청했지만 판매자가 거절했습니다. 관련 법령과 상담사례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 4,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": null,
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 4,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "answer": {
+    "question_summary": "온라인 쇼핑몰에서 구매한 운동화에 하자가 있어 수령 다음 날 사진과 함께 환불(청약철회)을 요청했으나 판매자가 거절하여 관련 법령과 상담사례를 확인하고 싶음.",
+    "answer": "인터넷쇼핑몰에서 물품을 구입한 경우 전자상거래 관련 법령에 따라 배송받은 날로부터 7일 이내에는 청약철회가 가능하다는 상담사례의 설명이 있습니다.\n\n청약철회 의사표시는 법률상 방법에 제한이 없으므로 전화·서면·전자문서 등으로 할 수 있고, 전화 통보의 경우 판매자가 부인할 수 있어 게시판 캡처나 서면 발송 등 증거를 보관하는 것이 권장된다는 설명이 있습니다.\n\n통신판매업자는 표시·광고 시 주소·전화번호·전자우편주소 등을 포함하여야 하며, 계약이 체결되면 계약내용이 기재된 서면을 계약자에게 교부하여야 한다는 규정이 있습니다.",
+    "key_issues": [
+      "전자상거래법상 소비자는 물품을 배송받은 날로부터 7일 이내에 청약철회(환불)를 할 수 있는지 여부",
+      "청약철회 의사 표시 방법(전화·서면·전자문서 등)과 증거 보관 방법",
+      "통신판매업자의 표시·광고 및 계약서류 교부 의무(판매자 연락처·계약내용 제공 등)"
+    ],
+    "cautions": [
+      "제공된 발췌문은 원문 일부이므로 전체 조문 및 최신 개정 여부를 확인할 필요가 있습니다.",
+      "발췌문에 모든 사실관계(예: 하자 여부 판정기준, 반품비 부담자 등)에 관한 구체적 규정이 포함되어 있지 않으므로 그 부분에 대해서는 추가 확인이 필요합니다.",
+      "아래 주장들은 제공된 발췌문에 근거한 요지 설명일 뿐 법률적 판단이나 결과 보장을 하는 자문은 아닙니다."
+    ],
+    "used_evidence_ids": [
+      "consultation-467",
+      "law-6"
+    ],
+    "claims": [
+      {
+        "text": "인터넷쇼핑몰에서 물품을 구입한 경우 전자상거래 관련 법령에 따라 배송받은 날로부터 7일 이내에는 청약철회가 가능하다는 상담사례의 설명이 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "consultation-467",
+            "quote": "사이즈 부정확 및 제품을 만족하지 못하여 즉시 환불을 요청하였으나, 규정상 환불은 못해주고 적립금을 줄 테니 나중에 이용하라고 합니다. 맘에 안 드는 물건을 사용하고 싶지 않아 환불을 원하며, 사업자에게서 환불을 받을 수 있는 강제 규정은 없는지 알고 싶습니다.\n\n답변: 인터넷쇼핑몰에서 의류를 구입한 경우라면 전자상거래 등에서의 소비자보호에 관한 법률에 의거 배송받은 날로부터 7일 내에는 청약철회가 가능합니다. 다만, 색상, 디자인 혹은 사이즈 불만 등의 사유로 청약철회를 요청한 경우 반품비(왕복기준)는 구매자가 부담해야 합니다."
+          }
+        ]
+      },
+      {
+        "text": "청약철회 의사표시는 법률상 방법에 제한이 없으므로 전화·서면·전자문서 등으로 할 수 있고, 전화 통보의 경우 판매자가 부인할 수 있어 게시판 캡처나 서면 발송 등 증거를 보관하는 것이 권장된다는 설명이 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "consultation-467",
+            "quote": "통신판매업자에 대한 청약철회 의사표시 방법은 법률상 특별한 제한이 없으므로 전화, 서면, 전자문서 모두 가능합니다. 다만, 전화로 의사표시를 한 경우 간혹 판매자가 청약철회 요구를 받은 사실이 없다고 주장하는 경우가 있으므로, 쇼핑몰 게시판에 청약철회 의사를 표시하고 그 화면을 캡처하여 보관하거나 서면으로 발송하는 것이 좋습니다. 서면으로 발송한 경우에는 발송한 날에 그 효력이 발생합니다."
+          }
+        ]
+      },
+      {
+        "text": "통신판매업자는 표시·광고 시 주소·전화번호·전자우편주소 등을 포함하여야 하며, 계약이 체결되면 계약내용이 기재된 서면을 계약자에게 교부하여야 한다는 규정이 있습니다.",
+        "citations": [
+          {
+            "evidence_id": "law-6",
+            "quote": "주소ㆍ전화번호ㆍ전자우편주소 3. 제12조에 따라 공정거래위원회 또는 특별자치시장ㆍ특별자치도지사ㆍ시장ㆍ군수ㆍ구청장에게 한 신고의 신고번호와 그 신고를 받은 기관의 이름 등 신고를 확인할 수 있는 사항 ② 통신판매업자는 소비자가 계약체결 전에 재화등에 대한 거래조건을 정확하게 이해하고 실수나 착오 없이 거래할 수 있도록 다음 각 호의 사항을 적절한 방법으로 표시ㆍ광고하거나 고지하여야 하며, 계약이 체결되면 계약자에게 다음 각 호의 사항이 기재된 계약내용에 관한 서면을 재화등을 공급할 때까지 교부하여야 한다. 다만, 계약자의 권리를 침해하지 아니하는 범위에서 대통령령으로 정하는 사유가 있는 경우에는 계약자를 갈음하여 재화등을 공급받는 자에게 계약내용에 관한 서면을 교부할 수 있다."
+          },
+          {
+            "evidence_id": "law-6",
+            "quote": "조문 제목: 신원 및 거래조건에 대한 정보의 제공\n내용: 제13조(신원 및 거래조건에 대한 정보의 제공) ① 통신판매업자가 재화등의 거래에 관한 청약을 받을 목적으로 표시ㆍ광고를 할 때에는 그 표시ㆍ광고에 다음 각 호의 사항을 포함하여야 한다. <개정 2016.3.29> 1."
+          }
+        ]
+      }
+    ]
+  },
+  "llm_used": true,
+  "diagnostics": {
+    "context_ms": 1,
+    "citation_mode": "spans",
+    "context_characters": 3140,
+    "context_documents": 4,
+    "context_spans": 12,
+    "repair_attempts": 0,
+    "excluded_claims": 0,
+    "source_spans": [
+      {
+        "span_id": "law-6:75eaa309ce9d:0:37",
+        "evidence_id": "law-6",
+        "start": 0,
+        "end": 37,
+        "source_sha256": "75eaa309ce9d28a0e364913a5473bfd76fca79190e96fe35fe8e2bf5d5a23b9f",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-6:75eaa309ce9d:38:192",
+        "evidence_id": "law-6",
+        "start": 38,
+        "end": 192,
+        "source_sha256": "75eaa309ce9d28a0e364913a5473bfd76fca79190e96fe35fe8e2bf5d5a23b9f",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-6:75eaa309ce9d:208:590",
+        "evidence_id": "law-6",
+        "start": 208,
+        "end": 590,
+        "source_sha256": "75eaa309ce9d28a0e364913a5473bfd76fca79190e96fe35fe8e2bf5d5a23b9f",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-20:27bf02083220:0:29",
+        "evidence_id": "case-20",
+        "start": 0,
+        "end": 29,
+        "source_sha256": "27bf020832203ef1e5b727f99fd2b06845ed31d2be22fbc9cc59917f602ac6c5",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-20:27bf02083220:63:286",
+        "evidence_id": "case-20",
+        "start": 63,
+        "end": 286,
+        "source_sha256": "27bf020832203ef1e5b727f99fd2b06845ed31d2be22fbc9cc59917f602ac6c5",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "case-20:27bf02083220:312:453",
+        "evidence_id": "case-20",
+        "start": 312,
+        "end": 453,
+        "source_sha256": "27bf020832203ef1e5b727f99fd2b06845ed31d2be22fbc9cc59917f602ac6c5",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-467:a91c1a7e1fbc:49:133",
+        "evidence_id": "consultation-467",
+        "start": 49,
+        "end": 133,
+        "source_sha256": "a91c1a7e1fbcdb2395e70addbd7797382315991feea7e4f73000a9b4b5c3f7cc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-467:a91c1a7e1fbc:178:477",
+        "evidence_id": "consultation-467",
+        "start": 178,
+        "end": 477,
+        "source_sha256": "a91c1a7e1fbcdb2395e70addbd7797382315991feea7e4f73000a9b4b5c3f7cc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "consultation-467:a91c1a7e1fbc:645:864",
+        "evidence_id": "consultation-467",
+        "start": 645,
+        "end": 864,
+        "source_sha256": "a91c1a7e1fbcdb2395e70addbd7797382315991feea7e4f73000a9b4b5c3f7cc",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-7:d1882464f6fe:0:20",
+        "evidence_id": "law-7",
+        "start": 0,
+        "end": 20,
+        "source_sha256": "d1882464f6feb5a1a4eaab15f7808ef78ca85decbfa184d4c02fdce4757f49ce",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-7:d1882464f6fe:21:188",
+        "evidence_id": "law-7",
+        "start": 21,
+        "end": 188,
+        "source_sha256": "d1882464f6feb5a1a4eaab15f7808ef78ca85decbfa184d4c02fdce4757f49ce",
+        "chunking_version": "sentence-context-v1"
+      },
+      {
+        "span_id": "law-7:d1882464f6fe:189:321",
+        "evidence_id": "law-7",
+        "start": 189,
+        "end": 321,
+        "source_sha256": "d1882464f6feb5a1a4eaab15f7808ef78ca85decbfa184d4c02fdce4757f49ce",
+        "chunking_version": "sentence-context-v1"
+      }
+    ],
+    "model": "gpt-5-mini",
+    "last_generation_call_ms": 14784,
+    "usage": {
+      "input_tokens": 2066,
+      "output_tokens": 1792,
+      "total_tokens": 3858
+    },
+    "citation_ids_normalized": false,
+    "citation_validation": "quotes_verified",
+    "semantic_review": {
+      "claims": [
+        {
+          "claim_index": 0,
+          "verdict": "supported",
+          "reason": "인용문이 '배송받은 날로부터 7일 내에는 청약철회가 가능합니다'라고 명시하고 있음."
+        },
+        {
+          "claim_index": 1,
+          "verdict": "supported",
+          "reason": "인용문이 청약철회 방법에 제한이 없음을 밝히고 전화 통보의 부인 가능성 및 게시판 캡처·서면 보관을 권장하고 있음."
+        },
+        {
+          "claim_index": 2,
+          "verdict": "supported",
+          "reason": "인용문에 표시·광고 시 주소·전화번호·전자우편주소 포함 의무와 계약체결 시 계약내용 기재 서면을 교부해야 한다고 규정하고 있음."
+        }
+      ]
+    },
+    "semantic_review_history": [
+      {
+        "attempt": 0,
+        "claims": [
+          {
+            "claim_index": 0,
+            "verdict": "supported",
+            "reason": "인용문이 '배송받은 날로부터 7일 내에는 청약철회가 가능합니다'라고 명시하고 있음."
+          },
+          {
+            "claim_index": 1,
+            "verdict": "supported",
+            "reason": "인용문이 청약철회 방법에 제한이 없음을 밝히고 전화 통보의 부인 가능성 및 게시판 캡처·서면 보관을 권장하고 있음."
+          },
+          {
+            "claim_index": 2,
+            "verdict": "supported",
+            "reason": "인용문에 표시·광고 시 주소·전화번호·전자우편주소 포함 의무와 계약체결 시 계약내용 기재 서면을 교부해야 한다고 규정하고 있음."
+          }
+        ]
+      }
+    ],
+    "semantic_review_scope": "model_judgment_not_legal_accuracy",
+    "retained_claim_indexes": [
+      0,
+      1,
+      2
+    ],
+    "generation_ms": 23943
+  },
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "answer",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 14784,
+      "usage": {
+        "input_tokens": 2066,
+        "output_tokens": 1792,
+        "total_tokens": 3858
+      },
+      "status": "completed",
+      "usage_known": true
+    },
+    {
+      "stage": "verification",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 9157,
+      "usage": {
+        "input_tokens": 1089,
+        "output_tokens": 1057,
+        "total_tokens": 2146
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 23950,
+  "known_tokens": 6004
+}

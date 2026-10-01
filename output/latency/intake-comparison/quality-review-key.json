@@ -1,0 +1,32 @@
+[
+  {
+    "review_id": "1d7d3ac54620",
+    "file": "case-0-baseline-1.json",
+    "variant": "baseline"
+  },
+  {
+    "review_id": "be644830293f",
+    "file": "case-0-intake_low-1.json",
+    "variant": "intake_low"
+  },
+  {
+    "review_id": "bbd23486069c",
+    "file": "case-0-intake_candidate-1.json",
+    "variant": "intake_candidate"
+  },
+  {
+    "review_id": "cb008b625855",
+    "file": "case-2-intake_candidate-1.json",
+    "variant": "intake_candidate"
+  },
+  {
+    "review_id": "50ceec587fdb",
+    "file": "case-2-intake_low-1.json",
+    "variant": "intake_low"
+  },
+  {
+    "review_id": "f5908cf30f6d",
+    "file": "case-2-baseline-1.json",
+    "variant": "baseline"
+  }
+]

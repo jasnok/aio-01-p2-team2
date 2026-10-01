@@ -1,0 +1,81 @@
+{
+  "category": "consumer",
+  "variant": "intake_low",
+  "scope": "intake",
+  "question": "온라인 쇼핑몰에서 운동화를 샀는데 배송된 상품에 하자가 있습니다. 수령 다음 날 사진과 함께 환불을 요청했지만 판매자가 거절했습니다. 관련 법령과 상담사례를 확인하고 싶습니다.",
+  "settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "low",
+    "answer_reasoning_effort": "",
+    "verification_reasoning_effort": "",
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60,
+    "request_timeout_seconds": 60,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "human_review": "pending",
+  "effective_settings": {
+    "semantic_verification_enabled": true,
+    "answer_repair_attempts": 1,
+    "intake_reasoning_effort": "low",
+    "answer_reasoning_effort": null,
+    "verification_reasoning_effort": null,
+    "context_max_documents": 6,
+    "context_max_windows": 3,
+    "context_document_budget": 2400,
+    "compact_verification_context": false,
+    "input_assessment_timeout_seconds": 60.0,
+    "request_timeout_seconds": 60.0,
+    "llm_provider": "openai",
+    "citation_mode": "spans",
+    "intake_model": "gpt-5-mini",
+    "answer_model": "gpt-5-mini",
+    "verification_model": "gpt-5-mini"
+  },
+  "intake": {
+    "is_ready_for_search": true,
+    "status": "proceed_with_caution",
+    "message": "온라인 쇼핑몰에서 받은 하자 상품 관련 법령·판례·상담사례 검색은 진행할 수 있습니다. 다만 구체적 구제 가능성(교환·환불·청약철회 시점·판매자 유형 등)은 추가 정보에 따라 달라질 수 있습니다.",
+    "missing_fields": [],
+    "follow_up_questions": [
+      "해당 거래의 관할국가(예: 대한민국)를 알려주실 수 있나요?",
+      "판매자가 오픈마켓(중개플랫폼)인가요, 개별 쇼핑몰(사업자)인가요, 또는 개인 간 거래인가요?",
+      "환불 거절 사유(예: 사용 흔적·반품 기간 경과 등)를 판매자가 어떻게 통지했나요?"
+    ],
+    "cautions": [
+      "제공하는 정보는 일반적 법률정보로서 구체적 법률상 권리·결과를 확정하지 않습니다."
+    ],
+    "checks": {
+      "situation": "met",
+      "timing": "met",
+      "relationship": "met",
+      "request_evidence": "met"
+    }
+  },
+  "llm_used": false,
+  "status": "completed",
+  "model_calls": [
+    {
+      "stage": "intake",
+      "model": "gpt-5-mini",
+      "elapsed_ms": 4979,
+      "usage": {
+        "input_tokens": 880,
+        "output_tokens": 525,
+        "total_tokens": 1405
+      },
+      "status": "completed",
+      "usage_known": true
+    }
+  ],
+  "elapsed_ms": 4990,
+  "known_tokens": 1405
+}

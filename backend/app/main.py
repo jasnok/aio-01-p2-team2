@@ -1,4 +1,5 @@
 import uuid
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -12,9 +13,19 @@ from backend.app.routers.legal import router as legal_router
 from backend.app.routers.legal_terms import router as legal_terms_router, term_run_router
 from backend.app.routers.mock_api import router as mock_api_router
 from backend.app.services.session_service import SessionStoreUnavailableError
+from backend.app.providers.openai import close_async_clients
+
+
+@asynccontextmanager
+async def lifespan(app):
+    try:
+        yield
+    finally:
+        await close_async_clients()
 
 
 app = FastAPI(
+    lifespan=lifespan,
     title="LawPath Backend API",
     version="0.1.0",
     description="""

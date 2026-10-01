@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import asyncio
 import json
 import logging
 from uuid import uuid4
 
 from backend.app.core.config import get_settings
 from backend.app.providers.registry import get_provider
+from backend.app.services.model_metrics import structured_call
 from backend.app.schemas.legal_terms import LegalTermChatResponse, LegalTermLLMOutput
 
 
@@ -38,9 +38,8 @@ class LegalTermChatService:
         }, ensure_ascii=False)
         try:
             provider = get_provider(settings.llm_provider)
-            result = await asyncio.to_thread(
-                provider.generate_structured, TERM_PERSONA, payload, LegalTermLLMOutput,
-            )
+            result = await structured_call(provider, "term", TERM_PERSONA, payload, LegalTermLLMOutput,
+                                           getattr(settings, "request_timeout_seconds", None))
             output = LegalTermLLMOutput.model_validate(result.output)
         except Exception:
             logger.exception("legal_term_chat_failed")
