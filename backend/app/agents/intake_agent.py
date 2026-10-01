@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field, ValidationError
 from backend.app.agents.models import InputChecks, IntakeResult
 from backend.app.core.config import get_settings
 from backend.app.providers.registry import get_provider
-from backend.app.services.model_metrics import record_call, stage_provider
+from backend.app.services.model_metrics import structured_call, stage_provider
 
 
 class IntakeDecision(BaseModel):
@@ -79,16 +79,8 @@ class IntakeAgent:
                 )
                 if remaining_seconds <= 0:
                     raise TimeoutError
-                result = await asyncio.wait_for(
-                    asyncio.to_thread(
-                        provider.generate_structured,
-                        INTAKE_SYSTEM_PROMPT,
-                        message + suffix,
-                        IntakeDecision,
-                    ),
-                    timeout=remaining_seconds,
-                )
-                record_call("intake", result)
+                result = await structured_call(provider, "intake", INTAKE_SYSTEM_PROMPT,
+                                               message + suffix, IntakeDecision, remaining_seconds)
                 decision = IntakeDecision.model_validate(result.output)
                 assessment = self._to_result(decision, question)
                 if event_callback:

@@ -4,7 +4,8 @@ from backend.app.agents.models import AnswerDraft
 from backend.app.schemas.legal import Evidence
 
 
-def build_context(question: str, evidence: list[Evidence], max_documents: int = 6):
+def build_context(question: str, evidence: list[Evidence], max_documents: int = 6,
+                  max_windows: int = 3, document_budget: int = 2400):
     if max_documents < 1:
         raise ValueError("max_documents must be positive")
     ranked = sorted(enumerate(evidence), key=lambda pair: (-(pair[1].score or 0), pair[0]))
@@ -22,7 +23,7 @@ def build_context(question: str, evidence: list[Evidence], max_documents: int = 
     documents, spans = [], {}
     for item in selected:
         excerpts = []
-        for window in select_windows(question, item.content):
+        for window in select_windows(question, item.content, limit=max_windows, budget=document_budget):
             span_id = f"{item.evidence_id}:{window['source_sha256'][:12]}:{window['start']}:{window['end']}"
             spans[span_id] = {"evidence_id": item.evidence_id, **window}
             excerpts.append({"span_id": span_id, "text": window["quote"]})
