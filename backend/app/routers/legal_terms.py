@@ -76,15 +76,17 @@ async def chat_with_legal_terms(
     except SavedConversationNotFoundError as error:
         raise HTTPException(status_code=404, detail={"code": "NOT_FOUND", "message": "저장한 법률 용어 대화를 찾을 수 없습니다."}) from error
     except Exception as error:
-        logger.exception("legal_term_chat_save_failed request_id=%s", response.request_id)
+        logger.error("legal_term_chat_save_failed stage=storage request_id=%s error_type=%s", response.request_id, type(error).__name__)
         raise HTTPException(status_code=503, detail={"code": "SAVED_CONVERSATION_UNAVAILABLE", "message": "법률 용어 대화를 저장할 수 없습니다."}) from error
     return response.model_copy(update={"conversation_id": conversation_id, "saved": True, "storage": "member"})
 
 
 @term_run_router.post("/{request_id}/save", summary="법률 용어 대화 결과 저장")
 async def save_legal_term_run(request_id: str, value: dict = Depends(require_user)) -> dict:
+    stored_request_id = "unavailable"
     try:
         run = await legal_term_runs.get_for_actor(request_id, value)
+        stored_request_id = run["request_id"]
         conversation_id = await saved_conversation_service.save_term_chat(
             actor=value,
             question=run["question"],
@@ -99,6 +101,6 @@ async def save_legal_term_run(request_id: str, value: dict = Depends(require_use
     except SessionStoreUnavailableError as error:
         raise HTTPException(status_code=503, detail={"code": "TERM_RUN_UNAVAILABLE", "message": "법률 용어 대화 결과를 불러올 수 없습니다."}) from error
     except Exception as error:
-        logger.exception("legal_term_run_save_failed request_id=%s", request_id)
+        logger.error("legal_term_run_save_failed stage=storage request_id=%s error_type=%s", stored_request_id, type(error).__name__)
         raise HTTPException(status_code=503, detail={"code": "SAVED_CONVERSATION_UNAVAILABLE", "message": "법률 용어 대화를 저장할 수 없습니다."}) from error
     return {"conversation_id": conversation_id, "saved": True}

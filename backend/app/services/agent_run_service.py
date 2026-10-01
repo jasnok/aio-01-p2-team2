@@ -111,6 +111,7 @@ async def _execute_run(run_id: str) -> None:
         "message": "법률 분석을 시작했습니다.",
     })
     await save_snapshot(run)
+    failure_stage = "context"
     step_ids: dict[str, list[str]] = {}
     validation_step_id: str | None = None
     generation_step_id: str | None = None
@@ -122,9 +123,11 @@ async def _execute_run(run_id: str) -> None:
     }
 
     async def on_runtime_event(trace: dict) -> None:
-        nonlocal validation_step_id, generation_step_id
+        nonlocal validation_step_id, generation_step_id, failure_stage
         tool = trace.get("tool")
         stage = trace.get("stage")
+        if stage in {"validation_started", "tool_selected", "generation_started"}:
+            failure_stage = {"validation_started": "validation", "tool_selected": "retrieval", "generation_started": "generation"}[stage]
         if stage == "validation_started":
             validation_step_id = f"validation-{uuid4()}"
             append_event(run, "step.started", {
@@ -197,6 +200,7 @@ async def _execute_run(run_id: str) -> None:
         request = LegalQuestionRequest(
             session_id=str(run["owner_id"]), category=run["category"], question=run["question"],
         )
+        failure_stage = "analysis"
         if context is None:
             result = await answer_question_from_mcp(request, event_callback=on_runtime_event)
         else:
@@ -205,6 +209,7 @@ async def _execute_run(run_id: str) -> None:
                 event_callback=on_runtime_event,
                 conversation_context=context,
             )
+        failure_stage = "storage"
         if run["save_selected"]:
             if get_settings().backend_mock_mode:
                 saved = await conversation_service.save_if_selected(
@@ -259,8 +264,8 @@ async def _execute_run(run_id: str) -> None:
     except SnapshotConflictError:
         conflicted = True
         raise
-    except Exception:
-        logger.exception("agent_run_failed run_id=%s", run_id)
+    except Exception as error:
+        logger.error("agent_run_failed run_id=%s stage=%s error_type=%s", run_id, failure_stage, type(error).__name__)
         # 내부 예외와 민감한 연결 정보는 SSE/HTTP 응답에 노출하지 않는다.
         run["status"] = "failed"
         run["error"] = {"code": "ANALYSIS_FAILED", "message": "법률 분석 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요."}
