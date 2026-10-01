@@ -23,6 +23,7 @@ from backend.app.services.agent_run_store import (
     SnapshotConflictError, save_snapshot, enabled as persistent_runs_enabled,
 )
 from backend.app.services.run_metrics import log_result
+from backend.app.services.run_capacity import RunSlot, run_capacity
 
 
 logger = logging.getLogger(__name__)
@@ -312,8 +313,21 @@ async def execute_run(run_id: str) -> None:
             store.agent_runs.pop(run_id, None)
 
 
-def start_run(run_id: str) -> asyncio.Task[None]:
-    task = asyncio.create_task(execute_run(run_id))
+def start_run(run_id: str, slot: RunSlot | None = None) -> asyncio.Task[None]:
+    slot = slot or run_capacity.acquire()
+    try:
+        task = asyncio.create_task(execute_run(run_id))
+    except BaseException:
+        slot.release()
+        raise
     _active_tasks.add(task)
     task.add_done_callback(_active_tasks.discard)
+    task.add_done_callback(lambda _: slot.release())
     return task
+
+
+async def close_active_runs() -> None:
+    tasks = list(_active_tasks)
+    for task in tasks:
+        task.cancel()
+    await asyncio.gather(*tasks, return_exceptions=True)

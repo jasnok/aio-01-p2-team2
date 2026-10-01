@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     term_run_ttl_seconds: int = 3600
     agent_run_ttl_seconds: int = 86400
     agent_run_timeout_seconds: int = 150
+    agent_run_max_concurrency: int = Field(default=4, ge=1, le=100)
     citation_mode: Literal["spans", "quotes"] = "spans"
     intake_model: str | None = None
     answer_model: str | None = None
