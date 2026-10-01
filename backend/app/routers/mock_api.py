@@ -383,7 +383,7 @@ def list_comments(question_id: str, value: dict = Depends(actor), page_number: i
     if value["role"] == "ADMIN" and question["visibility"] == "PRIVATE" and not owns_record(value, question): store.audit(value, "PRIVATE_COMMENTS_VIEWED", question_id)
     items = [item.copy() for item in store.comments.values() if item["question_id"] == question_id]
     items.sort(key=lambda item: (item["created_at"], item["id"]))
-    for item in items: item.pop("password_hash", None); item.pop("owner_role", None); item["is_owner"] = owns_record(value, item)
+    for item in items: item.pop("password_hash", None); item["is_owner"] = owns_record(value, item); item.pop("owner_role", None); item.pop("owner_id", None)
     return page(items, page_number, page_size)
 
 
@@ -397,7 +397,7 @@ def add_comment(question_id: str, body: CommentBody, value: dict = Depends(actor
     store.comments[comment_id] = comment
     message = "새 댓글이 등록되었습니다." if question["visibility"] == "PUBLIC" else "비밀 질문에 새 댓글이 등록되었습니다."
     store.notify(record_owner(question), "COMMENT_CREATED", "댓글 등록", message, target_type="question", target_id=question_id, category=question["category"])
-    result = comment.copy(); result.pop("password_hash"); result.pop("owner_role", None); result["is_owner"] = True
+    result = comment.copy(); result.pop("password_hash"); result.pop("owner_role", None); result.pop("owner_id", None); result["is_owner"] = True
     return result
 
 
@@ -407,7 +407,7 @@ def update_comment(question_id: str, comment_id: str, body: CommentBody, value: 
     if not comment or comment["question_id"] != question_id: fail(404, "NOT_FOUND", "댓글을 찾을 수 없습니다.")
     if not owns_record(value, comment) or (value["role"] == "GUEST" and not verify_password(body.comment_password or "", comment["password_hash"])): fail(403, "FORBIDDEN", "작성자만 댓글을 수정할 수 있습니다.")
     comment.update({"content": body.content.strip(), "updated_at": iso()})
-    result = comment.copy(); result.pop("password_hash"); result.pop("owner_role", None); result["is_owner"] = True
+    result = comment.copy(); result.pop("password_hash"); result.pop("owner_role", None); result.pop("owner_id", None); result["is_owner"] = True
     return result
 
 

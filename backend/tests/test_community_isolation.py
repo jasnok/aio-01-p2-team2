@@ -29,6 +29,8 @@ def test_same_id_cannot_read_modify_or_delete_other_principal_community_data(own
         private, public = posts
         comment = client.post(f"/api/questions/{public}/comments", json={"content": "synthetic comment", "comment_password": "1234"})
         assert comment.status_code == 201
+        assert "owner_id" not in comment.json()
+        assert "owner_role" not in comment.json()
         comment_id = comment.json()["id"]
         history_id = client.get("/api/history").json()["items"][0]["id"]
         notification_id = client.get("/api/notifications").json()["items"][0]["id"]
@@ -38,7 +40,10 @@ def test_same_id_cannot_read_modify_or_delete_other_principal_community_data(own
             assert denied.status_code == 403
             assert "synthetic-private-marker" not in denied.text
         assert client.get(f"/api/questions/{public}").status_code == 200
-        assert client.get(f"/api/questions/{public}/comments").json()["items"][0]["is_owner"] is False
+        public_comment = client.get(f"/api/questions/{public}/comments").json()["items"][0]
+        assert public_comment["is_owner"] is False
+        assert "owner_id" not in public_comment
+        assert "owner_role" not in public_comment
         assert client.post(f"/api/questions/{private}/comments", json={"content": "synthetic", "comment_password": "1234"}).status_code == 403
         assert client.post(f"/api/questions/{private}/unlock", json={"post_password": "1234"}).status_code == 403
         assert client.patch(f"/api/questions/{private}", json={"title": "changed title", "content": "changed synthetic content", "post_password": "1234"}).status_code == 403
