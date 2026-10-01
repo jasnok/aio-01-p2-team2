@@ -27,17 +27,12 @@ def make_run(status="completed", age=0):
 
 def test_snapshot_restores_without_process_memory_and_retains_ttl(monkeypatch):
     class Redis:
-        values = {}
-        async def set(self, key, value, ex):
-            assert ex == 86400
-            self.values[key] = value
+        values = {"lawpath:run:test-run": json.dumps(make_run())}
         async def get(self, key):
             return self.values.get(key)
     client = Redis()
     configure(monkeypatch, client)
-    run = make_run()
-    asyncio.run(agent_run_store.save_snapshot(run))
-    assert asyncio.run(agent_run_store.read_snapshot("test-run")) == run
+    assert asyncio.run(agent_run_store.read_snapshot("test-run"))["status"] == "completed"
 
 
 def test_abandoned_run_becomes_failed_instead_of_polling_forever(monkeypatch):
@@ -118,13 +113,95 @@ def test_real_redis_timeout_compare_and_set_preserves_winner_and_ttl(monkeypatch
             await client.set(key, raw, ex=30)
             before = await client.pttl(key)
             configure(monkeypatch, client)
-            assert (await agent_run_store.read_snapshot(run_id))["status"] == "failed"
+            interrupted = await agent_run_store.read_snapshot(run_id)
+            assert interrupted["status"] == "failed"
+            assert interrupted["revision"] == 1  # legacy snapshots start at revision zero
             assert 0 < await client.pttl(key) <= before
             await client.delete(key)
             assert await client.eval(agent_run_store._INTERRUPT_SNAPSHOT, 1, key, raw, raw) == ""
             assert not await client.exists(key)
         finally:
             await client.delete(key)
+            await client.aclose()
+
+    asyncio.run(verify())
+
+
+@pytest.mark.skipif(not os.getenv("RUN_REDIS_INTEGRATION"), reason="requires an explicit Redis test URL")
+def test_real_redis_revision_transitions_and_reservation(monkeypatch):
+    from copy import deepcopy
+    import hashlib
+    from redis.asyncio import Redis
+
+    async def verify():
+        client = Redis.from_url(os.environ["RUN_REDIS_INTEGRATION"], decode_responses=True)
+        owner = "revision-test-" + uuid.uuid4().hex
+        idempotency = uuid.uuid4().hex
+        fingerprint = ["housing", "synthetic question", False, None]
+        runs = [dict(make_run("queued"), run_id=owner + str(i), owner_id=owner) for i in range(2)]
+        reservation = "lawpath:run-idempotency:" + hashlib.sha256(
+            json.dumps([owner, idempotency]).encode()).hexdigest()
+        keys = [reservation] + [f"lawpath:run:{run['run_id']}" for run in runs]
+        configure(monkeypatch, client)
+
+        async def rejected(candidate, reason):
+            before = await client.get(f"lawpath:run:{candidate['run_id']}")
+            with pytest.raises(agent_run_store.SnapshotConflictError) as error:
+                await agent_run_store.save_snapshot(candidate)
+            assert error.value.reason == reason
+            assert await client.get(f"lawpath:run:{candidate['run_id']}") == before
+
+        try:
+            reservations = await asyncio.gather(*[
+                agent_run_store.reserve_run(run, fingerprint, idempotency) for run in runs])
+            assert sum(created for _, created in reservations) == 1
+            assert reservations[0][0]["run_id"] == reservations[1][0]["run_id"]
+            run = next(run for run, created in reservations if created)
+            assert run["revision"] == 1
+            queued = deepcopy(run)
+            run["status"] = "running"
+            run["events"] = [{"id": 1, "event": "run.started", "data": {}}]
+            await agent_run_store.save_snapshot(run)
+            assert run["revision"] == 2
+            await rejected(queued, "revision")
+            await rejected(dict(run, owner_id="different"), "identity")
+            await rejected(dict(run, status="queued"), "transition")
+            await rejected(dict(run, events=[]), "events")
+            altered = deepcopy(run)
+            altered["events"][0]["event"] = "rewritten"
+            await rejected(altered, "events")
+            await rejected(dict(run, events=run["events"] + [{"id": 3}]), "events")
+            await rejected(dict(run, status="completed"), "result")
+            await rejected(dict(run, status="failed"), "error")
+            stale = deepcopy(run)
+            run.update(status="completed", result={"answer": "preserved", "claims": [], "nested": {"items": []}})
+            run["events"].append({"id": 2, "event": "run.completed", "data": {}})
+            await agent_run_store.save_snapshot(run)
+            assert run["revision"] == 3
+            restored = await agent_run_store.read_snapshot(run["run_id"])
+            assert restored["result"]["claims"] == []
+            assert restored["result"]["nested"]["items"] == []
+            await rejected(stale, "revision")
+            await rejected(dict(run, status="failed", error={"code": "late"}), "terminal")
+            before = await client.pttl(f"lawpath:run:{run['run_id']}")
+            await agent_run_store.save_snapshot(run)  # identical terminal save is a no-op
+            assert run["revision"] == 3
+            assert 0 < await client.pttl(f"lawpath:run:{run['run_id']}") <= before
+            for terminal in ("stopped", "failed"):
+                await client.set(f"lawpath:run:{run['run_id']}", json.dumps(stale), ex=30)
+                ending = dict(deepcopy(stale), status=terminal, result={"answer": "retained"},
+                              error={"code": "synthetic"} if terminal == "failed" else None)
+                await agent_run_store.save_snapshot(ending)
+                await rejected(dict(ending, status="running"), "terminal")
+            legacy = deepcopy(stale)
+            legacy.pop("revision")
+            await client.set(f"lawpath:run:{run['run_id']}", json.dumps(legacy), ex=30)
+            await agent_run_store.save_snapshot(legacy)
+            assert legacy["revision"] == 1
+            await client.delete(f"lawpath:run:{run['run_id']}")
+            await rejected(run, "expired")
+        finally:
+            await client.delete(*keys)
             await client.aclose()
 
     asyncio.run(verify())

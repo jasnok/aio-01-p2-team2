@@ -8,11 +8,22 @@ on:
 jobs:
   python-tests:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
     env:
       BACKEND_MOCK_MODE: "true"
       LLM_PROVIDER: mock
       REDIS_ENABLED: "false"
       DATABASE_URL: postgresql://test:test@127.0.0.1:5432/test
+      RUN_REDIS_INTEGRATION: redis://127.0.0.1:6379/0
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
