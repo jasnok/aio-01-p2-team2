@@ -92,6 +92,7 @@ docker compose -f compose.yml up --build -d
 - [응답 속도 실험과 비동기 호출·답변 흐름 리팩토링 결과](docs/LATENCY_REFACTOR_REPORT.md)
 - [실행 상태의 원자적 버전 검사와 종료 결과 보호](docs/RUN_STATE_CONTRACT.md)
 - [게스트 임시 이력의 동시 저장 유실 방지](docs/GUEST_HISTORY_CONCURRENCY.md)
+- [저장 대화 문맥 조회 단순화와 용어 대화 오류 수정](docs/SAVED_CONTEXT_REFACTOR.md)
 - [2차 최적화 구현·평가 기록](docs/PORTFOLIO_OPTIMIZATION_REPORT.md) — 검색 병렬화, 구절 번호 인용, 중간 자료 표시, 반복 검색 캐시. 실제 일반 질문 3건 생성 성공은 단일 검증 결과이며 자연어 관련성 평가는 대기 중입니다.
 - [개인 리팩토링 구현·검증 결과](docs/PORTFOLIO_REFACTOR_REPORT.md)
 - [에이전트 아키텍처 설계서](docs/에이전트%20아키텍처%20설계서.md)
