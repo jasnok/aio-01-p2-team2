@@ -78,6 +78,39 @@ def test_invalid_output_retries_only_once(monkeypatch) -> None:
     assert provider.calls == 2
 
 
+@pytest.mark.parametrize("questions", [[], ["   "], ["synthetic question"], [" synthetic   question "]])
+def test_empty_clarification_after_normalization_retries_before_completed_event(monkeypatch, questions):
+    provider = configure_provider(monkeypatch, [
+        {"status": "needs_clarification", "message": "synthetic", "follow_up_questions": questions},
+        {"status": "needs_clarification", "message": "synthetic", "follow_up_questions": ["어떤 상황인가요?"]},
+    ], timeout=1)
+    events = []
+    async def event_callback(event):
+        events.append(event)
+    result = asyncio.run(IntakeAgent().assess("housing", "synthetic question", event_callback))
+    assert provider.calls == 2
+    assert result.follow_up_questions == ["어떤 상황인가요?"]
+    assert not result.is_ready_for_search
+    assert [event["stage"] for event in events] == ["validation_started", "validation_completed"]
+
+
+def test_repeated_empty_clarification_fails_with_bounded_attempts(monkeypatch):
+    provider = configure_provider(monkeypatch,
+        {"status": "needs_clarification", "message": "synthetic", "follow_up_questions": []}, timeout=1)
+    with pytest.raises(IntakeAssessmentError):
+        asyncio.run(IntakeAgent().assess("housing", "synthetic question"))
+    assert provider.calls == 2
+
+
+@pytest.mark.parametrize("status", ["sufficient", "proceed_with_caution"])
+def test_searchable_decision_does_not_require_follow_up_questions(monkeypatch, status):
+    provider = configure_provider(monkeypatch, {"status": status, "message": "synthetic"}, timeout=1)
+    result = asyncio.run(IntakeAgent().assess("housing", "synthetic question"))
+    assert provider.calls == 1
+    assert result.is_ready_for_search
+    assert result.follow_up_questions == []
+
+
 def test_general_law_question_returns_complete_optional_checks(monkeypatch) -> None:
     configure_provider(monkeypatch, {
         "status": "sufficient",

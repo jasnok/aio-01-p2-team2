@@ -127,6 +127,8 @@ class IntakeAgent:
                 break
         if decision.status == "sufficient":
             questions = []
+        if decision.status == "needs_clarification" and not questions:
+            raise ValueError("추가 정보가 필요한 판단에는 유효한 보완 질문이 필요합니다.")
 
         return IntakeResult(
             is_ready_for_search=is_ready,
