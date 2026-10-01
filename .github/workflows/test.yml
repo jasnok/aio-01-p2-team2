@@ -9,6 +9,19 @@ jobs:
   python-tests:
     runs-on: ubuntu-latest
     services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 5
       redis:
         image: redis:7-alpine
         ports:
@@ -24,6 +37,7 @@ jobs:
       REDIS_ENABLED: "false"
       DATABASE_URL: postgresql://test:test@127.0.0.1:5432/test
       RUN_REDIS_INTEGRATION: redis://127.0.0.1:6379/0
+      RUN_POSTGRES_INTEGRATION: postgresql://test:test@127.0.0.1:5432/test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

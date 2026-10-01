@@ -33,6 +33,7 @@ class SavedConversationService:
         category: str,
         question: str,
         response: LegalQuestionResponse,
+        execution_key: str | None = None,
     ) -> int:
         """Persist only an explicitly saved, completed response for a member."""
         if actor.get("role") == "GUEST":
@@ -44,7 +45,7 @@ class SavedConversationService:
             category=category,
             question=question,
             result=response.model_dump(mode="json"),
-            execution_key=response.request_id,
+            execution_key=response.request_id if execution_key is None else execution_key,
         )
 
     async def build_context_for_actor(
