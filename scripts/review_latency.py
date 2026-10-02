@@ -50,7 +50,7 @@ def create_review(folder, output_prefix="quality-review"):
     if any(path.exists() for path in outputs):
         raise FileExistsError("기존 검토 자료를 보존합니다. 다른 --output-prefix를 지정하세요.")
     index = json.loads((folder/"index.json").read_text(encoding="utf-8"))
-    source_bytes = Path(index["input"]).read_bytes()
+    source_bytes = Path(index["input"].replace("\\", "/")).read_bytes()
     if not source_matches(source_bytes, index["input_sha256"]):
         raise ValueError("비교 실험의 원본 SHA-256이 다릅니다.")
     source = json.loads(source_bytes)

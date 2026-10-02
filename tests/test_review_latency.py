@@ -116,3 +116,12 @@ def test_git_line_ending_change_preserves_source_identity(experiment):
     public = json.loads((folder / "quality-review.json").read_text(encoding="utf-8"))
     assert public["source_reference"]["sha256"] == index["input_sha256"]
     assert public["source_reference"]["normalized_lf_sha256"] == sha256(original.replace(b"\r\n", b"\n")).hexdigest()
+
+
+def test_windows_source_path_separators_are_accepted(experiment):
+    folder, source, index = experiment
+    index["input"] = str(source).replace("/", "\\")
+    write_json(folder / "index.json", index)
+    assert create_review(folder) == 2
+    public = json.loads((folder / "quality-review.json").read_text(encoding="utf-8"))
+    assert public["source_reference"]["file"] == index["input"]
