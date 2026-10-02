@@ -54,6 +54,8 @@ def build_analysis_pdf(result: dict) -> bytes:
             add('표시할 자료가 없습니다.')
         for index, item in enumerate(items, 1):
             add(f"{index}. {item.get('title', '제목 없음')}", heading)
+            if item.get('evidence_id'):
+                add(f"근거 ID: {item['evidence_id']}")
             info = [item.get('article') or item.get('article_number'), item.get('court'), item.get('case_number'), item.get('date') or item.get('decided_at')]
             add(' / '.join(str(v) for v in info if v) or '상세 식별 정보 미제공')
             add(score_label(item.get('score')))

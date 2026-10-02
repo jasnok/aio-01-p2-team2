@@ -29,3 +29,36 @@ def test_pdf_preserves_generation_state_and_claim_citations():
     assert '검색된 자료 목록을 대신 제공합니다' in text
     assert '확인할 주장' in text
     assert '검증된 원문 인용' in text
+
+
+def test_pdf_links_citations_to_each_evidence_body_without_inventing_ids():
+    result = {
+        'is_mock': False,
+        'generation_status': 'llm',
+        'cited_claims': [{'text': '자료별로 확인하세요.', 'citations': [
+            {'evidence_id': key, 'quote': f'인용 {key}'}
+            for key in ('law-1', 'case-2', 'consultation-3')]}],
+        'related_laws': [{'title': '동일 제목', 'evidence_id': 'law-1', 'content': '법령 본문'}],
+        'similar_cases': [{'title': '동일 제목', 'evidence_id': 'case-2', 'content': '판례 본문'}],
+        'consultations': [
+            {'title': '동일 제목', 'evidence_id': 'consultation-3', 'content': '상담 본문'},
+            {'title': '이전 자료', 'content': '식별자가 없는 본문'},
+        ],
+    }
+    text = ''.join(page.extract_text() for page in PdfReader(BytesIO(build_analysis_pdf(result))).pages)
+    for key, body in [('law-1', '법령 본문'), ('case-2', '판례 본문'), ('consultation-3', '상담 본문')]:
+        assert f'근거 {key}: 인용 {key}' in text
+        assert f'근거 ID: {key}' in text
+        assert text.index(f'근거 ID: {key}') < text.index(body)
+    assert text.count('근거 ID:') == 3
+    assert '식별자가 없는 본문' in text
+
+
+def test_pdf_preserves_literal_evidence_identifier_and_quote():
+    key = 'law<&>-한글'
+    quote = '금액 <100> & 조건'
+    result = {'cited_claims': [{'text': '주장', 'citations': [{'evidence_id': key, 'quote': quote}]}],
+              'related_laws': [{'title': '법령', 'evidence_id': key, 'content': quote}]}
+    text = ''.join(page.extract_text() for page in PdfReader(BytesIO(build_analysis_pdf(result))).pages)
+    assert f'근거 ID: {key}' in text
+    assert f'근거 {key}: {quote}' in text
