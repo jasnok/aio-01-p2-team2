@@ -136,6 +136,7 @@ docker compose -f compose.yml up --build -d
 - [분석 PDF의 세션 내 재사용과 개인 상태 정리](docs/SESSION_PDF_REUSE.md)
 - [발표 패널의 HTTP 연결 재사용 측정 근거](docs/HTTP_PORTFOLIO_EVIDENCE.md)
 - [법률 용어 대화 입력의 성공·실패 처리](docs/TERMS_INPUT_RECOVERY.md)
+- [HTTP 측정 원본의 분야 완전성과 정수 검증](docs/HTTP_EVIDENCE_COMPLETENESS.md)
 - [MCP 검색 응답 계약과 잘못된 결과 차단](docs/MCP_SEARCH_CONTRACT.md)
 - [운영 메트릭과 실패 로그의 상담 내용 노출 방지](docs/SAFE_OPERATIONAL_LOGS.md)
 - [분석 접수 제한과 종료 자원 정리](docs/RUN_ADMISSION_CONTROL.md)

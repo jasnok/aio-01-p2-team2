@@ -51,9 +51,15 @@ def build(directory):
             row[field] = measured(case["samples_ms"][name], keyword["measured_pairs"], case["median_ms"][name])
         rows.append(row)
     http = read('frontend-http-pool.json')
-    if http['authenticated_requests'] != 0 or http['model_requests'] != 0:
+    if any(type(http[field]) is not int or http[field] != 0 for field in ('authenticated_requests', 'model_requests')):
         raise ValueError('HTTP measurement scope differs')
+    if not isinstance(http['results'], dict) or set(http['results']) != {'housing', 'labor', 'consumer'}:
+        raise ValueError('HTTP measurement categories are incomplete')
     for category, case in http['results'].items():
+        for field in ('warmup_pairs', 'measured_pairs', 'equal_pairs_including_warmup'):
+            minimum = 0 if field == 'warmup_pairs' else 1
+            if type(case[field]) is not int or case[field] < minimum:
+                raise ValueError('Invalid HTTP measurement count')
         if case['equal_pairs_including_warmup'] != case['warmup_pairs'] + case['measured_pairs']:
             raise ValueError('HTTP result equivalence is not established')
         if len(case['response_sha256']) != 64 or any(c not in '0123456789abcdef' for c in case['response_sha256']):
