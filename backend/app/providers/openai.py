@@ -28,8 +28,11 @@ def _async_client(api_key, timeout):
 
 async def close_async_clients():
     clients = _async_clients.pop(asyncio.get_running_loop(), {})
-    for client in clients.values():
-        await client.close()
+    results = await asyncio.gather(*(client.close() for client in clients.values()),
+                                   return_exceptions=True)
+    for result in results:
+        if isinstance(result, BaseException):
+            raise result
 
 
 class OpenAIProvider:

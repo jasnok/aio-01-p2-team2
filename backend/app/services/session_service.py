@@ -79,6 +79,12 @@ class SessionService:
         async with self._lock:
             return self._memory.pop(token, None) is not None
 
+    async def close(self) -> None:
+        """Close an existing pool in its loop; a later lifespan creates a new one."""
+        client, self._redis = self._redis, None
+        if client is not None:
+            await client.aclose()
+
     async def _redis_client(self):
         if self._redis is None:
             try:
