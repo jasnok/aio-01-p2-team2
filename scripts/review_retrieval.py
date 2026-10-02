@@ -7,12 +7,38 @@ from pathlib import Path
 
 
 def review_cases(data):
+    if not isinstance(data, dict) or not isinstance(data.get("records"), list):
+        raise ValueError("검색 결과 records 목록이 필요합니다.")
     cases = []
+    seen = set()
     for record in data["records"]:
+        if not isinstance(record, dict):
+            raise ValueError("검색 결과 레코드는 객체여야 합니다.")
+        if not isinstance(record.get("kind"), str):
+            raise ValueError("검색 레코드 kind 문자열이 필요합니다.")
         if record["kind"] != "natural" or record.get("error"):
             continue
+        if not isinstance(record.get("id"), str) or not record["id"] or record["id"] in seen:
+            raise ValueError("질문 ID가 없거나 중복되었습니다.")
+        seen.add(record["id"])
+        if not isinstance(record.get("query"), str) or not record["query"].strip():
+            raise ValueError("질문 문자열이 필요합니다.")
+        if not isinstance(record.get("variants"), dict) or not record["variants"]:
+            raise ValueError("검색 비교 방식이 필요합니다.")
         documents = {}
-        for variant in record["variants"].values():
+        for name, variant in record["variants"].items():
+            if not isinstance(name, str) or not name.strip():
+                raise ValueError("검색 방식 이름이 필요합니다.")
+            if not isinstance(variant, dict):
+                raise ValueError("검색 방식 결과는 객체여야 합니다.")
+            arrays = [variant.get(field) for field in ("document_ids", "titles", "chunks")]
+            if any(not isinstance(values, list) for values in arrays) or len({len(values) for values in arrays}) != 1:
+                raise ValueError("문서 ID·제목·청크 목록 길이가 다릅니다.")
+            ids, titles, chunks = arrays
+            if any(type(value) is not int or value <= 0 for value in ids) or len(set(ids)) != len(ids):
+                raise ValueError("문서 ID가 잘못되었거나 중복되었습니다.")
+            if any(not isinstance(value, str) for value in titles + chunks):
+                raise ValueError("제목과 청크는 문자열이어야 합니다.")
             for doc_id, title, chunk in zip(variant["document_ids"], variant["titles"], variant["chunks"]):
                 item = documents.setdefault(str(doc_id), {"title": title, "chunks": []})
                 if chunk not in item["chunks"]:
@@ -26,21 +52,28 @@ def fingerprint(data):
 
 
 def score(data, labels):
+    if not isinstance(labels, dict):
+        raise ValueError("검토 점수는 객체여야 합니다.")
     if labels.get("dataset_fingerprint") != fingerprint(data):
         raise ValueError("검토한 데이터와 검색 결과가 다릅니다.")
-    if not labels.get("reviewer", "").strip():
+    if not isinstance(labels.get("reviewer"), str) or not labels["reviewer"].strip():
         raise ValueError("검토자 이름이 필요합니다.")
     cases = {case["id"]: case for case in review_cases(data)}
     grades = labels.get("grades", {})
+    if not isinstance(grades, dict) or set(grades) - set(cases):
+        raise ValueError("검토 대상 밖의 질문이 있거나 점수 형식이 잘못되었습니다.")
     completed = {}
     for case_id, case in cases.items():
         values = grades.get(case_id, {})
-        if all(str(doc) in values and type(values[str(doc)]) is int and 0 <= values[str(doc)] <= 3
-               for doc in case["documents"]):
-            completed[case_id] = values
+        if not isinstance(values, dict) or set(values) - set(case["documents"]):
+            raise ValueError("검토 대상 밖의 문서 점수가 있습니다.")
+        if any(type(value) is not int or not 0 <= value <= 3 for value in values.values()):
+            raise ValueError("점수는 0~3 정수여야 합니다.")
+        if case["documents"] and set(values) == set(case["documents"]):
+            completed[case_id] = {doc: values[doc] for doc in case["documents"]}
     scores = {}
     for record in data["records"]:
-        if record["id"] not in completed:
+        if record.get("kind") != "natural" or record.get("error") or record.get("id") not in completed:
             continue
         values = completed[record["id"]]
         ideal = sorted(values.values(), reverse=True)[:3]
@@ -57,6 +90,8 @@ def score(data, labels):
     return {"scope": "blinded pooled retrieved-chunk relevance; not corpus recall or legal accuracy",
             "reviewer": labels["reviewer"], "dataset_fingerprint": fingerprint(data),
             "reviewed_queries": len(completed), "total_queries": len(cases),
+            "pending_queries": len(cases) - len(completed),
+            "empty_candidate_queries": sum(not case["documents"] for case in cases.values()),
             "summary": {name: {"query_count": len(rows),
                 "precision_at_3": sum(row["precision_at_3"] for row in rows) / len(rows),
                 "pooled_ndcg_at_3": sum(row["pooled_ndcg_at_3"] for row in rows) / len(rows)}

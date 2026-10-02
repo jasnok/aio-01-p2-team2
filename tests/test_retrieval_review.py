@@ -27,3 +27,34 @@ def test_scores_reward_relevant_ranking_and_use_all_candidate_labels():
 def test_labels_from_other_snapshot_are_rejected():
     with pytest.raises(ValueError, match="다릅니다"):
         score(dataset(), {"dataset_fingerprint": "wrong", "reviewer": "검토자"})
+
+
+@pytest.mark.parametrize("grades", [{"q":{"1":3,"2":2,"3":0,"999":3}},
+    {"other":{}}, {"q":[]}, {"q":{"1":True}}, {"q":{"1":4}}, {"q":{"1":"3"}}])
+def test_invalid_labels_cannot_contaminate_metrics(grades):
+    data = dataset()
+    with pytest.raises(ValueError):
+        score(data, {"dataset_fingerprint":fingerprint(data),"reviewer":"synthetic-test","grades":grades})
+
+
+def test_partial_labels_remain_unscored():
+    data = dataset()
+    result = score(data,{"dataset_fingerprint":fingerprint(data),"reviewer":"synthetic-test","grades":{"q":{"1":3}}})
+    assert result["reviewed_queries"] == 0
+    assert result["summary"] == {}
+
+
+@pytest.mark.parametrize("field,value", [("titles",[]),("chunks",["a"]),
+    ("document_ids",[1,1,3]),("document_ids",[True,2,3])])
+def test_malformed_ranked_documents_are_rejected(field,value):
+    data = dataset()
+    data["records"][0]["variants"]["good"][field] = value
+    with pytest.raises(ValueError):
+        fingerprint(data)
+
+
+def test_empty_retrieval_is_not_marked_as_human_reviewed():
+    data = dataset()
+    data["records"][0]["variants"] = {"empty":{"document_ids":[],"titles":[],"chunks":[]}}
+    result = score(data,{"dataset_fingerprint":fingerprint(data),"reviewer":"synthetic-test","grades":{"q":{}}})
+    assert result["reviewed_queries"] == 0

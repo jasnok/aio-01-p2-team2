@@ -104,6 +104,7 @@ docker compose -f compose.yml up --build -d
 - [SSE 상태·이벤트의 UI 반영 전 검증](docs/SSE_PAYLOAD_CONTRACT.md)
 - [발표 모드의 엔지니어링 측정 화면과 자료 재생성](docs/PORTFOLIO_EVIDENCE_PANEL.md)
 - [성능 측정 시점의 코드·환경·데이터 출처 계약](docs/BENCHMARK_PROVENANCE.md)
+- [사람 검색 근거 검토의 입력 계약과 지표 오염 방지](docs/RETRIEVAL_REVIEW_CONTRACT.md)
 - [공유 Redis·모델 연결의 종료와 재사용 수명주기](docs/SHARED_CLIENT_LIFECYCLE.md)
 - [게시판·댓글·개인 이력·알림의 소유자 분리](docs/COMMUNITY_OWNER_ISOLATION.md)
 - [AI 실행·용어 결과의 회원·게스트 소유자 분리](docs/ACTOR_RESULT_ISOLATION.md)
