@@ -11,7 +11,7 @@ from frontend.clients import backend_client as api
 from frontend.core.config import get_frontend_settings
 from frontend.core.models import LegalQuestionView
 
-EVENTS = {"run.started", "step.started", "step.completed", "input.required", "run.completed", "run.failed"}
+EVENTS = {"run.started", "step.started", "step.completed", "input.required", "run.completed", "run.failed", "guest.storage_failed"}
 TERMINAL = {"completed", "stopped", "failed"}
 
 
@@ -34,6 +34,8 @@ def parse_sse(lines):
 
 
 def final_result(snapshot, run_id):
+    if not isinstance(snapshot, dict) or not isinstance(snapshot.get("status"), str):
+        raise api.BackendClientError("작업 상태 형식이 계약과 다릅니다.", "CONTRACT_MISMATCH")
     if snapshot.get("run_id") != run_id:
         raise api.BackendClientError("작업 ID가 일치하지 않습니다.", "CONTRACT_MISMATCH")
     status = snapshot.get("status")
@@ -50,6 +52,31 @@ def final_result(snapshot, run_id):
     if status not in {"queued", "running"}:
         raise api.BackendClientError("알 수 없는 작업 상태입니다.", "CONTRACT_MISMATCH")
     return None
+
+
+def validate_event(event, data, run_id):
+    """Validate UI inputs before invoking a callback that mutates session state."""
+    if event not in EVENTS or not isinstance(data, dict) or data.get("run_id") != run_id:
+        raise ValueError("Invalid SSE event")
+    if event.startswith("step.") and (not isinstance(data.get("step_id"), str) or not data["step_id"].strip()):
+        raise ValueError("Invalid step_id")
+    for field in ("step_id", "tool", "stage", "message", "status"):
+        if field == "tool" and data.get(field) is None:
+            continue
+        if field in data and not isinstance(data[field], str):
+            raise ValueError(f"Invalid {field}")
+    count = data.get("result_count")
+    if count is not None and (type(count) is not int or count < 0):
+        raise ValueError("Invalid result_count")
+    previews = data.get("evidence_previews", [])
+    if not isinstance(previews, list):
+        raise ValueError("Invalid evidence_previews")
+    for preview in previews:
+        if not isinstance(preview, dict):
+            raise ValueError("Invalid preview")
+        for field in ("evidence_id", "title", "content_preview", "source_type"):
+            if field in preview and not isinstance(preview[field], str):
+                raise ValueError(f"Invalid preview {field}")
 
 
 def receive_run(token, guest_id, run_id, last_id=0, on_event=lambda *args: None):
@@ -79,13 +106,12 @@ def receive_run(token, guest_id, run_id, last_id=0, on_event=lambda *args: None)
                             raise TimeoutError("전체 분석 대기시간 초과")
                         yield line
                 for event_id, event, data in parse_sse(bounded_lines()):
-                    if event not in EVENTS or not isinstance(data, dict) or data.get("run_id") != run_id:
-                        raise ValueError("Invalid SSE event")
+                    validate_event(event, data, run_id)
                     number = int(event_id)
+                    if number < 1:
+                        raise ValueError("Invalid event ID")
                     if number <= last_id:
                         continue
-                    if event.startswith("step.") and not data.get("step_id"):
-                        raise ValueError("Missing step_id")
                     on_event(number, event, data)
                     last_id = number
                     if event in {"run.completed", "input.required", "run.failed"}:

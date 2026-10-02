@@ -27,6 +27,7 @@ def friendly_event(event, data):
         "input.required": "더 정확한 안내를 위해 몇 가지 정보를 알려주세요.",
         "run.completed": "자료 정리가 끝났습니다. 분석 결과를 확인해 주세요.",
         "run.failed": "분석을 마치지 못했습니다. 잠시 후 다시 시도해 주세요.",
+        "guest.storage_failed": "임시 이력을 저장하지 못했습니다. 분석은 계속 진행합니다.",
     }
     if event in terminal:
         return terminal[event]
