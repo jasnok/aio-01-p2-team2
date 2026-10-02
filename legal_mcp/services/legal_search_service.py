@@ -68,14 +68,12 @@ class LegalSearchService:
                 limit=candidate_limit,
             )
 
-        keyword_rows = []
-        for term in extract_query_terms(query):
-            keyword_rows.extend(self.repository.search_documents_by_keyword(
-                query=term,
-                category=category,
-                document_types=document_types,
-                limit=candidate_limit,
-            ))
+        keyword_rows = self.repository.search_documents_by_keywords(
+            queries=extract_query_terms(query),
+            category=category,
+            document_types=document_types,
+            limit=candidate_limit,
+        )
 
         return self._merge_search_results(
             vector_rows=vector_rows,
