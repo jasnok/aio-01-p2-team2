@@ -4,10 +4,15 @@ from legal_mcp.providers import embedding_provider as module
 def test_reuses_identical_query_but_isolates_models_and_defends_mutation(monkeypatch):
     calls = []
     class Provider:
+        def __init__(self, *args):
+            pass
+        def close(self):
+            pass
         def embed(self, texts):
             calls.append(texts)
             return [[0.1, 0.2]]
     module._query_cache.clear()
+    monkeypatch.setattr(module, "_clients", module.EmbeddingClients())
     monkeypatch.setattr(module, "OpenAIEmbeddingProvider", Provider)
     first = module.create_embedding("퇴직금")
     first[0] = 9

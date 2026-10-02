@@ -1,9 +1,11 @@
 """Legal MCP Server."""
 
 import os
+from contextlib import asynccontextmanager
 from typing import Literal
 
 from mcp.server.fastmcp import FastMCP
+from legal_mcp.providers import embedding_provider
 from legal_mcp.tools.search_laws import search_laws as search_laws_tool
 
 from legal_mcp.schemas.tools import (
@@ -135,5 +137,27 @@ def search_legal_documents(
     return result.model_dump(mode="json")
 
 
+def create_app():
+    """Tie shared clients to the HTTP server, rather than a stateless request."""
+    app = mcp.streamable_http_app()
+    original_lifespan = app.router.lifespan_context
+
+    @asynccontextmanager
+    async def lifespan(app):
+        try:
+            async with original_lifespan(app):
+                yield
+        finally:
+            # Synchronous embedding workers must finish before transport disposal.
+            from anyio import CancelScope, to_thread
+            with CancelScope(shield=True):
+                await to_thread.run_sync(embedding_provider.close_embedding_clients)
+
+    app.router.lifespan_context = lifespan
+    return app
+
+
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    import uvicorn
+    uvicorn.run(create_app(), host=MCP_HOST, port=MCP_PORT,
+                log_level=mcp.settings.log_level.lower())
