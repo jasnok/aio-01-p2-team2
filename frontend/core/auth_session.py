@@ -4,7 +4,7 @@ from time import time
 import streamlit as st
 from pydantic import ValidationError
 
-from frontend.core.storage_models import LoginView, UserView
+from frontend.core.storage_models import AuthStatusView, LoginView
 
 
 def clear_private_state():
@@ -22,6 +22,8 @@ def clear_private_state():
 def apply_login(payload):
     from frontend.clients.backend_client import BackendClientError
     try:
+        if not isinstance(payload, dict):
+            raise ValueError("Login response must be an object")
         value = LoginView.model_validate({**payload, "access_token": payload.get("access_token") or payload.get("session_token")})
         if value.user.role == "GUEST":
             raise ValueError("Guest login")
@@ -60,11 +62,13 @@ def refresh_auth():
         return
     try:
         payload = api.get_current_user(token, "")
-        user = UserView.model_validate(payload.get("user", payload))
-        if user.role == "GUEST" or payload.get("authenticated") is False:
+        status = AuthStatusView.model_validate(payload)
+        user = status.user
+        if user.role == "GUEST" or not status.authenticated:
             expire_session()
         else:
-            if str(user.id) != str(st.session_state.current_user["id"]):
+            previous = st.session_state.current_user
+            if (str(user.id), user.role) != (str(previous["id"]), previous["role"]):
                 clear_private_state()
             st.session_state.current_user = user.model_dump()
             st.session_state.auth_checked_at = time()
