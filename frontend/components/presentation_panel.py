@@ -30,3 +30,5 @@ def render_presentation_panel(service: LegalService) -> None:
                 use_container_width=True,
             )
             st.caption("① 분야 선택 → ② 사례 분석 → ③ 상세 확인 → ④ 결과 저장")
+            from frontend.components.portfolio_evidence import render_portfolio_evidence
+            render_portfolio_evidence()
