@@ -22,6 +22,11 @@ class LoginView(BaseModel):
     user: UserView
 
 
+class AuthStatusView(BaseModel):
+    user: UserView
+    authenticated: StrictBool
+
+
 class MessageView(BaseModel):
     role: Literal["user", "assistant"]
     content: StrictStr

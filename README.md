@@ -126,6 +126,7 @@ docker compose -f compose.yml up --build -d
 - [공유 Redis·모델 연결의 종료와 재사용 수명주기](docs/SHARED_CLIENT_LIFECYCLE.md)
 - [게시판·댓글·개인 이력·알림의 소유자 분리](docs/COMMUNITY_OWNER_ISOLATION.md)
 - [AI 실행·용어 결과의 회원·게스트 소유자 분리](docs/ACTOR_RESULT_ISOLATION.md)
+- [인증 갱신 응답 계약과 역할 변경 시 개인 상태 초기화](docs/AUTH_REFRESH_CONTRACT.md)
 - [MCP 검색 응답 계약과 잘못된 결과 차단](docs/MCP_SEARCH_CONTRACT.md)
 - [운영 메트릭과 실패 로그의 상담 내용 노출 방지](docs/SAFE_OPERATIONAL_LOGS.md)
 - [분석 접수 제한과 종료 자원 정리](docs/RUN_ADMISSION_CONTROL.md)
