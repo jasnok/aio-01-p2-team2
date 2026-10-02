@@ -8,6 +8,39 @@ import subprocess
 import sys
 from pathlib import Path
 
+REQUIRED_CHECKS = {"idempotency", "real_mode", "live_sse_terminal", "terminal_status",
+                   "owner_isolation", "sse_replay", "live_sse_sequence"}
+
+
+def check_status(row):
+    checks = row.get("checks")
+    if checks is None or checks == {}:
+        return "unchecked"
+    if not isinstance(checks, dict) or any(type(value) is not bool for value in checks.values()):
+        return "invalid"
+    if not all(checks.values()):
+        return "failed"
+    required = set(REQUIRED_CHECKS)
+    final = row.get("run", {}).get("result") or {}
+    diagnostics = final.get("diagnostics", {})
+    if final.get("generation_status") == "llm":
+        required.add("citation_integrity")
+        if diagnostics.get("citation_mode") == "spans":
+            required.add("answer_matches_cited_claims")
+    if diagnostics.get("tool_timings_ms"):
+        required.add("early_evidence_events")
+    return "passed" if required <= checks.keys() else "incomplete"
+
+
+def valid_duration(value):
+    return type(value) in (int, float) and value >= 0 and (type(value) is int or math.isfinite(value))
+
+
+def valid_latency(row):
+    elapsed = row.get("elapsed_ms")
+    first = row.get("live_sse", {}).get("first_evidence_ms")
+    return valid_duration(elapsed) and (first is None or valid_duration(first) and first <= elapsed)
+
 
 def latency(values):
     values = sorted(values)
@@ -19,16 +52,20 @@ def latency(values):
 
 
 def summarize(samples):
+    checks = Counter(check_status(row) for row in samples)
     successful = [row for row in samples if not row.get("error") and
-        row.get("run", {}).get("status") in {"completed", "stopped"} and all(row.get("checks", {}).values())]
+        row.get("run", {}).get("status") in {"completed", "stopped"} and
+        check_status(row) == "passed" and valid_latency(row)]
     statuses = Counter(row.get("run", {}).get("status", "error") for row in samples)
     finals = [(row.get("run", {}).get("result") or {}) for row in samples]
     diagnostics = [final.get("diagnostics", {}) for final in finals]
-    return {"requests": len(samples), "successes": len(successful), "statuses": dict(statuses),
+    return {"success_contract": "live-smoke-checks-v2", "requests": len(samples),
+        "successes": len(successful), "statuses": dict(statuses),
         "generation_statuses": dict(Counter(final.get("generation_status") or "missing" for final in finals)),
         **latency([row["elapsed_ms"] for row in successful]),
-        "check_failures": sum(bool(row.get("checks")) and not all(row["checks"].values()) for row in samples),
-        "unchecked_requests": sum(not row.get("checks") for row in samples),
+        "check_failures": checks["failed"], "unchecked_requests": checks["unchecked"],
+        "invalid_check_requests": checks["invalid"], "incomplete_check_requests": checks["incomplete"],
+        "invalid_latency_requests": sum(not valid_latency(row) for row in samples),
         "fallbacks": sum(final.get("generation_status") == "fallback" for final in finals),
         "repairs": sum(d.get("repair_attempts", 0) > 0 for d in diagnostics),
         "repair_rate_all_requests": sum(d.get("repair_attempts", 0) > 0 for d in diagnostics)/len(samples) if samples else 0,
@@ -72,7 +109,7 @@ def main():
             if sample.get("scenario_index", position % 4) == index]) for index in range(4)}}
     (folder / "summary.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(result["summary"]))
-    return int(failed or result["summary"]["check_failures"] > 0 or result["summary"]["unchecked_requests"] > 0)
+    return int(failed or not samples or result["summary"]["successes"] != len(samples))
 
 
 if __name__ == "__main__":
