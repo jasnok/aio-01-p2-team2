@@ -11,7 +11,7 @@ def clear_private_state():
     for key in list(st.session_state):
         if key.startswith(("terms_", "history_", "history-", "saved_", "api-history", "analysis_save")):
             st.session_state.pop(key, None)
-    for key in ("sse_pending", "legal_terms_last", "analysis_terms_chat"):
+    for key in ("sse_pending", "legal_terms_last", "analysis_terms_chat", "follow_up_clear_input"):
         st.session_state.pop(key, None)
     st.session_state.update(last_result=None, analysis_error=None, analysis_in_progress=False,
                             session_history=[], conversation_messages=[], notifications=[],

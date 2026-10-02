@@ -16,12 +16,15 @@ def _start_new_analysis() -> None:
     st.session_state.question_message = ""
     st.session_state.analysis_draft = ""
     st.session_state.follow_up_input = ""
+    st.session_state.pop("follow_up_clear_input", None)
     st.session_state.conversation_messages = []
     st.session_state.analysis_error = None
     st.session_state.pop("sse_pending", None)
 
 
 def render_follow_up_chat(result: dict, service: LegalService) -> None:
+    if st.session_state.pop("follow_up_clear_input", False):
+        st.session_state.follow_up_input = ""
     needs_input = result.get("result_state") == "needs_clarification"
     if not needs_input:
         from frontend.components.legal_terms_chat import render_legal_terms_chat
@@ -42,7 +45,7 @@ def render_follow_up_chat(result: dict, service: LegalService) -> None:
                 use_container_width=True,
             )
 
-    with st.form("follow-up-form", clear_on_submit=True):
+    with st.form("follow-up-form", clear_on_submit=False):
         question = st.text_input("추가 정보" if needs_input else "후속 질문", key="follow_up_input", placeholder="예: 1년 3개월 근무했습니다.")
         submitted = st.form_submit_button("추가 정보로 다시 분석" if needs_input else "후속 질문 분석", type="primary")
     if submitted:
@@ -67,6 +70,7 @@ def render_follow_up_chat(result: dict, service: LegalService) -> None:
         st.session_state.conversation_messages.append({"role": "assistant", "content": follow_result["answer"]})
         st.session_state.last_result = follow_result
         st.session_state.session_history.append(follow_result)
+        st.session_state.follow_up_clear_input = True
         st.rerun()
 
     for message in st.session_state.conversation_messages:
