@@ -1,7 +1,24 @@
 from datetime import date
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field
+
+
+TermText = Annotated[str, Field(strict=True, min_length=1)]
+
+
+class LegalTermView(BaseModel):
+    term: TermText
+    description: TermText
+
+
+class TermSearchView(BaseModel):
+    items: list[LegalTermView]
+
+
+class CategoryTermsView(BaseModel):
+    category: Literal['housing', 'labor', 'consumer']
+    terms: list[tuple[TermText, TermText]]
 
 
 class SourceView(BaseModel):

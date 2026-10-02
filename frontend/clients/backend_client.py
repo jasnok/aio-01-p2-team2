@@ -4,7 +4,7 @@ from urllib.parse import quote
 from pydantic import ValidationError
 
 from frontend.core.config import get_frontend_settings
-from frontend.core.models import LegalQuestionView, SearchResultsView
+from frontend.core.models import CategoryTermsView, LegalQuestionView, SearchResultsView, TermSearchView
 
 
 ERROR_MESSAGES = {
@@ -166,11 +166,23 @@ def _search_documents(kind: str, source_type: str, category: str, query: str, to
 
 
 def search_terms(category: str, query: str) -> dict:
-    return _request("GET", "/api/legal/terms", params={"category": category, "query": query})
+    payload = _request("GET", "/api/legal/terms", params={"category": category, "query": query})
+    try:
+        TermSearchView.model_validate(payload)
+    except ValidationError as error:
+        raise BackendClientError("법률 용어 검색 응답 형식을 확인할 수 없습니다.", "CONTRACT_MISMATCH") from error
+    return payload
 
 
 def get_category_catalog(category: str) -> dict:
-    return _request("GET", f"/api/catalog/{category}")
+    payload = _request("GET", f"/api/catalog/{category}")
+    try:
+        if CategoryTermsView.model_validate(payload).category != category:
+            raise ValueError("Mismatched catalog category")
+    except (ValidationError, ValueError) as error:
+        raise BackendClientError("법률 용어 목록 응답 형식을 확인할 수 없습니다.", "CONTRACT_MISMATCH") from error
+    # Keep the full catalog for callers; validation does not discard other fields.
+    return payload
 
 
 def auth_headers(token: str | None, guest_id: str) -> dict[str, str]:
