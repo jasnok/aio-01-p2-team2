@@ -1,0 +1,86 @@
+[
+  {
+    "review_id": "1d7d3ac54620",
+    "file": "case-0-baseline-1.json",
+    "variant": "baseline",
+    "sample_sha256_lf": "db5ec52a17aeddca8f2dc9c881591cb78f74b3656b34e1989eb12f236226138f"
+  },
+  {
+    "review_id": "50b4602cf134",
+    "file": "case-0-repair0-1.json",
+    "variant": "repair0",
+    "sample_sha256_lf": "e4607e5fb89c9e8500c1e56617c81acfa54ab46b948cba04736d14bca652c1d1"
+  },
+  {
+    "review_id": "5f44ac3f0db1",
+    "file": "case-0-answer_low-1.json",
+    "variant": "answer_low",
+    "sample_sha256_lf": "39b0ed4d2aa8ba2b51bc1cc95da872bb349552fc2729c820516d27658dc65c36"
+  },
+  {
+    "review_id": "ac5d3fb7d170",
+    "file": "case-0-verification_low-1.json",
+    "variant": "verification_low",
+    "sample_sha256_lf": "3b3af26c398943c85e89fb72e14f9c492deb07e86fe54e57590325e0c82efec7"
+  },
+  {
+    "review_id": "e501a58d9454",
+    "file": "case-0-verification_candidate-1.json",
+    "variant": "verification_candidate",
+    "sample_sha256_lf": "e3ff584b182dfe3b9c22926094202fca125fe00793dfe207bc8b07b67bfb8826"
+  },
+  {
+    "review_id": "175a12c88957",
+    "file": "case-0-context4-1.json",
+    "variant": "context4",
+    "sample_sha256_lf": "36058eb890985ed3c941e7da1aabd09600d639b249c17400d62c6b06853f94f1"
+  },
+  {
+    "review_id": "b8734eecff92",
+    "file": "case-0-compact_review-1.json",
+    "variant": "compact_review",
+    "sample_sha256_lf": "b2dc5360b8cba6e2f3b4266edd6d22c7e12c640b19da48e8b5dee1b1705f0a4a"
+  },
+  {
+    "review_id": "9cf5aa3a7c10",
+    "file": "case-2-compact_review-1.json",
+    "variant": "compact_review",
+    "sample_sha256_lf": "881e9794498ebbdb0659f3f6c7b6de57f74780098eac7ef4b92ef4cbe5157489"
+  },
+  {
+    "review_id": "4d980bc76a08",
+    "file": "case-2-context4-1.json",
+    "variant": "context4",
+    "sample_sha256_lf": "d3d5549d07ca9539631114ae8d03b55c40e0fcaa9689fc99e136bb87d770f07f"
+  },
+  {
+    "review_id": "e89255defbc4",
+    "file": "case-2-verification_candidate-1.json",
+    "variant": "verification_candidate",
+    "sample_sha256_lf": "11973e1f21c4c734f2a53044b529ea5349d9fc26d49081bf2cb2fbe8765f4da7"
+  },
+  {
+    "review_id": "9c3659266618",
+    "file": "case-2-verification_low-1.json",
+    "variant": "verification_low",
+    "sample_sha256_lf": "65ae9dbc0d7f9664c2e3385d98060567f9a318e715fce583e58afc614413b056"
+  },
+  {
+    "review_id": "31928d216e3d",
+    "file": "case-2-answer_low-1.json",
+    "variant": "answer_low",
+    "sample_sha256_lf": "34db92f835a375da1ef6979150e98d09538d59d14b4db09e57bb95d445e91639"
+  },
+  {
+    "review_id": "778e47f40905",
+    "file": "case-2-repair0-1.json",
+    "variant": "repair0",
+    "sample_sha256_lf": "f6226e7881d6bc151464d64214852b024dd96b24d6a2f71a2751d10efbf6b512"
+  },
+  {
+    "review_id": "f5908cf30f6d",
+    "file": "case-2-baseline-1.json",
+    "variant": "baseline",
+    "sample_sha256_lf": "4e006205644c495cdf0d5c87d2368e1d6b3c94f20edbccc83aa261a24781d839"
+  }
+]
