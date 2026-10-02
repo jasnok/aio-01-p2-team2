@@ -1,5 +1,5 @@
 import uuid
-from contextlib import asynccontextmanager
+from contextlib import AsyncExitStack, asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
@@ -12,18 +12,18 @@ from backend.app.routers.integration_router import router as integration_router
 from backend.app.routers.legal import router as legal_router
 from backend.app.routers.legal_terms import router as legal_terms_router, term_run_router
 from backend.app.routers.mock_api import router as mock_api_router
-from backend.app.services.session_service import SessionStoreUnavailableError
+from backend.app.services.session_service import SessionStoreUnavailableError, sessions
 from backend.app.providers.openai import close_async_clients
 from backend.app.services.agent_run_service import close_active_runs
 
 
 @asynccontextmanager
 async def lifespan(app):
-    try:
+    async with AsyncExitStack() as cleanup:
+        cleanup.push_async_callback(sessions.close)
+        cleanup.push_async_callback(close_async_clients)
+        cleanup.push_async_callback(close_active_runs)
         yield
-    finally:
-        await close_active_runs()
-        await close_async_clients()
 
 
 app = FastAPI(
