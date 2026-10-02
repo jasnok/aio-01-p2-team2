@@ -1,0 +1,4 @@
+
+# Keep environment fingerprints identical across Windows/Linux checkouts.
+requirements-constraints.txt text eol=lf
+output/portfolio/environment*.json text eol=lf

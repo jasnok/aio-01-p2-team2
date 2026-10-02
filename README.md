@@ -97,6 +97,7 @@ docker compose -f compose.yml up --build -d
 - [문맥 전용 DB 조회와 합성 PostgreSQL 측정](docs/BOUNDED_CONTEXT_QUERY.md)
 - [이력 목록 요약 필드 조회와 합성 PostgreSQL 측정](docs/HISTORY_SUMMARY_PROJECTION.md)
 - [추가 정보 요청의 유효한 보완 질문 계약](docs/INTAKE_CLARIFICATION_CONTRACT.md)
+- [실행·평가 의존성 및 기반 이미지 재현성](docs/REPRODUCIBLE_ENVIRONMENTS.md)
 - [공유 Redis·모델 연결의 종료와 재사용 수명주기](docs/SHARED_CLIENT_LIFECYCLE.md)
 - [게시판·댓글·개인 이력·알림의 소유자 분리](docs/COMMUNITY_OWNER_ISOLATION.md)
 - [AI 실행·용어 결과의 회원·게스트 소유자 분리](docs/ACTOR_RESULT_ISOLATION.md)
