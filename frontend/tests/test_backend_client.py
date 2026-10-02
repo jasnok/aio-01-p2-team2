@@ -26,7 +26,7 @@ def test_auth_headers_use_token_or_guest_id() -> None:
 
 def test_request_accepts_empty_204_response(monkeypatch: pytest.MonkeyPatch) -> None:
     response = httpx.Response(204, request=httpx.Request("POST", "http://backend/api/auth/logout"))
-    monkeypatch.setattr(httpx, "request", lambda *args, **kwargs: response)
+    monkeypatch.setattr(backend_client, "http_request", lambda *args, **kwargs: response)
     assert backend_client._request("POST", "/api/auth/logout") == {}
 
 
@@ -74,7 +74,7 @@ def test_agent_run_create_sends_idempotency_key(monkeypatch: pytest.MonkeyPatch)
 @pytest.mark.parametrize("body", ["[]", "null", '"text"', "true", "42", "<html>proxy error</html>"])
 def test_request_rejects_non_object_success(monkeypatch, body):
     response = httpx.Response(200, content=body, request=httpx.Request("GET", "http://backend/history"))
-    monkeypatch.setattr(httpx, "request", lambda *args, **kwargs: response)
+    monkeypatch.setattr(backend_client, "http_request", lambda *args, **kwargs: response)
     with pytest.raises(backend_client.BackendClientError) as caught:
         backend_client._request("GET", "/api/history")
     assert caught.value.code == "INVALID_RESPONSE"
@@ -85,7 +85,7 @@ def test_request_rejects_non_object_success(monkeypatch, body):
     '{"detail":null}', '{"detail":{"code":"","message":"bad"}}'])
 def test_request_handles_malformed_error_body(monkeypatch, body):
     response = httpx.Response(502, content=body, request=httpx.Request("GET", "http://backend/history"))
-    monkeypatch.setattr(httpx, "request", lambda *args, **kwargs: response)
+    monkeypatch.setattr(backend_client, "http_request", lambda *args, **kwargs: response)
     with pytest.raises(backend_client.BackendClientError) as caught:
         backend_client._request("GET", "/api/history")
     assert caught.value.code == "BACKEND_ERROR"
@@ -100,7 +100,7 @@ def test_access_errors_keep_status_guidance_with_malformed_body(monkeypatch, sta
     state = SimpleNamespace(auth_invalid=False)
     monkeypatch.setattr(streamlit, "session_state", state)
     response = httpx.Response(status, content="[]", request=httpx.Request("GET", "http://backend/history"))
-    monkeypatch.setattr(httpx, "request", lambda *args, **kwargs: response)
+    monkeypatch.setattr(backend_client, "http_request", lambda *args, **kwargs: response)
     with pytest.raises(backend_client.BackendClientError) as caught:
         backend_client._request("GET", "/api/history", headers={"Authorization": "Bearer fake"})
     assert caught.value.status_code == status
@@ -114,7 +114,7 @@ def test_fastapi_validation_and_plain_detail_are_preserved():
 
 def test_valid_object_success_is_preserved(monkeypatch):
     response = httpx.Response(200, json={"items": [], "count": 0}, request=httpx.Request("GET", "http://backend/history"))
-    monkeypatch.setattr(httpx, "request", lambda *args, **kwargs: response)
+    monkeypatch.setattr(backend_client, "http_request", lambda *args, **kwargs: response)
     assert backend_client._request("GET", "/api/history") == {"items": [], "count": 0}
 
 
@@ -122,7 +122,7 @@ def test_valid_object_success_is_preserved(monkeypatch):
 def test_streamlit_connection_screen_shows_error_without_exception(monkeypatch, status):
     from streamlit.testing.v1 import AppTest
     response = httpx.Response(status, content="[]", request=httpx.Request("GET", "http://backend/health"))
-    monkeypatch.setattr(httpx, "request", lambda *args, **kwargs: response)
+    monkeypatch.setattr(backend_client, "http_request", lambda *args, **kwargs: response)
     app = AppTest.from_string(
         "from frontend.components.connection_status import render_connection_status\n"
         "render_connection_status()"
@@ -142,7 +142,7 @@ def test_request_errors_are_safe_and_never_replayed(monkeypatch, error_type, met
     def fail(*args, **kwargs):
         calls.append(args)
         raise error_type(marker)
-    monkeypatch.setattr(httpx, "request", fail)
+    monkeypatch.setattr(backend_client, "http_request", fail)
     with pytest.raises(backend_client.BackendClientError) as caught:
         backend_client._request(method, "/api/agent-runs")
     assert caught.value.code == "BACKEND_REQUEST_FAILED"
@@ -154,7 +154,7 @@ def test_request_errors_are_safe_and_never_replayed(monkeypatch, error_type, met
 def test_existing_network_error_codes_are_preserved(monkeypatch,error_type,code):
     def fail(*args, **kwargs):
         raise error_type("synthetic")
-    monkeypatch.setattr(httpx,"request",fail)
+    monkeypatch.setattr(backend_client,"http_request",fail)
     with pytest.raises(backend_client.BackendClientError) as caught:
         backend_client._request("GET","/health")
     assert caught.value.code == code
@@ -169,7 +169,7 @@ def test_interrupted_analysis_preserves_pending_identity_on_explicit_retry(monke
         if method == "POST" and created:
             return httpx.Response(200,json={"run_id":"existing-run","status":"queued"},request=httpx.Request(method,url))
         raise httpx.ReadError("PRIVATE-RESPONSE-DETAIL")
-    monkeypatch.setattr(httpx,"request",response)
+    monkeypatch.setattr(backend_client,"http_request",response)
     app = AppTest.from_string(
         "import streamlit as st\n"
         "from frontend.components.stream_analysis import analyze_with_stream\n"

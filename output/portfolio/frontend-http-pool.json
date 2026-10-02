@@ -1,0 +1,136 @@
+{
+  "scope": "public localhost catalog HTTP GET; includes client construction/close on old path; excludes model and retrieval",
+  "authenticated_requests": 0,
+  "model_requests": 0,
+  "provenance": {
+    "started_at": "2026-10-02T22:07:42.713044+00:00",
+    "git_head": "5f03d9c377381a5ad2fe47bf8aee14d5eba3e338",
+    "working_tree_dirty": true,
+    "python": "3.12.7",
+    "platform": "Windows",
+    "packages": {
+      "httpx": "0.28.1",
+      "httpcore": "1.0.9"
+    },
+    "constraints_sha256": "0c4ec022abd3dabc6e246a667d860e637e2878c5e7e5496505265a29218bfb42",
+    "code_sha256": {
+      "scripts/benchmark_frontend_http.py": "74fe1ba52dd070dae4a3c3b117bbaa582c716f49629eacda4e46daa27243b820",
+      "scripts/benchmark_provenance.py": "6d6b73a7b8ec2254c8578a9e71c8837ffa343cf33114cf7e449517c0733e6474",
+      "frontend/clients/http_client.py": "8becc2368fdbe7f670e0698f0fc93ddf8c4ecb740243f57613511730a3062276",
+      "frontend/clients/backend_client.py": "002731fc03cedd5f1be3e8d9f86f7e1417d9a669b115980bffbdff6eb07611ae",
+      "frontend/core/config.py": "66eaa840c79a4488fa9fc5baf6a2ff4e6dd14642b6b458eea6c1c04547e798d9"
+    },
+    "finished_at": "2026-10-02T22:07:57.442787+00:00",
+    "code_unchanged_during_measurement": true
+  },
+  "results": {
+    "housing": {
+      "warmup_pairs": 2,
+      "measured_pairs": 10,
+      "equal_pairs_including_warmup": 12,
+      "response_sha256": "95ae840767f4f84966e73e71cd716cfd4c86a3dc90c425945191f89a0fc6b9f1",
+      "new_client": {
+        "samples_ms": [
+          418.5835998505354,
+          346.8174999579787,
+          389.11319989711046,
+          386.7027999367565,
+          306.6338999196887,
+          343.3725999202579,
+          343.96800003014505,
+          341.47360012866557,
+          360.7334000989795,
+          297.25820012390614
+        ],
+        "median_ms": 345.3927499940619
+      },
+      "pooled_client": {
+        "samples_ms": [
+          2.3735000286251307,
+          2.557199914008379,
+          5.095200147479773,
+          4.703500075265765,
+          6.227700039744377,
+          2.9114000499248505,
+          4.7773998230695724,
+          3.513599978759885,
+          2.881599823012948,
+          2.401999896392226
+        ],
+        "median_ms": 3.2125000143423676
+      }
+    },
+    "labor": {
+      "warmup_pairs": 2,
+      "measured_pairs": 10,
+      "equal_pairs_including_warmup": 12,
+      "response_sha256": "e3a1eac9870e9f6e5c4a19911772401c90427efbdf5efa86138368814159663e",
+      "new_client": {
+        "samples_ms": [
+          328.68419983424246,
+          312.6973998732865,
+          320.5216999631375,
+          360.5275999289006,
+          519.5506000891328,
+          407.5392000377178,
+          391.1578000988811,
+          394.65709985233843,
+          412.16360009275377,
+          424.7123999521136
+        ],
+        "median_ms": 392.9074499756098
+      },
+      "pooled_client": {
+        "samples_ms": [
+          2.8518999461084604,
+          2.467300044372678,
+          2.7054999954998493,
+          2.6916000060737133,
+          3.288599895313382,
+          4.618300125002861,
+          6.980499951168895,
+          18.92319996841252,
+          3.5129000898450613,
+          16.4535001385957
+        ],
+        "median_ms": 3.4007499925792217
+      }
+    },
+    "consumer": {
+      "warmup_pairs": 2,
+      "measured_pairs": 10,
+      "equal_pairs_including_warmup": 12,
+      "response_sha256": "486b80934dd183f34ad1c65790dec7b7febb665f95361ca9a1062a686b3ca4f7",
+      "new_client": {
+        "samples_ms": [
+          504.22070012427866,
+          340.08300001733005,
+          444.86050005070865,
+          343.3105000294745,
+          332.575700012967,
+          371.75849988125265,
+          400.3173001110554,
+          422.5872999522835,
+          351.281400071457,
+          352.8766999952495
+        ],
+        "median_ms": 362.3175999382511
+      },
+      "pooled_client": {
+        "samples_ms": [
+          4.5934999361634254,
+          3.38379992172122,
+          3.1663000117987394,
+          3.1046001240611076,
+          3.415000159293413,
+          2.999400021508336,
+          3.2790000550448895,
+          3.3454999793320894,
+          4.682500148192048,
+          3.025699872523546
+        ],
+        "median_ms": 3.3122500171884894
+      }
+    }
+  }
+}

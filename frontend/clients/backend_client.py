@@ -4,6 +4,7 @@ from urllib.parse import quote
 from pydantic import ValidationError
 
 from frontend.core.config import get_frontend_settings
+from frontend.clients.http_client import request as http_request
 from frontend.core.models import CategoryTermsView, LegalQuestionView, SearchResultsView, TermSearchView
 
 
@@ -28,7 +29,7 @@ class BackendClientError(RuntimeError):
 def _request(method: str, path: str, **kwargs) -> dict:
     settings = get_frontend_settings()
     try:
-        response = httpx.request(
+        response = http_request(
             method,
             f"{settings.normalized_backend_url}{path}",
             timeout=settings.frontend_request_timeout_seconds,
