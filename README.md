@@ -111,6 +111,7 @@ docker compose -f compose.yml up --build -d
 - [실행·평가 의존성 및 기반 이미지 재현성](docs/REPRODUCIBLE_ENVIRONMENTS.md)
 - [검색 임베딩 클라이언트 재사용과 생성 비용 측정](docs/EMBEDDING_CLIENT_REUSE.md)
 - [키워드 조회 연결 재사용과 실제 PostgreSQL 짝 비교](docs/KEYWORD_CONNECTION_REUSE.md)
+- [벡터·키워드 후보 조회의 DB 연결 공유와 짝 비교](docs/HYBRID_CONNECTION_REUSE.md)
 - [Frontend Backend 응답 계약과 비정상 오류 본문 처리](docs/FRONTEND_RESPONSE_CONTRACT.md)
 - [SSE 상태·이벤트의 UI 반영 전 검증](docs/SSE_PAYLOAD_CONTRACT.md)
 - [발표 모드의 엔지니어링 측정 화면과 자료 재생성](docs/PORTFOLIO_EVIDENCE_PANEL.md)
