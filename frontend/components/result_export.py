@@ -1,5 +1,7 @@
 from datetime import datetime
 import logging
+import hashlib
+import json
 
 import streamlit as st
 
@@ -58,7 +60,14 @@ def build_analysis_markdown(result: dict) -> str:
 def render_result_download(result: dict) -> None:
     try:
         from frontend.components.pdf_export import build_analysis_pdf
-        pdf = build_analysis_pdf(result)
+        fingerprint = hashlib.sha256(json.dumps(result, sort_keys=True, ensure_ascii=False, default=str).encode()).hexdigest()
+        cached = st.session_state.get('analysis_pdf_cache')
+        if cached and cached[0] == fingerprint:
+            pdf = cached[1]
+        else:
+            st.session_state.pop('analysis_pdf_cache', None)
+            pdf = build_analysis_pdf(result)
+            st.session_state.analysis_pdf_cache = (fingerprint, pdf)
     except ImportError:
         logging.getLogger(__name__).error("PDF dependency unavailable")
         st.warning("PDF 기능 준비가 필요합니다. 실행 환경의 PDF 라이브러리 설치를 확인해 주세요.")
