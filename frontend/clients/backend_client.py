@@ -248,18 +248,6 @@ def chat_legal_terms(token: str | None, guest_id: str, message: str, *, save_sel
         raise BackendClientError("용어 대화 응답 형식이 계약과 다릅니다.", "CONTRACT_MISMATCH") from error
 
 
-def list_legal_term_conversations(token: str, page: int = 1) -> dict:
-    return _request("GET", "/api/legal-terms/conversations", params={"page": page, "page_size": 20}, headers=auth_headers(token, ""))
-
-
-def get_legal_term_conversation(token: str, conversation_id: str) -> dict:
-    return _request("GET", f"/api/legal-terms/conversations/{quote(str(conversation_id), safe='')}", headers=auth_headers(token, ""))
-
-
-def delete_legal_term_conversation(token: str, conversation_id: str) -> None:
-    _request("DELETE", f"/api/legal-terms/conversations/{quote(str(conversation_id), safe='')}", headers=auth_headers(token, ""))
-
-
 def list_faqs(category: str | None = None) -> dict:
     params = {"category": category} if category else None
     return _request("GET", "/api/faqs", params=params)

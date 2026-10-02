@@ -118,6 +118,7 @@ docker compose -f compose.yml up --build -d
 - [사람 검색 근거 검토의 입력 계약과 지표 오염 방지](docs/RETRIEVAL_REVIEW_CONTRACT.md)
 - [Frontend HTTP 장애 안내와 분석 재시도 식별자 유지](docs/FRONTEND_HTTP_FAILURES.md)
 - [용어 답변 저장 후 후속 질문의 대화 유지](docs/TERM_CONVERSATION_CONTINUITY.md)
+- [저장 분석·용어 대화의 공통 이력 API](docs/UNIFIED_HISTORY_API.md)
 - [공유 Redis·모델 연결의 종료와 재사용 수명주기](docs/SHARED_CLIENT_LIFECYCLE.md)
 - [게시판·댓글·개인 이력·알림의 소유자 분리](docs/COMMUNITY_OWNER_ISOLATION.md)
 - [AI 실행·용어 결과의 회원·게스트 소유자 분리](docs/ACTOR_RESULT_ISOLATION.md)
