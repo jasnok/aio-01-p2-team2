@@ -37,7 +37,10 @@ def _request(method: str, path: str, **kwargs) -> dict:
         response.raise_for_status()
         if response.status_code == 204 or not response.content:
             return {}
-        return response.json()
+        payload = response.json()
+        if not isinstance(payload, dict):
+            raise ValueError("Expected a JSON object")
+        return payload
     except httpx.TimeoutException as error:
         raise BackendClientError("Backend 응답 시간이 초과되었습니다.", "BACKEND_TIMEOUT") from error
     except httpx.ConnectError as error:
@@ -59,19 +62,28 @@ def _request(method: str, path: str, **kwargs) -> dict:
 
 
 def _extract_api_error(response: httpx.Response) -> tuple[str, str]:
+    fallback = ("BACKEND_ERROR", f"Backend 요청에 실패했습니다. HTTP {response.status_code}")
     if not response.is_stream_consumed:
         response.read()
     try:
         payload = response.json()
     except ValueError:
-        return "BACKEND_ERROR", f"Backend 요청에 실패했습니다. HTTP {response.status_code}"
+        return fallback
+    if not isinstance(payload, dict):
+        return fallback
 
     detail = payload.get("detail", payload)
     if isinstance(detail, list):
         return "VALIDATION_ERROR", "입력 내용을 확인해 주세요. 검색어는 2~200자입니다."
     if isinstance(detail, dict):
-        return detail.get("code", "BACKEND_ERROR"), detail.get("message", "Backend 요청에 실패했습니다.")
-    return "BACKEND_ERROR", str(detail)
+        code = detail.get("code", "BACKEND_ERROR")
+        message = detail.get("message", "Backend 요청에 실패했습니다.")
+        if isinstance(code, str) and code.strip() and isinstance(message, str) and message.strip():
+            return code, message
+        return fallback
+    if isinstance(detail, str) and detail.strip():
+        return "BACKEND_ERROR", detail
+    return fallback
 
 
 def get_backend_health() -> dict:
