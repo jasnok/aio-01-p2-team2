@@ -1,0 +1,182 @@
+{
+  "scope": "Keyword DB retrieval only; zero model requests; SQL unchanged",
+  "python": "3.12.7",
+  "warmup_pairs": 2,
+  "measured_pairs": 10,
+  "cases": [
+    {
+      "category": "housing",
+      "query": "보증금 임대차 계약갱신 내용증명",
+      "terms": [
+        "보증금 임대차 계약갱신 내용증명",
+        "보증금",
+        "임대차",
+        "계약갱신",
+        "내용증명"
+      ],
+      "rows": 19,
+      "result_hashes": [
+        "71a09b00720edb455f7fa8738474b5493d9f30d2e2c92ef4aba5978d1a61d93d"
+      ],
+      "equivalent_pairs": 12,
+      "samples_ms": {
+        "per_term_connection": [
+          324.904500041157,
+          350.93750013038516,
+          354.93839997798204,
+          318.8013997860253,
+          288.28589990735054,
+          342.97620016150177,
+          324.53560014255345,
+          361.9822000619024,
+          308.1291001290083,
+          282.65660000033677
+        ],
+        "shared_connection": [
+          143.46920000389218,
+          161.20600001886487,
+          140.02110017463565,
+          124.9853998888284,
+          159.50020006857812,
+          151.561499806121,
+          150.60780011117458,
+          171.39110015705228,
+          132.47449998743832,
+          187.5225999392569
+        ]
+      },
+      "median_ms": {
+        "per_term_connection": 324.7200500918552,
+        "shared_connection": 151.0846499586478
+      }
+    },
+    {
+      "category": "labor",
+      "query": "퇴직금 임금 해고 근로계약",
+      "terms": [
+        "퇴직금 임금 해고 근로계약",
+        "퇴직금",
+        "임금",
+        "해고",
+        "근로계약"
+      ],
+      "rows": 19,
+      "result_hashes": [
+        "353014612adc3010e9a53a34dec8bf7fc14cc3f7535d5666f7730df8feb7b69e"
+      ],
+      "equivalent_pairs": 12,
+      "samples_ms": {
+        "per_term_connection": [
+          238.77970012836158,
+          258.26569995842874,
+          205.61750000342727,
+          287.4920000322163,
+          278.0585999134928,
+          282.48540009371936,
+          215.2408000547439,
+          284.5247001387179,
+          243.7090000603348,
+          261.6000999696553
+        ],
+        "shared_connection": [
+          77.12380005978048,
+          91.76690015010536,
+          101.7377998214215,
+          86.11660008318722,
+          108.96799992769957,
+          84.45760002359748,
+          90.55920015089214,
+          121.92149995826185,
+          86.74909989349544,
+          107.73800010792911
+        ]
+      },
+      "median_ms": {
+        "per_term_connection": 259.932899964042,
+        "shared_connection": 91.16305015049875
+      }
+    },
+    {
+      "category": "consumer",
+      "query": "환불 반품 배송 하자",
+      "terms": [
+        "환불 반품 배송 하자",
+        "환불",
+        "반품",
+        "배송",
+        "하자"
+      ],
+      "rows": 36,
+      "result_hashes": [
+        "63db42e1197912164c69974d5ba5869f1510c7726eaa965eeebf6ad87b514ce4"
+      ],
+      "equivalent_pairs": 12,
+      "samples_ms": {
+        "per_term_connection": [
+          495.4486000351608,
+          486.82860005646944,
+          576.9962000194937,
+          473.4898000024259,
+          497.7059999946505,
+          461.84669993817806,
+          483.19939989596605,
+          463.4542998392135,
+          474.1632000077516,
+          512.7198998816311
+        ],
+        "shared_connection": [
+          344.24149990081787,
+          315.96309994347394,
+          325.4878001753241,
+          311.9270000606775,
+          354.75870012305677,
+          307.2314001619816,
+          317.10060010664165,
+          306.7269998136908,
+          284.1113999020308,
+          403.41849997639656
+        ]
+      },
+      "median_ms": {
+        "per_term_connection": 485.01399997621775,
+        "shared_connection": 316.5318500250578
+      }
+    }
+  ],
+  "provenance": {
+    "started_at": "2026-10-02T02:32:12.858210+00:00",
+    "git_head": "1d45c1c2db07812f999cebbd2c7849d59c04c6c4",
+    "working_tree_dirty": true,
+    "python": "3.12.7",
+    "platform": "Windows",
+    "packages": {
+      "psycopg": "3.3.6",
+      "pgvector": "0.5.0"
+    },
+    "constraints_sha256": "0c4ec022abd3dabc6e246a667d860e637e2878c5e7e5496505265a29218bfb42",
+    "code_sha256": {
+      "scripts/benchmark_keyword_connections.py": "23a4ce158cf2a10ba51ffde2230897a33289936a688e69869ab487875f665983",
+      "scripts/benchmark_provenance.py": "6d6b73a7b8ec2254c8578a9e71c8837ffa343cf33114cf7e449517c0733e6474",
+      "legal_mcp/repositories/legal_repository.py": "9f35f690c59f2f1bc41c6e375ec773c3c1e447def09e99498f4bc674f9deeeca",
+      "legal_mcp/services/query_terms.py": "77d951d940ddbc39e1a769367537293aa950376d33fdf1bb3528704ba4d34370",
+      "legal_mcp/infrastructure/database.py": "518f4c0272a6f1d44d6fea32596ab6895535ff923b2ed48733fe78033cf46950"
+    },
+    "database_before": {
+      "documents": 702,
+      "chunks": 2797,
+      "postgres_version_num": 160015,
+      "revision_declared": "seed-702-v1",
+      "immutable_snapshot": false
+    },
+    "database_after": {
+      "documents": 702,
+      "chunks": 2797,
+      "postgres_version_num": 160015,
+      "revision_declared": "seed-702-v1",
+      "immutable_snapshot": false
+    },
+    "database_counts_unchanged": true,
+    "finished_at": "2026-10-02T02:32:33.217452+00:00",
+    "code_unchanged_during_measurement": true
+  }
+}

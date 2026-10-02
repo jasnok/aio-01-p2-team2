@@ -8,12 +8,18 @@ from time import perf_counter
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from legal_mcp.providers.embedding_provider import EmbeddingClients, OpenAIEmbeddingProvider
+from scripts.benchmark_provenance import capture, finish
+
+CODE_PATHS = ["scripts/benchmark_embedding_clients.py", "scripts/benchmark_provenance.py",
+              "legal_mcp/providers/embedding_provider.py"]
+PACKAGES = ["openai", "httpx"]
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    provenance = capture(CODE_PATHS, PACKAGES)
     # Explicit constructor key; no real credentials or requests are needed.
     key = "synthetic-no-network-key"
     pool = EmbeddingClients()
@@ -37,7 +43,8 @@ def main():
         pool.close()
     report = {"scope": "SDK acquisition only; zero API requests; excludes close time",
               "python": sys.version.split()[0], "platform": sys.platform,
-              "warmup": 5, "samples": 15, "results": results}
+              "warmup": 5, "samples": 15, "results": results,
+              "provenance": finish(provenance, CODE_PATHS, PACKAGES)}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({name: result["median_ms"] for name, result in results.items()}))
