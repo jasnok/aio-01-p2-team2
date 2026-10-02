@@ -45,6 +45,8 @@ def _request(method: str, path: str, **kwargs) -> dict:
         raise BackendClientError("Backend 응답 시간이 초과되었습니다.", "BACKEND_TIMEOUT") from error
     except httpx.ConnectError as error:
         raise BackendClientError("Backend에 연결할 수 없습니다. 서버 주소와 실행 상태를 확인해 주세요.", "BACKEND_UNAVAILABLE") from error
+    except httpx.RequestError as error:
+        raise BackendClientError("Backend 응답을 확인하지 못했습니다. 변경 요청은 처리되었을 수 있으므로 이력이나 기존 작업을 먼저 확인해 주세요.", "BACKEND_REQUEST_FAILED") from error
     except httpx.HTTPStatusError as error:
         code, message = _extract_api_error(error.response)
         if error.response.status_code == 401 and kwargs.get("headers", {}).get("Authorization"):
@@ -63,11 +65,11 @@ def _request(method: str, path: str, **kwargs) -> dict:
 
 def _extract_api_error(response: httpx.Response) -> tuple[str, str]:
     fallback = ("BACKEND_ERROR", f"Backend 요청에 실패했습니다. HTTP {response.status_code}")
-    if not response.is_stream_consumed:
-        response.read()
     try:
+        if not response.is_stream_consumed:
+            response.read()
         payload = response.json()
-    except ValueError:
+    except (ValueError, httpx.RequestError):
         return fallback
     if not isinstance(payload, dict):
         return fallback
