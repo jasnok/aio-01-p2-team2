@@ -129,6 +129,7 @@ docker compose -f compose.yml up --build -d
 - [인증 갱신 응답 계약과 역할 변경 시 개인 상태 초기화](docs/AUTH_REFRESH_CONTRACT.md)
 - [PDF 인용과 자료 본문의 근거 ID 연결](docs/PDF_EVIDENCE_IDENTIFIERS.md)
 - [HTTP·SSE·저장 이력의 주장·인용 응답 계약](docs/CITATION_RESPONSE_CONTRACT.md)
+- [로컬 메모리 세션의 조회되지 않은 만료 자료 정리](docs/MEMORY_SESSION_EXPIRY.md)
 - [MCP 검색 응답 계약과 잘못된 결과 차단](docs/MCP_SEARCH_CONTRACT.md)
 - [운영 메트릭과 실패 로그의 상담 내용 노출 방지](docs/SAFE_OPERATIONAL_LOGS.md)
 - [분석 접수 제한과 종료 자원 정리](docs/RUN_ADMISSION_CONTROL.md)

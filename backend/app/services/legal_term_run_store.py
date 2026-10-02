@@ -7,6 +7,7 @@ from typing import Any
 
 from backend.app.core.config import get_settings
 from backend.app.services.actor_identity import actor_key
+from backend.app.services.memory_expiry import remove_expired_entries
 from backend.app.services.session_service import SessionStoreUnavailableError, sessions
 
 
@@ -44,7 +45,9 @@ class LegalTermRunStore:
             except Exception as error:
                 raise SessionStoreUnavailableError() from error
         async with self._lock:
-            self._memory[request_id] = (record, monotonic() + settings.term_run_ttl_seconds)
+            now = monotonic()
+            remove_expired_entries(self._memory, now)
+            self._memory[request_id] = (record, now + settings.term_run_ttl_seconds)
 
     async def get_for_actor(self, request_id: str, actor: dict) -> dict[str, Any]:
         settings = get_settings()

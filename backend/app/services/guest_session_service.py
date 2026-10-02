@@ -6,6 +6,7 @@ from time import monotonic
 from typing import Any
 
 from backend.app.core.config import get_settings
+from backend.app.services.memory_expiry import remove_expired_entries
 from backend.app.services.session_service import SessionStoreUnavailableError, sessions
 
 
@@ -66,12 +67,12 @@ class GuestSessionService:
 
         # Local development fallback: process-bound and explicitly non-durable.
         async with self._lock:
-            records, expires_at = self._memory.get(guest_id, ([], 0.0))
-            if expires_at <= monotonic():
-                records = []
+            now = monotonic()
+            remove_expired_entries(self._memory, now)
+            records, _ = self._memory.get(guest_id, ([], 0.0))
             records = [item for item in records if item["run_id"] != record["run_id"]]
             records.insert(0, record)
-            self._memory[guest_id] = (records, monotonic() + ttl)
+            self._memory[guest_id] = (records, now + ttl)
         return ttl
 
     async def list_analyses(self, guest_id: str) -> tuple[list[dict[str, Any]], int]:
