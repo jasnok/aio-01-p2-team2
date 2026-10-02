@@ -16,3 +16,14 @@ def owns_run(actor: dict, run: dict) -> bool:
         return str(run.get("owner_id")) == str(stored.get("id")) and actor_key(actor) == actor_key(stored)
     except ValueError:
         return False
+
+
+def record_owner(record: dict) -> dict:
+    return {"id": record.get("owner_id"), "role": record.get("owner_role")}
+
+
+def owns_record(actor: dict, record: dict) -> bool:
+    try:
+        return actor_key(actor) == actor_key(record_owner(record))
+    except ValueError:
+        return False

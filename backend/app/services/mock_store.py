@@ -13,6 +13,7 @@ import os
 import secrets
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
+from backend.app.services.actor_identity import actor_key
 
 
 class SessionExpiredError(PermissionError):
@@ -53,9 +54,9 @@ class MemoryStore:
         self.questions: dict[str, dict] = {}
         self.comments: dict[str, dict] = {}
         self.faqs: dict[str, dict] = {}
-        self.notifications: dict[str, list[dict]] = {}
-        self.history: dict[str, list[dict]] = {}
-        self.unlocks: dict[tuple[str, str], datetime] = {}
+        self.notifications: dict[tuple[str, str], list[dict]] = {}
+        self.history: dict[tuple[str, str], list[dict]] = {}
+        self.unlocks: dict[tuple[tuple[str, str], str], datetime] = {}
         self.idempotency: dict[tuple[tuple[str, str], str, str], tuple[datetime, dict, tuple]] = {}
         self.agent_runs: dict[str, dict] = {}
         self.agent_run_idempotency: dict[tuple[tuple[str, str], str], dict] = {}
@@ -81,8 +82,8 @@ class MemoryStore:
     def public_user(self, user: dict) -> dict:
         return {key: user[key] for key in ("id", "role", "display_name")}
 
-    def owner_key(self, actor: dict) -> str:
-        return actor["id"]
+    def owner_key(self, actor: dict) -> tuple[str, str]:
+        return actor_key(actor)
 
     def issue_session(self, user: dict) -> tuple[str, dict]:
         token = secrets.token_urlsafe(32)
@@ -100,9 +101,9 @@ class MemoryStore:
             return self.public_user(self.users[session["user_id"]])
         return {"id": guest_id or "guest-anonymous", "role": "GUEST", "display_name": "비회원"}
 
-    def notify(self, owner_id: str, kind: str, title: str, message: str, *, target_type: str | None = None, target_id: str | None = None, category: str | None = None, severity: str = "info") -> None:
+    def notify(self, owner: dict, kind: str, title: str, message: str, *, target_type: str | None = None, target_id: str | None = None, category: str | None = None, severity: str = "info") -> None:
         item = {"id": f"notification-{uuid4()}", "type": kind, "title": title, "message": message, "severity": severity, "target_type": target_type, "target_id": target_id, "category": category, "created_at": iso(), "is_read": False}
-        self.notifications.setdefault(owner_id, []).append(item)
+        self.notifications.setdefault(actor_key(owner), []).append(item)
 
     def audit(self, actor: dict, action: str, target_id: str, reason: str | None = None) -> None:
         self.audit_logs.append({"id": str(uuid4()), "actor_id": actor["id"], "action": action, "target_id": target_id, "reason": reason, "created_at": iso()})
