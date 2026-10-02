@@ -1,0 +1,68 @@
+{
+  "scope": "SDK acquisition only; zero API requests; excludes close time",
+  "python": "3.12.7",
+  "platform": "win32",
+  "warmup": 5,
+  "samples": 15,
+  "results": {
+    "new_client": {
+      "samples_ms": [
+        455.54019999690354,
+        401.82580007240176,
+        383.72879987582564,
+        365.0370000395924,
+        365.20099989138544,
+        407.7729999553412,
+        351.5685999300331,
+        363.51870000362396,
+        388.6085001286119,
+        433.3054998423904,
+        433.5912000387907,
+        399.750400101766,
+        379.070800030604,
+        412.702500121668,
+        409.11870007403195
+      ],
+      "median_ms": 399.750400101766
+    },
+    "reused_client": {
+      "samples_ms": [
+        0.00200001522898674,
+        0.0018998980522155762,
+        0.001800013706088066,
+        0.0018998980522155762,
+        0.001800013706088066,
+        0.0018998980522155762,
+        0.00209989957511425,
+        0.00200001522898674,
+        0.00200001522898674,
+        0.00190013088285923,
+        0.00190013088285923,
+        0.0017997808754444122,
+        0.0018998980522155762,
+        0.00190013088285923,
+        0.0018998980522155762
+      ],
+      "median_ms": 0.0018998980522155762
+    }
+  },
+  "provenance": {
+    "started_at": "2026-10-02T02:31:45.743335+00:00",
+    "git_head": "1d45c1c2db07812f999cebbd2c7849d59c04c6c4",
+    "working_tree_dirty": true,
+    "python": "3.12.7",
+    "platform": "Windows",
+    "packages": {
+      "openai": "2.54.0",
+      "httpx": "0.28.1"
+    },
+    "constraints_sha256": "0c4ec022abd3dabc6e246a667d860e637e2878c5e7e5496505265a29218bfb42",
+    "code_sha256": {
+      "scripts/benchmark_embedding_clients.py": "b24bb5cb6b6d8dd9624b696fd3ce86e8d2b1d2f2d685eb3395438846087ce07c",
+      "scripts/benchmark_provenance.py": "6d6b73a7b8ec2254c8578a9e71c8837ffa343cf33114cf7e449517c0733e6474",
+      "legal_mcp/providers/embedding_provider.py": "3da09c373e1954e5d324dab22c551821b288dc93d1d354ddf2af153dcf198e58"
+    },
+    "finished_at": "2026-10-02T02:31:54.872295+00:00",
+    "code_unchanged_during_measurement": true
+  }
+}

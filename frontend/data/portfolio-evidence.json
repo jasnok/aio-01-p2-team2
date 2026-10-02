@@ -4,8 +4,8 @@
     {
       "experiment": "embedding",
       "category": null,
-      "before_ms": 383.54940013960004,
-      "after_ms": 0.00190013088285923,
+      "before_ms": 399.750400101766,
+      "after_ms": 0.0018998980522155762,
       "samples": 15,
       "warmup": 5,
       "python": "3.12.7",
@@ -14,8 +14,8 @@
     {
       "experiment": "keyword",
       "category": "housing",
-      "before_ms": 325.850100023672,
-      "after_ms": 156.35050006676465,
+      "before_ms": 324.7200500918552,
+      "after_ms": 151.0846499586478,
       "samples": 10,
       "warmup": 2,
       "python": "3.12.7",
@@ -24,8 +24,8 @@
     {
       "experiment": "keyword",
       "category": "labor",
-      "before_ms": 263.4995001135394,
-      "after_ms": 86.45754994358867,
+      "before_ms": 259.932899964042,
+      "after_ms": 91.16305015049875,
       "samples": 10,
       "warmup": 2,
       "python": "3.12.7",
@@ -34,8 +34,8 @@
     {
       "experiment": "keyword",
       "category": "consumer",
-      "before_ms": 553.324899985455,
-      "after_ms": 358.5306501481682,
+      "before_ms": 485.01399997621775,
+      "after_ms": 316.5318500250578,
       "samples": 10,
       "warmup": 2,
       "python": "3.12.7",
@@ -67,12 +67,12 @@
   ],
   "sources": [
     {
-      "file": "embedding-client-acquisition.json",
-      "sha256": "4d1ae1e0360fe6ba4f59e8e6b151259228e4b61795a5d70682eaf472af2fc81e"
+      "file": "embedding-client-acquisition-v2.json",
+      "sha256": "f55804d5ff6f745b4fd7d655b70ae2a01f0fcac2c7b370d709a530962c2a7fc7"
     },
     {
-      "file": "keyword-connections.json",
-      "sha256": "173aad55fa364f7f3ce8b1989f9bc75fb30391cb4de8dadb25e00f57832ffd84"
+      "file": "keyword-connections-v2.json",
+      "sha256": "515f939dda73d6fdba71717de966985313f182eaec3046f2aa950b8e6c31c91e"
     },
     {
       "file": "environment-windows.json",
@@ -86,5 +86,65 @@
       "file": "environment-linux.json",
       "sha256": "8737a3b5ec21a1486aebfb417a39d7d0ce23d8f394b33a037f684eb8d3b761e9"
     }
-  ]
+  ],
+  "provenance": {
+    "embedding": {
+      "started_at": "2026-10-02T02:31:45.743335Z",
+      "finished_at": "2026-10-02T02:31:54.872295Z",
+      "git_head": "1d45c1c2db07812f999cebbd2c7849d59c04c6c4",
+      "working_tree_dirty": true,
+      "python": "3.12.7",
+      "platform": "Windows",
+      "packages": {
+        "openai": "2.54.0",
+        "httpx": "0.28.1"
+      },
+      "constraints_sha256": "0c4ec022abd3dabc6e246a667d860e637e2878c5e7e5496505265a29218bfb42",
+      "code_sha256": {
+        "scripts/benchmark_embedding_clients.py": "b24bb5cb6b6d8dd9624b696fd3ce86e8d2b1d2f2d685eb3395438846087ce07c",
+        "scripts/benchmark_provenance.py": "6d6b73a7b8ec2254c8578a9e71c8837ffa343cf33114cf7e449517c0733e6474",
+        "legal_mcp/providers/embedding_provider.py": "3da09c373e1954e5d324dab22c551821b288dc93d1d354ddf2af153dcf198e58"
+      },
+      "code_unchanged_during_measurement": true,
+      "database_before": null,
+      "database_after": null,
+      "database_counts_unchanged": null
+    },
+    "keyword": {
+      "started_at": "2026-10-02T02:32:12.858210Z",
+      "finished_at": "2026-10-02T02:32:33.217452Z",
+      "git_head": "1d45c1c2db07812f999cebbd2c7849d59c04c6c4",
+      "working_tree_dirty": true,
+      "python": "3.12.7",
+      "platform": "Windows",
+      "packages": {
+        "psycopg": "3.3.6",
+        "pgvector": "0.5.0"
+      },
+      "constraints_sha256": "0c4ec022abd3dabc6e246a667d860e637e2878c5e7e5496505265a29218bfb42",
+      "code_sha256": {
+        "scripts/benchmark_keyword_connections.py": "23a4ce158cf2a10ba51ffde2230897a33289936a688e69869ab487875f665983",
+        "scripts/benchmark_provenance.py": "6d6b73a7b8ec2254c8578a9e71c8837ffa343cf33114cf7e449517c0733e6474",
+        "legal_mcp/repositories/legal_repository.py": "9f35f690c59f2f1bc41c6e375ec773c3c1e447def09e99498f4bc674f9deeeca",
+        "legal_mcp/services/query_terms.py": "77d951d940ddbc39e1a769367537293aa950376d33fdf1bb3528704ba4d34370",
+        "legal_mcp/infrastructure/database.py": "518f4c0272a6f1d44d6fea32596ab6895535ff923b2ed48733fe78033cf46950"
+      },
+      "code_unchanged_during_measurement": true,
+      "database_before": {
+        "documents": 702,
+        "chunks": 2797,
+        "postgres_version_num": 160015,
+        "revision_declared": "seed-702-v1",
+        "immutable_snapshot": false
+      },
+      "database_after": {
+        "documents": 702,
+        "chunks": 2797,
+        "postgres_version_num": 160015,
+        "revision_declared": "seed-702-v1",
+        "immutable_snapshot": false
+      },
+      "database_counts_unchanged": true
+    }
+  }
 }

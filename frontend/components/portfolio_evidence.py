@@ -24,7 +24,21 @@ def render_portfolio_evidence():
         import pandas as pd
         st.bar_chart(pd.DataFrame(rows).set_index("측정")[["변경 전(ms)", "변경 후(ms)"]])
         st.caption("중앙값 비교이며 p95·추론 시간·검색 관련성 향상은 측정하지 않았습니다.")
-        st.caption("측정 시점의 커밋·데이터 버전은 원본에 미기록입니다. 사람에 의한 법률 정확도 채점도 미완료입니다.")
+        st.caption("사람에 의한 법률 정확도 채점은 미완료입니다.")
+        provenance = report.provenance.get(kind)
+        if provenance is None:
+            st.caption("측정 시점의 커밋·데이터 버전은 원본에 미기록입니다.")
+        else:
+            with st.expander("측정 시점의 코드·환경·데이터 출처"):
+                st.write(f"측정 시작(UTC): {provenance.started_at.isoformat()}")
+                st.write(f"Git HEAD: {provenance.git_head or '미기록'}")
+                st.write(f"미커밋 변경 포함: {provenance.working_tree_dirty}")
+                st.caption("Git HEAD와 실행 코드가 같다고 가정하지 않습니다. 실행 파일 해시를 함께 확인하세요.")
+                if provenance.database_before:
+                    st.write(f"문서 {provenance.database_before.documents}개 · 청크 {provenance.database_before.chunks}개")
+                    st.write(f"선언된 revision: {provenance.database_before.revision_declared}")
+                    st.caption("시작·종료 데이터 규모 비교이며 변경 불가능한 DB 스냅샷 버전은 아닙니다.")
+                st.json(provenance.model_dump(mode="json"))
         st.markdown("**환경 검증 기록**")
         st.dataframe([{"플랫폼": env.platform, "Python": env.python, "설치 패키지": env.packages,
                        "불일치": env.errors} for env in report.environments], hide_index=True)

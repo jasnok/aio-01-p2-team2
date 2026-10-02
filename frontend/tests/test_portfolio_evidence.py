@@ -30,7 +30,7 @@ def test_corrupted_measurements_are_rejected(tmp_path):
     directory = ROOT / "output" / "portfolio"
     for source in build(directory).sources:
         (tmp_path / source.file).write_bytes((directory / source.file).read_bytes())
-    path = tmp_path / "embedding-client-acquisition.json"
+    path = tmp_path / next(source.file for source in build(directory).sources if source.file.startswith("embedding-client"))
     data = json.loads(path.read_text(encoding="utf-8"))
     data["results"]["new_client"]["median_ms"] = 0
     path.write_text(json.dumps(data), encoding="utf-8")

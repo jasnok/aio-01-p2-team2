@@ -30,14 +30,17 @@ def build(directory):
             raise ValueError("Published median differs from samples")
         return result
 
-    embedding = read("embedding-client-acquisition.json")
+    def selected(stem):
+        return stem + ("-v2.json" if (directory / (stem + "-v2.json")).exists() else ".json")
+
+    embedding = read(selected("embedding-client-acquisition"))
     row = {"experiment": "embedding", "samples": embedding["samples"],
            "warmup": embedding["warmup"], "python": embedding["python"]}
     for field, name in [("before_ms", "new_client"), ("after_ms", "reused_client")]:
         sample = embedding["results"][name]
         row[field] = measured(sample["samples_ms"], embedding["samples"], sample["median_ms"])
     rows = [row]
-    keyword = read("keyword-connections.json")
+    keyword = read(selected("keyword-connections"))
     for case in keyword["cases"]:
         if len(case["result_hashes"]) != 1 or case["equivalent_pairs"] != keyword["warmup_pairs"] + keyword["measured_pairs"]:
             raise ValueError("Keyword result equivalence is not established")
@@ -53,7 +56,9 @@ def build(directory):
         environments.append({"platform": report["platform"], "python": report["python"],
             "packages": len(report["packages"]), "errors": len(report["errors"]),
             "constraints_sha256": report["constraints_sha256"]})
-    return PortfolioEvidence(rows=rows, sources=sources, environments=environments)
+    provenance = {name: value["provenance"] for name, value in [("embedding", embedding), ("keyword", keyword)]
+                  if "provenance" in value}
+    return PortfolioEvidence(rows=rows, sources=sources, environments=environments, provenance=provenance)
 
 
 def main():
