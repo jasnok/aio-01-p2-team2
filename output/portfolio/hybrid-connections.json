@@ -1,0 +1,179 @@
+{
+  "scope": "vector and keyword candidate DB retrieval; stored vectors; no API, embedding or model requests",
+  "warmup_pairs": 2,
+  "measured_pairs": 10,
+  "cases": [
+    {
+      "category": "housing",
+      "document_types": [
+        "LAW"
+      ],
+      "stored_chunk_id": 1,
+      "embedding_sha256": "e36b563ce9239d8fe6feccff38caa43ff89cbb3c3b48223b92942a8cfcc30014",
+      "keyword_count": 3,
+      "connections_before": 2,
+      "connections_after": 1,
+      "equivalent_pairs": 12,
+      "result_hashes": [
+        "f0b8e3fcc63d27cc148dba0ca30203a92f17738c2f0eaa34a1198eb0059937d1"
+      ],
+      "samples_ms": {
+        "separate_connections": [
+          183.11900016851723,
+          182.69439996220171,
+          156.15430008620024,
+          283.9589000213891,
+          149.1595001425594,
+          138.61409993842244,
+          162.3891000635922,
+          160.64899996854365,
+          162.48100018128753,
+          306.5049999859184
+        ],
+        "shared_connection": [
+          112.45010001584888,
+          128.96839994937181,
+          114.88480004481971,
+          124.51930018141866,
+          142.65660010278225,
+          137.3181000817567,
+          128.35259991697967,
+          143.75840011052787,
+          208.11009989120066,
+          106.52030003257096
+        ]
+      },
+      "median_ms": {
+        "separate_connections": 162.43505012243986,
+        "shared_connection": 128.66049993317574
+      }
+    },
+    {
+      "category": "labor",
+      "document_types": [
+        "CASE"
+      ],
+      "stored_chunk_id": 2063,
+      "embedding_sha256": "faa6df8e5f19cc42639f3a3365ab89aaf282a756e1bdcb5925d02365f839994f",
+      "keyword_count": 4,
+      "connections_before": 2,
+      "connections_after": 1,
+      "equivalent_pairs": 12,
+      "result_hashes": [
+        "2a2c9ccf72573caee54ffab89da77dd91c4689456367b29161ad5861f3b04001"
+      ],
+      "samples_ms": {
+        "separate_connections": [
+          119.42460015416145,
+          82.11810002103448,
+          126.45839992910624,
+          104.50639994814992,
+          103.10319997370243,
+          130.6244998704642,
+          123.94870002754033,
+          127.13590008206666,
+          99.17760011740029,
+          99.39159988425672
+        ],
+        "shared_connection": [
+          58.1133000086993,
+          51.11179989762604,
+          176.17600015364587,
+          71.90750003792346,
+          80.38090006448328,
+          51.55969993211329,
+          56.74310005269945,
+          53.531300043687224,
+          65.64879999496043,
+          59.45880012586713
+        ]
+      },
+      "median_ms": {
+        "separate_connections": 111.96550005115569,
+        "shared_connection": 58.78605006728321
+      }
+    },
+    {
+      "category": "consumer",
+      "document_types": [
+        "CONSULTATION"
+      ],
+      "stored_chunk_id": 2120,
+      "embedding_sha256": "a9fe1ae709d1270690cab0d57ba94429a013ecfb10d2f8ef0af79c24da486f8c",
+      "keyword_count": 4,
+      "connections_before": 2,
+      "connections_after": 1,
+      "equivalent_pairs": 12,
+      "result_hashes": [
+        "d9175f5effbe2250a7fc07cbd8d6916491f1b896942414c40c0a47bc87191ec0"
+      ],
+      "samples_ms": {
+        "separate_connections": [
+          294.2796000279486,
+          226.8103000242263,
+          256.57139997929335,
+          302.2598000243306,
+          235.98770005628467,
+          255.52650005556643,
+          291.8209999334067,
+          290.4376001097262,
+          209.25349998287857,
+          338.16449996083975
+        ],
+        "shared_connection": [
+          217.25469990633428,
+          212.81219995580614,
+          213.03119999356568,
+          234.79140014387667,
+          260.2198999375105,
+          214.08649999648333,
+          383.4863000083715,
+          217.92030008509755,
+          336.0552000813186,
+          320.9806999657303
+        ]
+      },
+      "median_ms": {
+        "separate_connections": 273.50450004450977,
+        "shared_connection": 226.3558501144871
+      }
+    }
+  ],
+  "provenance": {
+    "started_at": "2026-10-02T08:46:15.061183+00:00",
+    "git_head": "639db3de0bd9e8aa3e10c2c16a0d75b1ab4c904e",
+    "working_tree_dirty": true,
+    "python": "3.12.7",
+    "platform": "Windows",
+    "packages": {
+      "psycopg": "3.3.6",
+      "pgvector": "0.5.0"
+    },
+    "constraints_sha256": "0c4ec022abd3dabc6e246a667d860e637e2878c5e7e5496505265a29218bfb42",
+    "code_sha256": {
+      "scripts/benchmark_hybrid_connections.py": "279866e54fc3177313688c54c3b62504af34159871e1022c1122c17a0e09be40",
+      "scripts/benchmark_provenance.py": "6d6b73a7b8ec2254c8578a9e71c8837ffa343cf33114cf7e449517c0733e6474",
+      "legal_mcp/repositories/legal_repository.py": "441e7fb4e3a7e4dd9b9ea88b53ddc72bd48de1c0a0f2296f16002e7bddbb371c",
+      "legal_mcp/services/legal_search_service.py": "5c51373822009a256e1ed523ff18f967be30682e62f787619d9c5239492fde2e",
+      "legal_mcp/services/query_terms.py": "77d951d940ddbc39e1a769367537293aa950376d33fdf1bb3528704ba4d34370",
+      "legal_mcp/infrastructure/database.py": "518f4c0272a6f1d44d6fea32596ab6895535ff923b2ed48733fe78033cf46950"
+    },
+    "database_before": {
+      "documents": 702,
+      "chunks": 2797,
+      "postgres_version_num": 160015,
+      "revision_declared": "seed-702-v1",
+      "immutable_snapshot": false
+    },
+    "database_after": {
+      "documents": 702,
+      "chunks": 2797,
+      "postgres_version_num": 160015,
+      "revision_declared": "seed-702-v1",
+      "immutable_snapshot": false
+    },
+    "database_counts_unchanged": true,
+    "finished_at": "2026-10-02T08:46:28.984681+00:00",
+    "code_unchanged_during_measurement": true
+  }
+}

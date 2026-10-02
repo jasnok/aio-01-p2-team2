@@ -106,12 +106,10 @@ def test_service_batches_extracted_terms_without_changing_fusion(monkeypatch):
     calls = []
 
     class Repository:
-        def search_laws(self, **kwargs):
-            return [{"document_id": 1, "similarity": 0.9}]
-
-        def search_documents_by_keywords(self, **kwargs):
+        def search_hybrid_candidates(self, **kwargs):
             calls.append(kwargs)
-            return [{"document_id": 2, "keyword_score": 1.0}]
+            return ([{"document_id": 1, "similarity": 0.9}],
+                    [{"document_id": 2, "keyword_score": 1.0}])
 
     monkeypatch.setattr(service_module, "create_embedding", lambda query: [0.1])
     service = service_module.LegalSearchService.__new__(service_module.LegalSearchService)

@@ -44,31 +44,8 @@ class LegalSearchService:
         # 최종 top_k보다 넓게 가져온 뒤 Service에서 재정렬한다.
         candidate_limit = max(top_k * 3, self.settings.retrieval_top_k)
 
-        document_type_set = set(document_types)
-
-        if document_type_set == {"LAW"}:
-            vector_rows = self.repository.search_laws(
-                embedding=query_embedding,
-                category=category,
-                limit=candidate_limit,
-            )
-
-        elif document_type_set == {"CASE"}:
-            vector_rows = self.repository.search_cases(
-                embedding=query_embedding,
-                category=category,
-                limit=candidate_limit,
-            )
-
-        else:
-            vector_rows = self.repository.search_legal_documents(
-                embedding=query_embedding,
-                category=category,
-                document_types=document_types,
-                limit=candidate_limit,
-            )
-
-        keyword_rows = self.repository.search_documents_by_keywords(
+        vector_rows, keyword_rows = self.repository.search_hybrid_candidates(
+            embedding=query_embedding,
             queries=extract_query_terms(query),
             category=category,
             document_types=document_types,

@@ -12,6 +12,11 @@ class LegalRepository:
     ) -> list[dict]:
         """판례 청크를 벡터 유사도로 검색한다."""
 
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                return self._search_cases(cur, embedding, category, limit)
+
+    def _search_cases(self, cur, embedding, category, limit):
         sql = """
             SELECT
                 d.id AS document_id,
@@ -34,18 +39,17 @@ class LegalRepository:
             LIMIT %s
         """
 
-        with get_connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    sql,
-                    (
-                        embedding,
-                        category,
-                        embedding,
-                        limit,
-                    ),
-                )
-                return cur.fetchall()
+        cur.execute(
+            sql,
+            (
+                embedding,
+                category,
+                embedding,
+                limit,
+            ),
+        )
+        return cur.fetchall()
+
     def get_case_detail(self, document_id: int) -> dict | None:
         """판례 문서의 상세 정보를 조회한다."""
 
@@ -107,6 +111,11 @@ class LegalRepository:
     ) -> list[dict]:
         """법령과 판례 청크를 벡터 유사도로 통합 검색한다."""
 
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                return self._search_legal_documents(cur, embedding, category, document_types, limit)
+
+    def _search_legal_documents(self, cur, embedding, category, document_types, limit):
         sql = """
             SELECT
                 d.id AS document_id,
@@ -133,19 +142,18 @@ class LegalRepository:
             LIMIT %s
         """
 
-        with get_connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    sql,
-                    (
-                        embedding,
-                        category,
-                        document_types,
-                        embedding,
-                        limit,
-                    ),
-                )
-                return cur.fetchall()
+        cur.execute(
+            sql,
+            (
+                embedding,
+                category,
+                document_types,
+                embedding,
+                limit,
+            ),
+        )
+        return cur.fetchall()
+
     def search_laws(
         self,
         embedding: list[float],
@@ -154,6 +162,11 @@ class LegalRepository:
     ) -> list[dict]:
         """법령 청크를 벡터 유사도로 검색한다."""
 
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                return self._search_laws(cur, embedding, category, limit)
+
+    def _search_laws(self, cur, embedding, category, limit):
         sql = """
             SELECT
                 d.id AS document_id,
@@ -175,18 +188,32 @@ class LegalRepository:
             LIMIT %s
         """
 
+        cur.execute(
+            sql,
+            (
+                embedding,
+                category,
+                embedding,
+                limit,
+            ),
+        )
+        return cur.fetchall()
+
+    def search_hybrid_candidates(self, embedding, queries, category, document_types, limit=3):
+        """Run unchanged vector and per-term SQL through one connection."""
         with get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(
-                    sql,
-                    (
-                        embedding,
-                        category,
-                        embedding,
-                        limit,
-                    ),
-                )
-                return cur.fetchall()
+                types = set(document_types)
+                if types == {"LAW"}:
+                    vector_rows = self._search_laws(cur, embedding, category, limit)
+                elif types == {"CASE"}:
+                    vector_rows = self._search_cases(cur, embedding, category, limit)
+                else:
+                    vector_rows = self._search_legal_documents(cur, embedding, category, document_types, limit)
+                keyword_rows = [row for query in queries for row in
+                                self._search_documents_by_keyword(cur, query, category, document_types, limit)]
+                return vector_rows, keyword_rows
+
     def search_documents_by_keyword(
         self,
         query: str,
