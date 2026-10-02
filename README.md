@@ -101,6 +101,7 @@ docker compose -f compose.yml up --build -d
 - [검색 임베딩 클라이언트 재사용과 생성 비용 측정](docs/EMBEDDING_CLIENT_REUSE.md)
 - [키워드 조회 연결 재사용과 실제 PostgreSQL 짝 비교](docs/KEYWORD_CONNECTION_REUSE.md)
 - [Frontend Backend 응답 계약과 비정상 오류 본문 처리](docs/FRONTEND_RESPONSE_CONTRACT.md)
+- [SSE 상태·이벤트의 UI 반영 전 검증](docs/SSE_PAYLOAD_CONTRACT.md)
 - [공유 Redis·모델 연결의 종료와 재사용 수명주기](docs/SHARED_CLIENT_LIFECYCLE.md)
 - [게시판·댓글·개인 이력·알림의 소유자 분리](docs/COMMUNITY_OWNER_ISOLATION.md)
 - [AI 실행·용어 결과의 회원·게스트 소유자 분리](docs/ACTOR_RESULT_ISOLATION.md)

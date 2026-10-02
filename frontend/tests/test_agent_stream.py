@@ -106,3 +106,51 @@ def test_reconnection_limit(monkeypatch):
     with pytest.raises(BackendClientError, match="기존 작업"):
         stream.receive_run(None, "guest", "r1")
     assert len(calls) == 3
+
+
+@pytest.mark.parametrize("data", [None, [], {"run_id":"r1","status":[]},
+    {"run_id":"r1","status":{}}, {"run_id":"r1","status":True}])
+def test_malformed_snapshot_is_contract_error(data):
+    with pytest.raises(BackendClientError) as caught:
+        stream.final_result(data, "r1")
+    assert caught.value.code == "CONTRACT_MISMATCH"
+
+
+@pytest.mark.parametrize("patch", [{"step_id": []}, {"step_id": " "}, {"tool": []},
+    {"stage": {}}, {"message": None}, {"status": []}, {"result_count": True},
+    {"result_count": -1}, {"evidence_previews": None}, {"evidence_previews": [None]},
+    {"evidence_previews": [{"title": []}]}])
+def test_invalid_event_never_reaches_callback(monkeypatch, patch):
+    setup(monkeypatch)
+    monkeypatch.setattr(stream.api,"get_agent_run",lambda *args: {"run_id":"r1","status":"running"})
+    data = {"run_id":"r1","step_id":"search", **patch}
+    seen = []
+
+    @contextmanager
+    def connect(*args, **kwargs):
+        class Response:
+            headers = {"content-type":"text/event-stream"}
+            def raise_for_status(self): pass
+            def iter_lines(self):
+                yield from ["id: 1", "event: step.completed", "data: "+json.dumps(data), ""]
+        yield Response()
+
+    monkeypatch.setattr(stream.httpx,"stream",connect)
+    with pytest.raises(BackendClientError) as caught:
+        stream.receive_run(None,"guest","r1",on_event=lambda *args: seen.append(args))
+    assert caught.value.code == "CONTRACT_MISMATCH"
+    assert seen == []
+
+
+def test_normal_preview_event_accepts_nullable_count_and_extra_fields():
+    stream.validate_event("step.completed", {"run_id":"r1","step_id":"search", "tool":"search_laws",
+        "result_count":None,"future_field":{}, "evidence_previews":[{"evidence_id":"law:1",
+        "title":"법령","content_preview":"본문","source_type":"law"}]},"r1")
+
+
+def test_normal_validation_event_and_guest_storage_warning_are_accepted():
+    from frontend.components.stream_analysis import friendly_event
+    stream.validate_event("step.started", {"run_id":"r1","step_id":"validation", "tool":None,
+        "stage":"validation", "result_count":None},"r1")
+    stream.validate_event("guest.storage_failed", {"run_id":"r1","message":"temporary storage unavailable"},"r1")
+    assert "분석은 계속" in friendly_event("guest.storage_failed", {})
