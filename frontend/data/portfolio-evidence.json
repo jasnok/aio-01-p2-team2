@@ -40,6 +40,36 @@
       "warmup": 2,
       "python": "3.12.7",
       "equivalent_pairs": 12
+    },
+    {
+      "experiment": "http",
+      "category": "housing",
+      "before_ms": 345.3927499940619,
+      "after_ms": 3.2125000143423676,
+      "samples": 10,
+      "warmup": 2,
+      "python": "3.12.7",
+      "equivalent_pairs": 12
+    },
+    {
+      "experiment": "http",
+      "category": "labor",
+      "before_ms": 392.9074499756098,
+      "after_ms": 3.4007499925792217,
+      "samples": 10,
+      "warmup": 2,
+      "python": "3.12.7",
+      "equivalent_pairs": 12
+    },
+    {
+      "experiment": "http",
+      "category": "consumer",
+      "before_ms": 362.3175999382511,
+      "after_ms": 3.3122500171884894,
+      "samples": 10,
+      "warmup": 2,
+      "python": "3.12.7",
+      "equivalent_pairs": 12
     }
   ],
   "environments": [
@@ -73,6 +103,10 @@
     {
       "file": "keyword-connections-v2.json",
       "sha256": "515f939dda73d6fdba71717de966985313f182eaec3046f2aa950b8e6c31c91e"
+    },
+    {
+      "file": "frontend-http-pool.json",
+      "sha256": "6e56b609fd1d05c461a1b1863cd7b1ef65cd1c5bba840190b4acf5e0e3121388"
     },
     {
       "file": "environment-windows.json",
@@ -145,6 +179,30 @@
         "immutable_snapshot": false
       },
       "database_counts_unchanged": true
+    },
+    "http": {
+      "started_at": "2026-10-02T22:07:42.713044Z",
+      "finished_at": "2026-10-02T22:07:57.442787Z",
+      "git_head": "5f03d9c377381a5ad2fe47bf8aee14d5eba3e338",
+      "working_tree_dirty": true,
+      "python": "3.12.7",
+      "platform": "Windows",
+      "packages": {
+        "httpx": "0.28.1",
+        "httpcore": "1.0.9"
+      },
+      "constraints_sha256": "0c4ec022abd3dabc6e246a667d860e637e2878c5e7e5496505265a29218bfb42",
+      "code_sha256": {
+        "scripts/benchmark_frontend_http.py": "74fe1ba52dd070dae4a3c3b117bbaa582c716f49629eacda4e46daa27243b820",
+        "scripts/benchmark_provenance.py": "6d6b73a7b8ec2254c8578a9e71c8837ffa343cf33114cf7e449517c0733e6474",
+        "frontend/clients/http_client.py": "8becc2368fdbe7f670e0698f0fc93ddf8c4ecb740243f57613511730a3062276",
+        "frontend/clients/backend_client.py": "002731fc03cedd5f1be3e8d9f86f7e1417d9a669b115980bffbdff6eb07611ae",
+        "frontend/core/config.py": "66eaa840c79a4488fa9fc5baf6a2ff4e6dd14642b6b458eea6c1c04547e798d9"
+      },
+      "code_unchanged_during_measurement": true,
+      "database_before": null,
+      "database_after": null,
+      "database_counts_unchanged": null
     }
   }
 }
