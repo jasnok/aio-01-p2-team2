@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "rows": [
+    {
+      "experiment": "embedding",
+      "category": null,
+      "before_ms": 383.54940013960004,
+      "after_ms": 0.00190013088285923,
+      "samples": 15,
+      "warmup": 5,
+      "python": "3.12.7",
+      "equivalent_pairs": null
+    },
+    {
+      "experiment": "keyword",
+      "category": "housing",
+      "before_ms": 325.850100023672,
+      "after_ms": 156.35050006676465,
+      "samples": 10,
+      "warmup": 2,
+      "python": "3.12.7",
+      "equivalent_pairs": 12
+    },
+    {
+      "experiment": "keyword",
+      "category": "labor",
+      "before_ms": 263.4995001135394,
+      "after_ms": 86.45754994358867,
+      "samples": 10,
+      "warmup": 2,
+      "python": "3.12.7",
+      "equivalent_pairs": 12
+    },
+    {
+      "experiment": "keyword",
+      "category": "consumer",
+      "before_ms": 553.324899985455,
+      "after_ms": 358.5306501481682,
+      "samples": 10,
+      "warmup": 2,
+      "python": "3.12.7",
+      "equivalent_pairs": 12
+    }
+  ],
+  "environments": [
+    {
+      "platform": "Windows",
+      "python": "3.12.7",
+      "packages": 79,
+      "errors": 0,
+      "constraints_sha256": "68762e339e5a7d56550929510c7fc6fd94eea1d7b16482a245973bdcb8eba48c"
+    },
+    {
+      "platform": "Windows",
+      "python": "3.12.7",
+      "packages": 79,
+      "errors": 0,
+      "constraints_sha256": "68762e339e5a7d56550929510c7fc6fd94eea1d7b16482a245973bdcb8eba48c"
+    },
+    {
+      "platform": "Linux",
+      "python": "3.12.15",
+      "packages": 77,
+      "errors": 0,
+      "constraints_sha256": "68762e339e5a7d56550929510c7fc6fd94eea1d7b16482a245973bdcb8eba48c"
+    }
+  ],
+  "sources": [
+    {
+      "file": "embedding-client-acquisition.json",
+      "sha256": "4d1ae1e0360fe6ba4f59e8e6b151259228e4b61795a5d70682eaf472af2fc81e"
+    },
+    {
+      "file": "keyword-connections.json",
+      "sha256": "173aad55fa364f7f3ce8b1989f9bc75fb30391cb4de8dadb25e00f57832ffd84"
+    },
+    {
+      "file": "environment-windows.json",
+      "sha256": "84d5baddf9435f56f4f3bbeaf66c224eea3a987f219ae9103874100c45a1e18c"
+    },
+    {
+      "file": "environment-windows-clean.json",
+      "sha256": "84d5baddf9435f56f4f3bbeaf66c224eea3a987f219ae9103874100c45a1e18c"
+    },
+    {
+      "file": "environment-linux.json",
+      "sha256": "8737a3b5ec21a1486aebfb417a39d7d0ce23d8f394b33a037f684eb8d3b761e9"
+    }
+  ]
+}

@@ -54,4 +54,5 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python -m pip check
       - run: python scripts/check_environment.py
+      - run: python scripts/build_portfolio_evidence.py --check
       - run: pytest
