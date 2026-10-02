@@ -102,8 +102,8 @@ services:
 
   database-tools:
     build:
-      context: ./database
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: database/Dockerfile
     profiles: ["tools"]
     env_file:
       - ./database/.env
