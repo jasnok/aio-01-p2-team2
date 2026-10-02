@@ -194,6 +194,31 @@ class LegalRepository:
         document_types: list[str],
         limit: int = 3,
     ) -> list[dict]:
+        return self.search_documents_by_keywords([query], category, document_types, limit)
+
+    def search_documents_by_keywords(
+        self,
+        queries: list[str],
+        category: str,
+        document_types: list[str],
+        limit: int = 3,
+    ) -> list[dict]:
+        """Preserve per-term ordering and limits while sharing one connection."""
+        if not queries:
+            return []
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                return [row for query in queries for row in
+                        self._search_documents_by_keyword(cur, query, category, document_types, limit)]
+
+    def _search_documents_by_keyword(
+        self,
+        cur,
+        query: str,
+        category: str,
+        document_types: list[str],
+        limit: int = 3,
+    ) -> list[dict]:
         """법령명·조문번호·사건번호·본문 키워드로 문서를 검색한다."""
 
         keyword = query.strip()
@@ -235,10 +260,8 @@ class LegalRepository:
             ORDER BY keyword_score DESC, document_id
             LIMIT %s
         """
-        with get_connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(sql, (
-                    keyword, keyword, keyword, pattern, pattern, pattern,
-                    pattern, category, document_types, pattern, pattern, limit,
-                ))
-                return cur.fetchall()
+        cur.execute(sql, (
+            keyword, keyword, keyword, pattern, pattern, pattern,
+            pattern, category, document_types, pattern, pattern, limit,
+        ))
+        return cur.fetchall()

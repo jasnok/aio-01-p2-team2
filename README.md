@@ -99,6 +99,7 @@ docker compose -f compose.yml up --build -d
 - [추가 정보 요청의 유효한 보완 질문 계약](docs/INTAKE_CLARIFICATION_CONTRACT.md)
 - [실행·평가 의존성 및 기반 이미지 재현성](docs/REPRODUCIBLE_ENVIRONMENTS.md)
 - [검색 임베딩 클라이언트 재사용과 생성 비용 측정](docs/EMBEDDING_CLIENT_REUSE.md)
+- [키워드 조회 연결 재사용과 실제 PostgreSQL 짝 비교](docs/KEYWORD_CONNECTION_REUSE.md)
 - [공유 Redis·모델 연결의 종료와 재사용 수명주기](docs/SHARED_CLIENT_LIFECYCLE.md)
 - [게시판·댓글·개인 이력·알림의 소유자 분리](docs/COMMUNITY_OWNER_ISOLATION.md)
 - [AI 실행·용어 결과의 회원·게스트 소유자 분리](docs/ACTOR_RESULT_ISOLATION.md)
