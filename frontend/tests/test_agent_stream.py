@@ -93,14 +93,15 @@ def test_failed_and_invalid_final_response():
             stream.final_result(data, "r1")
 
 
-def test_reconnection_limit(monkeypatch):
+@pytest.mark.parametrize("error_type", [stream.httpx.ConnectError, stream.httpx.ReadError, stream.httpx.DecodingError])
+def test_reconnection_limit(monkeypatch, error_type):
     setup(monkeypatch)
     monkeypatch.setattr(stream.api, "get_agent_run", lambda *a: {"run_id": "r1", "status": "running"})
     calls = []
     @contextmanager
     def connect(*a, **kw):
         calls.append(1)
-        raise stream.httpx.ConnectError("offline")
+        raise error_type("offline")
         yield
     monkeypatch.setattr(stream.httpx, "stream", connect)
     with pytest.raises(BackendClientError, match="기존 작업"):

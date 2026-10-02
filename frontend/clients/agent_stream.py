@@ -122,7 +122,7 @@ def receive_run(token, guest_id, run_id, last_id=0, on_event=lambda *args: None)
         except httpx.HTTPStatusError as error:
             code, message = api._extract_api_error(error.response)
             raise api.BackendClientError(message, code) from error
-        except (httpx.TransportError, TimeoutError):
+        except (httpx.RequestError, TimeoutError):
             pass
         except (ValueError, TypeError) as error:
             raise api.BackendClientError("진행 이벤트 형식이 계약과 다릅니다.", "CONTRACT_MISMATCH") from error

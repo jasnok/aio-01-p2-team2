@@ -132,3 +132,74 @@ def test_streamlit_connection_screen_shows_error_without_exception(monkeypatch, 
     assert len(app.error) == 1
     assert not app.success
 
+
+@pytest.mark.parametrize("error_type", [httpx.ReadError, httpx.WriteError, httpx.RemoteProtocolError,
+    httpx.LocalProtocolError, httpx.DecodingError, httpx.ProxyError])
+@pytest.mark.parametrize("method", ["GET", "POST"])
+def test_request_errors_are_safe_and_never_replayed(monkeypatch, error_type, method):
+    calls = []
+    marker = "PRIVATE-TRANSPORT-DETAIL"
+    def fail(*args, **kwargs):
+        calls.append(args)
+        raise error_type(marker)
+    monkeypatch.setattr(httpx, "request", fail)
+    with pytest.raises(backend_client.BackendClientError) as caught:
+        backend_client._request(method, "/api/agent-runs")
+    assert caught.value.code == "BACKEND_REQUEST_FAILED"
+    assert marker not in caught.value.user_message
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("error_type,code", [(httpx.ReadTimeout,"BACKEND_TIMEOUT"),(httpx.ConnectError,"BACKEND_UNAVAILABLE")])
+def test_existing_network_error_codes_are_preserved(monkeypatch,error_type,code):
+    def fail(*args, **kwargs):
+        raise error_type("synthetic")
+    monkeypatch.setattr(httpx,"request",fail)
+    with pytest.raises(backend_client.BackendClientError) as caught:
+        backend_client._request("GET","/health")
+    assert caught.value.code == code
+
+
+@pytest.mark.parametrize("created", [False, True])
+def test_interrupted_analysis_preserves_pending_identity_on_explicit_retry(monkeypatch, created):
+    from streamlit.testing.v1 import AppTest
+    requests = []
+    def response(method, url, **kwargs):
+        requests.append((method, kwargs.get("headers", {}).get("Idempotency-Key")))
+        if method == "POST" and created:
+            return httpx.Response(200,json={"run_id":"existing-run","status":"queued"},request=httpx.Request(method,url))
+        raise httpx.ReadError("PRIVATE-RESPONSE-DETAIL")
+    monkeypatch.setattr(httpx,"request",response)
+    app = AppTest.from_string(
+        "import streamlit as st\n"
+        "from frontend.components.stream_analysis import analyze_with_stream\n"
+        "st.session_state.current_user={'id':'synthetic-guest','role':'GUEST'}\n"
+        "st.session_state.auth_token=None\n"
+        "for attempt in range(2):\n"
+        "    try:\n"
+        "        analyze_with_stream('housing','합성 계약 테스트')\n"
+        "    except ValueError as error:\n"
+        "        st.error(str(error))\n"
+    ).run(timeout=20)
+    assert not app.exception
+    assert len(app.error) == 2
+    assert all("PRIVATE" not in error.value for error in app.error)
+    posts = [key for method,key in requests if method == "POST"]
+    assert len(posts) == (1 if created else 2)
+    assert len(set(posts)) == 1
+    pending = app.session_state.sse_pending
+    assert pending["run_id"] == ("existing-run" if created else None)
+    assert not pending["finished"]
+
+
+def test_interrupted_error_body_has_safe_status_fallback():
+    class BrokenStream(httpx.SyncByteStream):
+        def __iter__(self):
+            raise httpx.ReadError("PRIVATE-ERROR-BODY")
+            yield b""
+    response = httpx.Response(502,stream=BrokenStream(),request=httpx.Request("GET","http://synthetic/health"))
+    try:
+        assert backend_client._extract_api_error(response) == ("BACKEND_ERROR","Backend 요청에 실패했습니다. HTTP 502")
+    finally:
+        response.close()
+
