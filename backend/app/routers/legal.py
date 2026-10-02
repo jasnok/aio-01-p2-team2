@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from backend.app.agents.models import AgentState
 from backend.app.agents.registry import get_agent_profile
 from backend.app.agents.runtime import LegalAgentRuntime
+from backend.app.mock_data.catalog import CATALOG
 from backend.app.schemas.legal import (
     Category,
     Evidence,
@@ -210,8 +211,12 @@ async def search_consultations(category: Category, query: str, top_k: int = Quer
 
 
 @router.get("/terms", summary="쉬운 법률 용어 검색", description="어려운 법률 용어를 쉬운 말로 설명합니다.")
-def search_terms(category: str, query: str = Query(min_length=2, max_length=200)) -> dict:
-    terms = {"labor": {"임금체불": "정해진 때에 임금이 지급되지 않은 상태입니다."}, "housing": {"보증금": "임대차 계약에서 반환 조건을 정하는 금액입니다."}, "consumer": {"청약철회": "일정한 거래에서 계약을 취소할 수 있는 권리입니다."}}
-    matched = [{"term": term, "description": description} for term, description in terms.get(category, {}).items() if query.strip() in term or query.strip() in description]
+def search_terms(category: Category, query: str = Query(min_length=2, max_length=200)) -> dict:
+    query = query.strip()
+    if len(query) < 2:
+        raise HTTPException(status_code=422, detail={"code": "VALIDATION_ERROR", "message": "검색어를 2~200자로 입력해 주세요."})
+    matched = [{"term": term, "description": description}
+               for term, description in CATALOG[category]["terms"]
+               if query in term or query in description]
     return {"items": matched}
 
