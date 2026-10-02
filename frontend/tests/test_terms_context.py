@@ -96,3 +96,43 @@ render_legal_terms_chat(dict(request_id="analysis", question="보증금 반환",
     assert not app.chat_message
     ask()
     assert calls[-1] is None
+
+
+def test_failed_question_is_preserved_and_success_clears_without_repeating_request(monkeypatch):
+    from types import SimpleNamespace
+    from streamlit.testing.v1 import AppTest
+    from frontend.clients import backend_client
+    from frontend.components import legal_terms_chat
+
+    monkeypatch.setattr(legal_terms_chat, 'get_frontend_settings', lambda: SimpleNamespace(frontend_data_mode='api'))
+    calls = []
+
+    def chat(*args, **kwargs):
+        calls.append(args[2])
+        if len(calls) == 1:
+            raise backend_client.BackendClientError('응답을 확인하지 못했습니다.')
+        return {'request_id': 'term-success', 'answer': '설명', 'conversation_id': 12, 'saved': False}
+
+    monkeypatch.setattr(backend_client, 'chat_legal_terms', chat)
+    app = AppTest.from_string('''
+from frontend.core.session import initialize_session
+from frontend.components.legal_terms_chat import render_legal_terms_chat
+initialize_session()
+render_legal_terms_chat(dict(request_id='analysis', question='보증금 반환', answer='자료 안내'))
+''').run()
+    question = '임차권은 무엇인가요?'
+    app.text_area[0].set_value(question)
+    next(b for b in app.button if b.label == '질문하기').click().run()
+    assert not app.exception and app.error
+    assert app.text_area[0].value == question
+    assert not app.chat_message
+    next(b for b in app.button if b.label == '질문하기').click().run()
+    assert not app.exception and not app.error
+    assert app.text_area[0].value == ''
+    assert len(app.chat_message) == 2
+    assert app.session_state['terms_conversation_id'] == 12
+    assert calls[0] == calls[1]
+    next(b for b in app.button if b.label == '질문하기').click().run()
+    assert not app.exception and app.warning
+    assert len(calls) == 2
+    assert app.session_state['terms_conversation_id'] == 12

@@ -5,6 +5,7 @@ from frontend.core.config import get_frontend_settings
 
 
 def reset_terms_chat():
+    st.session_state.pop('terms_clear_input', None)
     st.session_state.update(terms_messages=[], terms_conversation_id=None,
                             terms_saved=False, terms_reply={}, terms_input="",
                             terms_save=False, terms_save_login_notice=False)
@@ -20,6 +21,8 @@ def _continue_saved_conversation(saved):
 
 
 def render_legal_terms_chat(result: dict) -> None:
+    if st.session_state.pop('terms_clear_input', False):
+        st.session_state.terms_input = ''
     st.markdown("### 법률 용어 대화")
     st.caption("방금 분석한 사례의 법률 용어나 표현을 쉽게 풀어드립니다.")
     identity = (st.session_state.auth_token, result.get("request_id"), result.get("question"))
@@ -61,6 +64,8 @@ def render_legal_terms_chat(result: dict) -> None:
             if payload.get("saved") is True:
                 st.session_state.terms_saved = True
                 st.success("대화가 저장되었습니다.")
+            st.session_state.terms_clear_input = True
+            st.rerun()
         except backend_client.BackendClientError as error:
             st.error(error.user_message)
     reply = st.session_state.get("terms_reply", {})
