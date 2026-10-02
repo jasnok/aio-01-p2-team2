@@ -24,7 +24,7 @@ class MeasurementProvenance(BaseModel):
     working_tree_dirty: bool | None = Field(strict=True)
     python: str
     platform: str
-    packages: dict[Literal["openai", "httpx", "psycopg", "pgvector"], str]
+    packages: dict[Literal["openai", "httpx", "httpcore", "psycopg", "pgvector"], str]
     constraints_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     code_sha256: dict[str, Digest] = Field(min_length=1)
     code_unchanged_during_measurement: Literal[True]
@@ -44,7 +44,7 @@ class MeasurementProvenance(BaseModel):
 
 class EvidenceRow(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    experiment: Literal["embedding", "keyword"]
+    experiment: Literal["embedding", "keyword", "http"]
     category: Literal["housing", "labor", "consumer"] | None = None
     before_ms: FiniteFloat = Field(ge=0)
     after_ms: FiniteFloat = Field(ge=0)
@@ -75,7 +75,7 @@ class PortfolioEvidence(BaseModel):
     rows: list[EvidenceRow] = Field(min_length=1)
     environments: list[EnvironmentEvidence]
     sources: list[Source]
-    provenance: dict[Literal["embedding", "keyword"], MeasurementProvenance] = Field(default_factory=dict)
+    provenance: dict[Literal["embedding", "keyword", "http"], MeasurementProvenance] = Field(default_factory=dict)
 
 
 DEFAULT_PATH = Path(__file__).resolve().parents[1] / "data" / "portfolio-evidence.json"

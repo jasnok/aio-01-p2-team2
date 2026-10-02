@@ -50,13 +50,28 @@ def build(directory):
         for field, name in [("before_ms", "per_term_connection"), ("after_ms", "shared_connection")]:
             row[field] = measured(case["samples_ms"][name], keyword["measured_pairs"], case["median_ms"][name])
         rows.append(row)
+    http = read('frontend-http-pool.json')
+    if http['authenticated_requests'] != 0 or http['model_requests'] != 0:
+        raise ValueError('HTTP measurement scope differs')
+    for category, case in http['results'].items():
+        if case['equal_pairs_including_warmup'] != case['warmup_pairs'] + case['measured_pairs']:
+            raise ValueError('HTTP result equivalence is not established')
+        if len(case['response_sha256']) != 64 or any(c not in '0123456789abcdef' for c in case['response_sha256']):
+            raise ValueError('Invalid HTTP response digest')
+        row = {'experiment': 'http', 'category': category, 'python': http['provenance']['python'],
+               'samples': case['measured_pairs'], 'warmup': case['warmup_pairs'],
+               'equivalent_pairs': case['equal_pairs_including_warmup']}
+        for field, name in [('before_ms', 'new_client'), ('after_ms', 'pooled_client')]:
+            sample = case[name]
+            row[field] = measured(sample['samples_ms'], case['measured_pairs'], sample['median_ms'])
+        rows.append(row)
     environments = []
     for name in ("environment-windows.json", "environment-windows-clean.json", "environment-linux.json"):
         report = read(name)
         environments.append({"platform": report["platform"], "python": report["python"],
             "packages": len(report["packages"]), "errors": len(report["errors"]),
             "constraints_sha256": report["constraints_sha256"]})
-    provenance = {name: value["provenance"] for name, value in [("embedding", embedding), ("keyword", keyword)]
+    provenance = {name: value["provenance"] for name, value in [("embedding", embedding), ("keyword", keyword), ('http', http)]
                   if "provenance" in value}
     return PortfolioEvidence(rows=rows, sources=sources, environments=environments, provenance=provenance)
 

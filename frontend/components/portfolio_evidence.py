@@ -12,9 +12,12 @@ def render_portfolio_evidence():
         except (OSError, ValueError, ValidationError):
             st.warning("측정 자료를 확인할 수 없습니다. 자료를 재생성해 주세요.")
             return
-        st.warning("SDK 생성·키워드 DB 조회만 측정했습니다. 전체 상담 속도나 법률 정확도 평가가 아닙니다.")
-        choice = st.selectbox("측정 범위", ["키워드 DB 조회", "SDK 클라이언트 획득"], key="portfolio-measurement")
-        kind = "keyword" if choice == "키워드 DB 조회" else "embedding"
+        st.warning("SDK 생성·키워드 DB 조회·로컬 공개 HTTP GET 단계의 측정입니다. 전체 상담 속도나 법률 정확도 평가가 아닙니다.")
+        scopes = {"키워드 DB 조회": "keyword", "SDK 클라이언트 획득": "embedding", "HTTP 연결 재사용": "http"}
+        choice = st.selectbox("측정 범위", list(scopes), key="portfolio-measurement")
+        kind = scopes[choice]
+        if kind == 'http':
+            st.caption('인증·모델 요청 없는 localhost 공개 카탈로그 GET입니다. 기존 경로는 클라이언트 생성·종료를 포함합니다.')
         labels = {"housing": "주거", "labor": "노동", "consumer": "소비자", None: "SDK 획득"}
         rows = [{"측정": labels[row.category], "변경 전(ms)": row.before_ms,
                  "변경 후(ms)": row.after_ms, "표본 수": row.samples, "준비 횟수": row.warmup,
