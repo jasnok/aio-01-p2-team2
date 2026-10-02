@@ -20,6 +20,7 @@ def _start_new_analysis() -> None:
     st.session_state.conversation_messages = []
     st.session_state.analysis_error = None
     st.session_state.pop("sse_pending", None)
+    st.session_state.pop("analysis_pdf_cache", None)
 
 
 def render_follow_up_chat(result: dict, service: LegalService) -> None:

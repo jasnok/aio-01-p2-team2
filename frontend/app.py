@@ -64,6 +64,7 @@ def render_workspace() -> None:
         with input_column:
             submission = render_question_form(category_code)
         if submission:
+            st.session_state.pop('analysis_pdf_cache', None)
             st.session_state.analysis_in_progress = True
             st.session_state.analysis_error = None
             refresh_after_notification = False

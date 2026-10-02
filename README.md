@@ -133,6 +133,7 @@ docker compose -f compose.yml up --build -d
 - [기본 법률 용어 목록과 검색 사전의 일관성](docs/TERM_CATALOG_CONSISTENCY.md)
 - [법률 용어 목록·검색의 중첩 응답 계약](docs/TERM_RESPONSE_CONTRACT.md)
 - [Frontend HTTP 연결 재사용·인증 격리·실측](docs/FRONTEND_HTTP_POOL.md)
+- [분석 PDF의 세션 내 재사용과 개인 상태 정리](docs/SESSION_PDF_REUSE.md)
 - [MCP 검색 응답 계약과 잘못된 결과 차단](docs/MCP_SEARCH_CONTRACT.md)
 - [운영 메트릭과 실패 로그의 상담 내용 노출 방지](docs/SAFE_OPERATIONAL_LOGS.md)
 - [분석 접수 제한과 종료 자원 정리](docs/RUN_ADMISSION_CONTROL.md)

@@ -72,6 +72,7 @@ def initialize_session() -> None:
 
 def select_category(category: str) -> None:
     if st.session_state.selected_category != category:
+        st.session_state.pop('analysis_pdf_cache', None)
         st.session_state.last_result = None
         st.session_state.law_results = None
         st.session_state.case_results = None
