@@ -26,6 +26,34 @@ def test_context_bounds_exact_quotes_and_preserves_source_diversity():
     assert any("퇴직금 지급 기한" in item["quote"] for item in spans.values())
 
 
+@pytest.mark.parametrize('kind', ['law', 'case', 'consultation', 'external'])
+def test_unextractable_top_document_does_not_hide_next_safe_candidate(kind):
+    unsafe = evidence(1, kind, '분리할 수 없는 긴 문장' * 300)
+    unsafe.score = 0.99
+    safe = evidence(2, kind, '퇴직금 원문을 확인하세요.')
+    docs, spans = build_context('퇴직금', [unsafe, safe], max_documents=1, document_budget=300)
+    assert [doc['evidence_id'] for doc in docs] == [safe.evidence_id]
+    assert spans and all(span['quote'] == safe.content for span in spans.values())
+
+
+def test_safe_candidates_keep_diversity_limits_order_and_exact_offsets():
+    rows = [evidence(1, 'law', '긴문장' * 1000), evidence(2, 'law'),
+            evidence(3, 'law'), evidence(4, 'case', '긴문장' * 1000),
+            evidence(5, 'case'), evidence(6, 'consultation')]
+    docs, spans = build_context('퇴직금', rows, max_documents=3, max_windows=1, document_budget=300)
+    assert [doc['evidence_id'] for doc in docs] == ['law-2', 'case-5', 'consultation-6']
+    assert len(spans) == 3
+    originals = {item.evidence_id: item.content for item in rows}
+    for span in spans.values():
+        assert originals[span['evidence_id']][span['start']:span['end']] == span['quote']
+        assert len(span['quote']) <= 300
+    assert build_context('퇴직금', rows, max_documents=3, max_windows=1, document_budget=300) == (docs, spans)
+
+
+def test_all_unextractable_documents_still_produce_empty_safe_context():
+    assert build_context('퇴직금', [evidence(content='긴문장' * 1000)], document_budget=300) == ([], {})
+
+
 def test_server_resolves_span_id_and_binds_answer_to_cited_claim():
     _, spans = build_context("퇴직금", [evidence()])
     output = {"question_summary": "요약", "claims": [{"text": "기한을 확인하세요.", "span_ids": list(spans)}]}

@@ -9,21 +9,31 @@ def build_context(question: str, evidence: list[Evidence], max_documents: int = 
     if max_documents < 1:
         raise ValueError("max_documents must be positive")
     ranked = sorted(enumerate(evidence), key=lambda pair: (-(pair[1].score or 0), pair[0]))
+    windows = {}
+
+    def extract(index, item):
+        if index not in windows:
+            windows[index] = select_windows(question, item.content, limit=max_windows, budget=document_budget)
+        return windows[index]
+
     selected = []
     # Preserve source diversity before filling the remaining context budget.
     for source_type in ("law", "case", "consultation", "external"):
-        match = next((item for _, item in ranked if item.source.source_type == source_type), None)
-        if match and len(selected) < max_documents:
-            selected.append(match)
-    for _, item in ranked:
         if len(selected) >= max_documents:
             break
-        if item.evidence_id not in {doc.evidence_id for doc in selected}:
-            selected.append(item)
+        match = next(((index, item) for index, item in ranked
+                      if item.source.source_type == source_type and extract(index, item)), None)
+        if match:
+            selected.append(match)
+    for index, item in ranked:
+        if len(selected) >= max_documents:
+            break
+        if item.evidence_id not in {doc.evidence_id for _, doc in selected} and extract(index, item):
+            selected.append((index, item))
     documents, spans = [], {}
-    for item in selected:
+    for index, item in selected:
         excerpts = []
-        for window in select_windows(question, item.content, limit=max_windows, budget=document_budget):
+        for window in windows[index]:
             span_id = f"{item.evidence_id}:{window['source_sha256'][:12]}:{window['start']}:{window['end']}"
             spans[span_id] = {"evidence_id": item.evidence_id, **window}
             excerpts.append({"span_id": span_id, "text": window["quote"]})
