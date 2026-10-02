@@ -15,6 +15,10 @@ def start_new_terms_chat():
     st.session_state.terms_reset_notice = True
 
 
+def _continue_saved_conversation(saved):
+    st.session_state.terms_conversation_id = saved["conversation_id"]
+
+
 def render_legal_terms_chat(result: dict) -> None:
     st.markdown("### 법률 용어 대화")
     st.caption("방금 분석한 사례의 법률 용어나 표현을 쉽게 풀어드립니다.")
@@ -69,7 +73,8 @@ def render_legal_terms_chat(result: dict) -> None:
             st.text(entry["content"])
             if entry["role"] == "assistant" and token:
                 from frontend.components.result_save import render_result_save
-                render_result_save(entry, kind="legal_terms", result_id=entry.get("request_id"))
+                render_result_save(entry, kind="legal_terms", result_id=entry.get("request_id"),
+                                   on_saved=_continue_saved_conversation)
 
 
 def build_context_message(result, question, messages):

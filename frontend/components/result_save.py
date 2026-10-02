@@ -3,7 +3,7 @@ import streamlit as st
 from frontend.clients import backend_client as api
 
 
-def render_result_save(result, *, kind, result_id):
+def render_result_save(result, *, kind, result_id, on_saved=None):
     token = st.session_state.get("auth_token")
     if not token:
         return
@@ -16,6 +16,8 @@ def render_result_save(result, *, kind, result_id):
             with st.spinner("저장하고 있습니다."):
                 saved = api.save_completed_result(token, result_id, kind=kind)
             result.update(saved)
+            if on_saved is not None:
+                on_saved(saved)
             st.rerun()
         except api.BackendClientError as error:
             st.error(error.user_message)

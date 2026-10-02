@@ -166,3 +166,42 @@ def test_snapshot_uses_the_numeric_contract_version_required_by_db() -> None:
         "version": 1,
         "payload": {"kind": "legal_analysis"},
     }
+
+
+def test_unsaved_term_followup_preserves_owner_checked_conversation(monkeypatch):
+    from fastapi import FastAPI
+    from fastapi.testclient import TestClient
+    from backend.app.routers import legal_terms
+    from backend.app.schemas.legal_terms import LegalTermChatResponse
+
+    contexts = []
+    remembered = []
+
+    class Repository(FakeSavedRepository):
+        async def restore(self, *args):
+            restored = await super().restore(*args)
+            restored["conversation"]["category"] = "legal_terms"
+            return restored
+
+    async def chat(message, context):
+        contexts.append(context)
+        return LegalTermChatResponse(request_id="term-followup", answer="설명", notice="일반 정보",
+                                    storage="none", is_llm_response=True)
+
+    async def remember(**kwargs):
+        remembered.append(kwargs)
+
+    monkeypatch.setattr(legal_terms, "saved_conversation_service", SavedConversationService(Repository()))
+    monkeypatch.setattr(legal_terms.term_chat_service, "chat", chat)
+    monkeypatch.setattr(legal_terms.legal_term_runs, "remember", remember)
+    app = FastAPI()
+    app.include_router(legal_terms.router)
+    app.dependency_overrides[legal_terms.actor] = lambda: {"id": 42, "role": "USER"}
+    with TestClient(app) as client:
+        result = client.post("/api/legal-terms/chat", json={"message": "임차권이 뭐예요?", "conversation_id": 71})
+    assert result.status_code == 200
+    assert result.json()["conversation_id"] == 71
+    assert result.json()["saved"] is False
+    assert result.json()["storage"] == "none"
+    assert contexts[0][0] == {"role": "user", "content": "첫 질문"}
+    assert remembered[0]["conversation_id"] == 71

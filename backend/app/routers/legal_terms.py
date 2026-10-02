@@ -67,7 +67,7 @@ async def chat_with_legal_terms(
         return response.model_copy(update={"storage": "guest_temporary"})
 
     if not body.save_selected:
-        return response
+        return response.model_copy(update={"conversation_id": body.conversation_id})
     try:
         conversation_id = await saved_conversation_service.save_term_chat(
             actor=value, question=body.message, answer=response.answer,
