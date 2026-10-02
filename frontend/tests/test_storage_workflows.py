@@ -56,32 +56,33 @@ render_saved_history()
 ''').run()
 
 
-def test_history_failure_isolation_and_read_only_detail(monkeypatch):
-    monkeypatch.setattr(api, "list_saved_conversations", lambda *a, **kw: {"items": [{"id": 1, "title": "내 분석"}]})
+def test_history_read_only_detail_and_list_failure(monkeypatch):
+    monkeypatch.setattr(api, "list_saved_conversations", lambda *a, **kw: {"items": [{"id": 1, "type": "analysis", "title": "내 분석"}]})
     def unavailable(*a, **kw):
         raise api.BackendClientError("아직 준비되지 않았습니다.", status_code=404)
-    monkeypatch.setattr(api, "list_legal_term_conversations", unavailable)
     monkeypatch.setattr(api, "get_saved_conversation", lambda *a: dict(id=1, question="질문", result=RAW))
     app = history_app()
-    assert not app.exception and app.error
+    assert not app.exception and not app.error
     app.button(key="history-analysis-1-open").click().run()
     assert not app.exception
     assert any(x.value == "분석 답변" for x in app.markdown)
     assert not app.text_input and not app.text_area
+    monkeypatch.setattr(api, "list_saved_conversations", unavailable)
+    app.run()
+    assert not app.exception and app.error
 
 
-def test_same_id_different_kind_delete_requires_confirmation(monkeypatch):
+def test_term_delete_requires_confirmation(monkeypatch):
     deleted = []
-    monkeypatch.setattr(api, "list_saved_conversations", lambda *a, **kw: {"items": [{"id": 1}]})
-    monkeypatch.setattr(api, "list_legal_term_conversations", lambda *a, **kw: {"items": [] if deleted else [{"id": 1}]})
-    monkeypatch.setattr(api, "delete_legal_term_conversation", lambda *a: deleted.append("terms"))
-    monkeypatch.setattr(api, "delete_saved_conversation", lambda *a: deleted.append("analysis"))
+    monkeypatch.setattr(api, "list_saved_conversations", lambda *a, **kw: {"items": [
+        {"id": 2, "type": "analysis"}] + ([] if deleted else [{"id": 1, "type": "legal_terms"}])})
+    monkeypatch.setattr(api, "delete_saved_conversation", lambda *a: deleted.append(a[1]))
     app = history_app()
     app.button(key="history-legal_terms-1-delete").click().run()
     assert not deleted
     app.button(key="history-legal_terms-1-yes").click().run()
-    assert not app.exception and deleted == ["terms"]
-    assert app.button(key="history-analysis-1-delete")
+    assert not app.exception and deleted == [1]
+    assert app.button(key="history-analysis-2-delete")
 
 
 def test_auth_login_and_expiration_clear_private_state():
@@ -147,3 +148,67 @@ if st.button("run"):
 def test_stream_error_body_can_be_read():
     response = httpx.Response(401, stream=httpx.ByteStream(b'{"detail":{"code":"AUTH_REQUIRED","message":"expired"}}'))
     assert api._extract_api_error(response) == ("AUTH_REQUIRED", "expired")
+
+
+def test_mixed_history_preserves_types_and_uses_existing_api(monkeypatch):
+    calls = []
+    def request(method, path, **kwargs):
+        calls.append((method, path))
+        if method == "DELETE":
+            return {}
+        if path.endswith("/2"):
+            return {"id": 2, "type": "legal_terms", "messages": [
+                {"role": "user", "content": "임차권"},
+                {"role": "assistant", "content": "용어 설명"}]}
+        if path == "/api/saved-conversations":
+            return {"items": [{"id": 1, "type": "analysis", "title": "내 분석"},
+                              {"id": 2, "type": "legal_terms", "title": "내 용어"}],
+                    "page": 1, "page_size": 20, "total": 2}
+        raise api.BackendClientError("없는 경로", status_code=404)
+
+    monkeypatch.setattr(api, "_request", request)
+    app = history_app()
+    assert not app.exception and not app.error
+    assert calls == [("GET", "/api/saved-conversations")]
+    app.button(key="history-legal_terms-2-open").click().run()
+    assert not app.exception and not app.error
+    assert len(app.chat_message) == 2
+    assert ("GET", "/api/saved-conversations/2") in calls
+    app.button(key="history-legal_terms-2-delete").click().run()
+    app.button(key="history-legal_terms-2-yes").click().run()
+    assert not app.exception
+    assert ("DELETE", "/api/saved-conversations/2") in calls
+
+
+@pytest.mark.parametrize("payload", [{"id": 99}, {"conversation_id": 99},
+                                    {"type": "analysis"}, {"type": "unknown"}])
+def test_term_detail_rejects_identity_or_type_mismatch(monkeypatch, payload):
+    from frontend.services.history_service import load_detail
+    monkeypatch.setattr(api, "get_saved_conversation", lambda *args: payload)
+    with pytest.raises(api.BackendClientError) as caught:
+        load_detail("member", {"id": 2, "type": "legal_terms"})
+    assert caught.value.code == "CONTRACT_MISMATCH"
+
+
+def test_unified_history_filter_pagination_and_delete_failure(monkeypatch):
+    pages = []
+    def listing(token, *, page):
+        pages.append(page)
+        return {"items": [{"id": 1, "type": "analysis"}, {"id": 2, "type": "legal_terms"}],
+                "page": page, "page_size": 20, "total": 2}
+    def failed_delete(*args):
+        raise api.BackendClientError("삭제할 수 없습니다.")
+    monkeypatch.setattr(api, "list_saved_conversations", listing)
+    monkeypatch.setattr(api, "delete_saved_conversation", failed_delete)
+    app = history_app()
+    app.radio[0].set_value("legal_terms").run()
+    assert not app.exception
+    assert not any(b.key == "history-analysis-1-open" for b in app.button)
+    app.number_input[0].set_value(2).run()
+    assert pages == [1, 1, 2]
+    app.button(key="history-legal_terms-2-delete").click().run()
+    app.button(key="history-legal_terms-2-yes").click().run()
+    assert not app.exception and app.error
+    assert app.session_state["history-legal_terms-2-confirm"] is True
+    assert app.button(key="history-legal_terms-2-open")
+    assert pages == [1, 1, 2, 2, 2]

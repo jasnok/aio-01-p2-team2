@@ -48,10 +48,7 @@ def render_items(items, token):
                     st.warning("이 저장 항목을 삭제할까요?")
                     if st.button("삭제 확인", key=key + "-yes"):
                         try:
-                            if item["type"] == "analysis":
-                                api.delete_saved_conversation(token, item["id"])
-                            else:
-                                api.delete_legal_term_conversation(token, item["id"])
+                            api.delete_saved_conversation(token, item["id"])
                             for suffix in ("-detail", "-confirm"):
                                 st.session_state.pop(key + suffix, None)
                             st.rerun()
@@ -101,15 +98,7 @@ def render_saved_history():
     items = []
     try:
         raw = api.list_saved_conversations(token, page=page_number)
-        page = parse_page(raw, kind="analysis")
-        if "page" not in raw:
-            page["items"] = page["items"][(page_number - 1) * 20:page_number * 20]
-        items.extend(page["items"])
-    except api.BackendClientError as error:
-        st.error(error.user_message)
-    try:
-        raw = api.list_legal_term_conversations(token, page=page_number)
-        page = parse_page(raw, kind="legal_terms")
+        page = parse_page(raw)
         if "page" not in raw:
             page["items"] = page["items"][(page_number - 1) * 20:page_number * 20]
         items.extend(page["items"])

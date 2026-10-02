@@ -48,14 +48,15 @@ def is_expired(item):
 
 def load_detail(token, item):
     kind = item["type"]
-    if kind == "analysis":
-        payload = api.get_saved_conversation(token, item["id"])
-    else:
-        payload = api.get_legal_term_conversation(token, item["id"])
+    payload = api.get_saved_conversation(token, item["id"])
     try:
-        detail = normalize_item({**item, **payload}, kind)
-        if str(detail["id"]) != str(item["id"]):
-            raise ValueError("Mismatched ID")
-        return detail
+        if not isinstance(payload, dict):
+            raise ValueError("Invalid detail object")
+        if "type" in payload and payload["type"] != kind:
+            raise ValueError("Mismatched history type")
+        for field in ("id", "conversation_id"):
+            if field in payload and str(payload[field]) != str(item["id"]):
+                raise ValueError("Mismatched ID")
+        return normalize_item({**item, **payload}, kind)
     except (ValidationError, ValueError, TypeError) as error:
         raise api.BackendClientError("이력 상세 응답 형식을 확인할 수 없습니다.", "CONTRACT_MISMATCH") from error
