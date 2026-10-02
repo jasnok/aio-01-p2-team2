@@ -8,6 +8,7 @@ from datetime import timedelta
 from time import monotonic
 
 from backend.app.core.config import get_settings
+from backend.app.services.memory_expiry import remove_expired_entries
 
 
 class SessionStoreUnavailableError(RuntimeError):
@@ -43,7 +44,9 @@ class SessionService:
                 raise SessionStoreUnavailableError() from error
         else:
             async with self._lock:
-                self._memory[token] = (SessionRecord(user_id), monotonic() + ttl)
+                now = monotonic()
+                remove_expired_entries(self._memory, now)
+                self._memory[token] = (SessionRecord(user_id), now + ttl)
         return token, ttl
 
     async def read(self, token: str | None) -> SessionRecord | None:
