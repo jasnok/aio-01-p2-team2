@@ -52,6 +52,16 @@ class InputAssessmentView(BaseModel):
     checks: InputChecklistView | None = None
 
 
+class ClaimCitationView(BaseModel):
+    evidence_id: str = Field(strict=True, min_length=1)
+    quote: str = Field(strict=True, min_length=1, max_length=2400)
+
+
+class CitedClaimView(BaseModel):
+    text: str = Field(strict=True, min_length=1)
+    citations: list[ClaimCitationView] = Field(min_length=1)
+
+
 class LegalQuestionView(BaseModel):
     request_id: str
     agent_id: Literal["housing", "labor", "consumer"]
@@ -74,6 +84,6 @@ class LegalQuestionView(BaseModel):
     expires_at: str | None = None
     generation_status: Literal["llm", "fallback", "no_evidence", "clarification", "mock"] = "mock"
     used_evidence_ids: list[str] = Field(default_factory=list)
-    cited_claims: list[dict[str, Any]] = Field(default_factory=list)
+    cited_claims: list[CitedClaimView] = Field(default_factory=list)
     diagnostics: dict[str, Any] = Field(default_factory=dict)
 
