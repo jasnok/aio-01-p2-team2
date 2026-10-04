@@ -16,6 +16,7 @@ def test_small_sample_does_not_report_p95_and_failures_stay_in_denominator():
 
 
 def test_failure_exit_preserves_raw_file_and_summary_reference(monkeypatch, tmp_path):
+    tmp_path = tmp_path / "new-measurement"
     import json
     import sys
     from types import SimpleNamespace
@@ -79,6 +80,7 @@ def test_invalid_first_evidence_time_excludes_measurement(first):
                                      {"checks": {**CHECKS, "real_mode": 1}},
                                      {"elapsed_ms": -1}, {"run": {"status": "failed"}}, None, {}])
 def test_cli_classifies_output_even_when_child_exits_zero(monkeypatch, tmp_path, changes):
+    tmp_path = tmp_path / "new-measurement"
     import json
     import sys
     from pathlib import Path

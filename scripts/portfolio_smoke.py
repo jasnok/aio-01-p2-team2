@@ -135,30 +135,40 @@ def main():
     parser.add_argument("--cache-state", choices=["uncontrolled", "cold", "primed"], default="uncontrolled")
     parser.add_argument("--scenarios", nargs="+", type=int, choices=[0, 1, 2, 3], default=[0, 1, 2, 3])
     args = parser.parse_args()
-    from benchmark_cache import cold_cache, prime_cache
-    records = []
-    for index, (category, question) in enumerate(SCENARIOS):
-        if index not in args.scenarios:
-            continue
-        cache = {"method": "uncontrolled"}
-        try:
-            if args.cache_state == "cold":
-                cache = cold_cache()
-            elif args.cache_state == "primed" and index < 3:
-                cache = prime_cache(args.base_url, category, question, request)
-            record = run_scenario(args.base_url, category, question, args.require_llm and index < 3)
-        except Exception as error:
-            record = {"category": category, "question": question, "elapsed_ms": 0,
-                      "error": "cache_control_failed", "error_type": type(error).__name__}
-            cache = {"method": args.cache_state, "control_succeeded": False}
-        record["cache_control"] = cache
-        record["scenario_index"] = index
-        records.append(record)
-        destination = Path(args.output)
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
-        print(category, record.get("run", {}).get("status", record.get("error")), record["elapsed_ms"], flush=True)
-    return int(any(item.get("error") or not item.get("checks") or not all(item["checks"].values()) for item in records))
+    destination = Path(args.output)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        output = destination.open("x", encoding="utf-8")
+    except FileExistsError:
+        parser.error("output file already exists; choose a new measurement file")
+    with output:
+        output.write("[]")
+        output.flush()
+        from benchmark_cache import cold_cache, prime_cache
+        records = []
+        for index, (category, question) in enumerate(SCENARIOS):
+            if index not in args.scenarios:
+                continue
+            cache = {"method": "uncontrolled"}
+            try:
+                if args.cache_state == "cold":
+                    cache = cold_cache()
+                elif args.cache_state == "primed" and index < 3:
+                    cache = prime_cache(args.base_url, category, question, request)
+                record = run_scenario(args.base_url, category, question, args.require_llm and index < 3)
+            except Exception as error:
+                record = {"category": category, "question": question, "elapsed_ms": 0,
+                          "error": "cache_control_failed", "error_type": type(error).__name__}
+                cache = {"method": args.cache_state, "control_succeeded": False}
+            record["cache_control"] = cache
+            record["scenario_index"] = index
+            records.append(record)
+            output.seek(0)
+            json.dump(records, output, ensure_ascii=False, indent=2)
+            output.truncate()
+            output.flush()
+            print(category, record.get("run", {}).get("status", record.get("error")), record["elapsed_ms"], flush=True)
+        return int(any(item.get("error") or not item.get("checks") or not all(item["checks"].values()) for item in records))
 
 
 if __name__ == "__main__":
