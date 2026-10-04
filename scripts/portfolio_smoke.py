@@ -45,6 +45,45 @@ def consume_sse(lines, started, clock=time.monotonic):
             "terminal_ms": terminal, "stream_completed": terminal is not None}
 
 
+def citation_integrity(final):
+    """Check nonempty claims and exact source quotes, without judging legal correctness."""
+    def nonempty(value):
+        return isinstance(value, str) and bool(value.strip())
+
+    originals = {}
+    for field in ("related_laws", "similar_cases", "consultations"):
+        evidence = final.get(field, [])
+        if not isinstance(evidence, list):
+            return False
+        for item in evidence:
+            if not isinstance(item, dict):
+                return False
+            identifier, content = item.get("evidence_id"), item.get("content")
+            if not nonempty(identifier) or not nonempty(content):
+                return False
+            if identifier in originals and originals[identifier] != content:
+                return False
+            originals[identifier] = content
+    claims = final.get("cited_claims")
+    if not isinstance(claims, list) or not claims:
+        return False
+    for claim in claims:
+        if not isinstance(claim, dict) or not nonempty(claim.get("text")):
+            return False
+        citations = claim.get("citations")
+        if not isinstance(citations, list) or not citations:
+            return False
+        for citation in citations:
+            if not isinstance(citation, dict):
+                return False
+            identifier, quote = citation.get("evidence_id"), citation.get("quote")
+            if not nonempty(identifier) or not nonempty(quote):
+                return False
+            if identifier not in originals or quote not in originals[identifier]:
+                return False
+    return True
+
+
 def run_scenario(base, category, question, require_llm=False):
     started = time.monotonic()
     headers = {"Content-Type": "application/json", "X-Guest-Id": str(uuid4()), "Idempotency-Key": str(uuid4())}
@@ -73,14 +112,10 @@ def run_scenario(base, category, question, require_llm=False):
         checks["sse_replay"] = bool(ids) and ids == list(range(1, len(ids)+1))
         checks["live_sse_sequence"] = [event["id"] for event in live["events"]] == ids
         if final.get("generation_status") == "llm":
-            originals = {item["evidence_id"]: item["content"] for item in
-                final.get("related_laws", []) + final.get("similar_cases", []) + final.get("consultations", [])}
-            claims = final.get("cited_claims", [])
-            checks["citation_integrity"] = bool(claims) and all(
-                c["evidence_id"] in originals and c["quote"] in originals[c["evidence_id"]]
-                for claim in claims for c in claim["citations"])
+            checks["citation_integrity"] = citation_integrity(final)
             if final.get("diagnostics", {}).get("citation_mode") == "spans":
-                checks["answer_matches_cited_claims"] = final["answer"] == "\n\n".join(c["text"] for c in claims)
+                checks["answer_matches_cited_claims"] = checks["citation_integrity"] and (
+                    final.get("answer") == "\n\n".join(claim["text"] for claim in final["cited_claims"]))
         if final.get("diagnostics", {}).get("tool_timings_ms"):
             checks["early_evidence_events"] = final["diagnostics"].get("evidence_count", 0) == 0 or live["first_evidence_ms"] is not None
         if require_llm:
