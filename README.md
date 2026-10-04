@@ -155,3 +155,5 @@ docker compose -f compose.yml up --build -d
 - [시연 스크립트의 인용 무결성 검증](docs/SMOKE_CITATION_INTEGRITY.md)
 
 - [시연·측정 결과 보존](docs/MEASUREMENT_OUTPUT_PRESERVATION.md)
+
+- [대화 오류 후 화면 연속성](docs/CHAT_ERROR_CONTINUITY.md)

@@ -23,6 +23,32 @@ def _start_new_analysis() -> None:
     st.session_state.pop("analysis_pdf_cache", None)
 
 
+def _submit_follow_up(result, service, question) -> None:
+    if len(question.strip()) < 5:
+        st.warning("후속 질문을 5자 이상 입력해 주세요.")
+        return
+    combined = f"{result['question']}\n추가 정보: {question.strip()}"
+    if len(combined) > 2000:
+        st.warning("원래 질문과 추가 정보를 합쳐 2000자 이내로 입력해 주세요.")
+        return
+    try:
+        settings = get_frontend_settings()
+        if settings.frontend_data_mode.lower() == "api" and settings.frontend_sse_enabled:
+            follow_result = analyze_with_stream(result["agent_id"], combined)
+        else:
+            follow_result = service.analyze_case(result["agent_id"], combined)
+    except ValueError as error:
+        st.error(str(error))
+        return
+    follow_result["parent_request_id"] = result["request_id"]
+    st.session_state.conversation_messages.append({"role": "user", "content": question.strip()})
+    st.session_state.conversation_messages.append({"role": "assistant", "content": follow_result["answer"]})
+    st.session_state.last_result = follow_result
+    st.session_state.session_history.append(follow_result)
+    st.session_state.follow_up_clear_input = True
+    st.rerun()
+
+
 def render_follow_up_chat(result: dict, service: LegalService) -> None:
     if st.session_state.pop("follow_up_clear_input", False):
         st.session_state.follow_up_input = ""
@@ -50,29 +76,7 @@ def render_follow_up_chat(result: dict, service: LegalService) -> None:
         question = st.text_input("추가 정보" if needs_input else "후속 질문", key="follow_up_input", placeholder="예: 1년 3개월 근무했습니다.")
         submitted = st.form_submit_button("추가 정보로 다시 분석" if needs_input else "후속 질문 분석", type="primary")
     if submitted:
-        if len(question.strip()) < 5:
-            st.warning("후속 질문을 5자 이상 입력해 주세요.")
-            return
-        combined = f"{result['question']}\n추가 정보: {question.strip()}"
-        if len(combined) > 2000:
-            st.warning("원래 질문과 추가 정보를 합쳐 2000자 이내로 입력해 주세요.")
-            return
-        try:
-            settings = get_frontend_settings()
-            if settings.frontend_data_mode.lower() == "api" and settings.frontend_sse_enabled:
-                follow_result = analyze_with_stream(result["agent_id"], combined)
-            else:
-                follow_result = service.analyze_case(result["agent_id"], combined)
-        except ValueError as error:
-            st.error(str(error))
-            return
-        follow_result["parent_request_id"] = result["request_id"]
-        st.session_state.conversation_messages.append({"role": "user", "content": question.strip()})
-        st.session_state.conversation_messages.append({"role": "assistant", "content": follow_result["answer"]})
-        st.session_state.last_result = follow_result
-        st.session_state.session_history.append(follow_result)
-        st.session_state.follow_up_clear_input = True
-        st.rerun()
+        _submit_follow_up(result, service, question)
 
     for message in st.session_state.conversation_messages:
         with st.chat_message(message["role"]):
