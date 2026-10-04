@@ -82,6 +82,8 @@ async def run_case(case, variant, options, scope):
 
 
 async def compare(args):
+    folder = Path(args.output_dir)
+    folder.mkdir(parents=True, exist_ok=False)
     source = Path(args.input)
     samples = json.loads(source.read_text(encoding="utf-8"))
     cases = []
@@ -97,8 +99,6 @@ async def compare(args):
         options["intake_candidate"]["intake_model"] = args.candidate_model
     if "verification_candidate" in options:
         options["verification_candidate"]["verification_model"] = args.candidate_model
-    folder = Path(args.output_dir)
-    folder.mkdir(parents=True, exist_ok=True)
     index = {"input": str(source), "input_sha256": sha256(source.read_bytes()).hexdigest(),
         "scope": args.scope + "; fixed synthetic evidence; no live retrieval/cache latency",
         "human_quality_review": "pending", "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
@@ -149,7 +149,10 @@ def main():
         parser.error("intake variants require --scope intake or pipeline")
     if args.scope == "intake" and any(name not in {"baseline", "intake_low", "intake_candidate"} for name in args.variants):
         parser.error("intake scope requires intake variants")
-    return asyncio.run(compare(args))
+    try:
+        return asyncio.run(compare(args))
+    except FileExistsError:
+        parser.error("output directory already exists; choose a new experiment directory")
 
 
 if __name__ == "__main__":
