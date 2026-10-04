@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 
 from backend.app.repositories.user_repository import DbUser, UserRepository
 from backend.app.services.password_service import hash_password, verify_password
@@ -19,13 +20,13 @@ class AuthService:
     async def register(self, email: str, password: str, display_name: str) -> DbUser:
         return await self.users.create_member(
             email=email.strip().lower(),
-            password_hash=hash_password(password),
+            password_hash=await asyncio.to_thread(hash_password, password),
             display_name=display_name.strip(),
         )
 
     async def login(self, email: str, password: str) -> DbUser:
         user = await self.users.find_by_email(email.strip().lower())
-        if user is None or not verify_password(password, user.password_hash):
+        if user is None or not await asyncio.to_thread(verify_password, password, user.password_hash):
             raise InvalidCredentialsError()
         if not user.is_active:
             raise InactiveUserError()
