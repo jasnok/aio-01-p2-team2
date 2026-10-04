@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, model_validator
 
 from frontend.core.models import LegalQuestionView
 
@@ -58,12 +58,19 @@ class HistoryPageView(BaseModel):
 class TermReplyView(BaseModel):
     request_id: StrictStr = Field(min_length=1)
     answer: StrictStr = Field(min_length=1)
-    conversation_id: Identifier | None = None
+    conversation_id: StrictInt | None = Field(default=None, gt=0)
     saved: StrictBool = False
     storage: Literal["member", "guest_temporary", "none"] = "none"
     expires_at: datetime | None = None
     notice: str = ""
     model_config = ConfigDict(extra="ignore")
+
+
+    @model_validator(mode="after")
+    def validate_saved_conversation(self):
+        if self.saved and (self.storage != "member" or self.conversation_id is None):
+            raise ValueError("saved term reply requires member storage and conversation ID")
+        return self
 
 
 class SaveResultView(BaseModel):

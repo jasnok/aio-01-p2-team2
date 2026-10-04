@@ -71,6 +71,8 @@
 - [법률 용어 대화 입력의 성공·실패 처리](TERMS_INPUT_RECOVERY.md)
 - [대화 오류 후 화면 연속성](CHAT_ERROR_CONTINUITY.md)
 
+- [용어 대화의 응답 ID와 저장 상태](TERM_REPLY_STORAGE_CONTRACT.md)
+
 ## 과거 검증 스냅샷
 
 [PR #133 CI](https://github.com/jasnok/aio-01-p2-team2/actions/runs/36957220181)는 해당 커밋에서 481개 통과·4개 제외를 기록했다. 최신 검증은 위 CI 목록에서 커밋·상태·실제 로그를 함께 확인한다. CI 통과는 법률 정확도나 검색 관련성의 사람 평가를 의미하지 않는다.
