@@ -151,3 +151,5 @@ docker compose -f compose.yml up --build -d
 - [인증 비밀번호 계산의 이벤트 루프 분리](docs/AUTH_PASSWORD_OFFLOAD.md)
 
 - [운영·데모 인증의 공통 비밀번호 계산](docs/DEMO_AUTH_HASHING.md)
+
+- [시연 스크립트의 인용 무결성 검증](docs/SMOKE_CITATION_INTEGRITY.md)
