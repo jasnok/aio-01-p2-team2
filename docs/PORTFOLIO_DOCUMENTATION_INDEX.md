@@ -40,6 +40,8 @@
 - [HTTP 측정 원본의 분야 완전성과 정수 검증](HTTP_EVIDENCE_COMPLETENESS.md)
 - [시연·측정 결과 보존](MEASUREMENT_OUTPUT_PRESERVATION.md)
 
+- [모델 비교 실험의 결과 보존](MODEL_EXPERIMENT_OUTPUT_PRESERVATION.md)
+
 ## 실행 상태·소유자·운영
 
 - [실행 상태의 원자적 버전 검사와 종료 결과 보호](RUN_STATE_CONTRACT.md)
