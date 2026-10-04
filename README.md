@@ -9,7 +9,7 @@
 
 | 확인할 내용 | 근거 |
 |---|---|
-| 최근 코드 검증 | [PR #133 CI](https://github.com/jasnok/aio-01-p2-team2/actions/runs/36957220181): 2026-10-02, 481개 통과·4개 제외. 이 개수는 해당 커밋 기준입니다. |
+| 최근 코드 검증 | [main CI 실행 목록](https://github.com/jasnok/aio-01-p2-team2/actions/workflows/test.yml?query=branch%3Amain): 커밋·결과·로그에서 실제 통과 및 제외 개수를 확인합니다. 과거 기록은 [문서 색인](docs/PORTFOLIO_DOCUMENTATION_INDEX.md)에 보존합니다. |
 | 속도 개선의 측정 범위 | [SDK 생성 비용](output/portfolio/embedding-client-acquisition-v2.json), [키워드 DB 조회](output/portfolio/keyword-connections-v2.json): 원시 표본·코드 해시·환경·측정 시점 포함 |
 | 실제 사이트 시연 | Docker 실행 후 발표 모드에서 분석 과정·근거 원문·측정 표와 그래프 확인 |
 | 아직 검증하지 않은 내용 | 사람 평가에 의한 자연어 검색 관련성, 법률 정확도, 전체 상담 p95 |
@@ -96,64 +96,11 @@ docker compose -f compose.yml up --build -d
 
 구현과 평가 명령, 약 3분 시연 촬영 순서는 [로컬 실행 안내](docs/DOCKER_LOCAL_SETUP.md#8-개인-리팩토링-평가와-촬영)에 정리했습니다. 모델·데이터 범위에 따른 품질 한계가 있으므로 같은 결과가 항상 재현되지는 않습니다.
 
-## 자세한 기록
+## 설계·검증 기록 찾아보기
 
-- [3차 평가·문맥 보존·주장 검증 구현과 5~6단계 세부 계획](docs/PORTFOLIO_PHASE3_AND_ROADMAP.md)
-- [다음 응답 속도 개선과 코드 단순화 계획](docs/LATENCY_AND_SIMPLIFICATION_PLAN.md)
-- [응답 속도 실험과 비동기 호출·답변 흐름 리팩토링 결과](docs/LATENCY_REFACTOR_REPORT.md)
-- [실행 상태의 원자적 버전 검사와 종료 결과 보호](docs/RUN_STATE_CONTRACT.md)
-- [게스트 임시 이력의 동시 저장 유실 방지](docs/GUEST_HISTORY_CONCURRENCY.md)
-- [저장 대화 문맥 조회 단순화와 용어 대화 오류 수정](docs/SAVED_CONTEXT_REFACTOR.md)
-- [분석 자동 저장·완료 후 저장의 동일 실행 키](docs/ANALYSIS_SAVE_IDEMPOTENCY.md)
-- [문맥 전용 DB 조회와 합성 PostgreSQL 측정](docs/BOUNDED_CONTEXT_QUERY.md)
-- [이력 목록 요약 필드 조회와 합성 PostgreSQL 측정](docs/HISTORY_SUMMARY_PROJECTION.md)
-- [추가 정보 요청의 유효한 보완 질문 계약](docs/INTAKE_CLARIFICATION_CONTRACT.md)
-- [실행·평가 의존성 및 기반 이미지 재현성](docs/REPRODUCIBLE_ENVIRONMENTS.md)
-- [검색 임베딩 클라이언트 재사용과 생성 비용 측정](docs/EMBEDDING_CLIENT_REUSE.md)
-- [키워드 조회 연결 재사용과 실제 PostgreSQL 짝 비교](docs/KEYWORD_CONNECTION_REUSE.md)
-- [벡터·키워드 후보 조회의 DB 연결 공유와 짝 비교](docs/HYBRID_CONNECTION_REUSE.md)
-- [Frontend Backend 응답 계약과 비정상 오류 본문 처리](docs/FRONTEND_RESPONSE_CONTRACT.md)
-- [SSE 상태·이벤트의 UI 반영 전 검증](docs/SSE_PAYLOAD_CONTRACT.md)
-- [발표 모드의 엔지니어링 측정 화면과 자료 재생성](docs/PORTFOLIO_EVIDENCE_PANEL.md)
-- [성능 측정 시점의 코드·환경·데이터 출처 계약](docs/BENCHMARK_PROVENANCE.md)
-- [사람 검색 근거 검토의 입력 계약과 지표 오염 방지](docs/RETRIEVAL_REVIEW_CONTRACT.md)
-- [Frontend HTTP 장애 안내와 분석 재시도 식별자 유지](docs/FRONTEND_HTTP_FAILURES.md)
-- [용어 답변 저장 후 후속 질문의 대화 유지](docs/TERM_CONVERSATION_CONTINUITY.md)
-- [저장 분석·용어 대화의 공통 이력 API](docs/UNIFIED_HISTORY_API.md)
-- [추가 정보 분석 실패 시 입력 보존과 성공 후 초기화](docs/CLARIFICATION_INPUT_RECOVERY.md)
-- [벤치마크 성공 지연 통계의 표본 계약](docs/BENCHMARK_SUCCESS_CONTRACT.md)
-- [사람 답변 품질 검토의 원문 근거와 출처·기존 작업 보존](docs/HUMAN_ANSWER_REVIEW_EVIDENCE.md)
-- [공유 Redis·모델 연결의 종료와 재사용 수명주기](docs/SHARED_CLIENT_LIFECYCLE.md)
-- [게시판·댓글·개인 이력·알림의 소유자 분리](docs/COMMUNITY_OWNER_ISOLATION.md)
-- [AI 실행·용어 결과의 회원·게스트 소유자 분리](docs/ACTOR_RESULT_ISOLATION.md)
-- [인증 갱신 응답 계약과 역할 변경 시 개인 상태 초기화](docs/AUTH_REFRESH_CONTRACT.md)
-- [PDF 인용과 자료 본문의 근거 ID 연결](docs/PDF_EVIDENCE_IDENTIFIERS.md)
-- [HTTP·SSE·저장 이력의 주장·인용 응답 계약](docs/CITATION_RESPONSE_CONTRACT.md)
-- [로컬 메모리 세션의 조회되지 않은 만료 자료 정리](docs/MEMORY_SESSION_EXPIRY.md)
-- [기본 법률 용어 목록과 검색 사전의 일관성](docs/TERM_CATALOG_CONSISTENCY.md)
-- [법률 용어 목록·검색의 중첩 응답 계약](docs/TERM_RESPONSE_CONTRACT.md)
-- [Frontend HTTP 연결 재사용·인증 격리·실측](docs/FRONTEND_HTTP_POOL.md)
-- [분석 PDF의 세션 내 재사용과 개인 상태 정리](docs/SESSION_PDF_REUSE.md)
-- [발표 패널의 HTTP 연결 재사용 측정 근거](docs/HTTP_PORTFOLIO_EVIDENCE.md)
-- [법률 용어 대화 입력의 성공·실패 처리](docs/TERMS_INPUT_RECOVERY.md)
-- [HTTP 측정 원본의 분야 완전성과 정수 검증](docs/HTTP_EVIDENCE_COMPLETENESS.md)
-- [안전한 발췌가 있는 다음 근거 후보 선택](docs/SAFE_CONTEXT_CANDIDATES.md)
-- [MCP 검색 응답 계약과 잘못된 결과 차단](docs/MCP_SEARCH_CONTRACT.md)
-- [운영 메트릭과 실패 로그의 상담 내용 노출 방지](docs/SAFE_OPERATIONAL_LOGS.md)
-- [분석 접수 제한과 종료 자원 정리](docs/RUN_ADMISSION_CONTROL.md)
-- [2차 최적화 구현·평가 기록](docs/PORTFOLIO_OPTIMIZATION_REPORT.md) — 검색 병렬화, 구절 번호 인용, 중간 자료 표시, 반복 검색 캐시. 실제 일반 질문 3건 생성 성공은 단일 검증 결과이며 자연어 관련성 평가는 대기 중입니다.
-- [개인 리팩토링 구현·검증 결과](docs/PORTFOLIO_REFACTOR_REPORT.md)
-- [에이전트 아키텍처 설계서](docs/에이전트%20아키텍처%20설계서.md)
-- [에이전트 시험 결과 보고서](docs/에이전트%20시험%20결과%20보고서.md)
+- [담당 범위·설계 선택·3분 시연](docs/PORTFOLIO_CASE_STUDY.md)
+- [Docker 실행과 시연 준비](docs/DOCKER_LOCAL_SETUP.md)
+- [속도 측정 화면과 원본 검증](docs/PORTFOLIO_EVIDENCE_PANEL.md)
+- [주제별 전체 문서 색인](docs/PORTFOLIO_DOCUMENTATION_INDEX.md) — AI 근거 검증, 속도·측정, 실행·소유자, 화면·대화 기록과 과거 CI 스냅샷
 
 이 서비스는 법률 정보 탐색을 돕는 프로젝트이며, 변호사의 법률 자문이나 사건의 승패 예측을 대신하지 않습니다.
-
-- [인증 비밀번호 계산의 이벤트 루프 분리](docs/AUTH_PASSWORD_OFFLOAD.md)
-
-- [운영·데모 인증의 공통 비밀번호 계산](docs/DEMO_AUTH_HASHING.md)
-
-- [시연 스크립트의 인용 무결성 검증](docs/SMOKE_CITATION_INTEGRITY.md)
-
-- [시연·측정 결과 보존](docs/MEASUREMENT_OUTPUT_PRESERVATION.md)
-
-- [대화 오류 후 화면 연속성](docs/CHAT_ERROR_CONTINUITY.md)
