@@ -149,3 +149,5 @@ docker compose -f compose.yml up --build -d
 이 서비스는 법률 정보 탐색을 돕는 프로젝트이며, 변호사의 법률 자문이나 사건의 승패 예측을 대신하지 않습니다.
 
 - [인증 비밀번호 계산의 이벤트 루프 분리](docs/AUTH_PASSWORD_OFFLOAD.md)
+
+- [운영·데모 인증의 공통 비밀번호 계산](docs/DEMO_AUTH_HASHING.md)

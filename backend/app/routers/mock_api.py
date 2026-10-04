@@ -159,8 +159,11 @@ async def register(body: Register) -> dict:
         return {"session_token": token, "expires_in": expires_in, "user": user.public()}
     if any(item["email"] == body.email for item in store.users.values()):
         fail(409, "CONFLICT", "이미 사용 중인 이메일입니다.")
+    password_hash = await asyncio.to_thread(hash_password, body.password)
+    if any(item["email"] == body.email for item in store.users.values()):
+        fail(409, "CONFLICT", "이미 사용 중인 이메일입니다.")
     user_id = f"user-{uuid4()}"
-    user = {"id": user_id, "email": body.email, "display_name": body.display_name.strip(), "role": "USER", "password_hash": hash_password(body.password)}
+    user = {"id": user_id, "email": body.email, "display_name": body.display_name.strip(), "role": "USER", "password_hash": password_hash}
     store.users[user_id] = user
     token, public = store.issue_session(user)
     store.notify(user, "REGISTERED", "회원가입 완료", "회원가입이 완료되었습니다.", severity="success")
@@ -179,7 +182,7 @@ async def login(body: Credentials) -> dict:
             fail(503, "SESSION_UNAVAILABLE", "로그인 세션을 만들 수 없습니다. 잠시 후 다시 시도해 주세요.")
         return {"session_token": token, "expires_in": expires_in, "user": user.public()}
     user = next((item for item in store.users.values() if item["email"] == body.email), None)
-    if not user or not verify_password(body.password, user["password_hash"]):
+    if not user or not await asyncio.to_thread(verify_password, body.password, user["password_hash"]):
         fail(401, "AUTH_REQUIRED", "이메일 또는 비밀번호가 올바르지 않습니다.")
     token, public = store.issue_session(user)
     store.notify(user, "LOGGED_IN", "로그인", "로그인되었습니다.", severity="success")

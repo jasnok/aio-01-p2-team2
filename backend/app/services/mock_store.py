@@ -6,14 +6,11 @@ does not change the HTTP contract.
 """
 from __future__ import annotations
 
-import base64
-import hashlib
-import hmac
-import os
 import secrets
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 from backend.app.services.actor_identity import actor_key
+from backend.app.services.password_service import hash_password, verify_password
 
 
 class SessionExpiredError(PermissionError):
@@ -26,25 +23,6 @@ def now() -> datetime:
 
 def iso(value: datetime | None = None) -> str:
     return (value or now()).isoformat()
-
-
-def hash_password(password: str) -> str:
-    """Use a salted, deliberately expensive standard-library password hash."""
-    salt = os.urandom(16)
-    digest = hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1)
-    return "scrypt$" + base64.b64encode(salt + digest).decode()
-
-
-def verify_password(password: str, stored: str | None) -> bool:
-    if not stored or not stored.startswith("scrypt$"):
-        return False
-    try:
-        payload = base64.b64decode(stored.split("$", 1)[1])
-        salt, digest = payload[:16], payload[16:]
-        candidate = hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1)
-        return hmac.compare_digest(candidate, digest)
-    except (ValueError, TypeError):
-        return False
 
 
 class MemoryStore:
