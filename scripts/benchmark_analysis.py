@@ -86,14 +86,16 @@ def main():
     args = parser.parse_args()
     if not 1 <= args.repeats <= 10:
         parser.error("repeats must be between 1 and 10 (4 API calls per repeat)")
+    folder = Path(args.output_dir)
+    try:
+        folder.mkdir(parents=True, exist_ok=False)
+    except FileExistsError:
+        parser.error("output directory already exists; choose a new measurement directory")
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
     dirty = bool(subprocess.check_output(["git", "status", "--porcelain"], text=True).strip())
-    folder = Path(args.output_dir)
-    folder.mkdir(parents=True, exist_ok=True)
     samples, files, failed = [], [], False
     for repeat in range(args.repeats):
         output = folder / f"run-{repeat+1}.json"
-        output.unlink(missing_ok=True)
         process = subprocess.run([sys.executable, "-X", "utf8", "scripts/portfolio_smoke.py",
             "--base-url", args.base_url, "--cache-state", args.cache_state, "--output", str(output)], check=False)
         if not output.exists():
@@ -107,7 +109,8 @@ def main():
         "summary": summarize(samples), "sample_files": files,
         "scenarios": {str(index): summarize([sample for position, sample in enumerate(samples)
             if sample.get("scenario_index", position % 4) == index]) for index in range(4)}}
-    (folder / "summary.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    with (folder / "summary.json").open("x", encoding="utf-8") as output:
+        json.dump(result, output, ensure_ascii=False, indent=2)
     print(json.dumps(result["summary"]))
     return int(failed or not samples or result["summary"]["successes"] != len(samples))
 

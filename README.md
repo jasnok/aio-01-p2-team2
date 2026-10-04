@@ -153,3 +153,5 @@ docker compose -f compose.yml up --build -d
 - [운영·데모 인증의 공통 비밀번호 계산](docs/DEMO_AUTH_HASHING.md)
 
 - [시연 스크립트의 인용 무결성 검증](docs/SMOKE_CITATION_INTEGRITY.md)
+
+- [시연·측정 결과 보존](docs/MEASUREMENT_OUTPUT_PRESERVATION.md)
