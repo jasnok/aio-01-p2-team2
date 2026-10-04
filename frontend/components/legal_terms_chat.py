@@ -20,6 +20,34 @@ def _continue_saved_conversation(saved):
     st.session_state.terms_conversation_id = saved["conversation_id"]
 
 
+def _submit_terms_question(result, message) -> None:
+    if len(message.strip()) < 2:
+        st.warning("질문을 2자 이상 입력해 주세요.")
+        return
+    try:
+        payload = backend_client.chat_legal_terms(
+            st.session_state.auth_token,
+            f"guest-{st.session_state.session_id}",
+            build_context_message(result, message.strip(), st.session_state.terms_messages),
+            save_selected=False,
+            conversation_id=st.session_state.terms_conversation_id,
+        )
+        answer = payload.get("answer")
+        if not isinstance(answer, str) or not answer.strip():
+            raise backend_client.BackendClientError("대화 응답 형식을 확인할 수 없습니다.")
+        st.session_state.terms_conversation_id = payload.get("conversation_id")
+        st.session_state.terms_reply = payload
+        st.session_state.terms_messages.extend([{"role": "user", "content": message.strip()}, {"role": "assistant", "content": answer,
+            "request_id": payload.get("request_id"), "saved": payload.get("saved", False)}])
+        if payload.get("saved") is True:
+            st.session_state.terms_saved = True
+            st.success("대화가 저장되었습니다.")
+        st.session_state.terms_clear_input = True
+        st.rerun()
+    except backend_client.BackendClientError as error:
+        st.error(error.user_message)
+
+
 def render_legal_terms_chat(result: dict) -> None:
     if st.session_state.pop('terms_clear_input', False):
         st.session_state.terms_input = ''
@@ -43,31 +71,8 @@ def render_legal_terms_chat(result: dict) -> None:
         message = st.text_area("분석 내용에서 궁금한 법률 용어", key="terms_input", placeholder="예: 이 사례에서 할부항변권은 무엇인가요?", max_chars=400)
         submitted = st.form_submit_button("질문하기", type="primary")
     if submitted:
-        if len(message.strip()) < 2:
-            st.warning("질문을 2자 이상 입력해 주세요.")
-            return
-        try:
-            payload = backend_client.chat_legal_terms(
-                st.session_state.auth_token,
-                f"guest-{st.session_state.session_id}",
-                build_context_message(result, message.strip(), st.session_state.terms_messages),
-                save_selected=False,
-                conversation_id=st.session_state.terms_conversation_id,
-            )
-            answer = payload.get("answer")
-            if not isinstance(answer, str) or not answer.strip():
-                raise backend_client.BackendClientError("대화 응답 형식을 확인할 수 없습니다.")
-            st.session_state.terms_conversation_id = payload.get("conversation_id")
-            st.session_state.terms_reply = payload
-            st.session_state.terms_messages.extend([{"role": "user", "content": message.strip()}, {"role": "assistant", "content": answer,
-                "request_id": payload.get("request_id"), "saved": payload.get("saved", False)}])
-            if payload.get("saved") is True:
-                st.session_state.terms_saved = True
-                st.success("대화가 저장되었습니다.")
-            st.session_state.terms_clear_input = True
-            st.rerun()
-        except backend_client.BackendClientError as error:
-            st.error(error.user_message)
+        _submit_terms_question(result, message)
+
     reply = st.session_state.get("terms_reply", {})
     if reply.get("storage") == "guest_temporary":
         st.caption("이 대화는 임시 보관되며 서버 보관 기간이 지나면 삭제됩니다.")
