@@ -25,6 +25,8 @@
 - [MCP 검색 응답 계약과 잘못된 결과 차단](MCP_SEARCH_CONTRACT.md)
 - [시연 스크립트의 인용 무결성 검증](SMOKE_CITATION_INTEGRITY.md)
 
+- [리랭킹 후보 입력의 완전성](RERANKING_CANDIDATE_CONTRACT.md)
+
 ## 속도·측정·출처
 
 - [문맥 전용 DB 조회와 합성 PostgreSQL 측정](BOUNDED_CONTEXT_QUERY.md)
